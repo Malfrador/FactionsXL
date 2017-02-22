@@ -1,0 +1,265 @@
+/*
+ * Copyright (C) 2017 Daniel Saukel
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package io.github.dre2n.factionsxl.faction;
+
+import io.github.dre2n.commons.util.messageutil.MessageUtil;
+import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.board.Board;
+import io.github.dre2n.factionsxl.config.FMessage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+/**
+ * Facton instance manager.
+ *
+ * @author Daniel Saukel
+ */
+public class FactionCache {
+
+    FactionsXL plugin = FactionsXL.getInstance();
+
+    private Set<LegalEntity> entities = new HashSet<>();
+    private Set<Faction> factions = new HashSet<>();
+    private Set<Federation> federations = new HashSet<>();
+    private Set<TradeLeague> leagues = new HashSet<>();
+
+    public FactionCache() {
+        for (File file : FactionsXL.FACTIONS.listFiles()) {
+            Faction faction = new Faction(file);
+            entities.add(faction);
+            factions.add(faction);
+        }
+
+        for (File file : FactionsXL.FEDERATIONS.listFiles()) {
+            Federation federation = new Federation(file);
+            entities.add(federation);
+            federations.add(federation);
+        }
+
+        for (File file : FactionsXL.TRADE_LEAGUES.listFiles()) {
+            TradeLeague league = new TradeLeague(file);
+            entities.add(league);
+            leagues.add(league);
+        }
+    }
+
+    /**
+     * @param player
+     * the creator of the faction
+     * @param name
+     * the name of the faction
+     */
+    public Faction create(OfflinePlayer player, Location home, String name) {
+        int id = generateId();
+        File file = new File(FactionsXL.FACTIONS, id + ".yml");
+
+        try {
+            file.createNewFile();
+            MessageUtil.log(plugin, FMessage.LOG_NEW_FACTION_DATA.getMessage(file.getName()));
+        } catch (IOException exception) {
+        }
+
+        Board board = plugin.getBoard();
+
+        Faction faction = new Faction(id);
+        faction.creationDate = System.currentTimeMillis();
+        faction.active = true;
+        faction.name = name;
+        faction.admin = player;
+        faction.type = GovernmentType.MONARCHY;
+        faction.home = home;
+        faction.capital = board.getByLocation(faction.home);
+        faction.capital.setOwner(faction);
+        faction.capital.getCoreFactions().put(faction, Calendar.getInstance().getTime());
+        faction.members.add(player);
+        board.save(Board.FILE);
+        faction.save();
+        faction.load();
+        factions.add(faction);
+        return faction;
+    }
+
+    /**
+     * @param player
+     * the creator of the faction
+     * @param name
+     * the name of the faction
+     */
+    public Faction create(Player player, String name) {
+        return create(player, player.getLocation(), name);
+    }
+
+    /* Getters and setters */
+    /**
+     * @param id
+     * the ID to check
+     * @return
+     * the faction that has this ID
+     */
+    public Faction getById(int id) {
+        for (Faction faction : factions) {
+            if (faction.getId() == id) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param name
+     * the name to check
+     * @return
+     * the faction that has this name
+     */
+    public Faction getByName(String name) {
+        for (Faction faction : factions) {
+            if (faction.getName().equalsIgnoreCase(name)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param member
+     * the member to check
+     * @return
+     * the faction that has this member
+     */
+    public Faction getByMember(OfflinePlayer member) {
+        for (Faction faction : getActive()) {
+            for (OfflinePlayer player : faction.getMembers()) {
+                if (player.getUniqueId().equals(member.getUniqueId())) {
+                    return faction;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param chunk
+     * the chunk to check
+     * @return
+     * the faction that owns this chunk
+     */
+    public Faction getByChunk(Chunk chunk) {
+        for (Faction faction : factions) {
+            if (faction.getChunks().contains(chunk)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param location
+     * the location to check
+     * @return
+     * the faction that owns this location
+     */
+    public Faction getByLocation(Location location) {
+        return getByChunk(location.getChunk());
+    }
+
+    /**
+     * @return
+     * all active factions
+     */
+    public Set<Faction> getActive() {
+        HashSet<Faction> toReturn = new HashSet<>();
+        for (Faction faction : factions) {
+            if (faction.isActive()) {
+                toReturn.add(faction);
+            }
+        }
+        return toReturn;
+    }
+
+    /**
+     * @return
+     * all factions
+     */
+    public Set<Faction> getAll() {
+        return factions;
+    }
+
+    /**
+     * @param entity
+     * an instance of LegelEntity to add
+     */
+    public void addEntity(LegalEntity entity) {
+        entities.add(entity);
+        if (entity instanceof Faction) {
+            factions.add((Faction) entity);
+        } else if (entity instanceof Federation) {
+            federations.add((Federation) entity);
+        } else if (entity instanceof TradeLeague) {
+            leagues.add((TradeLeague) entity);
+        }
+    }
+
+    /**
+     * @param entity
+     * an instance of LegalEntity to remove
+     */
+    public void removeEntity(LegalEntity entity) {
+        entities.remove(entity);
+        if (entity instanceof Faction) {
+            factions.remove((Faction) entity);
+        } else if (entity instanceof Federation) {
+            federations.remove((Federation) entity);
+        } else if (entity instanceof TradeLeague) {
+            leagues.remove((TradeLeague) entity);
+        }
+    }
+
+    /**
+     * @return
+     * a new, unused entity ID.
+     */
+    public int generateId() {
+        return entities.size();
+    }
+
+    /* Persistence */
+    /**
+     * Saves all factions
+     */
+    public void saveAll() {
+        for (Faction faction : factions) {
+            faction.save();
+        }
+    }
+
+    /**
+     * Loads the persistent data of all factions
+     */
+    public void loadAll() {
+        for (Faction faction : factions) {
+            faction.load();
+        }
+    }
+
+}

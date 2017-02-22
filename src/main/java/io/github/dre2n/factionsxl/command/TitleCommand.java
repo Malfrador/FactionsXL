@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 2017 Daniel Saukel
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package io.github.dre2n.factionsxl.command;
+
+import io.github.dre2n.commons.command.BRCommand;
+import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.player.FPlayerCache;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+/**
+ * @author Daniel Saukel
+ */
+public class TitleCommand extends BRCommand {
+
+    FactionsXL plugin = FactionsXL.getInstance();
+    FPlayerCache fPlayers = plugin.getFPlayerCache();
+
+    public TitleCommand() {
+        setCommand("title");
+        setMinArgs(2);
+        setMaxArgs(2);
+        setHelp(FMessage.HELP_CMD_TITLE.getMessage());
+        setPermission(FPermission.TITLE.getNode());
+        setPlayerCommand(true);
+        setConsoleCommand(true);
+    }
+
+    @Override
+    public void onExecute(String[] args, CommandSender sender) {
+        if (sender instanceof Player && !fPlayers.getByPlayer((Player) sender).isMod()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+
+        FPlayer fPlayer = fPlayers.getByName(args[1]);
+        if (fPlayer == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
+            return;
+        }
+        fPlayer.setTitle(args[2]);
+        fPlayer.getFaction().sendMessage(FMessage.CMD_TITLE_SUCCESS.getMessage(), sender, fPlayer, args[2]);
+    }
+
+}

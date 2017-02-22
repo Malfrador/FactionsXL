@@ -1,0 +1,11 @@
+name: FactionsXL
+main: io.github.dre2n.factionsxl.FactionsXL
+version: ${project.version}${buildNo}
+author: Daniel Saukel
+description: ${project.description}
+website: ${project.url}
+softdepend: [Vault, LWC, Dynmap]
+commands:
+  factionsxl:
+    description: Reference command for FactionsXL.
+    aliases: [fxl,f,faction]
