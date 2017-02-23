@@ -325,6 +325,35 @@ public class Faction extends LegalEntity {
      */
     public void setAdmin(OfflinePlayer admin) {
         this.admin = admin;
+        checkForPersonalUnions();
+    }
+
+    /**
+     * Updates personal unions.
+     */
+    public void checkForPersonalUnions() {
+        HashSet<Faction> toRemove = new HashSet<>();
+        for (Entry<Faction, Relation> entry : relations.entrySet()) {
+            if (entry.getValue() == Relation.PERSONAL_UNION && !entry.getKey().getAdmin().equals(admin)) {
+                toRemove.add(entry.getKey());
+            }
+        }
+        for (Faction key : toRemove) {
+            relations.remove(key);
+        }
+
+        for (Faction faction : plugin.getFactionCache().getActive()) {
+            if (faction == this) {
+                continue;
+            }
+            if (faction.getAdmin().equals(admin)) {
+                relations.put(faction, Relation.PERSONAL_UNION);
+                faction.relations.put(this, Relation.PERSONAL_UNION);
+                ParsingUtil.broadcastMessage(FMessage.FACTION_PERSONAL_UNION_FORMED.getMessage(), this, faction, admin);
+            } else if (faction.getRelation(this) == Relation.PERSONAL_UNION) {
+                faction.relations.remove(this);
+            }
+        }
     }
 
     /**

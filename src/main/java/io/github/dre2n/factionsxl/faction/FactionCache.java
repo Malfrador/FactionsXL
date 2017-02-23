@@ -97,6 +97,7 @@ public class FactionCache {
         faction.save();
         faction.load();
         factions.add(faction);
+        faction.checkForPersonalUnions();
         return faction;
     }
 
