@@ -25,6 +25,7 @@ import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.faction.GovernmentType;
 import io.github.dre2n.factionsxl.faction.Relation;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +47,8 @@ public class ShowCommand extends BRCommand {
         setCommand("show");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_DISBAND.getMessage());
-        setPermission(FPermission.DISBAND.getNode());
+        setHelp(FMessage.HELP_CMD_SHOW.getMessage());
+        setPermission(FPermission.SHOW.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
     }
@@ -60,9 +61,13 @@ public class ShowCommand extends BRCommand {
             faction = factions.getByMember((Player) sender);
         } else if (args.length == 2) {
             faction = factions.getByName(args[1]);
+            if (faction == null) {
+                FPlayer fPlayer = plugin.getFPlayerCache().getByName(args[1]);
+                faction = fPlayer != null ? fPlayer.getFaction() : null;
+            }
         }
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, (args.length >= 2 ? FMessage.ERROR_NO_SUCH_FACTION : FMessage.ERROR_SPECIFY_FACTION).getMessage());
+            ParsingUtil.sendMessage(sender, args.length >= 2 ? FMessage.ERROR_NO_SUCH_FACTION.getMessage(args[1]) : FMessage.ERROR_SPECIFY_FACTION.getMessage());
             return;
         }
 
@@ -93,8 +98,8 @@ public class ShowCommand extends BRCommand {
             if (relation != Relation.PEACE && relation != Relation.OWN) {
                 if (!first) {
                     components.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
-                    first = false;
                 }
+                first = false;
                 components.addAll(Arrays.asList(relation.getFormatted(other)));
             }
         }

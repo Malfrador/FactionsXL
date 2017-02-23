@@ -16,10 +16,10 @@ FactionsXL works with Spigot 1.11.2.
 
 ### Building information and dependencies
 Building FactionsXL from source requires [Apache Maven](https://maven.apache.org/).
-Maven automatically fetches all dependencies and builds DungeonsXL; just run _build.bat_ or enter the command _mvn clean install_.
+Maven automatically fetches all dependencies and builds FactionsXL; just run _build.bat_ or enter the command _mvn clean install_.
 
 #### BRCommons
-[BRCommons](https://github.com/DRE2N/BRCommons) is a util library for common tasks. DungeonsXL contains BRCommons 1.0.6.
+[BRCommons](https://github.com/DRE2N/BRCommons) is a util library for common tasks. FactionsXL contains BRCommons 1.0.6.
 
 ### Java
 Make sure that your server uses Java 7 or higher.

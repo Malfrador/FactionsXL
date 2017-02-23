@@ -67,6 +67,7 @@ public enum FPermission {
     SET_CAPITAL("set.capital", TRUE),
     SET_COLOR("set.color", TRUE),
     SET_GOVERNMENT("set.government", TRUE),
+    SHOW("show", TRUE),
     STORAGE("storage", TRUE),
     TAG("tag", OP),
     TITLE("title", TRUE),
@@ -74,7 +75,7 @@ public enum FPermission {
     // Kits
     ADMINISTRATOR("*", OP),
     HALF_PLAYER("halfplayer", TRUE, ADMIN, CHAT, CLAIM, DISBAND, HELP, HOME_SET, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD, OPEN,
-            POWER, REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, STORAGE, TITLE, TRADE_OFFER),
+            POWER, REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SHOW, STORAGE, TITLE, TRADE_OFFER),
     FULL_PLAYER("fullplayer", OP, HALF_PLAYER, HOME, CREATE, CREATE_VASSAL, TAG);
 
     public static final String PREFIX = "fxl.";

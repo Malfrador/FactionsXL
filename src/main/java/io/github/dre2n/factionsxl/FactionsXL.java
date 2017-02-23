@@ -445,7 +445,7 @@ public class FactionsXL extends BRPlugin {
             PluginDescriptionFile desc = lwc.getPlugin().getDescription();
             MessageUtil.log(this, "Successfully hooked into " + desc.getName() + " v" + desc.getVersion() + ".");
         } else {
-            MessageUtil.log(this, "&4Could not find LWC!");
+            MessageUtil.log(this, "&4Could not find LWC.");
         }
     }
 
