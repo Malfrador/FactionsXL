@@ -134,13 +134,18 @@ public enum Relation {
      * @param string
      * the String to check
      * @return
-     *
+     * the relation
      */
     public static Relation fromString(String string) {
         switch (string.toLowerCase()) {
+            case "real_union":
             case "realunion":
             case "ru":
                 return REAL_UNION;
+            case "personal_union":
+            case "personalunion":
+            case "pu":
+                return PERSONAL_UNION;
             case "vassal":
             case "v":
                 return VASSAL;

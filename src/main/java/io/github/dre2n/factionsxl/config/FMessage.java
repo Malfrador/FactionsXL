@@ -126,6 +126,7 @@ public enum FMessage implements Messages {
     GOVERNMENT_TYPE_REPUBLIC("governmentType.republic", "Republic"),
     GOVERNMENT_TYPE_THEOCRACY("governmentType.theocracy", "Theocracy"),
     HELP_CMD_ADMIN("help.cmd.admin", "/f admin ([faction]) [player] - Passes the ownership of a faction to another player."),
+    HELP_CMD_ALLY("help.cmd.ally", "/f ally ([faction]) [target] - Sends an alliance request to the target faction."),
     HELP_CMD_CHAT("help.cmd.chat", "/f chat [f(action)|p(ublic)] [faction] - Changes the chat mode."),
     HELP_CMD_CLAIM("help.cmd.claim", "/f claim [faction] - Claims a territory."),
     HELP_CMD_CREATE("help.cmd.create", "/f create [tag] - Creates a new faction."),

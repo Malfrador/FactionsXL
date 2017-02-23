@@ -90,7 +90,7 @@ public class RelationCommand extends BRCommand {
             requests.remove(matching);
             return;
         }
-        if (relation != null && relation != Relation.OWN) {
+        if (relation != null && relation != Relation.OWN && relation != Relation.PERSONAL_UNION) {
             Request request = new Request(subjectFaction, objectFaction, relation);
             if (!requestExists(subjectFaction, objectFaction)) {
                 requests.add(request);
