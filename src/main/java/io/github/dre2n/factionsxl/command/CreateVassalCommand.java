@@ -65,7 +65,7 @@ public class CreateVassalCommand extends BRCommand {
 
         Location location = player.getLocation();
         Region region = board.getByLocation(location);
-        if (!region.getOwner().equals(mother)) {
+        if (region.getOwner() == null || !region.getOwner().equals(mother)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_CANNOT_PASS_LAND.getMessage());
             return;
         } else if (region.equals(mother.getCapital()) || mother.getRegions().size() <= 1) {
@@ -81,6 +81,10 @@ public class CreateVassalCommand extends BRCommand {
         OfflinePlayer leader = Bukkit.getOfflinePlayer(args[2]);
         if (!leader.hasPlayedBefore()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[2]);
+            return;
+        }
+        if (mother.getAdmin().equals(leader)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL_IS_MOTHER_ADMIN.getMessage(), fPlayer);
             return;
         }
 
