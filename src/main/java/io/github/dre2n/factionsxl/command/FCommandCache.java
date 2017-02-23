@@ -55,12 +55,14 @@ public class FCommandCache extends BRCommands {
     public static RegionCommand REGION = new RegionCommand();
     public static RegionsCommand REGIONS = new RegionsCommand();
     public static RelationCommand RELATION = new RelationCommand();
+    public static RelationAllyCommand RELATION_ALLY = new RelationAllyCommand();
     public static ReloadCommand RELOAD = new ReloadCommand();
     public static ScoreboardCommand SCOREBOARD = new ScoreboardCommand();
     public static SetAnthemCommand SET_ANTHEM = new SetAnthemCommand();
     public static SetBannerCommand SET_BANNER = new SetBannerCommand();
     public static SetCapitalCommand SET_CAPITAL = new SetCapitalCommand();
     public static SetColorCommand SET_COLOR = new SetColorCommand();
+    public static SetGovernmentCommand SET_GOVERNMENT = new SetGovernmentCommand();
     public static SetHomeCommand SET_HOME = new SetHomeCommand();
     public static ShowCommand SHOW = new ShowCommand();
     public static StorageCommand STORAGE = new StorageCommand();
@@ -95,12 +97,14 @@ public class FCommandCache extends BRCommands {
                 REGION,
                 REGIONS,
                 RELATION,
+                RELATION_ALLY,
                 RELOAD,
                 SCOREBOARD,
                 SET_ANTHEM,
                 SET_BANNER,
                 SET_CAPITAL,
                 SET_COLOR,
+                SET_GOVERNMENT,
                 SET_HOME,
                 SHOW,
                 TAG,

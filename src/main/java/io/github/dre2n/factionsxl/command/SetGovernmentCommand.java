@@ -34,7 +34,7 @@ public class SetGovernmentCommand extends BRCommand {
     FactionsXL plugin = FactionsXL.getInstance();
 
     public SetGovernmentCommand() {
-        setCommand("setGovernmentType");
+        setCommand("setGovernment");
         setMinArgs(2);
         setMaxArgs(2);
         setHelp(FMessage.HELP_CMD_SET_GOVERNMENT.getMessage());
