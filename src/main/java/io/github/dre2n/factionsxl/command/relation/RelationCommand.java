@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.command;
+package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;

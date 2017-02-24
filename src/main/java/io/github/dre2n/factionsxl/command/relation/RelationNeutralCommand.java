@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.command;
+package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -30,18 +30,18 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class RelationAllyCommand extends BRCommand {
+public class RelationNeutralCommand extends BRCommand {
 
     FactionCache factions = FactionsXL.getInstance().getFactionCache();
 
-    public RelationAllyCommand() {
-        setCommand("ally");
+    public RelationNeutralCommand() {
+        setCommand("neutral");
         setMinArgs(1);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_ALLY.getMessage());
+        setHelp(FMessage.HELP_CMD_NEUTRAL.getMessage());
         setPermission(FPermission.RELATION.getNode());
         setPlayerCommand(true);
-        setConsoleCommand(true);
+        setConsoleCommand(false);
     }
 
     @Override
@@ -50,14 +50,35 @@ public class RelationAllyCommand extends BRCommand {
             displayHelp(sender);
             return;
         }
+
         Faction faction = sender instanceof Player ? factions.getByMember((Player) sender) : null;
-        String subject = args.length == 3 ? args[1] : (faction != null ? faction.getName() : null);
+        Faction subject = args.length == 3 ? factions.getByName(args[1]) : (faction != null ? faction : null);
         if (subject == null) {
             ParsingUtil.sendMessage(sender, args.length < 3 ? FMessage.ERROR_SPECIFY_FACTION.getMessage() : FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
-        String object = args.length == 3 ? args[2] : args[1];
-        FCommandCache.RELATION.onExecute(new String[]{FCommandCache.RELATION.getCommand(), subject, object, Relation.ALLIANCE.toString()}, sender);
+
+        Faction object = args.length == 3 ? factions.getByName(args[2]) : factions.getByName(args[1]);
+        if (object == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args.length == 3 ? args[2] : args[1]);
+            return;
+        }
+
+        switch (subject.getRelation(object)) {
+            case LORD:
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subject);
+                return;
+            case OWN:
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage(), subject, object);
+                return;
+            case PERSONAL_UNION:
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION.getMessage(), subject, object);
+                return;
+            default:
+                subject.getRelations().remove(object);
+                object.getRelations().remove(subject);
+                ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, Relation.PEACE.getName());
+        }
     }
 
 }

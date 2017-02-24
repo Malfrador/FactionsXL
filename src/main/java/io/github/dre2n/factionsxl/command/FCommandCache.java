@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.commons.command.BRCommands;
 import io.github.dre2n.commons.javaplugin.BRPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.command.relation.*;
 
 /**
  * An enumeration of all command instances.
@@ -56,6 +57,9 @@ public class FCommandCache extends BRCommands {
     public static RegionsCommand REGIONS = new RegionsCommand();
     public static RelationCommand RELATION = new RelationCommand();
     public static RelationAllyCommand RELATION_ALLY = new RelationAllyCommand();
+    public static RelationOathCommand RELATION_OATH = new RelationOathCommand();
+    public static RelationNeutralCommand RELATION_NEUTRAL = new RelationNeutralCommand();
+    public static RelationVassalizeCommand RELATION_VASSALIZE = new RelationVassalizeCommand();
     public static ReloadCommand RELOAD = new ReloadCommand();
     public static ScoreboardCommand SCOREBOARD = new ScoreboardCommand();
     public static SetAnthemCommand SET_ANTHEM = new SetAnthemCommand();
@@ -98,6 +102,9 @@ public class FCommandCache extends BRCommands {
                 REGIONS,
                 RELATION,
                 RELATION_ALLY,
+                RELATION_OATH,
+                RELATION_NEUTRAL,
+                RELATION_VASSALIZE,
                 RELOAD,
                 SCOREBOARD,
                 SET_ANTHEM,
