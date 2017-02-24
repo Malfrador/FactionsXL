@@ -57,7 +57,7 @@ public class RelationAllyCommand extends BRCommand {
             return;
         }
         String object = args.length == 3 ? args[2] : args[1];
-        FCommandCache.RELATION.onExecute(new String[]{subject, object, Relation.ALLIANCE.toString()}, sender);
+        FCommandCache.RELATION.onExecute(new String[]{FCommandCache.RELATION.getCommand(), subject, object, Relation.ALLIANCE.toString()}, sender);
     }
 
 }

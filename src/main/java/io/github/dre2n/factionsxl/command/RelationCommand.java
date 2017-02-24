@@ -68,7 +68,7 @@ public class RelationCommand extends BRCommand {
         if (args.length == 5 && args[4].equals("-deny")) {
             HashSet<Request> toRemove = new HashSet<>();
             for (Request request : requests) {
-                if (request.getSubject().equals(subjectFaction) && request.getObject().equals(objectFaction)) {
+                if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction)) {
                     toRemove.add(request);
                     objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), objectFaction, request.getRelation().getName());
                 }
