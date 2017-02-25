@@ -64,6 +64,11 @@ public class RelationCommand extends BRCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[2]);
             return;
         }
+        
+        if (subjectFaction == objectFaction) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
+            return;
+        }
 
         if (args.length == 5 && args[4].equals("-deny")) {
             HashSet<Request> toRemove = new HashSet<>();
