@@ -101,8 +101,8 @@ public class RegionCommand extends BRCommand {
                 Relation relation = faction != null ? faction.getRelation(coreFaction) : Relation.PEACE;
                 if (!first1) {
                     cores.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
-                    first1 = false;
                 }
+                first1 = false;
                 BaseComponent[] relComps = TextComponent.fromLegacyText(relation.getColor() + coreFaction.getName());
                 HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + date.toString()));
                 for (BaseComponent relComp : relComps) {
@@ -120,8 +120,8 @@ public class RegionCommand extends BRCommand {
                 Relation relation = faction != null ? faction.getRelation(claimFaction) : Relation.PEACE;
                 if (!first2) {
                     claims.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
-                    first2 = false;
                 }
+                first2 = false;
                 BaseComponent[] relComps = TextComponent.fromLegacyText(relation.getColor() + claimFaction.getName());
                 HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + date.toString()));
                 for (BaseComponent relComp : relComps) {
