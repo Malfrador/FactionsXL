@@ -820,6 +820,14 @@ public class Faction extends LegalEntity {
         config.set("mapLineColor", mapLineColor);
         config.set("creationDate", creationDate);
         config.set("type", type.toString());
+        if (!active) {
+            try {
+                config.save(file);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            return;
+        }
         config.set("home", home);
         config.set("capital", capital.getId());
         config.set("admin", admin.getUniqueId().toString());

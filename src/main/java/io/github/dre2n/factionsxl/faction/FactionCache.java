@@ -179,10 +179,8 @@ public class FactionCache {
         }
         union.mods = new HashSet<>(faction1.mods);
         union.mods.addAll(faction2.mods);
-        System.out.println(union.mods);
         union.members = new HashSet<>(faction1.members);
         union.members.addAll(faction2.members);
-        System.out.println(union.members);
         union.invited = new HashSet<>(faction1.invited);
         union.invited.addAll(faction2.invited);
         for (Entry<Faction, Relation> entry : faction1.relations.entrySet()) {
