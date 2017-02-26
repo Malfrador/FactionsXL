@@ -203,9 +203,10 @@ public class FPlayer {
      * the player's prefix as specified in the language file
      */
     public String getPrefix() {
-        if (getFaction().getAdmin().getUniqueId().equals(uuid)) {
+        Faction faction = getFaction();
+        if (faction != null && faction.getAdmin().getUniqueId().equals(uuid)) {
             return FMessage.CHAT_PREFIX_ADMIN.getMessage();
-        } else if (isMod()) {
+        } else if (faction != null && isMod(faction)) {
             return FMessage.CHAT_PREFIX_MOD.getMessage();
         } else {
             return FMessage.CHAT_PREFIX_MEMBER.getMessage();
