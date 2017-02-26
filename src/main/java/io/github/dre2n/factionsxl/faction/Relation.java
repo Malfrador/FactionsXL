@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
@@ -214,7 +215,7 @@ public enum Relation {
             TextComponent deny = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
             deny.setClickEvent(onClickDeny);
 
-            object.sendMessage(FMessage.RELATION_WISH.getMessage(), object, relation.getName());// TODO getFormatted()
+            object.sendMessage(FMessage.RELATION_WISH.getMessage(), subject, relation.getName());// TODO getFormatted()
             for (Player player : object.getOnlineMods()) {
                 player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
             }
@@ -227,16 +228,21 @@ public enum Relation {
          * Applies the requested relation to the factions
          */
         public void confirm() {
+            if (relation == REAL_UNION) {
+                FactionsXL.getInstance().getFactionCache().formRealUnion(subject, object);
+                ParsingUtil.broadcastMessage(FMessage.RELATION_UNITED.getMessage(), subject, object);
+                return;
+            }
             subject.getRelations().put(object, relation);
             if (relation != LORD && relation != VASSAL) {
                 object.getRelations().put(subject, relation);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, relation.getName());
             } else if (relation == VASSAL) {
                 object.getRelations().put(subject, LORD);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
+                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), subject, object);
             } else if (relation == LORD) {
                 object.getRelations().put(subject, VASSAL);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), subject, object);
+                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
             }
         }
 

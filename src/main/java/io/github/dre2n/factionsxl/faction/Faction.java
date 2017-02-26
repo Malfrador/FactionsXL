@@ -703,14 +703,37 @@ public class Faction extends LegalEntity {
      * Deactivates the faction.
      */
     public void disband() {
+        disband(true);
+    }
+
+    /**
+     * Deactivates the faction.
+     *
+     * @param unclaim
+     * if the land owner of the land of this faction shall be set to null.
+     */
+    public void disband(boolean unclaim) {
         active = false;
-        for (Region region : regions) {
-            region.setOwner(null);
+        open = false;
+        home = null;
+        capital = null;
+        if (unclaim) {
+            for (Region region : regions) {
+                region.setOwner(null);
+            }
         }
         regions.clear();
+        admin = null;
         mods.clear();
         members.clear();
+        invited.clear();
         chunks.clear();
+        relations.clear();
+        for (Faction faction : plugin.getFactionCache().getActive()) {
+            faction.relations.remove(this);
+        }
+        ideaGroups.clear();
+        ideas.clear();
     }
 
     /* Serialization */

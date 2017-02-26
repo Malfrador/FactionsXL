@@ -59,6 +59,7 @@ public class FCommandCache extends BRCommands {
     public static RelationAllyCommand RELATION_ALLY = new RelationAllyCommand();
     public static RelationOathCommand RELATION_OATH = new RelationOathCommand();
     public static RelationNeutralCommand RELATION_NEUTRAL = new RelationNeutralCommand();
+    public static RelationUniteCommand RELATION_UNITE = new RelationUniteCommand();
     public static RelationVassalizeCommand RELATION_VASSALIZE = new RelationVassalizeCommand();
     public static ReloadCommand RELOAD = new ReloadCommand();
     public static ScoreboardCommand SCOREBOARD = new ScoreboardCommand();
@@ -104,6 +105,7 @@ public class FCommandCache extends BRCommands {
                 RELATION_ALLY,
                 RELATION_OATH,
                 RELATION_NEUTRAL,
+                RELATION_UNITE,
                 RELATION_VASSALIZE,
                 RELOAD,
                 SCOREBOARD,

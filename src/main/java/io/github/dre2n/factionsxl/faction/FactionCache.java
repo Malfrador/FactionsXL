@@ -19,11 +19,14 @@ package io.github.dre2n.factionsxl.faction;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
+import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -69,8 +72,9 @@ public class FactionCache {
      * the creator of the faction
      * @param name
      * the name of the faction
+     * @param checkPersonalUnions
      */
-    public Faction create(OfflinePlayer player, Location home, String name) {
+    public Faction create(OfflinePlayer player, Location home, String name, boolean checkPersonalUnions) {
         int id = generateId();
         File file = new File(FactionsXL.FACTIONS, id + ".yml");
 
@@ -96,9 +100,22 @@ public class FactionCache {
         board.save(Board.FILE);
         faction.save();
         faction.load();
+        entities.add(faction);
         factions.add(faction);
-        faction.checkForPersonalUnions();
+        if (checkPersonalUnions) {
+            faction.checkForPersonalUnions();
+        }
         return faction;
+    }
+
+    /**
+     * @param player
+     * the creator of the faction
+     * @param name
+     * the name of the faction
+     */
+    public Faction create(OfflinePlayer player, Location home, String name) {
+        return create(player, home, name, true);
     }
 
     /**
@@ -109,6 +126,86 @@ public class FactionCache {
      */
     public Faction create(Player player, String name) {
         return create(player, player.getLocation(), name);
+    }
+
+    /**
+     * Merges two factions into a new one.
+     *
+     * @param faction1
+     * the first faction
+     * @param faction2
+     * the second faction
+     * @return
+     * the real union
+     */
+    public Faction formRealUnion(Faction faction1, Faction faction2) {
+        Faction union = create(faction1.admin, faction1.home, faction1.name + "-" + faction2.name, false);
+        faction1.setActive(false);
+        faction2.setActive(false);
+
+        union.desc = faction1.desc;
+        union.anthem = faction1.anthem;
+        union.banner = faction1.banner;
+        union.bannerColor = faction2.bannerColor;
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            union.account.setBalance(faction1.account.getBalance() + faction2.account.getBalance());
+            faction1.account.setBalance(0);
+            faction2.account.setBalance(0);
+        }
+        union.mapFillColor = faction1.mapFillColor;
+        union.mapLineColor = faction2.mapLineColor;
+        union.type = faction1.type;
+        union.open = faction1.open;
+        union.prestige = faction1.prestige + faction2.prestige;
+        union.stability = (byte) ((faction1.stability + faction2.stability) / 2);
+        union.exhaustion = faction1.exhaustion + faction2.exhaustion;
+        union.manpowerModifier = faction1.manpowerModifier + faction2.manpowerModifier; // Double ideas?
+        union.capital = faction1.capital;
+        union.chunks = new HashSet<>(faction1.chunks);
+        union.chunks.addAll(faction2.chunks);
+        union.regions = new HashSet<>(faction1.regions);
+        union.regions.addAll(faction2.regions);
+        for (Region region : union.regions) {
+            region.setOwner(union);
+            Date coreDate = null;
+            for (Entry<Faction, Date> entry : region.getCoreFactions().entrySet()) {
+                if (entry.getKey() == faction1 || entry.getKey() == faction2) {
+                    coreDate = entry.getValue();
+                }
+            }
+            if (coreDate != null) {
+                region.getCoreFactions().put(union, coreDate);
+            }
+        }
+        union.mods = new HashSet<>(faction1.mods);
+        union.mods.addAll(faction2.mods);
+        System.out.println(union.mods);
+        union.members = new HashSet<>(faction1.members);
+        union.members.addAll(faction2.members);
+        System.out.println(union.members);
+        union.invited = new HashSet<>(faction1.invited);
+        union.invited.addAll(faction2.invited);
+        for (Entry<Faction, Relation> entry : faction1.relations.entrySet()) {
+            if (entry.getValue() == Relation.VASSAL) {
+                union.relations.put(entry.getKey(), entry.getValue());
+                entry.getKey().relations.remove(faction1);
+                entry.getKey().relations.put(union, Relation.LORD);
+            }
+        }
+        for (Entry<Faction, Relation> entry : faction2.relations.entrySet()) {
+            if (entry.getValue() == Relation.VASSAL) {
+                union.relations.put(entry.getKey(), entry.getValue());
+                entry.getKey().relations.remove(faction2);
+                entry.getKey().relations.put(union, Relation.LORD);
+            }
+        }
+        // Ideas? Trade?
+
+        faction1.disband(false);
+        faction2.disband(false);
+
+        union.checkForPersonalUnions();
+        return union;
     }
 
     /* Getters and setters */

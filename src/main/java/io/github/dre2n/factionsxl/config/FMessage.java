@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.config;
 import io.github.dre2n.commons.config.Messages;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.faction.Relation;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -174,6 +175,7 @@ public enum FMessage implements Messages {
     HELP_CMD_TRADE_OFFER("help.cmd.tradeOffer", "/f tradeOffer ([faction]) - Creates a trade offer."),
     HELP_CMD_UNCLAIM("help.cmd.unclaim", "/f unclaim - Unclaims a territory."),
     HELP_CMD_UNINVITE("help.cmd.uninvite", "/f uninvite ([faction]) [player] - Removes a player's invitation."),
+    HELP_CMD_UNITE("help.cmd.unite", "/f unite ([faction]) [target] - Forms a real union with another faction."),
     HELP_CMD_VASSALIZE("help.cmd.vassalize", "/f vassalize ([faction]) [target] - Vassalizes the target faction."),
     IDEA_GROUP_CENTRALIZATION("idea.group.centralization", "Centralization"),
     IDEA_GROUP_DIPLOMACY("idea.group.diplomacy", "Diplomacy"),
@@ -237,6 +239,7 @@ public enum FMessage implements Messages {
     RELATION_PERSONAL_UNION_DESC("relation.personalUnionDesc", "Two factions are ruled by the same monarch."),
     RELATION_REAL_UNION("relation.realUnion", "Real Union"),
     RELATION_REAL_UNION_DESC("relation.realUnionDesc", "An advanced personal union. The factions can be regarded as one."),
+    RELATION_UNITED("relation.united", "&aThe factions &v1 &aand &v2 &aformed a &2Real Union&a!"),
     RELATION_VASSAL("relation.vassal", "Vassal"),
     RELATION_VASSAL_DESC("relation.vassalDesc", "This faction vowed to serve its foreign lord."),
     RELATION_VASSALIZED("relation.vassalized", "&aThe faction &v1 &avassalized &v2&a."),
