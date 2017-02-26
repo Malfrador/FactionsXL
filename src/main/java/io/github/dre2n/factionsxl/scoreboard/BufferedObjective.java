@@ -17,7 +17,6 @@
 package io.github.dre2n.factionsxl.scoreboard;
 
 import com.google.common.base.Splitter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,8 +36,7 @@ import org.bukkit.scoreboard.Team;
  */
 public class BufferedObjective {
 
-    private static final Method addEntryMethod;
-    private static final int MAX_LINE_LENGTH;
+    private static final int MAX_LINE_LENGTH = 48;
 
     private final Scoreboard scoreboard;
     private final String baseName;
@@ -53,27 +51,6 @@ public class BufferedObjective {
     private boolean requiresUpdate = false;
 
     private final Map<Integer, String> contents = new HashMap<>();
-
-    static {
-        // Check for long line support.
-        // We require use of Spigot's `addEntry(String)` method on
-        // Teams, as adding OfflinePlayers to a team is far too slow.
-
-        Method addEntryMethodLookup = null;
-        try {
-            addEntryMethodLookup = Team.class.getMethod("addEntry", String.class);
-
-        } catch (NoSuchMethodException ignored) {
-        }
-
-        addEntryMethod = addEntryMethodLookup;
-
-        if (addEntryMethod != null) {
-            MAX_LINE_LENGTH = 48;
-        } else {
-            MAX_LINE_LENGTH = 16;
-        }
-    }
 
     public BufferedObjective(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
@@ -132,7 +109,6 @@ public class BufferedObjective {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void flip() {
         if (!requiresUpdate) {
             return;
@@ -157,10 +133,7 @@ public class BufferedObjective {
                     team.setSuffix(split.next());
                 }
 
-                try {
-                    addEntryMethod.invoke(team, name);
-                } catch (ReflectiveOperationException ignored) {
-                }
+                team.addEntry(name);
                 buffer.getScore(name).setScore(entry.getKey());
 
             } else {

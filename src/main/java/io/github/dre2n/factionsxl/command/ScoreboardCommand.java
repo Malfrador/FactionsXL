@@ -22,6 +22,7 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
+import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,8 @@ import org.bukkit.entity.Player;
  * @author Daniel Saukel
  */
 public class ScoreboardCommand extends BRCommand {
+
+    FactionsXL plugin = FactionsXL.getInstance();
 
     public ScoreboardCommand() {
         setCommand("scoreboard");
@@ -42,8 +45,15 @@ public class ScoreboardCommand extends BRCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        FPlayer fPlayer = FactionsXL.getInstance().getFPlayerCache().getByPlayer((Player) sender);
+        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer((Player) sender);
         FScoreboard board = FScoreboard.get(fPlayer);
+
+        if (board == null) {
+            FScoreboard.init(fPlayer);
+            board = FScoreboard.get(fPlayer);
+            board.setDefaultSidebar(new FDefaultSidebar(), plugin.getFConfig().getScoreboardUpdateInterval());
+            board.setSidebarVisibility(fPlayer.isScoreboardEnabled());
+        }
 
         board.setSidebarVisibility(!fPlayer.isScoreboardEnabled());
         fPlayer.setScoreboardEnabled(!fPlayer.isScoreboardEnabled());

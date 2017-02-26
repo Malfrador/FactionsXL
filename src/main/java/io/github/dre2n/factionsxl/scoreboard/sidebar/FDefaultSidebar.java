@@ -17,9 +17,9 @@
 package io.github.dre2n.factionsxl.scoreboard.sidebar;
 
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FSidebarProvider;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -30,38 +30,32 @@ import java.util.ListIterator;
  */
 public class FDefaultSidebar extends FSidebarProvider {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = FactionsXL.getInstance().getFConfig();
 
     @Override
     public String getTitle(FPlayer fplayer) {
-        return replaceTags(fplayer, plugin.getFConfig().getDefaultScoreboardTitle());
+        return replaceTags(fplayer, config.getDefaultScoreboardTitle());
     }
 
     @Override
     public List<String> getLines(FPlayer fplayer) {
         if (fplayer.hasFaction()) {
-            return getOutput(fplayer, "scoreboard.default");
+            return getOutput(fplayer, config.getScoreboardDefault());
 
-        } else if (plugin.getFConfig().isScoreboardFactionlessEnabled()) {
-            return getOutput(fplayer, "scoreboard.factionless");
+        } else if (config.isScoreboardFactionlessEnabled()) {
+            return getOutput(fplayer, config.getScoreboardFactionless());
         }
 
-        return getOutput(fplayer, "scoreboard.default"); // no faction, factionless-board disabled
+        return getOutput(fplayer, config.getScoreboardDefault()); // no faction, factionless-board disabled
     }
 
-    public List<String> getOutput(FPlayer fplayer, String list) {
-        List<String> lines = plugin.getConfig().getStringList(list);
-
-        if (lines == null || lines.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        ListIterator<String> it = lines.listIterator();
+    public List<String> getOutput(FPlayer fplayer, List<String> content) {
+        ListIterator<String> it = content.listIterator();
         while (it.hasNext()) {
             it.set(replaceTags(fplayer, it.next()));
         }
 
-        return lines;
+        return content;
     }
 
 }

@@ -87,9 +87,9 @@ public class FTeamWrapper {
         }
 
         FTeamWrapper wrapper = wrappers.get(faction);
-        Set<FPlayer> factionMembers = faction.getFPlayers();
+        Set<OfflinePlayer> factionMembers = faction.getMembers();
 
-        if (wrapper != null && plugin.getFactionCache().getById(faction.getId()) == null) {
+        if (wrapper != null && !faction.isActive()) {
             // Faction was disbanded
             wrapper.unregister();
             wrappers.remove(faction);
@@ -102,19 +102,19 @@ public class FTeamWrapper {
         }
 
         for (OfflinePlayer player : wrapper.getPlayers()) {
-            if (!player.isOnline() || !factionMembers.contains(plugin.getFPlayerCache().getByPlayer(player))) {
+            if (!player.isOnline() || !factionMembers.contains(player)) {
                 // Player is offline or no longer in faction
                 wrapper.removePlayer(player);
             }
         }
 
-        for (FPlayer fmember : factionMembers) {
+        for (OfflinePlayer fmember : factionMembers) {
             if (!fmember.isOnline()) {
                 continue;
             }
 
             // Scoreboard might not have player; add him/her
-            wrapper.addPlayer(fmember.getPlayer());
+            wrapper.addPlayer(fmember);
         }
 
         wrapper.updatePrefixes();
@@ -167,7 +167,7 @@ public class FTeamWrapper {
         teams.put(fboard, team);
 
         for (OfflinePlayer player : getPlayers()) {
-            team.addPlayer(player);
+            team.addEntry(player.getName());
         }
 
         updatePrefix(fboard);
@@ -207,7 +207,7 @@ public class FTeamWrapper {
     private void addPlayer(OfflinePlayer player) {
         if (members.add(player)) {
             for (Team team : teams.values()) {
-                team.addPlayer(player);
+                team.addEntry(player.getName());
             }
         }
     }
@@ -215,7 +215,7 @@ public class FTeamWrapper {
     private void removePlayer(OfflinePlayer player) {
         if (members.remove(player)) {
             for (Team team : teams.values()) {
-                team.removePlayer(player);
+                team.removeEntry(player.getName());
             }
         }
     }

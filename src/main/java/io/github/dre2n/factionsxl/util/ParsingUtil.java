@@ -27,6 +27,7 @@ import io.github.dre2n.factionsxl.player.FPlayer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -40,12 +41,23 @@ import org.bukkit.entity.Player;
 public enum ParsingUtil {
 
     FACTION_ADMIN("%faction_admin%"),
+    FACTION_BALANCE("%faction_balance%"),//NEW
+    FACTION_CAPITAL("%faction_capital%"),//NEW
+    FACTION_GOVERNMENT_TYPE("%faction_gov_type%"),//NEW
     FACTION_MEMBER_LIST("%faction_member_list%"),
     FACTION_MOD_LIST("%faction_mod_list%"),
-    FACTION_TAG("%faction_tag%"),
+    FACTION_ONLINE_COUNT("%faction_online%"),//NEW
+    FACTION_POWER("%faction_power%"), //NEW
     FACTION_PLAYER_COUNT("%faction_player_count%"),
     FACTION_PLAYER_LIST("%faction_player_list%"),
+    FACTION_PROVINCE_COUNT("%faction_province_count%"),//NEW
+    FACTION_STABILITY("%faction_stability%"),//NEW
+    FACTION_TAG("%faction_tag%"),
+    FEDERATION_TAG("%federation_tag%"),//NEW
+    PLAYER_BALANCE("%player_balance%"),
+    PLAYER_DYNASTY("%player_dynasty%"), //NEW
     PLAYER_NAME("%player_name%"),
+    PLAYER_POWER("%player_power%"), //NEW
     PLAYER_PREFIX("%player_prefix%"),
     PLAYER_TITLE("%player_title%"),
     RELATION("%relation%"),
@@ -123,12 +135,65 @@ public enum ParsingUtil {
      * the FPlayer to compare to the standpoint faction
      */
     public static String replaceRelationPlaceholders(String string, Faction standpoint, FPlayer object) {
-        string = string.replaceAll(RELATION.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
+        string = string.replaceAll(RELATION.getPlaceholder(), standpoint.getRelation(object).getName());
         string = string.replaceAll(RELATION_COLOR.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
         if (object.hasFaction()) {
             string = string.replaceAll(PLAYER_PREFIX.getPlaceholder(), object.getPrefix());
             string = string.replaceAll(PLAYER_TITLE.getPlaceholder(), object.getTitle());
         }
+        return string;
+    }
+
+    /**
+     * Replace the scoreboard placeholders in a String automatically.
+     *
+     * @param fPlayer
+     * the scoreboard owner
+     * @param string
+     * the String that contains the placeholders
+     */
+    public static String replaceScoreboardPlaceholders(FPlayer fPlayer, String string) {
+        FactionsXL plugin = FactionsXL.getInstance();
+        Economy econ = plugin.getEconomyProvider();
+
+        Faction faction = fPlayer.getFaction();
+        string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction != null ? faction.getName() : "None");
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            string = string.replaceAll(PLAYER_BALANCE.getPlaceholder(), econ.format(econ.getBalance(fPlayer.getPlayer())));
+        }
+        string = string.replaceAll(PLAYER_DYNASTY.getPlaceholder(), fPlayer.getDynasty() != null ? fPlayer.getDynasty().getName() : "None");
+        string = string.replaceAll(PLAYER_NAME.getPlaceholder(), fPlayer.getName());
+        string = string.replaceAll(PLAYER_PREFIX.getPlaceholder(), fPlayer.getPrefix());
+        string = string.replaceAll(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
+
+        string = ChatColor.translateAlternateColorCodes('&', string);
+        return string;
+    }
+
+    /**
+     * Replace the info scoreboard placeholders in a String automatically.
+     *
+     * @param faction
+     * the faction connected to the info board
+     * @param fPlayer
+     * the scoreboard owner
+     * @param string
+     * the String that contains the placeholders
+     */
+    public static String replaceScoreboardPlaceholders(Faction faction, FPlayer fPlayer, String string) {
+        string = replaceScoreboardPlaceholders(fPlayer, string);
+        string = string.replaceAll(FACTION_ADMIN.getPlaceholder(), faction.getAdmin().getName());
+        if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
+            string = string.replaceAll(FACTION_BALANCE.getPlaceholder(), faction.getAccount().getFormatted());
+        }
+        string = string.replaceAll(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
+        string = string.replaceAll(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
+        string = string.replaceAll(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
+        //string = string.replaceAll(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
+        string = string.replaceAll(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
+        string = string.replaceAll(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
+        string = string.replaceAll(RELATION.getPlaceholder(), fPlayer.getRelation(faction).getName());
+        string = string.replaceAll(RELATION_COLOR.getPlaceholder(), fPlayer.getRelation(faction).getColor().toString());
         return string;
     }
 

@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.faction;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -244,6 +245,8 @@ public enum Relation {
                 object.getRelations().put(subject, VASSAL);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
             }
+            FTeamWrapper.updatePrefixes(subject);
+            FTeamWrapper.updatePrefixes(object);
         }
 
     }

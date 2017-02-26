@@ -32,6 +32,7 @@ import io.github.dre2n.factionsxl.idea.IdeaMenu;
 import io.github.dre2n.factionsxl.player.Dynasty;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.population.PopulationMenu;
+import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
@@ -107,6 +108,12 @@ public class Faction extends LegalEntity {
     }
 
     /* Getters and setters */
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        FTeamWrapper.updatePrefixes(this);
+    }
+
     /**
      * @return
      * if the faction is active or disbanded
@@ -734,6 +741,7 @@ public class Faction extends LegalEntity {
         }
         ideaGroups.clear();
         ideas.clear();
+        FTeamWrapper.applyUpdates(this);
     }
 
     /* Serialization */

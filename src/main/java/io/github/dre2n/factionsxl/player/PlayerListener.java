@@ -23,6 +23,7 @@ import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
+import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -90,12 +91,15 @@ public class PlayerListener implements Listener {
             Faction fromFaction = fromRegion != null ? fromRegion.getOwner() : null;
             Faction toFaction = toRegion != null ? toRegion.getOwner() : null;
             if (fromFaction != toFaction) {
-                MessageUtil.sendCenteredMessage(player, ParsingUtil.getFactionName(player, toFaction));
                 stopSound(player, fromFaction);
                 if (toFaction != null && toFaction.getDescription() != null) {
+                    MessageUtil.sendCenteredMessage(player, ParsingUtil.getFactionName(player, toFaction));
                     MessageUtil.sendCenteredMessage(player, toFaction.getDescription());
                     stopSound(player, toFaction);
                     player.playSound(player.getLocation(), toFaction.getAnthem(), 1, 1);
+                    if (fPlayers.getByPlayer(player).isScoreboardEnabled()) {
+                        FScoreboard.get(player).setTemporarySidebar(new FInfoSidebar(toFaction));
+                    }
                 }
             }
         }

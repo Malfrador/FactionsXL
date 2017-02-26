@@ -21,8 +21,10 @@ import io.github.dre2n.commons.config.BRConfig;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,8 @@ public class FConfig extends BRConfig {
     public static final long DAY = HOUR * 24;
     public static final long WEEK = DAY * 7;
     public static final long MONTH = DAY * 30;
+
+    public static final String SCOREBOARD_VALUE_PREFIX = "&7 ";
 
     private String language = "english";
     private double dayLength = 24;
@@ -68,8 +72,32 @@ public class FConfig extends BRConfig {
     private boolean defaultScoreboardPrefixes = true;
     private boolean scoreboardEnabledByDefault = true;
     private boolean scoreboardFactionlessEnabled = true;
-    private String defaultScoreboardTitle = "TEST";
-    private List<String> scoreboardFactionInfo = new ArrayList<>();
+    private String defaultScoreboardTitle = "&a" + ParsingUtil.PLAYER_NAME;
+    private List<String> scoreboardDefault = new ArrayList<>(Arrays.asList(
+            "&6Your Faction",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_TAG,
+            "&3Your Dynasty",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_DYNASTY,
+            "&6Your Power",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_POWER,
+            "&3Balance",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_BALANCE
+    ));
+    private List<String> scoreboardFactionInfo = new ArrayList<>(Arrays.asList(
+            "&6Government Type",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_GOVERNMENT_TYPE,
+            "&3Federation",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FEDERATION_TAG,
+            "&6Leader",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_ADMIN,
+            "&3Members",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_ONLINE_COUNT + "/" + ParsingUtil.FACTION_PLAYER_COUNT,
+            "&6Capital",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_CAPITAL,
+            "&3Stability / Power / Provinces",
+            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_STABILITY + "/" + ParsingUtil.FACTION_POWER + "/" + ParsingUtil.FACTION_PROVINCE_COUNT
+    ));
+    private List<String> scoreboardFactionless = new ArrayList<>(Arrays.asList("Join a faction!"));
 
     // Dynmap
     private boolean dynmap = true;
@@ -263,8 +291,24 @@ public class FConfig extends BRConfig {
      * @return
      * the information the scoreboard shows
      */
+    public List<String> getScoreboardDefault() {
+        return scoreboardDefault;
+    }
+
+    /**
+     * @return
+     * the information the scoreboard shows
+     */
     public List<String> getScoreboardFactionInfo() {
         return scoreboardFactionInfo;
+    }
+
+    /**
+     * @return
+     * the information the scoreboard shows
+     */
+    public List<String> getScoreboardFactionless() {
+        return scoreboardFactionless;
     }
 
     /* Actions */
@@ -338,8 +382,16 @@ public class FConfig extends BRConfig {
             config.set("scoreboard.defaultTitle", defaultScoreboardTitle);
         }
 
+        if (!config.contains("scoreboard.default")) {
+            config.set("scoreboard.default", scoreboardDefault);
+        }
+
         if (!config.contains("scoreboard.factionInfo")) {
             config.set("scoreboard.factionInfo", scoreboardFactionInfo);
+        }
+
+        if (!config.contains("scoreboard.factionless")) {
+            config.set("scoreboard.factionless", scoreboardFactionless);
         }
 
         save();
@@ -415,8 +467,16 @@ public class FConfig extends BRConfig {
             defaultScoreboardTitle = config.getString("scoreboard.defaultTitle");
         }
 
+        if (config.contains("scoreboard.default")) {
+            scoreboardDefault = config.getStringList("scoreboard.default");
+        }
+
         if (config.contains("scoreboard.factionInfo")) {
             scoreboardFactionInfo = config.getStringList("scoreboard.factionInfo");
+        }
+
+        if (config.contains("scoreboard.factionless")) {
+            scoreboardFactionless = config.getStringList("scoreboard.factionless");
         }
     }
 
