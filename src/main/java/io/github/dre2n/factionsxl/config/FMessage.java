@@ -19,7 +19,6 @@ package io.github.dre2n.factionsxl.config;
 import io.github.dre2n.commons.config.Messages;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.faction.Relation;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -213,6 +212,7 @@ public enum FMessage implements Messages {
     PROTECTION_CANNOT_BUILD_WILDERNESS("protection.cannotBuildWilderness", "&4You may not build in the wilderness."),
     PROTECTION_CANNOT_DESTROY_FACTION("protection.cannotDestroyFaction", "&4You may not destroy the territory of &v1&4."),
     PROTECTION_CANNOT_DESTROY_WILDERNESS("protection.cannotDestroyFaction", "&4You may not destroy the wilderness."),
+    PROTECTION_CANNOT_REGISTER_FACTION("protection.cannotRegisterFaction", "&4You may not register LWC protections in the territory of &v1&4."),
     REGION_BARREN("region.barren", "Barren"),
     REGION_CITY("region.city", "City"),
     REGION_DESERT("region.desert", "Desert"),

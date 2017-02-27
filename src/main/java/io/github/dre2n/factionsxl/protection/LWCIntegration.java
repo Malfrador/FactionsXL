@@ -20,9 +20,14 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.scripting.JavaModule;
 import com.griefcraft.scripting.event.LWCProtectionDestroyEvent;
 import com.griefcraft.scripting.event.LWCProtectionInteractEvent;
+import com.griefcraft.scripting.event.LWCProtectionRegisterEvent;
+import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -50,18 +55,27 @@ public class LWCIntegration extends JavaModule {
         }
     }
 
+    @Override
+    public void onRegisterProtection(LWCProtectionRegisterEvent event) {
+        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(event.getPlayer());
+        Region region = plugin.getBoard().getByLocation(event.getBlock().getLocation());
+        if (region == null || region.isNeutral()) {
+            return;
+        }
+        Faction faction = region.getOwner();
+        if (!faction.getRelation(fPlayer).canBuild()) {
+            event.setCancelled(true);
+            ParsingUtil.sendMessage(event.getPlayer(), FMessage.PROTECTION_CANNOT_REGISTER_FACTION.getMessage(), faction);
+        }
+    }
+
     public boolean canBypass(Player player, Block block) {
         Region region = plugin.getBoard().getByLocation(block.getLocation());
         if (region == null || region.isNeutral()) {
             return false;
         }
-
         Faction faction = region.getOwner();
-        if (!faction.getAdmin().equals(player)) {
-            return false;
-        }
-
-        return true;
+        return faction.getAdmin().getPlayer().equals(player);
     }
 
 }

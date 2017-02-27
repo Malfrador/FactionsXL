@@ -38,6 +38,7 @@ import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.player.PlayerListener;
 import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
+import io.github.dre2n.factionsxl.protection.LWCIntegration;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.util.PageGUICache;
 import java.io.File;
@@ -444,6 +445,7 @@ public class FactionsXL extends BRPlugin {
         if (manager.isPluginEnabled("LWC")) {
             lwc = LWC.getInstance();
             PluginDescriptionFile desc = lwc.getPlugin().getDescription();
+            lwc.getModuleLoader().registerModule(this, new LWCIntegration());
             MessageUtil.log(this, "Successfully hooked into " + desc.getName() + " v" + desc.getVersion() + ".");
         } else {
             MessageUtil.log(this, "&4Could not find LWC.");
