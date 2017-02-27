@@ -58,7 +58,7 @@ public class EntityProtectionListener implements Listener {
         }
 
         Entity damaged = event.getEntity();
-        boolean living = event instanceof LivingEntity;
+        boolean living = damaged instanceof LivingEntity;
         Region region = board.getByLocation(damaged.getLocation());
         if (region == null || region.isNeutral()) {
             return;
