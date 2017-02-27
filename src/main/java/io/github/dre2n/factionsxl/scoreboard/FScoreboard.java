@@ -71,11 +71,14 @@ public class FScoreboard {
     }
 
     public static FScoreboard get(FPlayer fplayer) {
+        if (fscoreboards.get(fplayer) == null) {
+            init(fplayer);
+        }
         return fscoreboards.get(fplayer);
     }
 
     public static FScoreboard get(Player player) {
-        return fscoreboards.get(FactionsXL.getInstance().getFPlayerCache().getByPlayer(player));
+        return get(FactionsXL.getInstance().getFPlayerCache().getByPlayer(player));
     }
 
     private FScoreboard(FPlayer fplayer) {
