@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl;
 
 import com.griefcraft.lwc.LWC;
 import io.github.dre2n.commons.compatibility.Internals;
+import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.commons.config.MessageConfig;
 import io.github.dre2n.commons.javaplugin.BRPlugin;
 import io.github.dre2n.commons.javaplugin.BRPluginSettings;
@@ -93,14 +94,14 @@ public class FactionsXL extends BRPlugin {
          * ##########################
          */
 
-        settings = new BRPluginSettings(true, true, true, false, true, Internals.v1_11_R1);
+        settings = new BRPluginSettings(true, true, true, false, true, Internals.INDEPENDENT);
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
-        if (!compat.isSpigot() || compat.getInternals() != Internals.v1_11_R1) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.11.2 to work. It is not compatible with CraftBukkit and other versions.");
+        if (!compat.isSpigot() || !Version.andHigher(Version.MC1_9).contains(compat.getVersion())) {
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.9 or higher to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }

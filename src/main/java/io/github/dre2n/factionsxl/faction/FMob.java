@@ -16,6 +16,8 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import io.github.dre2n.commons.compatibility.CompatibilityHandler;
+import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.factionsxl.FactionsXL;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_TRADER;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_VILLAGER;
@@ -60,7 +62,11 @@ public class FMob implements Listener {
      */
     public static Villager spawnVillager(Location location) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
-        villager.setProfession(Profession.NITWIT);
+        if (Version.andHigher(Version.MC1_11).contains(CompatibilityHandler.getInstance().getVersion())) {
+            villager.setProfession(Profession.NITWIT);
+        } else {
+            villager.setProfession(Profession.FARMER);
+        }
         villager.setCustomName(MOB_VILLAGER.getMessage());
         villager.setCustomNameVisible(true);
         return villager;

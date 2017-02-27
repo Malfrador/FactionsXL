@@ -16,6 +16,8 @@
  */
 package io.github.dre2n.factionsxl.player;
 
+import io.github.dre2n.commons.compatibility.CompatibilityHandler;
+import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
@@ -25,6 +27,7 @@ import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -109,7 +112,11 @@ public class PlayerListener implements Listener {
         if (player == null || faction == null || faction.getAnthem() == null) {
             return;
         }
-        player.stopSound(faction.getAnthem());
+        if (Version.andHigher(Version.MC1_10).contains(CompatibilityHandler.getInstance().getVersion())) {
+            player.stopSound(faction.getAnthem());
+        } else {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + player.getName() + " master " + faction.getAnthem());
+        }
     }
 
 }
