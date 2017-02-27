@@ -58,7 +58,7 @@ public class ClaimCommand extends BRCommand {
         }
 
         Region region = plugin.getBoard().getByLocation(player.getLocation());
-        if (!region.isNeutral()) {
+        if (region == null || !region.isNeutral()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
             return;
         }
