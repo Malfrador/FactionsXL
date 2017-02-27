@@ -20,7 +20,6 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +60,7 @@ public class TradeMenu implements Listener {
         if (!plugin.getFConfig().isEconomyEnabled()) {
             gui = new PageGUI(FMessage.ERROR_ECON_DISABLED.getMessage());
             for (int i = 0; i <= 44; i++) {
-                gui.getPages().get(0).setItem(i, ItemUtil.DISABLED);
+                gui.getPages().get(0).setItem(i, PageGUI.DISABLED);
             }
         } else {
             gui = new PageGUI(FMessage.TRADE_TITLE.getMessage(faction.getName()));
@@ -120,7 +119,7 @@ public class TradeMenu implements Listener {
             return;
         }
         ItemStack button = inventory.getItem(event.getSlot());
-        if (button == null || button.equals(ItemUtil.DISABLED)) {
+        if (button == null || button.equals(PageGUI.DISABLED)) {
             return;
         }
         if (!faction.isPrivileged(event.getWhoClicked())) {

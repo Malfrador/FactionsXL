@@ -17,7 +17,7 @@
 package io.github.dre2n.factionsxl.economy;
 
 import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.PageGUI;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -80,7 +80,7 @@ public enum Resource {
     SALMON(FMessage.RESOURCE_SALMON, new ItemStack(Material.RAW_FISH, 1, (short) 1), 10),
     INK(FMessage.RESOURCE_INK, new ItemStack(Material.INK_SACK), 17.5),
     SALT(FMessage.RESOURCE_SALT, new ItemStack(Material.SUGAR), 40),
-    WATER(FMessage.RESOURCE_WATER, ItemUtil.GUI_WATER_BOTTLE, 0.1),
+    WATER(FMessage.RESOURCE_WATER, PageGUI.GUI_WATER_BOTTLE.clone(), 0.1),
     // Seabed
     CLAY(FMessage.RESOURCE_CLAY, new ItemStack(Material.CLAY_BRICK), 15),
     PRISMARINE(FMessage.RESOURCE_PRISMARINE, new ItemStack(Material.PRISMARINE_SHARD), 150),

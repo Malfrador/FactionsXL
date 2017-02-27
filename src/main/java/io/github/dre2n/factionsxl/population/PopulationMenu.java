@@ -38,7 +38,7 @@ public class PopulationMenu implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
 
     public static final ItemStack DEMANDS = ItemUtil.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS.getMessage());
-    public static final ItemStack MILITARY = ItemUtil.setDisplayName(ItemUtil.GUI_SWORD, FMessage.POPULATION_MILITARY.getMessage());
+    public static final ItemStack MILITARY = ItemUtil.setDisplayName(PageGUI.GUI_SWORD, FMessage.POPULATION_MILITARY.getMessage());
 
     private Faction faction;
     private Inventory gui;

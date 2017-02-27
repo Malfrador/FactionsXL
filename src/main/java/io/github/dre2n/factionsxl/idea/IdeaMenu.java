@@ -22,7 +22,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.PageGUI;
-import io.github.dre2n.factionsxl.util.ItemUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,7 +64,7 @@ public class IdeaMenu implements Listener {
         for (IdeaGroup group : IdeaGroup.values()) {
             boolean has = faction.getIdeaGroups().contains(group);
             boolean freeSlots = plugin.getFConfig().getMaxIdeaGroups() > faction.getIdeaGroups().size();
-            ItemStack button = has || freeSlots ? group.getIcon().clone() : ItemUtil.DISABLED.clone();
+            ItemStack button = has || freeSlots ? group.getIcon().clone() : PageGUI.DISABLED.clone();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName((has ? ChatColor.GREEN : ChatColor.DARK_RED) + group.getName());
             List<String> lore = new ArrayList<>();
@@ -84,7 +83,7 @@ public class IdeaMenu implements Listener {
         Class handler = group.getHandler();
         int size = (int) (9 * Math.ceil(((double) (handler.getEnumConstants().length + 1) / 9)));
         ideas.put(group, Bukkit.createInventory(null, size, FMessage.IDEA_MENU_IDEAS_TITLE.getMessage(group.getName())));
-        ideas.get(group).setItem(0, ItemUtil.GUI_BACK);
+        ideas.get(group).setItem(0, PageGUI.GUI_BACK);
         for (Object ideaObj : handler.getEnumConstants()) {
             Idea idea = (Idea) ideaObj;
             boolean has = faction.getIdeas().contains(idea);
@@ -170,7 +169,7 @@ public class IdeaMenu implements Listener {
         }
 
         HumanEntity player = event.getWhoClicked();
-        if (button.equals(ItemUtil.GUI_BACK)) {
+        if (button.equals(PageGUI.GUI_BACK)) {
             openGroups(player);
             return;
         } else if (!faction.isPrivileged(player)) {

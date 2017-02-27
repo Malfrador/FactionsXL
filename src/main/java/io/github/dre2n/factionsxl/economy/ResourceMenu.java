@@ -89,7 +89,7 @@ public class ResourceMenu implements Listener {
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         banner.setItemMeta(meta);
-        gui.setItem(0, ItemUtil.GUI_BACK);
+        gui.setItem(0, PageGUI.GUI_BACK);
         gui.setItem(1, banner);
         gui.setItem(2, banner);
         gui.setItem(3, banner);
@@ -136,7 +136,7 @@ public class ResourceMenu implements Listener {
         if (button == null) {
             return;
         }
-        if (button.equals(ItemUtil.GUI_BACK)) {
+        if (button.equals(PageGUI.GUI_BACK)) {
             faction.getTradeMenu().open(player);
         }
     }
