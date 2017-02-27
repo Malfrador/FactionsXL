@@ -93,7 +93,7 @@ public class FMob implements Listener {
      * true if the entity is a villager
      */
     public static boolean isVillager(Entity entity) {
-        return entity.getCustomName().equals(MOB_VILLAGER.getMessage());
+        return MOB_VILLAGER.getMessage().equals(entity.getCustomName());
     }
 
     /**
@@ -103,7 +103,7 @@ public class FMob implements Listener {
      * true if the entity is a trader
      */
     public static boolean isTrader(Entity entity) {
-        return entity.getCustomName().equals(MOB_TRADER.getMessage());
+        return MOB_TRADER.getMessage().equals(entity.getCustomName());
     }
 
     @EventHandler
