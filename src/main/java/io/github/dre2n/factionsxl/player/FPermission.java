@@ -61,7 +61,7 @@ public enum FPermission {
     REGIONS("regions", OP),
     RELATION("relation", TRUE),
     RELOAD("reload", OP),
-    SCOREBOARD("scoreboard", OP),
+    SCOREBOARD("scoreboard", TRUE),
     SET_ANTHEM("set.anthem", TRUE),
     SET_BANNER("set.banner", TRUE),
     SET_CAPITAL("set.capital", TRUE),
