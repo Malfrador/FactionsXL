@@ -30,103 +30,102 @@ public class FCommandCache extends BRCommands {
 
     public static final String LABEL = "factionsxl";
 
-    public static AdminCommand ADMIN = new AdminCommand();
-    public static ChatCommand CHAT = new ChatCommand();
-    public static ClaimCommand CLAIM = new ClaimCommand();
-    public static CreateCommand CREATE = new CreateCommand();
-    public static CreateVassalCommand CREATE_VASSAL = new CreateVassalCommand();
-    public static DescCommand DESC = new DescCommand();
-    public static DisbandCommand DISBAND = new DisbandCommand();
-    public static HelpCommand HELP = new HelpCommand();
-    public static HomeCommand HOME = new HomeCommand();
-    public static IdeaCommand IDEA = new IdeaCommand();
-    public static InviteCommand INVITE = new InviteCommand();
-    public static JoinCommand JOIN = new JoinCommand();
-    public static KickCommand KICK = new KickCommand();
-    public static LeaveCommand LEAVE = new LeaveCommand();
-    public static ListCommand LIST = new ListCommand();
-    public static LongTagCommand LONG_TAG = new LongTagCommand();
-    public static MainCommand MAIN = new MainCommand();
-    public static MobCommand MOB = new MobCommand();
-    public static ModCommand MOD = new ModCommand();
-    public static MoneyCommand MONEY = new MoneyCommand();
-    public static OpenCommand OPEN = new OpenCommand();
-    public static PaydayCommand PAYDAY = new PaydayCommand();
-    public static PowerCommand POWER = new PowerCommand();
-    public static RegionCommand REGION = new RegionCommand();
-    public static RegionsCommand REGIONS = new RegionsCommand();
-    public static RelationCommand RELATION = new RelationCommand();
-    public static RelationAllyCommand RELATION_ALLY = new RelationAllyCommand();
-    public static RelationOathCommand RELATION_OATH = new RelationOathCommand();
-    public static RelationNeutralCommand RELATION_NEUTRAL = new RelationNeutralCommand();
-    public static RelationUniteCommand RELATION_UNITE = new RelationUniteCommand();
-    public static RelationVassalizeCommand RELATION_VASSALIZE = new RelationVassalizeCommand();
-    public static ReloadCommand RELOAD = new ReloadCommand();
-    public static ScoreboardCommand SCOREBOARD = new ScoreboardCommand();
-    public static SetAnthemCommand SET_ANTHEM = new SetAnthemCommand();
-    public static SetBannerCommand SET_BANNER = new SetBannerCommand();
-    public static SetCapitalCommand SET_CAPITAL = new SetCapitalCommand();
-    public static SetColorCommand SET_COLOR = new SetColorCommand();
-    public static SetGovernmentCommand SET_GOVERNMENT = new SetGovernmentCommand();
-    public static SetHomeCommand SET_HOME = new SetHomeCommand();
-    public static ShowCommand SHOW = new ShowCommand();
-    public static StorageCommand STORAGE = new StorageCommand();
-    public static TagCommand TAG = new TagCommand();
-    public static TitleCommand TITLE = new TitleCommand();
-    public static TradeOfferCommand TRADE_OFFER = new TradeOfferCommand();
-    public static UnclaimCommand UNCLAIM = new UnclaimCommand();
-    public static UninviteCommand UNINVITE = new UninviteCommand();
+    public AdminCommand admin = new AdminCommand();
+    public ChatCommand chat = new ChatCommand();
+    public ClaimCommand claim = new ClaimCommand();
+    public CreateCommand create = new CreateCommand();
+    public CreateVassalCommand createVassal = new CreateVassalCommand();
+    public DescCommand desc = new DescCommand();
+    public DisbandCommand disband = new DisbandCommand();
+    public HelpCommand help = new HelpCommand();
+    public HomeCommand home = new HomeCommand();
+    public IdeaCommand idea = new IdeaCommand();
+    public InviteCommand invite = new InviteCommand();
+    public JoinCommand join = new JoinCommand();
+    public KickCommand kick = new KickCommand();
+    public LeaveCommand leave = new LeaveCommand();
+    public ListCommand list = new ListCommand();
+    public LongTagCommand longTag = new LongTagCommand();
+    public MainCommand main = new MainCommand();
+    public MobCommand mob = new MobCommand();
+    public ModCommand mod = new ModCommand();
+    public MoneyCommand money = new MoneyCommand();
+    public OpenCommand open = new OpenCommand();
+    public PaydayCommand payday = new PaydayCommand();
+    public PowerCommand power = new PowerCommand();
+    public RegionCommand region = new RegionCommand();
+    public RegionsCommand regions = new RegionsCommand();
+    public RelationCommand relation = new RelationCommand();
+    public RelationAllyCommand relationAlly = new RelationAllyCommand();
+    public RelationOathCommand relationOath = new RelationOathCommand();
+    public RelationNeutralCommand relationNeutral = new RelationNeutralCommand();
+    public RelationUniteCommand relationUnite = new RelationUniteCommand();
+    public RelationVassalizeCommand relationVassalize = new RelationVassalizeCommand();
+    public ReloadCommand reload = new ReloadCommand();
+    public ScoreboardCommand scoreboard = new ScoreboardCommand();
+    public SetAnthemCommand setAnthem = new SetAnthemCommand();
+    public SetBannerCommand setBanner = new SetBannerCommand();
+    public SetCapitalCommand setCapital = new SetCapitalCommand();
+    public SetColorCommand setColor = new SetColorCommand();
+    public SetGovernmentCommand setGovernment = new SetGovernmentCommand();
+    public SetHomeCommand setHome = new SetHomeCommand();
+    public ShowCommand show = new ShowCommand();
+    public StorageCommand storage = new StorageCommand();
+    public TagCommand tag = new TagCommand();
+    public TitleCommand title = new TitleCommand();
+    public TradeOfferCommand tradeOffer = new TradeOfferCommand();
+    public UnclaimCommand unclaim = new UnclaimCommand();
+    public UninviteCommand uninvite = new UninviteCommand();
 
     public FCommandCache(BRPlugin plugin) {
-        super("factionsxl", plugin,
-                ADMIN,
-                CHAT,
-                CLAIM,
-                CREATE,
-                CREATE_VASSAL,
-                DESC,
-                DISBAND,
-                HELP,
-                HOME,
-                INVITE,
-                JOIN,
-                KICK,
-                LEAVE,
-                LIST,
-                LONG_TAG,
-                MAIN,
-                MOB,
-                MOD,
-                OPEN,
-                POWER,
-                REGION,
-                REGIONS,
-                RELATION,
-                RELATION_ALLY,
-                RELATION_OATH,
-                RELATION_NEUTRAL,
-                RELATION_UNITE,
-                RELATION_VASSALIZE,
-                RELOAD,
-                SCOREBOARD,
-                SET_ANTHEM,
-                SET_BANNER,
-                SET_CAPITAL,
-                SET_COLOR,
-                SET_GOVERNMENT,
-                SET_HOME,
-                SHOW,
-                TAG,
-                TITLE,
-                UNCLAIM,
-                UNINVITE
-        );
+        super("factionsxl", plugin);
+        addCommand(admin);
+        addCommand(chat);
+        addCommand(claim);
+        addCommand(create);
+        addCommand(createVassal);
+        addCommand(desc);
+        addCommand(disband);
+        addCommand(help);
+        addCommand(home);
+        addCommand(invite);
+        addCommand(join);
+        addCommand(kick);
+        addCommand(leave);
+        addCommand(list);
+        addCommand(longTag);
+        addCommand(main);
+        addCommand(mob);
+        addCommand(mod);
+        addCommand(open);
+        addCommand(power);
+        addCommand(region);
+        addCommand(regions);
+        addCommand(relation);
+        addCommand(relationAlly);
+        addCommand(relationOath);
+        addCommand(relationNeutral);
+        addCommand(relationUnite);
+        addCommand(relationVassalize);
+        addCommand(reload);
+        addCommand(scoreboard);
+        addCommand(setAnthem);
+        addCommand(setBanner);
+        addCommand(setCapital);
+        addCommand(setColor);
+        addCommand(setGovernment);
+        addCommand(setHome);
+        addCommand(show);
+        addCommand(tag);
+        addCommand(title);
+        addCommand(unclaim);
+        addCommand(uninvite);
         if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
-            addCommand(IDEA);
-            addCommand(MONEY);
-            addCommand(PAYDAY);
-            addCommand(STORAGE);
-            addCommand(TRADE_OFFER);
+            addCommand(idea);
+            addCommand(money);
+            addCommand(payday);
+            addCommand(storage);
+            addCommand(tradeOffer);
         }
     }
 

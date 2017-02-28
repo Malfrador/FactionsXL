@@ -33,7 +33,9 @@ import org.bukkit.entity.Player;
  */
 public abstract class RelationAliasCommand extends BRCommand {
 
-    FactionCache factions = FactionsXL.getInstance().getFactionCache();
+    FactionsXL plugin = FactionsXL.getInstance();
+    FactionCache factions = plugin.getFactionCache();
+    FCommandCache commands = plugin.getCommands();
 
     public RelationAliasCommand() {
         setMinArgs(1);
@@ -56,7 +58,7 @@ public abstract class RelationAliasCommand extends BRCommand {
             return;
         }
         String object = args.length == 3 ? args[2] : args[1];
-        FCommandCache.RELATION.onExecute(new String[]{FCommandCache.RELATION.getCommand(), subject, object, getRelation().toString()}, sender);
+        commands.relation.onExecute(new String[]{commands.relation.getCommand(), subject, object, getRelation().toString()}, sender);
     }
 
     public abstract Relation getRelation();
