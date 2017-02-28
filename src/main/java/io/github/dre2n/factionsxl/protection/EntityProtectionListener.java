@@ -28,6 +28,7 @@ import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,6 +59,10 @@ public class EntityProtectionListener implements Listener {
         }
 
         Entity damaged = event.getEntity();
+        if (entity instanceof Monster) {
+            return;
+        }
+
         boolean living = damaged instanceof LivingEntity;
         Region region = board.getByLocation(damaged.getLocation());
         if (region == null || region.isNeutral()) {
