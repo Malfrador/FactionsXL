@@ -59,7 +59,7 @@ public class EntityProtectionListener implements Listener {
         }
 
         Entity damaged = event.getEntity();
-        if (entity instanceof Monster) {
+        if (damaged instanceof Monster) {
             return;
         }
 
