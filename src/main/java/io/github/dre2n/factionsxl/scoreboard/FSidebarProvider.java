@@ -32,12 +32,15 @@ public abstract class FSidebarProvider {
 
     public abstract List<String> getLines(FPlayer fplayer);
 
-    public String replaceTags(FPlayer fPlayer, String s) {
-        return ParsingUtil.replaceScoreboardPlaceholders(fPlayer, s);
+    public String replaceTags(FPlayer fPlayer, String string) {
+        return ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
     }
 
-    public String replaceTags(Faction faction, FPlayer fPlayer, String s) {
-        return ParsingUtil.replaceScoreboardPlaceholders(faction, fPlayer, s);
+    public String replaceTags(Faction faction, FPlayer fPlayer, String string) {
+        string = ParsingUtil.replaceFactionPlaceholders(string, faction);
+        string = ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
+        string = ParsingUtil.replaceRelationPlaceholders(string, fPlayer, faction);
+        return string;
     }
 
 }
