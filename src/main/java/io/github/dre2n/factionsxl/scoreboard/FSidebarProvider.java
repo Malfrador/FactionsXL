@@ -33,7 +33,11 @@ public abstract class FSidebarProvider {
     public abstract List<String> getLines(FPlayer fplayer);
 
     public String replaceTags(FPlayer fPlayer, String string) {
-        return ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
+        if (fPlayer.hasFaction()) {
+            string = ParsingUtil.replaceFactionPlaceholders(string, fPlayer.getFaction());
+        }
+        string = ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
+        return string;
     }
 
     public String replaceTags(Faction faction, FPlayer fPlayer, String string) {
