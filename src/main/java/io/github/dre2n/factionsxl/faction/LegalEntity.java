@@ -130,8 +130,13 @@ public abstract class LegalEntity {
      * @param banner
      * the banner to set
      */
-    public void setBanner(BannerMeta banner) {
-        this.banner = banner;
+    public void setBanner(ItemStack banner) {
+        if (banner.getType() != Material.BANNER && banner.getType() != Material.SHIELD) {
+            return;
+        }
+
+        this.banner = (BannerMeta) banner.getItemMeta();
+        bannerColor = banner.getDurability();
     }
 
     /**
@@ -140,14 +145,6 @@ public abstract class LegalEntity {
      */
     public short getBannerColor() {
         return bannerColor;
-    }
-
-    /**
-     * @param value
-     * the damage value to set
-     */
-    public void setBannerColor(short value) {
-        bannerColor = value;
     }
 
     /**

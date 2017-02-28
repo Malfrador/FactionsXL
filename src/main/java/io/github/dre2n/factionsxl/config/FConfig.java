@@ -22,6 +22,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.Bukkit;
 
 /**
  * Represents the main config.yml.
@@ -64,6 +66,16 @@ public class FConfig extends BRConfig {
     // Protection
     private boolean lwcEnabled = true;
     private boolean wildernessProtected = true;
+
+    // Holograms
+    private boolean hologramsEnabled = true;
+    private List<String> homeHologramText = new ArrayList<>(Arrays.asList(
+            "&4&lH O M E",
+            "&a" + ProgressBar.BAR,
+            "&6&l=== " + ParsingUtil.FACTION_LONG_TAG + " &6&l===",
+            "&7&o" + ParsingUtil.FACTION_CAPITAL,
+            "&a" + ProgressBar.BAR
+    ));
 
     // Nametag and scoreboard
     private String nametagPrefix = "%relation_color%%faction_tag% ";
@@ -233,6 +245,23 @@ public class FConfig extends BRConfig {
 
     /**
      * @return
+     * true if hologram features are enabled;
+     * false if not or if HolographicDisplays is not installed
+     */
+    public boolean areHologramsEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays") && hologramsEnabled;
+    }
+
+    /**
+     * @return
+     * the home hologram text lines
+     */
+    public List<String> getHomeHologramText() {
+        return homeHologramText;
+    }
+
+    /**
+     * @return
      * the nametag prefix
      */
     public String getNametagPrefix() {
@@ -354,6 +383,14 @@ public class FConfig extends BRConfig {
             config.set("wildernessProtected", wildernessProtected);
         }
 
+        if (!config.contains("hologramsEnabled")) {
+            config.set("hologramsEnabled", hologramsEnabled);
+        }
+
+        if (!config.contains("homeHologramText")) {
+            config.set("homeHologramText", homeHologramText);
+        }
+
         if (!config.contains("nametag.prefix")) {
             config.set("nametag.prefix", nametagPrefix);
         }
@@ -437,6 +474,14 @@ public class FConfig extends BRConfig {
 
         if (config.contains("wildernessProtected")) {
             wildernessProtected = config.getBoolean("wildernessProtected");
+        }
+
+        if (config.contains("hologramsEnabled")) {
+            hologramsEnabled = config.getBoolean("hologramsEnabled");
+        }
+
+        if (config.contains("homeHologramText")) {
+            homeHologramText = config.getStringList("homeHologramText");
         }
 
         if (config.contains("nametag.prefix")) {

@@ -93,7 +93,7 @@ public class FactionCache {
         faction.name = name;
         faction.admin = player;
         faction.type = GovernmentType.MONARCHY;
-        faction.home = home;
+        faction.setHome(home);
         faction.capital = board.getByLocation(faction.home);
         faction.capital.setOwner(faction);
         faction.capital.getCoreFactions().put(faction, Calendar.getInstance().getTime());

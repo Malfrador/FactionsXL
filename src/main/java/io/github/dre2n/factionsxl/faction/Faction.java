@@ -23,6 +23,7 @@ import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.FAccount;
 import io.github.dre2n.factionsxl.economy.FStorage;
@@ -60,7 +61,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Represents a faction.
@@ -70,6 +73,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 public class Faction extends LegalEntity implements RelationParticipator {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FConfig fConfig = plugin.getFConfig();
 
     File file;
     FileConfiguration config;
@@ -84,6 +88,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     double exhaustion;
     double manpowerModifier;
     Location home;
+    Hologram homeHolo;
     Region capital;
     Set<Chunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
@@ -116,6 +121,12 @@ public class Faction extends LegalEntity implements RelationParticipator {
     public void setName(String name) {
         super.setName(name);
         FTeamWrapper.updatePrefixes(this);
+    }
+
+    @Override
+    public void setBanner(ItemStack banner) {
+        super.setBanner(banner);
+        updateHomeHologram();
     }
 
     /**
@@ -288,6 +299,31 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setHome(Location home) {
         this.home = home;
+        updateHomeHologram();
+    }
+
+    /**
+     * Updates the home hologram
+     */
+    public void updateHomeHologram() {
+        if (!fConfig.areHologramsEnabled()) {
+            return;
+        }
+        // Run this 1 tick later sothat everything is loaded
+        final Faction faction = this;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (homeHolo != null) {
+                    homeHolo.delete();
+                }
+                homeHolo = HologramsAPI.createHologram(plugin, getHome().clone().add(0, 3, 0));
+                homeHolo.appendItemLine(getBannerStack());
+                for (String line : fConfig.getHomeHologramText()) {
+                    homeHolo.appendTextLine(ParsingUtil.replaceFactionPlaceholders(line, faction));
+                }
+            }
+        }.runTaskLater(plugin, 1L);
     }
 
     /**
@@ -731,6 +767,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         active = false;
         open = false;
         home = null;
+        if (fConfig.areHologramsEnabled()) {
+            homeHolo.delete();
+        }
         capital = null;
         if (unclaim) {
             for (Region region : regions) {
@@ -766,7 +805,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
         manpowerModifier = config.getInt("manpowerModifier", 0);
-        home = (Location) config.get("home");
+        setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
 
         admin = Bukkit.getOfflinePlayer(UUID.fromString(config.getString("admin")));
@@ -793,7 +832,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             chunks.addAll(region.getChunks());
         }
 
-        if (plugin.getFConfig().isEconomyEnabled()) {
+        if (fConfig.isEconomyEnabled()) {
             account = new FAccount(this);
         }
         tradeMenu = new TradeMenu(this);
@@ -845,6 +884,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
             return;
         }
         config.set("home", home);
+        if (homeHolo != null) {
+            homeHolo.delete();
+        }
         config.set("capital", capital.getId());
         config.set("admin", admin.getUniqueId().toString());
 

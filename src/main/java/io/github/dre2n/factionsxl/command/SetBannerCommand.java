@@ -26,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
 
 /**
  * @author Daniel Saukel
@@ -65,8 +64,7 @@ public class SetBannerCommand extends BRCommand {
             return;
         }
 
-        faction.setBanner((BannerMeta) item.getItemMeta());
-        faction.setBannerColor(item.getDurability());
+        faction.setBanner(item);
         faction.sendMessage(FMessage.CMD_SET_BANNER_SUCCESS.getMessage(), player, faction);
     }
 
