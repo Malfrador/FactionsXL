@@ -20,7 +20,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import java.util.ArrayList;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**

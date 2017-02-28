@@ -16,6 +16,8 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -32,6 +34,8 @@ import io.github.dre2n.factionsxl.idea.IdeaMenu;
 import io.github.dre2n.factionsxl.player.Dynasty;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.population.PopulationMenu;
+import io.github.dre2n.factionsxl.relation.Relation;
+import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
@@ -63,7 +67,7 @@ import org.bukkit.inventory.meta.BannerMeta;
  *
  * @author Daniel Saukel
  */
-public class Faction extends LegalEntity {
+public class Faction extends LegalEntity implements RelationParticipator {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -508,13 +512,17 @@ public class Faction extends LegalEntity {
         return relations;
     }
 
-    /**
-     * @param faction
-     * another faction
-     * @return
-     * the relation of this faction to the other one
-     */
-    public Relation getRelation(Faction faction) {
+    @Override
+    public Relation getRelation(RelationParticipator object) {
+        Faction faction = null;
+        if (object instanceof FPlayer) {
+            if (((FPlayer) object).hasFaction()) {
+                faction = (Faction) object;
+            }
+        } else if (object instanceof Faction) {
+            faction = (Faction) object;
+        }
+
         if (relations.containsKey(faction)) {
             return relations.get(faction);
         } else if (faction == this) {

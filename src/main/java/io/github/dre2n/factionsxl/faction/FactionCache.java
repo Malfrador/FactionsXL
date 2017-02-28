@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.relation.Relation;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;

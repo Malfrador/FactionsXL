@@ -21,7 +21,8 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.Relation;
+import io.github.dre2n.factionsxl.relation.Relation;
+import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.UUID;
@@ -33,7 +34,7 @@ import org.bukkit.entity.Player;
  *
  * @author Daniel Saukel
  */
-public class FPlayer {
+public class FPlayer implements RelationParticipator {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -214,25 +215,10 @@ public class FPlayer {
         }
     }
 
-    /**
-     * @return
-     * the player's relation to the fPlayer
-     */
-    public Relation getRelation(FPlayer fPlayer) {
-        return getRelation(fPlayer.getFaction());
-    }
-
-    /**
-     * @return
-     * the player's relation to the faction
-     */
-    public Relation getRelation(Faction faction) {
+    @Override
+    public Relation getRelation(RelationParticipator object) {
         Faction own = getFaction();
-        if (own == null || faction == null) {
-            return Relation.PEACE;
-        } else {
-            return own.getRelation(faction);
-        }
+        return own != null ? own.getRelation(object) : Relation.PEACE;
     }
 
     /**

@@ -14,24 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.command.relation;
-
-import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.relation.Relation;
+package io.github.dre2n.factionsxl.relation;
 
 /**
  * @author Daniel Saukel
  */
-public class RelationVassalizeCommand extends RelationAliasCommand {
+public interface RelationParticipator {
 
-    public RelationVassalizeCommand() {
-        setCommand("vassalize");
-        setHelp(FMessage.HELP_CMD_VASSALIZE.getMessage());
-    }
-
-    @Override
-    public Relation getRelation() {
-        return Relation.VASSAL;
-    }
+    /**
+     * @param object
+     * another RelationParticipator
+     * @return
+     * the relation of this faction to the other one
+     */
+    public Relation getRelation(RelationParticipator object);
 
 }

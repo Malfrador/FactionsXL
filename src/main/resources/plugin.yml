@@ -4,7 +4,7 @@ version: ${project.version}${buildNo}
 author: Daniel Saukel
 description: ${project.description}
 website: ${project.url}
-softdepend: [Vault, LWC, Dynmap]
+softdepend: [Vault, LWC, Dynmap, HolographicDisplays]
 commands:
   factionsxl:
     description: Reference command for FactionsXL.

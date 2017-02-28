@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.chat;
 
-import io.github.dre2n.factionsxl.faction.Relation;
+import io.github.dre2n.factionsxl.relation.Relation;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.ChatColor;
