@@ -517,7 +517,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         Faction faction = null;
         if (object instanceof FPlayer) {
             if (((FPlayer) object).hasFaction()) {
-                faction = (Faction) object;
+                faction = ((FPlayer) object).getFaction();
             }
         } else if (object instanceof Faction) {
             faction = (Faction) object;
