@@ -40,6 +40,10 @@ public class LWCIntegration extends JavaModule {
     FactionsXL plugin = FactionsXL.getInstance();
     LWC lwc = plugin.getLWC();
 
+    public LWCIntegration() {
+        lwc.getModuleLoader().registerModule(plugin, this);
+    }
+
     @Override
     public void onProtectionInteract(LWCProtectionInteractEvent event) {
         if (canBypass(event.getPlayer(), event.getProtection().getBlock())) {
