@@ -102,7 +102,7 @@ public enum ParsingUtil {
         string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction.getName());
         string = string.replaceAll(RELATION.getPlaceholder(), relation.getName());
         string = string.replaceAll(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     /**
@@ -132,7 +132,7 @@ public enum ParsingUtil {
         string = string.replaceAll(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
         string = string.replaceAll(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
         string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction.getName());
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     /**
@@ -148,7 +148,7 @@ public enum ParsingUtil {
     public static String replaceRelationPlaceholders(String string, RelationParticipator standpoint, RelationParticipator object) {
         string = string.replaceAll(RELATION.getPlaceholder(), standpoint.getRelation(object).getName());
         string = string.replaceAll(RELATION_COLOR.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     /**
@@ -172,8 +172,7 @@ public enum ParsingUtil {
         string = string.replaceAll(PLAYER_PREFIX.getPlaceholder(), fPlayer.getPrefix());
         string = string.replaceAll(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
 
-        string = ChatColor.translateAlternateColorCodes('&', string);
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     public static List<String> namesToList(Collection<FPlayer> fPlayers) {
