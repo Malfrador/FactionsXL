@@ -114,7 +114,7 @@ public class RegionsCommand extends BRCommand {
     }
 
     private void addChunk(Player player, String[] args) {
-        Region regionAdd = board.getById(Integer.parseInt(args[2]));
+        Region regionAdd = board.getById(NumberUtil.parseInt(args[2]));
         if (regionAdd == null) {
             regionAdd = board.getByName(args[2]);
         }

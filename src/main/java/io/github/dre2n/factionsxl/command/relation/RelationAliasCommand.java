@@ -35,7 +35,6 @@ public abstract class RelationAliasCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
-    FCommandCache commands = plugin.getCommands();
 
     public RelationAliasCommand() {
         setMinArgs(1);
@@ -58,7 +57,7 @@ public abstract class RelationAliasCommand extends BRCommand {
             return;
         }
         String object = args.length == 3 ? args[2] : args[1];
-        commands.relation.onExecute(new String[]{commands.relation.getCommand(), subject, object, getRelation().toString()}, sender);
+        plugin.getCommands().relation.onExecute(new String[]{plugin.getCommands().relation.getCommand(), subject, object, getRelation().toString()}, sender);
     }
 
     public abstract Relation getRelation();
