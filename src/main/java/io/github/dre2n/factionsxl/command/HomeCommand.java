@@ -71,6 +71,7 @@ public class HomeCommand extends BRCommand {
         private Player player;
         private Location location;
         private Faction target;
+        private boolean teleport;
 
         public HomeTask(Player player, Faction target) {
             super(player, 10);
@@ -88,8 +89,12 @@ public class HomeCommand extends BRCommand {
                 return;
             }
 
-            if (secondsLeft == 0) {
+            if (teleport) {
                 PlayerUtil.secureTeleport(player, target.getHome());
+            }
+
+            if (secondsLeft == 0) {
+                teleport = true;
             }
         }
 
