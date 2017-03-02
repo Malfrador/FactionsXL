@@ -657,7 +657,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             return true;
         }
         Player player = (Player) sender;
-        return mods.contains(player) || admin.equals(player);
+        return mods.contains(player) || admin.equals(player) || FPermission.hasPermission(sender, FPermission.BYPASS);
     }
 
     /**
@@ -667,7 +667,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * true if the player is admin or mod
      */
     public boolean isPrivileged(FPlayer fPlayer) {
-        return fPlayer.isMod(this) || admin.getUniqueId().equals(fPlayer.getUniqueId());
+        return fPlayer.isMod(this) || admin.getUniqueId().equals(fPlayer.getUniqueId()) || FPermission.hasPermission(fPlayer.getPlayer(), FPermission.BYPASS);
     }
 
     /* Actions */

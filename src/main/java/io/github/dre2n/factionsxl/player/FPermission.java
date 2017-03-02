@@ -34,6 +34,7 @@ public enum FPermission {
     // Main nodes
     ADMIN("admin", TRUE),
     BUILD("build", OP),
+    BYPASS("bypass", OP),
     CHAT("chat", TRUE),
     CLAIM("claim", TRUE),
     CREATE("create", OP),
