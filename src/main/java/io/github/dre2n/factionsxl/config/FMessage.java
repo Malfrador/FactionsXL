@@ -213,7 +213,7 @@ public enum FMessage implements Messages {
     PROTECTION_CANNOT_DESTROY_FACTION("protection.cannotDestroyFaction", "&4You may not destroy the territory of &v1&4."),
     PROTECTION_CANNOT_DESTROY_WILDERNESS("protection.cannotDestroyFaction", "&4You may not destroy the wilderness."),
     PROTECTION_CANNOT_LEASH_FACTION("protection.cannotLeashFaction", "&4You may not leash animals in the territory of &v1&4."),
-    PROTECTION_CANNOT_SHEER_FACTION("protection.cannotLeashFaction", "&4You may not sheer animals in the territory of &v1&4."),
+    PROTECTION_CANNOT_SHEAR_FACTION("protection.cannotShearFaction", "&4You may not sheer animals in the territory of &v1&4."),
     PROTECTION_CANNOT_TAME_FACTION("protection.cannotTameFaction", "&4You may not tame animals in the territory of &v1&4."),
     PROTECTION_CANNOT_UNLEASH_FACTION("protection.cannotLeashFaction", "&4You may not unleash animals in the territory of &v1&4."),
     PROTECTION_CANNOT_REGISTER_FACTION("protection.cannotRegisterFaction", "&4You may not register LWC protections in the territory of &v1&4."),

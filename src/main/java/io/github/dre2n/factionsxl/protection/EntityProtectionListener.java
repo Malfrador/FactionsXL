@@ -51,7 +51,7 @@ public class EntityProtectionListener implements Listener {
         ATTACK,
         BUILD,
         LEASH,
-        SHEER,
+        SHEAR,
         TAME,
         UNLEASH
     }
@@ -84,7 +84,7 @@ public class EntityProtectionListener implements Listener {
 
     @EventHandler
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
-        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, SHEER);
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, SHEAR);
     }
 
     @EventHandler
@@ -135,8 +135,8 @@ public class EntityProtectionListener implements Listener {
                 case LEASH:
                     message = FMessage.PROTECTION_CANNOT_LEASH_FACTION;
                     break;
-                case SHEER:
-                    message = FMessage.PROTECTION_CANNOT_SHEER_FACTION;
+                case SHEAR:
+                    message = FMessage.PROTECTION_CANNOT_SHEAR_FACTION;
                     break;
                 case TAME:
                     message = FMessage.PROTECTION_CANNOT_TAME_FACTION;
