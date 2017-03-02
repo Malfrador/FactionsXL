@@ -17,65 +17,147 @@
 package io.github.dre2n.factionsxl.protection;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
+import static io.github.dre2n.factionsxl.protection.EntityProtectionListener.Action.*;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * @author Daniel Saukel
  */
 public class EntityProtectionListener implements Listener {
 
+    enum Action {
+        ATTACK,
+        BUILD,
+        LEASH,
+        SHEER,
+        TAME,
+        UNLEASH
+    }
+
     FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-    Board board = plugin.getBoard();
-    FConfig config = plugin.getFConfig();
-    boolean wildernessProtected = config.isWildernessProtected();
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Entity entity = event.getDamager();
-        Player attacker = null;
-        if (entity instanceof Player) {
-            attacker = (Player) entity;
-        } else {
+        forbidIfInProtectedTerritory(getDamageSource(event.getDamager()), event.getEntity(), event, ATTACK);
+    }
+
+    @EventHandler
+    public void onEntityTame(EntityTameEvent event) {
+        Player owner = null;
+        if (event.getOwner() instanceof Player) {
+            owner = (Player) event.getOwner();
+        }
+        forbidIfInProtectedTerritory(owner, event.getEntity(), event, TAME);
+    }
+
+    @EventHandler
+    public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
+        forbidIfInProtectedTerritory(getDamageSource(event.getRemover()), event.getEntity(), event, ATTACK);
+    }
+
+    @EventHandler
+    public void onHangingPlace(HangingPlaceEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, BUILD);
+    }
+
+    @EventHandler
+    public void onPlayerShearEntity(PlayerShearEntityEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, SHEER);
+    }
+
+    @EventHandler
+    public void onPlayerLeashEntity(PlayerLeashEntityEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, LEASH);
+    }
+
+    @EventHandler
+    public void onPlayerUnLeashEntity(PlayerUnleashEntityEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, UNLEASH);
+    }
+
+    @EventHandler
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        forbidIfInProtectedTerritory(getDamageSource(event.getAttacker()), event.getVehicle(), event, ATTACK);
+    }
+
+    private void forbidIfInProtectedTerritory(Player attacker, Entity damaged, Cancellable event, Action action) {
+        if (attacker == null) {
             return;
         }
         if (FPermission.hasPermission(attacker, FPermission.BUILD)) {
             return;
         }
-
-        Entity damaged = event.getEntity();
         if (damaged instanceof Monster) {
             return;
         }
 
         boolean living = damaged instanceof LivingEntity;
-        Region region = board.getByLocation(damaged.getLocation());
+        Region region = plugin.getBoard().getByLocation(damaged.getLocation());
         if (region == null || region.isNeutral()) {
             return;
         }
 
-        Faction aFaction = factions.getByMember(attacker);
+        Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction owner = region.getOwner();
         Relation rel = owner.getRelation(aFaction);
         if (!rel.canBuild()) {
             event.setCancelled(true);
-            ParsingUtil.sendMessage(attacker, (living ? FMessage.PROTECTION_CANNOT_ATTACK_FACTION : FMessage.PROTECTION_CANNOT_DESTROY_FACTION).getMessage(), region.getOwner());
+            FMessage message = FMessage.PROTECTION_CANNOT_BUILD_FACTION;
+            switch (action) {
+                case ATTACK:
+                    message = living ? FMessage.PROTECTION_CANNOT_ATTACK_FACTION : FMessage.PROTECTION_CANNOT_DESTROY_FACTION;
+                    break;
+                case BUILD:
+                    message = FMessage.PROTECTION_CANNOT_BUILD_FACTION;
+                    break;
+                case LEASH:
+                    message = FMessage.PROTECTION_CANNOT_LEASH_FACTION;
+                    break;
+                case SHEER:
+                    message = FMessage.PROTECTION_CANNOT_SHEER_FACTION;
+                    break;
+                case TAME:
+                    message = FMessage.PROTECTION_CANNOT_TAME_FACTION;
+                    break;
+                case UNLEASH:
+                    message = FMessage.PROTECTION_CANNOT_UNLEASH_FACTION;
+            }
+            ParsingUtil.sendMessage(attacker, message.getMessage(), region.getOwner());
         }
+    }
+
+    private Player getDamageSource(Entity damager) {
+        if (damager instanceof Player) {
+            return (Player) damager;
+        } else if (damager instanceof Arrow) {
+            ProjectileSource shooter = ((Arrow) damager).getShooter();
+            if (shooter instanceof Player) {
+                return (Player) shooter;
+            }
+        }
+        return null;
     }
 
 }

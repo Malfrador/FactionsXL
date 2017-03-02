@@ -111,13 +111,14 @@ public class FMob implements Listener {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
         Faction faction = FactionsXL.getInstance().getFactionCache().getByLocation(entity.getLocation());
-        event.setCancelled(true);
         if (faction == null) {
             return;
         }
         if (isVillager(entity)) {
+            event.setCancelled(true);
             faction.getPopulationMenu().open(player);
         } else if (isTrader(entity)) {
+            event.setCancelled(true);
             faction.getTradeMenu().open(player);
         }
     }

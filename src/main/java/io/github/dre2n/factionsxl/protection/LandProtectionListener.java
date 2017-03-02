@@ -26,11 +26,16 @@ import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 
 /**
  * @author Daniel Saukel
@@ -45,16 +50,39 @@ public class LandProtectionListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        Player breaker = event.getPlayer();
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getBlock(), event, true);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getBlock(), event, false);
+    }
+
+    @EventHandler
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getBlock(), event, true);
+    }
+
+    @EventHandler
+    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getBlockClicked(), event, true);
+    }
+
+    @EventHandler
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getBlockClicked(), event, false);
+    }
+
+    private void forbidIfInProtectedTerritory(Player breaker, Block destroyed, Cancellable event, boolean destroy) {
         if (FPermission.hasPermission(breaker, FPermission.BUILD)) {
             return;
         }
 
-        Region region = board.getByChunk(event.getBlock().getChunk());
+        Region region = board.getByChunk(destroyed.getChunk());
         if (region == null || region.isNeutral()) {
             if (wildernessProtected) {
                 event.setCancelled(true);
-                ParsingUtil.sendMessage(breaker, FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS.getMessage());
+                ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS : FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS).getMessage());
             }
             return;
         }
@@ -64,32 +92,7 @@ public class LandProtectionListener implements Listener {
         Relation rel = owner.getRelation(bFaction);
         if (!rel.canBuild()) {
             event.setCancelled(true);
-            ParsingUtil.sendMessage(breaker, FMessage.PROTECTION_CANNOT_DESTROY_FACTION.getMessage(), region.getOwner());
-        }
-    }
-
-    @EventHandler
-    public void onPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        if (FPermission.hasPermission(player, FPermission.BUILD)) {
-            return;
-        }
-
-        Region region = board.getByChunk(event.getBlock().getChunk());
-        if (region == null || region.isNeutral()) {
-            if (wildernessProtected) {
-                event.setCancelled(true);
-                ParsingUtil.sendMessage(player, FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS.getMessage());
-            }
-            return;
-        }
-
-        Faction bFaction = factions.getByMember(player);
-        Faction owner = region.getOwner();
-        Relation rel = owner.getRelation(bFaction);
-        if (!rel.canBuild()) {
-            event.setCancelled(true);
-            ParsingUtil.sendMessage(player, FMessage.PROTECTION_CANNOT_BUILD_FACTION.getMessage(), region.getOwner());
+            ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
         }
     }
 
