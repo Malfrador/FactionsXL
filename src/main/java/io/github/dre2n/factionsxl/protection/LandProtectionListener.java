@@ -74,6 +74,9 @@ public class LandProtectionListener implements Listener {
     }
 
     private void forbidIfInProtectedTerritory(Player breaker, Block destroyed, Cancellable event, boolean destroy) {
+        if (breaker == null) {
+            return;
+        }
         if (FPermission.hasPermission(breaker, FPermission.BUILD)) {
             return;
         }
