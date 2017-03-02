@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -60,6 +61,7 @@ public class JoinCommand extends BRCommand {
             if (args.length == 2) {
                 faction.getMembers().add(player);
                 faction.sendMessage(FMessage.FACTION_JOIN_ACCEPT.getMessage(), player);
+                FTeamWrapper.updatePrefixes(faction);
             } else {
                 faction.sendMessage(FMessage.FACTION_JOIN_DENY.getMessage(), player);
                 ParsingUtil.sendMessage(player, FMessage.FACTION_JOIN_DENY.getMessage(), player);

@@ -31,6 +31,7 @@ import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -123,12 +124,12 @@ public enum ParsingUtil {
         string = string.replaceAll(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
         string = string.replaceAll(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
         string = string.replaceAll(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
-        string = string.replaceAll(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedFPlayers()));
-        string = string.replaceAll(FACTION_MOD_LIST.getPlaceholder(), namesToString(faction.getFMods()));
+        string = string.replaceAll(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
+        string = string.replaceAll(FACTION_MOD_LIST.getPlaceholder(), namesToString(faction.getMods()));
         string = string.replaceAll(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
-        string = string.replaceAll(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getFPlayers().size()));
-        string = string.replaceAll(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getFPlayers()));
-        //string = string.replaceAll(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
+        string = string.replaceAll(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getMembers().size()));
+        string = string.replaceAll(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getMembers()));
+        string = string.replaceAll(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
         string = string.replaceAll(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
         string = string.replaceAll(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
         string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction.getName());
@@ -183,11 +184,11 @@ public enum ParsingUtil {
         return names;
     }
 
-    public static String namesToString(Collection<FPlayer> fPlayers) {
-        return namesToString(fPlayers, ChatColor.WHITE);
+    public static String fNamesToString(Collection<FPlayer> fPlayers) {
+        return fNamesToString(fPlayers, ChatColor.WHITE);
     }
 
-    public static String namesToString(Collection<FPlayer> fPlayers, ChatColor comma) {
+    public static String fNamesToString(Collection<FPlayer> fPlayers, ChatColor comma) {
         String names = new String();
         boolean first = true;
         for (FPlayer fPlayer : fPlayers) {
@@ -197,6 +198,24 @@ public enum ParsingUtil {
                 first = false;
             }
             names += fPlayer.getName();
+        }
+        return names;
+    }
+
+    public static String namesToString(Collection<OfflinePlayer> players) {
+        return namesToString(players, ChatColor.WHITE);
+    }
+
+    public static String namesToString(Collection<OfflinePlayer> players, ChatColor comma) {
+        String names = new String();
+        boolean first = true;
+        for (OfflinePlayer player : players) {
+            if (!first) {
+                names += comma + ", ";
+            } else {
+                first = false;
+            }
+            names += player.getName();
         }
         return names;
     }

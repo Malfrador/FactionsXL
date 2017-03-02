@@ -20,6 +20,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FSidebarProvider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -50,6 +51,7 @@ public class FDefaultSidebar extends FSidebarProvider {
     }
 
     public List<String> getOutput(FPlayer fplayer, List<String> content) {
+        content = new ArrayList<>(content);
         ListIterator<String> it = content.listIterator();
         while (it.hasNext()) {
             it.set(replaceTags(fplayer, it.next()));

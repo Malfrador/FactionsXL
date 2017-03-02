@@ -33,6 +33,7 @@ import io.github.dre2n.factionsxl.idea.Idea;
 import io.github.dre2n.factionsxl.idea.IdeaGroup;
 import io.github.dre2n.factionsxl.idea.IdeaMenu;
 import io.github.dre2n.factionsxl.player.Dynasty;
+import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.population.PopulationMenu;
 import io.github.dre2n.factionsxl.relation.Relation;
@@ -231,6 +232,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setPrestige(double prestige) {
         this.prestige = prestige;
+    }
+
+    /**
+     * @return
+     * the power of all players
+     */
+    public int getPower() {
+        return 0;// TODO
     }
 
     /**
@@ -481,8 +490,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     public Set<OfflinePlayer> getNonPrivilegedMembers() {
         HashSet<OfflinePlayer> players = new HashSet<>();
         for (OfflinePlayer member : members) {
-            FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(member);
-            if (!isPrivileged(fPlayer)) {
+            if (!mods.contains(member) && !member.equals(admin)) {
                 players.add(member);
             }
         }

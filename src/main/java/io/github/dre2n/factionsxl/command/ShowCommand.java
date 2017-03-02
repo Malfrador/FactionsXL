@@ -107,7 +107,7 @@ public class ShowCommand extends BRCommand {
 
         String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : "&oInterregnum";
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_LEADER.getMessage() + c + leader);
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_MEMBERS.getMessage() + c + ParsingUtil.namesToString(faction.getFPlayers(), c));
+        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_MEMBERS.getMessage() + c + ParsingUtil.namesToString(faction.getMembers(), c));
     }
 
 }

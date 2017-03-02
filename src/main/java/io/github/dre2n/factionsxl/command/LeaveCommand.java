@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,6 +57,7 @@ public class LeaveCommand extends BRCommand {
         faction.getOnlineMods().remove(player);
         faction.getMembers().remove(player);
         faction.getOnlineMembers().remove(player);
+        FTeamWrapper.updatePrefixes(faction);
     }
 
 }

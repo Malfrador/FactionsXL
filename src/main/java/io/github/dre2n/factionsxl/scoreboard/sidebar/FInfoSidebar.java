@@ -20,6 +20,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FSidebarProvider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -45,7 +46,7 @@ public class FInfoSidebar extends FSidebarProvider {
 
     @Override
     public List<String> getLines(FPlayer fplayer) {
-        List<String> lines = plugin.getFConfig().getScoreboardFactionInfo();
+        List<String> lines = new ArrayList<>(plugin.getFConfig().getScoreboardFactionInfo());
 
         ListIterator<String> it = lines.listIterator();
         while (it.hasNext()) {
