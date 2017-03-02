@@ -38,7 +38,7 @@ public class MobCommand extends BRCommand {
         setCommand("mob");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_MOB.getMessage());
+        setHelp(FMessage.HELP_MOB.getMessage());
         setPermission(FPermission.MOB.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

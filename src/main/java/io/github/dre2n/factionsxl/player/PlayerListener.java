@@ -22,6 +22,8 @@ import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.config.FConfig;
+import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
@@ -32,6 +34,7 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -44,11 +47,13 @@ public class PlayerListener implements Listener {
     FactionsXL plugin;
     FPlayerCache fPlayers;
     Board board;
+    FConfig fConfig;
 
     public PlayerListener(FactionsXL plugin) {
         this.plugin = plugin;
         fPlayers = plugin.getFPlayerCache();
         board = plugin.getBoard();
+        fConfig = plugin.getFConfig();
     }
 
     @EventHandler
@@ -60,9 +65,9 @@ public class PlayerListener implements Listener {
         Region region = board.getByLocation(player.getLocation());
         MessageUtil.sendActionBarMessage(player, ParsingUtil.getRegionName(player, region));
 
-        if (plugin.getFConfig().isScoreboardEnabledByDefault()) {
+        if (fConfig.isScoreboardEnabledByDefault()) {
             FScoreboard.init(fPlayer);
-            FScoreboard.get(fPlayer).setDefaultSidebar(new FDefaultSidebar(), plugin.getFConfig().getScoreboardUpdateInterval());
+            FScoreboard.get(fPlayer).setDefaultSidebar(new FDefaultSidebar(), fConfig.getScoreboardUpdateInterval());
             FScoreboard.get(fPlayer).setSidebarVisibility(fPlayer.isScoreboardEnabled());
         }
     }
@@ -72,6 +77,24 @@ public class PlayerListener implements Listener {
         FPlayer fPlayer = fPlayers.getByPlayer(event.getPlayer());
         FScoreboard.remove(fPlayer);
         fPlayers.removePlayer(fPlayer);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Player killedP = event.getEntity();
+        Player killerP = event.getEntity().getKiller();
+        FPlayer killedF = fPlayers.getByPlayer(killedP);
+        FPlayer killerF = fPlayers.getByPlayer(killerP);
+        double loss = fConfig.getPowerDeathLoss();
+        double newPower = killedF.getPower() - loss;
+        killedF.setPower(newPower < fConfig.getMinPower() ? fConfig.getMinPower() : newPower);
+        if (killerF != null) {
+            killerF.setPower(killerF.getPower() + loss);
+            ParsingUtil.sendMessage(killedP, FMessage.DEATH_PLAYER_KILL_KILLED.getMessage(), killerF, String.valueOf(loss), String.valueOf(killedF.getPower()));
+            ParsingUtil.sendMessage(killerP, FMessage.DEATH_PLAYER_KILL_KILLER.getMessage(), killedF, String.valueOf(loss), String.valueOf(killerF.getPower()));
+        } else {
+            ParsingUtil.sendMessage(killerP, FMessage.DEATH_DEFAULT_DEATH.getMessage(), String.valueOf(loss), String.valueOf(killedF.getPower()));
+        }
     }
 
     @EventHandler

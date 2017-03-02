@@ -45,7 +45,7 @@ public class RegionsCommand extends BRCommand {
         setCommand("regions");
         setMinArgs(0);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_REGIONS.getMessage());
+        setHelp(FMessage.HELP_REGIONS.getMessage());
         setPermission(FPermission.REGIONS.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

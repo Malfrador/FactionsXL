@@ -50,7 +50,7 @@ public class ListCommand extends BRCommand implements Listener {
         setCommand("list");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_LIST.getMessage());
+        setHelp(FMessage.HELP_LIST.getMessage());
         setPermission(FPermission.LIST.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

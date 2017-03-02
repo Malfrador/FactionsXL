@@ -26,7 +26,7 @@ public class RelationUniteCommand extends RelationAliasCommand {
 
     public RelationUniteCommand() {
         setCommand("unite");
-        setHelp(FMessage.HELP_CMD_UNITE.getMessage());
+        setHelp(FMessage.HELP_UNITE.getMessage());
     }
 
     @Override

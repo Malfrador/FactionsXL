@@ -37,7 +37,7 @@ public class InviteCommand extends BRCommand {
         setCommand("invite");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_INVITE.getMessage());
+        setHelp(FMessage.HELP_INVITE.getMessage());
         setPermission(FPermission.INVITE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

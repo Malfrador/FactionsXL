@@ -38,7 +38,7 @@ public class StorageCommand extends BRCommand {
         setCommand("storage");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_STORAGE.getMessage());
+        setHelp(FMessage.HELP_STORAGE.getMessage());
         setPermission(FPermission.STORAGE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

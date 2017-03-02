@@ -239,7 +239,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the power of all players
      */
     public int getPower() {
-        return 0;// TODO
+        Double power = 0D;
+        for (OfflinePlayer member : members) {
+            Double d = plugin.getFData().power.get(member.getUniqueId());
+            if (d != null) {
+                power += d;
+            }
+        }
+        return power.intValue();
     }
 
     /**

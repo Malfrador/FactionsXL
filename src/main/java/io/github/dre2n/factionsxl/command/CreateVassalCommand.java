@@ -44,7 +44,7 @@ public class CreateVassalCommand extends BRCommand {
         setCommand("createVassal");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_CREATE_VASSAL.getMessage());
+        setHelp(FMessage.HELP_CREATE_VASSAL.getMessage());
         setPermission(FPermission.CREATE_VASSAL.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

@@ -38,7 +38,7 @@ public class TitleCommand extends BRCommand {
         setCommand("title");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_TITLE.getMessage());
+        setHelp(FMessage.HELP_TITLE.getMessage());
         setPermission(FPermission.TITLE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

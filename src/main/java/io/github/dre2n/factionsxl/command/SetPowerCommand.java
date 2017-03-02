@@ -17,55 +17,44 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.commons.command.BRCommand;
+import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import org.bukkit.Material;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public class SetBannerCommand extends BRCommand {
+public class SetPowerCommand extends BRCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetBannerCommand() {
-        setCommand("setbanner");
-        setMinArgs(1);
-        setMaxArgs(1);
-        setHelp(FMessage.HELP_SET_BANNER.getMessage());
-        setPermission(FPermission.SET_BANNER.getNode());
+    public SetPowerCommand() {
+        setCommand("setPower");
+        setMinArgs(2);
+        setMaxArgs(2);
+        setHelp(FMessage.HELP_SET_POWER.getMessage());
+        setPermission(FPermission.POWER_SET.getNode());
         setPlayerCommand(true);
-        setConsoleCommand(false);
+        setConsoleCommand(true);
     }
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
-        if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+        if (!player.hasPlayedBefore()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
             return;
         }
 
-        if (!faction.getAdmin().equals(player)) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
-            return;
+        int power = NumberUtil.parseInt(args[2], 0);
+        FactionsXL.getInstance().getFData().power.put(player.getUniqueId(), (double) power);
+        ParsingUtil.sendMessage(sender, FMessage.CMD_SET_POWER_SENDER.getMessage(), player.getName(), String.valueOf(power));
+        if (player.isOnline()) {
+            ParsingUtil.sendMessage(player.getPlayer(), FMessage.CMD_SET_POWER_TARGET.getMessage(), sender, String.valueOf(power));
         }
-
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType() != Material.BANNER) {
-            displayHelp(player);
-            return;
-        }
-
-        faction.setBanner(item);
-        faction.sendMessage(FMessage.CMD_SET_BANNER_SUCCESS.getMessage(), player, faction);
     }
 
 }

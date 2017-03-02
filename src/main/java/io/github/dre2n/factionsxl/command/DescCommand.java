@@ -35,7 +35,7 @@ public class DescCommand extends BRCommand {
         setCommand("desc");
         setMinArgs(-1);
         setMaxArgs(-1);
-        setHelp(FMessage.HELP_CMD_DESC.getMessage());
+        setHelp(FMessage.HELP_DESC.getMessage());
         setPermission(FPermission.DESC.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

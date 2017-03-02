@@ -26,7 +26,7 @@ public class RelationAllyCommand extends RelationAliasCommand {
 
     public RelationAllyCommand() {
         setCommand("ally");
-        setHelp(FMessage.HELP_CMD_ALLY.getMessage());
+        setHelp(FMessage.HELP_ALLY.getMessage());
     }
 
     @Override

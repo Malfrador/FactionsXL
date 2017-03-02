@@ -30,8 +30,10 @@ import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -47,7 +49,7 @@ public class ShowCommand extends BRCommand {
         setCommand("show");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_SHOW.getMessage());
+        setHelp(FMessage.HELP_SHOW.getMessage());
         setPermission(FPermission.SHOW.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -87,27 +89,48 @@ public class ShowCommand extends BRCommand {
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_INVITATION.getMessage() + c + !faction.isOpen());
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_CAPITAL.getMessage() + c + faction.getCapital().getName());
         String stability = String.valueOf(faction.getStability());
-        String power = String.valueOf(0/*faction.getPower()*/);
+        String power = String.valueOf(faction.getPower());
         String provinces = String.valueOf(faction.getRegions().size());
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), stability, power, provinces));
 
-        ArrayList<BaseComponent> components = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));
-        boolean first = true;
+        ArrayList<BaseComponent> relList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));
+        boolean relFirst = true;
         for (Faction other : factions.getActive()) {
             Relation relation = faction.getRelation(other);
             if (relation != Relation.PEACE && relation != Relation.OWN) {
-                if (!first) {
-                    components.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+                if (!relFirst) {
+                    relList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
                 }
-                first = false;
-                components.addAll(Arrays.asList(relation.getFormatted(other)));
+                relFirst = false;
+                relList.addAll(Arrays.asList(relation.getFormatted(other)));
             }
         }
-        player.spigot().sendMessage(components.toArray(new BaseComponent[]{}));
+        player.spigot().sendMessage(relList.toArray(new BaseComponent[]{}));
 
         String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : "&oInterregnum";
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_LEADER.getMessage() + c + leader);
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_MEMBERS.getMessage() + c + ParsingUtil.namesToString(faction.getMembers(), c));
+
+        ArrayList<BaseComponent> memList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_MEMBERS.getMessage())));
+        boolean memFirst = true;
+        for (OfflinePlayer member : faction.getMembers()) {
+            Double memPower = plugin.getFData().power.get(member.getUniqueId());
+            if (memPower == null) {
+                memPower = 0D;
+            }
+            String memPowerHover = FMessage.CMD_POWER.getMessage(ChatColor.GOLD + member.getName(), String.valueOf(memPower.intValue()));
+            HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(memPowerHover));
+            BaseComponent[] components = TextComponent.fromLegacyText(c + member.getName());
+            for (BaseComponent component : components) {
+                component.setHoverEvent(onHover);
+            }
+
+            if (!memFirst) {
+                memList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+            }
+            memFirst = false;
+            memList.addAll(Arrays.asList(components));
+        }
+        player.spigot().sendMessage(memList.toArray(new BaseComponent[]{}));
     }
 
 }

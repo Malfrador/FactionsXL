@@ -38,7 +38,7 @@ public class ModCommand extends BRCommand {
         setCommand("mod");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_MOD.getMessage());
+        setHelp(FMessage.HELP_MOD.getMessage());
         setPermission(FPermission.MOD.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

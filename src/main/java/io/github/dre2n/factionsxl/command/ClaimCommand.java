@@ -37,7 +37,7 @@ public class ClaimCommand extends BRCommand {
         setCommand("claim");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_CLAIM.getMessage());
+        setHelp(FMessage.HELP_CLAIM.getMessage());
         setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

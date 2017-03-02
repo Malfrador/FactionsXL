@@ -37,7 +37,7 @@ public class ScoreboardCommand extends BRCommand {
         setCommand("scoreboard");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_SCOREBOARD.getMessage());
+        setHelp(FMessage.HELP_SCOREBOARD.getMessage());
         setPermission(FPermission.SCOREBOARD.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

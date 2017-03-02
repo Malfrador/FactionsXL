@@ -39,7 +39,7 @@ public class MoneyCommand extends BRCommand {
         setCommand("money");
         setMinArgs(2);
         setMaxArgs(3);
-        setHelp(FMessage.HELP_CMD_MONEY.getMessage());
+        setHelp(FMessage.HELP_MONEY.getMessage());
         setPermission(FPermission.MONEY.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

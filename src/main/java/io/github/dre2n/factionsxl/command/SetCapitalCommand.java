@@ -37,7 +37,7 @@ public class SetCapitalCommand extends BRCommand {
         setCommand("setCapital");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_SET_CAPITAL.getMessage());
+        setHelp(FMessage.HELP_SET_CAPITAL.getMessage());
         setPermission(FPermission.SET_CAPITAL.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

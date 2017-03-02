@@ -37,7 +37,7 @@ public class UninviteCommand extends BRCommand {
         setCommand("uninvite");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_UNINVITE.getMessage());
+        setHelp(FMessage.HELP_UNINVITE.getMessage());
         setPermission(FPermission.INVITE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

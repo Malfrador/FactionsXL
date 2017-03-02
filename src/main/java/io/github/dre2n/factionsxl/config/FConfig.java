@@ -53,7 +53,6 @@ public class FConfig extends BRConfig {
 
     private String language = "english";
     private double dayLength = 24;
-    private int maxPower = 10;
     private int maxIdeaGroups = 2;
     private double defaultManpowerModifier = 5;
     private boolean economyEnabled = true;
@@ -66,6 +65,14 @@ public class FConfig extends BRConfig {
     // Protection
     private boolean lwcEnabled = true;
     private boolean wildernessProtected = true;
+
+    // Power
+    private int maxPower = 100;
+    private int minPower = -100;
+    private long powerUpdateInterval = MINUTE;
+    private double powerIncreaseRate = 1;
+    private double powerDecreaseRate = 0.01;
+    private double powerDeathLoss = 25;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -177,14 +184,6 @@ public class FConfig extends BRConfig {
 
     /**
      * @return
-     * the maximum power that a player may store
-     */
-    public int getMaxPower() {
-        return maxPower;
-    }
-
-    /**
-     * @return
      * the maximum amount of idea groups that a faction can have
      */
     public int getMaxIdeaGroups() {
@@ -241,6 +240,54 @@ public class FConfig extends BRConfig {
      */
     public boolean isWildernessProtected() {
         return wildernessProtected;
+    }
+
+    /**
+     * @return
+     * the maximum power that a player may store
+     */
+    public int getMaxPower() {
+        return maxPower;
+    }
+
+    /**
+     * @return
+     * the minimum power that a player may store
+     */
+    public int getMinPower() {
+        return minPower;
+    }
+
+    /**
+     * @return
+     * the power update interval
+     */
+    public long getPowerUpdateInterval() {
+        return powerUpdateInterval;
+    }
+
+    /**
+     * @return
+     * the power increase rate
+     */
+    public double getPowerIncreaseRate() {
+        return powerIncreaseRate;
+    }
+
+    /**
+     * @return
+     * the power decrease rate
+     */
+    public double getPowerDecreaseRate() {
+        return powerDecreaseRate;
+    }
+
+    /**
+     * @return
+     * the power death loss rate
+     */
+    public double getPowerDeathLoss() {
+        return powerDeathLoss;
     }
 
     /**
@@ -351,10 +398,6 @@ public class FConfig extends BRConfig {
             config.set("dayLength", dayLength);
         }
 
-        if (!config.contains("maxPower")) {
-            config.set("maxPower", maxPower);
-        }
-
         if (!config.contains("maxIdeaGroups")) {
             config.set("maxIdeaGroups", maxIdeaGroups);
         }
@@ -381,6 +424,30 @@ public class FConfig extends BRConfig {
 
         if (!config.contains("wildernessProtected")) {
             config.set("wildernessProtected", wildernessProtected);
+        }
+
+        if (!config.contains("maxPower")) {
+            config.set("maxPower", maxPower);
+        }
+
+        if (!config.contains("minPower")) {
+            config.set("minPower", minPower);
+        }
+
+        if (!config.contains("powerUpdateInterval")) {
+            config.set("powerUpdateInterval", powerUpdateInterval);
+        }
+
+        if (!config.contains("powerIncreaseRate")) {
+            config.set("powerIncreaseRate", powerIncreaseRate);
+        }
+
+        if (!config.contains("powerDecreaseRate")) {
+            config.set("powerDecreaseRate", powerDecreaseRate);
+        }
+
+        if (!config.contains("powerDeathLoss")) {
+            config.set("powerDeathLoss", powerDeathLoss);
         }
 
         if (!config.contains("hologramsEnabled")) {
@@ -444,10 +511,6 @@ public class FConfig extends BRConfig {
             dayLength = config.getDouble("dayLength");
         }
 
-        if (config.contains("maxPower")) {
-            maxPower = config.getInt("maxPower");
-        }
-
         if (config.contains("maxIdeaGroups")) {
             maxIdeaGroups = config.getInt("maxIdeaGroups");
         }
@@ -474,6 +537,30 @@ public class FConfig extends BRConfig {
 
         if (config.contains("wildernessProtected")) {
             wildernessProtected = config.getBoolean("wildernessProtected");
+        }
+
+        if (config.contains("maxPower")) {
+            maxPower = config.getInt("maxPower");
+        }
+
+        if (config.contains("minPower")) {
+            minPower = config.getInt("minPower");
+        }
+
+        if (config.contains("powerUpdateInterval")) {
+            powerUpdateInterval = config.getLong("powerUpdateInterval");
+        }
+
+        if (config.contains("powerIncreaseRate")) {
+            powerIncreaseRate = config.getDouble("powerIncreaseRate");
+        }
+
+        if (config.contains("powerDecreaseRate")) {
+            powerDecreaseRate = config.getDouble("powerDecreaseRate");
+        }
+
+        if (config.contains("powerDeathLoss")) {
+            powerDeathLoss = config.getDouble("powerDeathLoss");
         }
 
         if (config.contains("hologramsEnabled")) {

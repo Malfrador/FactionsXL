@@ -38,7 +38,7 @@ public class CreateCommand extends BRCommand {
         setCommand("create");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_CREATE.getMessage());
+        setHelp(FMessage.HELP_CREATE.getMessage());
         setPermission(FPermission.CREATE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

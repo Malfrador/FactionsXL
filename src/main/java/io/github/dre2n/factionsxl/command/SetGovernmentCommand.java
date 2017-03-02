@@ -37,7 +37,7 @@ public class SetGovernmentCommand extends BRCommand {
         setCommand("setGovernment");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_SET_GOVERNMENT.getMessage());
+        setHelp(FMessage.HELP_SET_GOVERNMENT.getMessage());
         setPermission(FPermission.SET_GOVERNMENT.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

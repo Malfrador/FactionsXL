@@ -37,7 +37,7 @@ public class HelpCommand extends BRCommand {
         setCommand("help");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_HELP.getMessage());
+        setHelp(FMessage.HELP_HELP.getMessage());
         setPermission(FPermission.HELP.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

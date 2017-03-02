@@ -35,7 +35,7 @@ public class OpenCommand extends BRCommand {
         setCommand("open");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_OPEN.getMessage());
+        setHelp(FMessage.HELP_OPEN.getMessage());
         setPermission(FPermission.OPEN.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

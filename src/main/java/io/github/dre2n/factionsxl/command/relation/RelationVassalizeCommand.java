@@ -26,7 +26,7 @@ public class RelationVassalizeCommand extends RelationAliasCommand {
 
     public RelationVassalizeCommand() {
         setCommand("vassalize");
-        setHelp(FMessage.HELP_CMD_VASSALIZE.getMessage());
+        setHelp(FMessage.HELP_VASSALIZE.getMessage());
     }
 
     @Override

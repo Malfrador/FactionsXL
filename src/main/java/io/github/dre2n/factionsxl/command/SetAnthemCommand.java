@@ -36,7 +36,7 @@ public class SetAnthemCommand extends BRCommand {
         setCommand("setAnthem");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_SET_ANTHEM.getMessage());
+        setHelp(FMessage.HELP_SET_ANTHEM.getMessage());
         setPermission(FPermission.SET_ANTHEM.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

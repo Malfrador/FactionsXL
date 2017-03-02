@@ -37,7 +37,7 @@ public class UnclaimCommand extends BRCommand {
         setCommand("unclaim");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_UNCLAIM.getMessage());
+        setHelp(FMessage.HELP_UNCLAIM.getMessage());
         setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

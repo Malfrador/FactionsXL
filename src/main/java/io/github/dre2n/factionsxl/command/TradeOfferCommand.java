@@ -71,7 +71,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         setCommand("tradeOffer");
         setMinArgs(0);
         setMaxArgs(7);
-        setHelp(FMessage.HELP_CMD_TRADE_OFFER.getMessage());
+        setHelp(FMessage.HELP_TRADE_OFFER.getMessage());
         setPermission(FPermission.TRADE_OFFER.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

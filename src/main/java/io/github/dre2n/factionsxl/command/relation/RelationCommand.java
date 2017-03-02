@@ -41,7 +41,7 @@ public class RelationCommand extends BRCommand {
         setCommand("relation");
         setMinArgs(3);
         setMaxArgs(4);
-        setHelp(FMessage.HELP_CMD_RELATION.getMessage());
+        setHelp(FMessage.HELP_RELATION.getMessage());
         setPermission(FPermission.RELATION.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

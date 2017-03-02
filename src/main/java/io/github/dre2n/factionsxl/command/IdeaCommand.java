@@ -38,7 +38,7 @@ public class IdeaCommand extends BRCommand {
         setCommand("idea");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_IDEA.getMessage());
+        setHelp(FMessage.HELP_IDEA.getMessage());
         setPermission(FPermission.IDEA.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

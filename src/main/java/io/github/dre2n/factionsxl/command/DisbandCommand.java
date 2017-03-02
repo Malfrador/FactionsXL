@@ -36,7 +36,7 @@ public class DisbandCommand extends BRCommand {
         setCommand("disband");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_DISBAND.getMessage());
+        setHelp(FMessage.HELP_DISBAND.getMessage());
         setPermission(FPermission.DISBAND.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

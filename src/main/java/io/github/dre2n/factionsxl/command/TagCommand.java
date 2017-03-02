@@ -36,7 +36,7 @@ public class TagCommand extends BRCommand {
         setCommand("tag");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_TAG.getMessage());
+        setHelp(FMessage.HELP_TAG.getMessage());
         setPermission(FPermission.TAG.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

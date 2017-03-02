@@ -37,7 +37,7 @@ public class ReloadCommand extends BRCommand {
         setCommand("reload");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_RELOAD.getMessage());
+        setHelp(FMessage.HELP_RELOAD.getMessage());
         setPermission(FPermission.RELOAD.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

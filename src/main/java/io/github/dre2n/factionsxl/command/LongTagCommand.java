@@ -35,7 +35,7 @@ public class LongTagCommand extends BRCommand {
         setCommand("longtag");
         setMinArgs(-1);
         setMaxArgs(-1);
-        setHelp(FMessage.HELP_CMD_LONG_TAG.getMessage());
+        setHelp(FMessage.HELP_LONG_TAG.getMessage());
         setPermission(FPermission.TAG.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

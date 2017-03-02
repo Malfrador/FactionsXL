@@ -34,6 +34,7 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.IncomeTask;
 import io.github.dre2n.factionsxl.faction.FMob;
 import io.github.dre2n.factionsxl.faction.FactionCache;
+import io.github.dre2n.factionsxl.player.AsyncPowerTask;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.player.PlayerListener;
@@ -41,6 +42,7 @@ import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.util.PageGUICache;
 import java.io.File;
+import java.io.IOException;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -78,6 +80,7 @@ public class FactionsXL extends BRPlugin {
     private EntityProtectionListener entityProtectionListener;
     private LandProtectionListener landProtectionListener;
     private BukkitTask incomeTask;
+    private BukkitTask powerTask;
 
     public FactionsXL() {
         /*
@@ -186,6 +189,7 @@ public class FactionsXL extends BRPlugin {
         if (fConfig.isLWCEnabled()) {
             loadLWC();
         }
+        startPowerTask();
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
         }
@@ -193,6 +197,7 @@ public class FactionsXL extends BRPlugin {
     }
 
     public void saveData() {
+        fData.save();
         board.save(Board.FILE);
         factions.saveAll();
         fPlayers.saveAll();
@@ -204,6 +209,12 @@ public class FactionsXL extends BRPlugin {
         FileUtil.copyDirectory(FACTIONS, new File(backupDir, "factions"), new String[]{});
         FileUtil.copyDirectory(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
         FileUtil.copyDirectory(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
+        try {
+            FileUtil.copyFile(Board.FILE, new File(backupDir, "board.yml"));
+            FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
+            FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));
+        } catch (IOException exception) {
+        }
     }
 
     /* Getters and loaders */
@@ -448,6 +459,26 @@ public class FactionsXL extends BRPlugin {
         } else {
             MessageUtil.log(this, "&4Could not find LWC.");
         }
+    }
+
+    /**
+     * @return
+     * the AsyncPowerTask
+     */
+    public BukkitTask getPowerTask() {
+        return powerTask;
+    }
+
+    /**
+     * start a new AsyncPowerTask
+     */
+    public void startPowerTask() {
+        long interval = fConfig.getPowerUpdateInterval();
+        long passed = System.currentTimeMillis() - fData.lastPowerUpdate;
+        double increase = fConfig.getPowerIncreaseRate();
+        double decrease = fConfig.getPowerDecreaseRate();
+        int maxPower = fConfig.getMaxPower();
+        powerTask = new AsyncPowerTask(increase, decrease, maxPower).runTaskTimerAsynchronously(this, interval - passed, interval);
     }
 
     /**

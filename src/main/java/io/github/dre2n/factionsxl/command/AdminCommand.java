@@ -37,7 +37,7 @@ public class AdminCommand extends BRCommand {
         setCommand("admin");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_ADMIN.getMessage());
+        setHelp(FMessage.HELP_ADMIN.getMessage());
         setPermission(FPermission.ADMIN.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

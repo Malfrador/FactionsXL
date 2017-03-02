@@ -37,7 +37,7 @@ public class PowerCommand extends BRCommand {
         setCommand("power");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_POWER.getMessage());
+        setHelp(FMessage.HELP_POWER.getMessage());
         setPermission(FPermission.POWER.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);
@@ -57,6 +57,7 @@ public class PowerCommand extends BRCommand {
             fPlayer = fPlayers.getByName(args[1]);
             if (fPlayer == null) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
+                return;
             }
         }
 

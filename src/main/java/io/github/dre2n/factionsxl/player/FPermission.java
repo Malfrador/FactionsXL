@@ -44,7 +44,6 @@ public enum FPermission {
     HELP("help", TRUE),
     HOME("home", OP),
     HOME_OTHERS("home.others", OP),
-    HOME_SET("home.set", TRUE),
     IDEA("idea", TRUE),
     INVITE("invite", TRUE),
     JOIN("join", TRUE),
@@ -58,6 +57,7 @@ public enum FPermission {
     OPEN("open", TRUE),
     PAYDAY("payday", OP),
     POWER("power", TRUE),
+    POWER_SET("power.set", OP),
     REGION("region", TRUE),
     REGIONS("regions", OP),
     RELATION("relation", TRUE),
@@ -68,6 +68,7 @@ public enum FPermission {
     SET_CAPITAL("set.capital", TRUE),
     SET_COLOR("set.color", TRUE),
     SET_GOVERNMENT("set.government", TRUE),
+    SET_HOME("set.home", TRUE),
     SHOW("show", TRUE),
     STORAGE("storage", TRUE),
     TAG("tag", OP),
@@ -75,8 +76,8 @@ public enum FPermission {
     TRADE_OFFER("tradeoffer", TRUE),
     // Kits
     ADMINISTRATOR("*", OP),
-    HALF_PLAYER("halfplayer", TRUE, ADMIN, CHAT, CLAIM, DISBAND, HELP, HOME_SET, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD, OPEN,
-            POWER, REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SHOW, STORAGE, TITLE, TRADE_OFFER),
+    HALF_PLAYER("halfplayer", TRUE, ADMIN, CHAT, CLAIM, DISBAND, HELP, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD, OPEN, POWER,
+            REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SET_HOME, SHOW, STORAGE, TITLE, TRADE_OFFER),
     FULL_PLAYER("fullplayer", OP, HALF_PLAYER, HOME, CREATE, CREATE_VASSAL, TAG);
 
     public static final String PREFIX = "fxl.";

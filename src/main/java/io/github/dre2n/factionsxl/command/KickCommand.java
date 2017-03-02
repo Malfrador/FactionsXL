@@ -37,7 +37,7 @@ public class KickCommand extends BRCommand {
         setCommand("kick");
         setMinArgs(2);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_KICK.getMessage());
+        setHelp(FMessage.HELP_KICK.getMessage());
         setPermission(FPermission.KICK.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

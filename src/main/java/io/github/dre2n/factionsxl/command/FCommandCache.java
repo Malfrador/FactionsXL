@@ -69,6 +69,7 @@ public class FCommandCache extends BRCommands {
     public SetColorCommand setColor = new SetColorCommand();
     public SetGovernmentCommand setGovernment = new SetGovernmentCommand();
     public SetHomeCommand setHome = new SetHomeCommand();
+    public SetPowerCommand setPower = new SetPowerCommand();
     public ShowCommand show = new ShowCommand();
     public StorageCommand storage = new StorageCommand();
     public TagCommand tag = new TagCommand();
@@ -115,6 +116,7 @@ public class FCommandCache extends BRCommands {
         addCommand(setColor);
         addCommand(setGovernment);
         addCommand(setHome);
+        addCommand(setPower);
         addCommand(show);
         addCommand(tag);
         addCommand(title);

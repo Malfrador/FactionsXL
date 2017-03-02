@@ -37,8 +37,8 @@ public class SetHomeCommand extends BRCommand {
         setCommand("sethome");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_SET_HOME.getMessage());
-        setPermission(FPermission.HOME_SET.getNode());
+        setHelp(FMessage.HELP_SET_HOME.getMessage());
+        setPermission(FPermission.SET_HOME.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
     }

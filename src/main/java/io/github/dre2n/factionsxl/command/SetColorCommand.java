@@ -38,7 +38,7 @@ public class SetColorCommand extends BRCommand {
         setCommand("setColor");
         setMinArgs(3);
         setMaxArgs(3);
-        setHelp(FMessage.HELP_CMD_SET_COLOR.getMessage());
+        setHelp(FMessage.HELP_SET_COLOR.getMessage());
         setPermission(FPermission.SET_COLOR.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

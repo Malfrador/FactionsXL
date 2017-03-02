@@ -19,11 +19,15 @@ package io.github.dre2n.factionsxl.config;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- *
  * @author Daniel Saukel
  */
 public class FData {
@@ -31,14 +35,35 @@ public class FData {
     public static final File FILE = new File(FactionsXL.getInstance().getDataFolder(), "data.yml");
 
     public FileConfiguration config = YamlConfiguration.loadConfiguration(FILE);
+
     public long lastNewDay;
+    public long lastPowerUpdate;
+    public Map<UUID, Double> power = new HashMap<>();
 
     public FData() {
         lastNewDay = config.getLong("lastNewDay");
+        lastPowerUpdate = config.getLong("lastPowerUpdate");
+
+        ConfigurationSection powerSection = config.getConfigurationSection("power");
+        if (powerSection != null) {
+            for (Entry<String, Object> entry : powerSection.getValues(false).entrySet()) {
+                power.put(UUID.fromString(entry.getKey()), (Double) entry.getValue());
+            }
+        }
     }
 
     public void save() {
         config.set("lastNewDay", lastNewDay);
+        config.set("lastPowerUpdate", lastPowerUpdate);
+
+        if (!config.contains("power")) {
+            config.createSection("power");
+        }
+        ConfigurationSection powerSection = config.getConfigurationSection("power");
+        for (Entry<UUID, Double> entry : power.entrySet()) {
+            powerSection.set(entry.getKey().toString(), entry.getValue());
+        }
+        config.set("power", powerSection);
 
         try {
             config.save(FILE);

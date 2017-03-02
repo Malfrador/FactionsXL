@@ -38,7 +38,7 @@ public class RelationNeutralCommand extends BRCommand {
         setCommand("neutral");
         setMinArgs(1);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_NEUTRAL.getMessage());
+        setHelp(FMessage.HELP_NEUTRAL.getMessage());
         setPermission(FPermission.RELATION.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

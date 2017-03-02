@@ -37,7 +37,7 @@ public class LeaveCommand extends BRCommand {
         setCommand("leave");
         setMinArgs(0);
         setMaxArgs(0);
-        setHelp(FMessage.HELP_CMD_LEAVE.getMessage());
+        setHelp(FMessage.HELP_LEAVE.getMessage());
         setPermission(FPermission.LEAVE.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

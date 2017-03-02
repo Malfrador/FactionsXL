@@ -173,15 +173,16 @@ public class FPlayer implements RelationParticipator {
      * the player's power value
      */
     public int getPower() {
-        return 0;
+        Double raw = plugin.getFData().power.get(uuid);
+        return raw != null ? (int) Math.round(raw) : 0;
     }
 
     /**
      * @param power
      * the power value to set
      */
-    public void setPower(int power) {
-        ;// TODO
+    public void setPower(double power) {
+        plugin.getFData().power.put(uuid, power);
     }
 
     /**

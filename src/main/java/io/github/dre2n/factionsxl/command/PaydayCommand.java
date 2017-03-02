@@ -33,7 +33,7 @@ public class PaydayCommand extends BRCommand {
         setCommand("payday");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_PAYDAY.getMessage());
+        setHelp(FMessage.HELP_PAYDAY.getMessage());
         setPermission(FPermission.PAYDAY.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

@@ -33,7 +33,7 @@ public class MainCommand extends BRCommand {
 
     public MainCommand() {
         setCommand("main");
-        setHelp(FMessage.HELP_CMD_MAIN.getMessage());
+        setHelp(FMessage.HELP_MAIN.getMessage());
         setPermission(FPermission.MAIN.getNode());
         setPlayerCommand(true);
         setConsoleCommand(true);

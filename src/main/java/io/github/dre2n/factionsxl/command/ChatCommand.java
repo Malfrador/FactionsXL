@@ -33,7 +33,7 @@ public class ChatCommand extends BRCommand {
         setCommand("c");
         setMinArgs(1);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CMD_CHAT.getMessage());
+        setHelp(FMessage.HELP_CHAT.getMessage());
         setPermission(FPermission.CHAT.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

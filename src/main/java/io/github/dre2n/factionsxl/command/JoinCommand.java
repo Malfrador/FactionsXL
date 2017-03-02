@@ -37,7 +37,7 @@ public class JoinCommand extends BRCommand {
         setCommand("join");
         setMinArgs(1);
         setMaxArgs(2);
-        setHelp(FMessage.HELP_CMD_JOIN.getMessage());
+        setHelp(FMessage.HELP_JOIN.getMessage());
         setPermission(FPermission.JOIN.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);

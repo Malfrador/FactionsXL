@@ -26,7 +26,7 @@ public class RelationOathCommand extends RelationAliasCommand {
 
     public RelationOathCommand() {
         setCommand("oath");
-        setHelp(FMessage.HELP_CMD_OATH.getMessage());
+        setHelp(FMessage.HELP_OATH.getMessage());
     }
 
     @Override
