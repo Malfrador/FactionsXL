@@ -225,7 +225,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
     }
 
     private Inventory choosePriceAndAmount(int amount, double price) {
-        Inventory gui = Bukkit.createInventory(null, 18, TRADE_OFFER_CHOOSE_PRICE_AND_AMOUNT.replaceAll("&v1", String.valueOf(amount)).replaceAll("&v2", String.valueOf(price)));
+        Inventory gui = Bukkit.createInventory(null, 18, TRADE_OFFER_CHOOSE_PRICE_AND_AMOUNT.replace("&v1", String.valueOf(amount)).replace("&v2", String.valueOf(price)));
         gui.setContents(choosePriceAndAmount);
         return gui;
     }
@@ -327,15 +327,15 @@ public class TradeOfferCommand extends BRCommand implements Listener {
             String name = button.getItemMeta().getDisplayName();
             if (name.startsWith(AMOUNT)) {
                 if (name.startsWith(AMOUNT + PLUS)) {
-                    amount += NumberUtil.parseInt(name.replaceAll(AMOUNT + PLUS, new String()));
+                    amount += NumberUtil.parseInt(name.replace(AMOUNT + PLUS, new String()));
                 } else if (name.startsWith(AMOUNT + MINUS)) {
-                    amount -= NumberUtil.parseInt(name.replaceAll(AMOUNT + MINUS, new String()));
+                    amount -= NumberUtil.parseInt(name.replace(AMOUNT + MINUS, new String()));
                 }
             } else if (name.startsWith(PRICE)) {
                 if (name.startsWith(PRICE + PLUS)) {
-                    price += NumberUtil.parseDouble(name.replaceAll(PRICE + PLUS, new String()));
+                    price += NumberUtil.parseDouble(name.replace(PRICE + PLUS, new String()));
                 } else if (name.startsWith(PRICE + MINUS)) {
-                    price -= NumberUtil.parseDouble(name.replaceAll(PRICE + MINUS, new String()));
+                    price -= NumberUtil.parseDouble(name.replace(PRICE + MINUS, new String()));
                 }
             }
         }
@@ -343,7 +343,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
     }
 
     private int readAmountFromTitle(String title) {
-        String amount = title.replaceAll(ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
+        String amount = title.replace(ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
                 + FMessage.TRADE_OFFER_AMOUNT.getMessage() + ": " + ChatColor.DARK_AQUA.toString(), new String());
         amount = amount.split(" ")[0];
         return NumberUtil.parseInt(amount);

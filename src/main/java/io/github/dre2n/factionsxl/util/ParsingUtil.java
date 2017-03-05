@@ -97,12 +97,12 @@ public enum ParsingUtil {
     public static String replaceChatPlaceholders(String string, FPlayer sender, FPlayer receiver) {
         Faction faction = sender.getFaction();
         Relation relation = faction.getRelation(receiver);
-        string = string.replaceAll(PLAYER_NAME.getPlaceholder(), sender.getName());
-        string = string.replaceAll(PLAYER_PREFIX.getPlaceholder(), sender.getPrefix());
-        string = string.replaceAll(PLAYER_TITLE.getPlaceholder(), sender.getTitle());
-        string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction.getName());
-        string = string.replaceAll(RELATION.getPlaceholder(), relation.getName());
-        string = string.replaceAll(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
+        string = string.replace(PLAYER_NAME.getPlaceholder(), sender.getName());
+        string = string.replace(PLAYER_PREFIX.getPlaceholder(), sender.getPrefix());
+        string = string.replace(PLAYER_TITLE.getPlaceholder(), sender.getTitle());
+        string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
+        string = string.replace(RELATION.getPlaceholder(), relation.getName());
+        string = string.replace(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
@@ -116,23 +116,23 @@ public enum ParsingUtil {
      */
     public static String replaceFactionPlaceholders(String string, Faction faction) {
         if (faction.getAdmin() != null) {
-            string = string.replaceAll(FACTION_ADMIN.getPlaceholder(), faction.getAdmin().getName());
+            string = string.replace(FACTION_ADMIN.getPlaceholder(), faction.getAdmin().getName());
         }
         if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
-            string = string.replaceAll(FACTION_BALANCE.getPlaceholder(), faction.getAccount().getFormatted());
+            string = string.replace(FACTION_BALANCE.getPlaceholder(), faction.getAccount().getFormatted());
         }
-        string = string.replaceAll(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
-        string = string.replaceAll(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
-        string = string.replaceAll(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
-        string = string.replaceAll(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
-        string = string.replaceAll(FACTION_MOD_LIST.getPlaceholder(), namesToString(faction.getMods()));
-        string = string.replaceAll(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
-        string = string.replaceAll(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getMembers().size()));
-        string = string.replaceAll(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getMembers()));
-        string = string.replaceAll(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
-        string = string.replaceAll(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
-        string = string.replaceAll(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
-        string = string.replaceAll(FACTION_TAG.getPlaceholder(), faction.getName());
+        string = string.replace(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
+        string = string.replace(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
+        string = string.replace(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
+        string = string.replace(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
+        string = string.replace(FACTION_MOD_LIST.getPlaceholder(), namesToString(faction.getMods()));
+        string = string.replace(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
+        string = string.replace(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getMembers().size()));
+        string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getMembers()));
+        string = string.replace(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
+        string = string.replace(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
+        string = string.replace(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
+        string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
@@ -147,8 +147,8 @@ public enum ParsingUtil {
      * the FPlayer to compare to the standpoint faction
      */
     public static String replaceRelationPlaceholders(String string, RelationParticipator standpoint, RelationParticipator object) {
-        string = string.replaceAll(RELATION.getPlaceholder(), standpoint.getRelation(object).getName());
-        string = string.replaceAll(RELATION_COLOR.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
+        string = string.replace(RELATION.getPlaceholder(), standpoint.getRelation(object).getName());
+        string = string.replace(RELATION_COLOR.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
@@ -165,13 +165,13 @@ public enum ParsingUtil {
         Economy econ = plugin.getEconomyProvider();
 
         if (plugin.getFConfig().isEconomyEnabled()) {
-            string = string.replaceAll(PLAYER_BALANCE.getPlaceholder(), econ.format(econ.getBalance(fPlayer.getPlayer())));
+            string = string.replace(PLAYER_BALANCE.getPlaceholder(), econ.format(econ.getBalance(fPlayer.getPlayer())));
         }
-        string = string.replaceAll(PLAYER_DYNASTY.getPlaceholder(), fPlayer.getDynasty() != null ? fPlayer.getDynasty().getName() : "None");
-        string = string.replaceAll(PLAYER_NAME.getPlaceholder(), fPlayer.getName());
-        string = string.replaceAll(PLAYER_POWER.getPlaceholder(), String.valueOf(fPlayer.getPower()));
-        string = string.replaceAll(PLAYER_PREFIX.getPlaceholder(), fPlayer.getPrefix());
-        string = string.replaceAll(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
+        string = string.replace(PLAYER_DYNASTY.getPlaceholder(), fPlayer.getDynasty() != null ? fPlayer.getDynasty().getName() : "None");
+        string = string.replace(PLAYER_NAME.getPlaceholder(), fPlayer.getName());
+        string = string.replace(PLAYER_POWER.getPlaceholder(), String.valueOf(fPlayer.getPower()));
+        string = string.replace(PLAYER_PREFIX.getPlaceholder(), fPlayer.getPrefix());
+        string = string.replace(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
 
         return ChatColor.translateAlternateColorCodes('&', string);
     }
@@ -257,10 +257,11 @@ public enum ParsingUtil {
     }
 
     /**
-     * Handles CommandSenders, Players, FPlayers, FactionCache and Regions as arguments
+     * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
      */
     public static void sendMessage(CommandSender sender, String message, Object... args) {
-        FactionCache factions = FactionsXL.getInstance().getFactionCache();
+        FactionsXL plugin = FactionsXL.getInstance();
+        FactionCache factions = plugin.getFactionCache();
         Faction subjectFaction = null;
         if (sender instanceof Player) {
             subjectFaction = factions.getByMember((Player) sender);
@@ -270,6 +271,9 @@ public enum ParsingUtil {
         for (Object arg : args) {
             i++;
             if (arg != null) {
+                if (arg instanceof OfflinePlayer) {
+                    arg = plugin.getFPlayerCache().getByPlayer((OfflinePlayer) arg);
+                }
                 if (arg instanceof String) {
                     messageParsed = messageParsed.replace("&v" + i, (String) arg);
                 } else if (arg instanceof CommandSender) {
