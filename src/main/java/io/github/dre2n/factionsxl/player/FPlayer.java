@@ -242,7 +242,7 @@ public class FPlayer implements RelationParticipator {
      * the player's faction
      */
     public Faction getFaction() {
-        return plugin.getFactionCache().getByMember(player);
+        return plugin.getFactionCache().getByFPlayer(this);
     }
 
     /**

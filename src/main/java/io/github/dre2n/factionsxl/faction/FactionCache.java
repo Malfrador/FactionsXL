@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
 import java.io.File;
 import java.io.IOException;
@@ -248,6 +249,23 @@ public class FactionCache {
         for (Faction faction : getActive()) {
             for (OfflinePlayer player : faction.getMembers()) {
                 if (player.getUniqueId().equals(member.getUniqueId())) {
+                    return faction;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param fPlayer
+     * the FPlayer to check
+     * @return
+     * the faction that has this member
+     */
+    public Faction getByFPlayer(FPlayer fPlayer) {
+        for (Faction faction : getActive()) {
+            for (OfflinePlayer player : faction.getMembers()) {
+                if (player.getUniqueId().equals(fPlayer.getUniqueId())) {
                     return faction;
                 }
             }

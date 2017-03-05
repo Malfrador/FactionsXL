@@ -271,7 +271,7 @@ public enum ParsingUtil {
         for (Object arg : args) {
             i++;
             if (arg != null) {
-                if (arg instanceof OfflinePlayer) {
+                if (arg instanceof OfflinePlayer && !(arg instanceof Player)) {
                     arg = plugin.getFPlayerCache().getByPlayer((OfflinePlayer) arg);
                 }
                 if (arg instanceof String) {
@@ -284,7 +284,7 @@ public enum ParsingUtil {
                     ChatColor color = subjectFaction == null ? ChatColor.WHITE : subjectFaction.getRelation(objectFaction).getColor();
                     messageParsed = messageParsed.replace("&v" + i, color + ((CommandSender) arg).getName());
                 } else if (arg instanceof FPlayer) {
-                    Faction objectFaction = factions.getByMember(((FPlayer) arg).getPlayer());
+                    Faction objectFaction = factions.getByFPlayer(((FPlayer) arg));
                     ChatColor color = subjectFaction == null ? ChatColor.WHITE : subjectFaction.getRelation(objectFaction).getColor();
                     messageParsed = messageParsed.replace("&v" + i, color + ((FPlayer) arg).getName());
                 } else if (arg instanceof Faction) {
