@@ -322,7 +322,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * Updates the home hologram
      */
     public void updateHomeHologram() {
-        if (!fConfig.areHologramsEnabled()) {
+        if (!fConfig.areHologramsEnabled() || !active) {
             return;
         }
         // Run this 1 tick later sothat everything is loaded
