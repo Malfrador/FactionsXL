@@ -75,10 +75,10 @@ public class RelationCommand extends BRCommand {
             for (Request request : requests) {
                 if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction)) {
                     toRemove.add(request);
-                    objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), objectFaction, request.getRelation().getName());
+                    objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, request.getRelation().getName());
                 }
             }
-            toRemove.removeAll(toRemove);
+            requests.removeAll(toRemove);
             return;
         }
 

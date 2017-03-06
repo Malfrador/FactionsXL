@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
@@ -32,7 +33,9 @@ import org.bukkit.entity.Player;
  */
 public class RelationNeutralCommand extends BRCommand {
 
-    FactionCache factions = FactionsXL.getInstance().getFactionCache();
+    FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
+    FactionCache factions = plugin.getFactionCache();
 
     public RelationNeutralCommand() {
         setCommand("neutral");
@@ -77,6 +80,12 @@ public class RelationNeutralCommand extends BRCommand {
             default:
                 subject.getRelations().remove(object);
                 object.getRelations().remove(subject);
+                if (config.isEconomyEnabled()) {
+                    if (subject.getAccount().getBalance() < config.getPriceRelation(Relation.PEACE)) {
+                        subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
+                        return;
+                    }
+                }
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, Relation.PEACE.getName());
         }
     }

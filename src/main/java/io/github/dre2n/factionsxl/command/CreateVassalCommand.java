@@ -20,6 +20,7 @@ import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -39,6 +40,7 @@ public class CreateVassalCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     Board board = plugin.getBoard();
+    FConfig config = plugin.getFConfig();
 
     public CreateVassalCommand() {
         setCommand("createVassal");
@@ -76,6 +78,15 @@ public class CreateVassalCommand extends BRCommand {
         if (plugin.getFactionCache().getByName(args[1]) != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NAME_IN_USE.getMessage(), args[1]);
             return;
+        }
+
+        if (config.isEconomyEnabled()) {
+            if (mother.getAccount().getBalance() < config.getPriceCreateVassal()) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), mother);
+                return;
+            } else {
+                mother.getAccount().withdraw(config.getPriceCreateVassal());
+            }
         }
 
         OfflinePlayer leader = Bukkit.getOfflinePlayer(args[2]);

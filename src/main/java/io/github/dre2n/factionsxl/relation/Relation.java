@@ -17,6 +17,7 @@
 package io.github.dre2n.factionsxl.relation;
 
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
@@ -202,6 +203,41 @@ public enum Relation {
             return relation;
         }
 
+        public Relation getObjectRelation() {
+            switch (relation) {
+                case VASSAL:
+                    return Relation.LORD;
+                case LORD:
+                    return Relation.VASSAL;
+                default:
+                    return relation;
+            }
+        }
+
+        /**
+         * @return
+         * true if the subject faction can pay for the request
+         */
+        public boolean checkSubject() {
+            FConfig config = FactionsXL.getInstance().getFConfig();
+            if (!config.isEconomyEnabled()) {
+                return true;
+            }
+            return subject.getAccount().getBalance() >= config.getPriceRelation(relation);
+        }
+
+        /**
+         * @return
+         * true if the object faction can pay for the request
+         */
+        public boolean checkObject() {
+            FConfig config = FactionsXL.getInstance().getFConfig();
+            if (!config.isEconomyEnabled()) {
+                return true;
+            }
+            return object.getAccount().getBalance() >= config.getPriceRelation(getObjectRelation());
+        }
+
         /**
          * Requires Spigot API!
          *
@@ -235,6 +271,23 @@ public enum Relation {
                 ParsingUtil.broadcastMessage(FMessage.RELATION_UNITED.getMessage(), subject, object);
                 return;
             }
+
+            FConfig config = FactionsXL.getInstance().getFConfig();
+            if (config.isEconomyEnabled()) {
+                if (!checkSubject()) {
+                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
+                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
+                    return;
+                }
+                if (!checkObject()) {
+                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object);
+                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object);
+                    return;
+                }
+                subject.getAccount().withdraw(config.getPriceRelation(relation));
+                object.getAccount().withdraw(config.getPriceRelation(getObjectRelation()));
+            }
+
             subject.getRelations().put(object, relation);
             if (relation != LORD && relation != VASSAL) {
                 object.getRelations().put(subject, relation);

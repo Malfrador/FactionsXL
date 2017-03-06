@@ -20,11 +20,13 @@ import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.commons.util.playerutil.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.util.ProgressBar;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,6 +37,8 @@ import org.bukkit.entity.Player;
 public class HomeCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
+    Economy econ = plugin.getEconomyProvider();
 
     public HomeCommand() {
         setCommand("home");
@@ -60,6 +64,11 @@ public class HomeCommand extends BRCommand {
             } else if (args.length == 2) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             }
+            return;
+        }
+
+        if (FPermission.hasPermission(sender, FPermission.BYPASS)) {
+            PlayerUtil.secureTeleport(player, faction.getHome());
             return;
         }
 
@@ -90,6 +99,14 @@ public class HomeCommand extends BRCommand {
             }
 
             if (teleport) {
+                if (config.isEconomyEnabled()) {
+                    if (!econ.has(player, config.getPriceHomeWarp())) {
+                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage());
+                        return;
+                    } else {
+                        econ.withdrawPlayer(player, config.getPriceHomeWarp());
+                    }
+                }
                 PlayerUtil.secureTeleport(player, target.getHome());
             }
 

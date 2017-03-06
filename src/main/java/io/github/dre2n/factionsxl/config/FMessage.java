@@ -112,6 +112,8 @@ public enum FMessage implements Messages {
     ERROR_NO_SUCH_PLAYER("error.noSuch.player", "&4The player &6&v1 &4does not exist."),
     ERROR_NO_SUCH_REGION("error.noSuch.region", "&4This region does not exist."),
     ERROR_NO_SUCH_RELATION("error.noSuch.relation", "&4The relation &6&v1 &4does not exist."),
+    ERROR_NOT_ENOUGH_MONEY("error.notEnoughMoney", "&4You do not have enough money to do this."),
+    ERROR_NOT_ENOUGH_MONEY_FACTION("error.notEnoughMoneyFaction", "&4The faction &v1 &4does not have enough money to do this."),
     ERROR_NOT_NUMERIC("error.notNumeric", "&6&v1 &4is not a numeric value."),
     ERROR_OWN_FACTION("error.ownFaction", "&4This is your own faction."),
     ERROR_PERSONAL_UNION_WITH_FACTION("error.personalUnionWithFaction", "&4The faction &v1 &4has a personal union with &v2&4."),

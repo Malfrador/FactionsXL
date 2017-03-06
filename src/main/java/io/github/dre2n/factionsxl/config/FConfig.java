@@ -21,16 +21,20 @@ import io.github.dre2n.commons.config.BRConfig;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
+import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Represents the main config.yml.
@@ -55,7 +59,24 @@ public class FConfig extends BRConfig {
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
     private double defaultManpowerModifier = 5;
+
+    // Economy
     private boolean economyEnabled = true;
+    private double priceCreate = 1000;
+    private double priceCreateVassal = 1000;
+    private double priceHomeWarp = 5;
+    private Map<Relation, Double> priceRelation = new HashMap<Relation, Double>() {
+        {
+            put(Relation.REAL_UNION, 500D);
+            put(Relation.ALLIANCE, 750D);
+            put(Relation.PERSONAL_UNION, 0D);
+            put(Relation.LORD, 0D);
+            put(Relation.VASSAL, 750D);
+            put(Relation.COALITION, 0D);
+            put(Relation.PEACE, 0D);
+            put(Relation.ENEMY, 0D);
+        }
+    };
 
     // Chat
     private String chatFormatAlly = "&d[%relation_color%%faction_tag%&d] %relation_color%%player_prefix%&d%player_name%: ";
@@ -205,6 +226,40 @@ public class FConfig extends BRConfig {
      */
     public boolean isEconomyEnabled() {
         return FactionsXL.getInstance().getEconomyProvider() != null && economyEnabled;
+    }
+
+    /**
+     * @return
+     * the price to create a faction
+     */
+    public double getPriceCreate() {
+        return priceCreate;
+    }
+
+    /**
+     * @return
+     * the price to create a vassal
+     */
+    public double getPriceCreateVassal() {
+        return priceCreateVassal;
+    }
+
+    /**
+     * @return
+     * the price to warp to the faction home
+     */
+    public double getPriceHomeWarp() {
+        return priceHomeWarp;
+    }
+
+    /**
+     * @param relation
+     * the new relation
+     * @return
+     * the price to get the relation
+     */
+    public double getPriceRelation(Relation relation) {
+        return priceRelation.get(relation) != null ? priceRelation.get(relation) : 0;
     }
 
     /**
@@ -406,6 +461,25 @@ public class FConfig extends BRConfig {
             config.set("economyEnabled", economyEnabled);
         }
 
+        if (!config.contains("price.create")) {
+            config.set("price.create", priceCreate);
+        }
+
+        if (!config.contains("price.createVassal")) {
+            config.set("price.createVassal", priceCreateVassal);
+        }
+
+        if (!config.contains("price.homeWarp")) {
+            config.set("price.homeWarp", priceHomeWarp);
+        }
+
+        if (!config.contains("price.relation")) {
+            config.createSection("price.relation");
+            for (Entry<Relation, Double> entry : priceRelation.entrySet()) {
+                config.set("price.relation." + entry.getKey().toString(), entry.getValue());
+            }
+        }
+
         if (!config.contains("chatFormat.ally")) {
             config.set("chatFormat.ally", chatFormatAlly);
         }
@@ -517,6 +591,25 @@ public class FConfig extends BRConfig {
 
         if (config.contains("economyEnabled")) {
             economyEnabled = config.getBoolean("economyEnabled");
+        }
+
+        if (config.contains("price.create")) {
+            priceCreate = config.getDouble("price.create");
+        }
+
+        if (config.contains("price.createVassal")) {
+            priceCreateVassal = config.getDouble("price.createVassal");
+        }
+
+        if (config.contains("price.homeWarp")) {
+            priceHomeWarp = config.getDouble("price.homeWarp");
+        }
+
+        if (config.contains("price.relation")) {
+            ConfigurationSection section = config.getConfigurationSection("price.relation");
+            for (Entry<String, Object> entry : section.getValues(false).entrySet()) {
+                priceRelation.put(Relation.fromString(entry.getKey()), (double) entry.getValue());
+            }
         }
 
         if (config.contains("chatFormat.ally")) {

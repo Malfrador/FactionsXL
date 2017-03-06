@@ -19,10 +19,12 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,6 +35,8 @@ import org.bukkit.entity.Player;
 public class CreateCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
+    Economy econ = plugin.getEconomyProvider();
 
     public CreateCommand() {
         setCommand("create");
@@ -63,6 +67,15 @@ public class CreateCommand extends BRCommand {
         if (plugin.getFactionCache().getByName(args[1]) != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NAME_IN_USE.getMessage(), args[1]);
             return;
+        }
+
+        if (config.isEconomyEnabled()) {
+            if (!econ.has(player, config.getPriceCreate())) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage());
+                return;
+            } else {
+                econ.withdrawPlayer(player, config.getPriceCreate());
+            }
         }
 
         plugin.getFactionCache().create(player, args[1]);

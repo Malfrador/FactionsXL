@@ -79,7 +79,7 @@ public class ShowCommand extends BRCommand {
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_DESCRIPTION.getMessage() + c + faction.getDescription());
         if (plugin.getFConfig().isEconomyEnabled()) {
-            MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_BALANCE.getMessage() + c + faction.getAccount().getBalance());
+            MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_BALANCE.getMessage() + c + plugin.getEconomyProvider().format(faction.getAccount().getBalance()));
         }
         String govType = faction.getGovernmentType().getName();
         if (faction.getGovernmentType() == GovernmentType.MONARCHY) {

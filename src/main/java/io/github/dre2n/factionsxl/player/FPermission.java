@@ -169,20 +169,20 @@ public enum FPermission {
             return true;
         }
 
-        FPermission dPermission = null;
+        FPermission fPermission = null;
         if (EnumUtil.isValidEnum(FPermission.class, permission)) {
-            dPermission = FPermission.valueOf(permission);
+            fPermission = FPermission.valueOf(permission);
 
         } else if (FPermission.getByNode(permission) != null) {
-            dPermission = FPermission.getByNode(permission);
+            fPermission = FPermission.getByNode(permission);
         }
 
-        if (dPermission == null) {
+        if (fPermission == null) {
             return false;
         }
 
         for (FPermission parent : FPermission.values()) {
-            if (parent.getChildren().contains(dPermission) && sender.hasPermission(parent.getNode())) {
+            if (parent.getChildren().contains(fPermission) && sender.hasPermission(parent.getNode())) {
                 return true;
             }
         }
