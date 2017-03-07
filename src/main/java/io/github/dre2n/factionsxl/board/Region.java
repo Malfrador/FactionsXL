@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.board;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.SerializationUtil;
@@ -51,6 +52,9 @@ public class Region {
     private List<Chunk> chunks = new ArrayList<>();
     private Map<Faction, Date> cores = new HashMap<>();
     private Map<Faction, Date> claims = new HashMap<>();
+    private String mapFillColor;
+    private String mapLineColor;
+    private DynmapStyle dynmapStyle;
 
     public Region(String name, Chunk chunk) {
         id = plugin.getBoard().generateId();
@@ -79,6 +83,8 @@ public class Region {
             Date date = new Date((long) entry.getValue());
             cores.put(faction, date);
         }
+        mapFillColor = config.getString("mapFillColor");
+        mapLineColor = config.getString("mapLineColor");
     }
 
     public ConfigurationSection serialize() {
@@ -113,6 +119,9 @@ public class Region {
             serializedClaims.put(entry.getKey().getId(), entry.getValue().getTime());
         }
         config.set("claims", serializedClaims);
+
+        config.set("mapFillColor", mapFillColor);
+        config.set("mapLineColor", mapLineColor);
 
         return config;
     }
@@ -244,6 +253,51 @@ public class Region {
      */
     public Map<Faction, Date> getClaimFactions() {
         return claims;
+    }
+
+    /**
+     * @return
+     * the Dynmap fill color
+     */
+    public String getMapFillColor() {
+        return mapFillColor;
+    }
+
+    /**
+     * @return
+     * the Dynmap line color
+     */
+    public String getMapLineColor() {
+        return mapLineColor;
+    }
+
+    /**
+     * @param fill
+     * the Dynmap fill color to set
+     * @param line
+     * the Dynmap line color to set
+     */
+    public void setMapColor(String fill, String line) {
+        if (fill.matches("#[0-9A-F]{6}") && line.matches("#[0-9A-F]{6}")) {
+            mapFillColor = fill;
+            mapLineColor = line;
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+        }
+    }
+
+    /**
+     * @return
+     * the dynmap style of the faction
+     */
+    public DynmapStyle getDynmapStyle() {
+        if (dynmapStyle == null) {
+            if (mapLineColor == null || mapFillColor == null) {
+                dynmapStyle = plugin.getFConfig().getDynmapRegionTypeStyles().get(type);
+            } else {
+                dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+            }
+        }
+        return dynmapStyle;
     }
 
     /**

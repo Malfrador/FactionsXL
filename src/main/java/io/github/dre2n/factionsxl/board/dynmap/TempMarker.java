@@ -82,7 +82,7 @@ public class TempMarker {
     public static MarkerIcon getMarkerIcon(MarkerAPI markerApi, String name) {
         MarkerIcon ret = markerApi.getMarkerIcon(name);
         if (ret == null) {
-            ret = markerApi.getMarkerIcon(Conf.DYNMAP_STYLE_HOME_MARKER);
+            ret = markerApi.getMarkerIcon(DynmapStyle.DEFAULT_HOME_MARKER);
         }
         return ret;
     }

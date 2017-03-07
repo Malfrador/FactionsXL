@@ -16,25 +16,28 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import com.google.common.collect.ImmutableMap;
 import io.github.dre2n.commons.config.BRConfig;
+import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.board.RegionType;
+import static io.github.dre2n.factionsxl.board.RegionType.*;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
+import static io.github.dre2n.factionsxl.board.dynmap.DynmapStyle.DEFAULT_STYLE;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.relation.Relation;
-import io.github.dre2n.factionsxl.util.ParsingUtil;
+import static io.github.dre2n.factionsxl.relation.Relation.*;
+import static io.github.dre2n.factionsxl.util.ParsingUtil.*;
 import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Represents the main config.yml.
@@ -67,21 +70,21 @@ public class FConfig extends BRConfig {
     private double priceHomeWarp = 5;
     private Map<Relation, Double> priceRelation = new HashMap<Relation, Double>() {
         {
-            put(Relation.REAL_UNION, 500D);
-            put(Relation.ALLIANCE, 750D);
-            put(Relation.PERSONAL_UNION, 0D);
-            put(Relation.LORD, 0D);
-            put(Relation.VASSAL, 750D);
-            put(Relation.COALITION, 0D);
-            put(Relation.PEACE, 0D);
-            put(Relation.ENEMY, 0D);
+            put(REAL_UNION, 500D);
+            put(ALLIANCE, 750D);
+            put(PERSONAL_UNION, 0D);
+            put(LORD, 0D);
+            put(VASSAL, 750D);
+            put(COALITION, 0D);
+            put(PEACE, 0D);
+            put(ENEMY, 0D);
         }
     };
 
     // Chat
-    private String chatFormatAlly = "&d[%relation_color%%faction_tag%&d] %relation_color%%player_prefix%&d%player_name%: ";
-    private String chatFormatCoalition = "&c[%relation_color%%faction_tag%&c] %relation_color%%player_prefix%&c%player_name%: ";
-    private String chatFormatFaction = "%relation_color%%player_prefix%&a%player_title% %player_name%: ";
+    private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
+    private String chatFormatCoalition = "&c[" + RELATION_COLOR + FACTION_TAG + "&c] " + RELATION_COLOR + PLAYER_PREFIX + "&c" + PLAYER_NAME + ": ";
+    private String chatFormatFaction = RELATION_COLOR.getPlaceholder() + PLAYER_PREFIX + "&a" + PLAYER_TITLE + " " + PLAYER_NAME + ": ";
 
     // Protection
     private boolean lwcEnabled = true;
@@ -100,8 +103,8 @@ public class FConfig extends BRConfig {
     private List<String> homeHologramText = new ArrayList<>(Arrays.asList(
             "&4&lH O M E",
             "&a" + ProgressBar.BAR,
-            "&6&l=== " + ParsingUtil.FACTION_LONG_TAG + " &6&l===",
-            "&7&o" + ParsingUtil.FACTION_CAPITAL,
+            "&6&l=== " + FACTION_LONG_TAG + " &6&l===",
+            "&7&o" + FACTION_CAPITAL,
             "&a" + ProgressBar.BAR
     ));
 
@@ -112,70 +115,76 @@ public class FConfig extends BRConfig {
     private boolean defaultScoreboardPrefixes = true;
     private boolean scoreboardEnabledByDefault = true;
     private boolean scoreboardFactionlessEnabled = true;
-    private String defaultScoreboardTitle = "&a" + ParsingUtil.PLAYER_NAME;
+    private String defaultScoreboardTitle = "&a" + PLAYER_NAME;
     private List<String> scoreboardDefault = new ArrayList<>(Arrays.asList(
             "&6Your Faction",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_TAG,
+            SCOREBOARD_VALUE_PREFIX + FACTION_TAG,
             "&3Your Dynasty",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_DYNASTY,
+            SCOREBOARD_VALUE_PREFIX + PLAYER_DYNASTY,
             "&6Your Power",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_POWER,
+            SCOREBOARD_VALUE_PREFIX + PLAYER_POWER,
             "&3Balance",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.PLAYER_BALANCE
+            SCOREBOARD_VALUE_PREFIX + PLAYER_BALANCE
     ));
     private List<String> scoreboardFactionInfo = new ArrayList<>(Arrays.asList(
             "&6Government Type",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_GOVERNMENT_TYPE,
+            SCOREBOARD_VALUE_PREFIX + FACTION_GOVERNMENT_TYPE,
             "&3Federation",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FEDERATION_TAG,
+            SCOREBOARD_VALUE_PREFIX + FEDERATION_TAG,
             "&6Leader",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_ADMIN,
+            SCOREBOARD_VALUE_PREFIX + FACTION_ADMIN,
             "&3Members",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_ONLINE_COUNT + "/" + ParsingUtil.FACTION_PLAYER_COUNT,
+            SCOREBOARD_VALUE_PREFIX + FACTION_ONLINE_COUNT + "/" + FACTION_PLAYER_COUNT,
             "&6Capital",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_CAPITAL,
+            SCOREBOARD_VALUE_PREFIX + FACTION_CAPITAL,
             "&3Stability / Power / Provinces",
-            SCOREBOARD_VALUE_PREFIX + ParsingUtil.FACTION_STABILITY + "/" + ParsingUtil.FACTION_POWER + "/" + ParsingUtil.FACTION_PROVINCE_COUNT
+            SCOREBOARD_VALUE_PREFIX + FACTION_STABILITY + "/" + FACTION_POWER + "/" + FACTION_PROVINCE_COUNT
     ));
     private List<String> scoreboardFactionless = new ArrayList<>(Arrays.asList("Join a faction!"));
 
     // Dynmap
-    private boolean dynmap = true;
-    private int dynmapLayerPriority = 2;
+    private boolean dynmapEnabled = true;
+    private int dynmapLayerPriorityFaction = 2;
+    private int dynmapLayerPriorityRegion = 2;
     private int dynmapLayerMinimumZoom = 0;
-    private String dynmapDescription
+    private String dynmapDescriptionFaction
             = "<div class=\"infowindow\">\n"
-            + "<span style=\"font-weight: bold; font-size: 150%;\">%name%</span><br>\n"
-            + "<span style=\"font-style: italic; font-size: 110%;\">%description%</span><br>"
+            + "<span style=\"font-weight: bold; font-size: 150%;\">" + FACTION_LONG_TAG + "</span><br>\n"
+            + "<span style=\"font-style: italic; font-size: 110%;\">" + FACTION_DESCRIPTION + "</span><br>"
             + "<br>\n"
-            + "<span style=\"font-weight: bold;\">Leader:</span> %players.leader%<br>\n"
-            + "<span style=\"font-weight: bold;\">Admins:</span> %players.admins.count%<br>\n"
-            + "<span style=\"font-weight: bold;\">Moderators:</span> %players.moderators.count%<br>\n"
-            + "<span style=\"font-weight: bold;\">Members:</span> %players.normals.count%<br>\n"
-            + "<span style=\"font-weight: bold;\">TOTAL:</span> %players.count%<br>\n"
+            + "<span style=\"font-weight: bold;\">Admin:</span> " + FACTION_ADMIN + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Moderators:</span> " + FACTION_MOD_LIST + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Members:</span> " + FACTION_MEMBER_LIST + "<br>\n"
+            + "<span style=\"font-weight: bold;\">TOTAL:</span> " + FACTION_PLAYER_COUNT + "<br>\n"
             + "</br>\n"
-            + "<span style=\"font-weight: bold;\">Bank:</span> %money%<br>\n"
+            + "<span style=\"font-weight: bold;\">Bank:</span> " + FACTION_BALANCE + "<br>\n"
             + "<br>\n"
             + "</div>";
-    private boolean dynmapDescriptionMoney = false;
-    private boolean dynmapVisibilityByFaction = true;
-    private Set<String> dynmapVisibleFactions = new HashSet<>();
-    private Set<String> dynmapHiddenFactions = new HashSet<>();
-    private DynmapStyle dynmapDefaultStyle = new DynmapStyle()
-            .setStrokeColor("#FFFFFF")
-            .setLineOpacity(0.8)
-            .setLineWeight(3)
-            .setFillColor("#E0E0E0")
-            .setFillOpacity(0.35)
-            .setHomeMarker("greenflag")
-            .setBoost(false);
-    private Map<String, DynmapStyle> dynmapFactionStyles = ImmutableMap.of(
-            "SafeZone", new DynmapStyle().setStrokeColor("#FF00FF").setFillColor("#FF00FF").setBoost(false),
-            "WarZone", new DynmapStyle().setStrokeColor("#FF0000").setFillColor("#FF0000").setBoost(false)
-    );
-    private Map<String, DynmapStyle> dynmapRegionStyles = ImmutableMap.of(
-            "PLACEHOLDER", new DynmapStyle().setStrokeColor("#FF00FF").setFillColor("#FF00FF").setBoost(false)
-    );
+    private String dynmapDescriptionRegion
+            = "<div class=\"infowindow\">\n"
+            + "<span style=\"font-weight: bold; font-size: 150%;\">" + REGION_NAME + " (" + REGION_OWNER + ")" + "</span><br>\n"
+            + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Type:</span> " + REGION_TYPE + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Level:</span> " + REGION_LEVEL + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Population:</span> " + REGION_POPULATION + "<br>\n"
+            + "</br>\n"
+            + "<span style=\"font-weight: bold;\">Cores:</span> " + REGION_CORE_LIST + "<br>\n"
+            + "<span style=\"font-weight: bold;\">Claims:</span> " + REGION_CLAIM_LIST + "<br>\n"
+            + "<br>\n"
+            + "</div>";
+    private List<String> dynmapHiddenWorlds = new ArrayList<>();
+    private Map<RegionType, DynmapStyle> dynmapRegionTypeStyles = new HashMap<RegionType, DynmapStyle>() {
+        {
+            put(BARREN, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#9B8600").setFillColor("#816300"));
+            put(CITY, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#5D82AE").setFillColor("#8EADC8"));
+            put(DESERT, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#D0B203").setFillColor("#FFCF21"));
+            put(FARMLAND, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#72C143").setFillColor("#A5F443"));
+            put(FOREST, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#557B4C").setFillColor("#103700"));
+            put(MAGIC, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#F8AB00").setFillColor("#DF3418"));
+            put(MOUNTAINOUS, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#EDEDED").setFillColor("#DADADA"));
+            put(SEA, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#00C7C2").setFillColor("#0088C2"));
+        }
+    };
 
     public FConfig(File file) {
         super(file, CONFIG_VERSION);
@@ -442,6 +451,75 @@ public class FConfig extends BRConfig {
         return scoreboardFactionless;
     }
 
+    /**
+     * @return
+     * if Dynmap layers shall be enabled
+     */
+    public boolean isDynmapEnabled() {
+        Plugin dynmap = Bukkit.getServer().getPluginManager().getPlugin("dynmap");
+        if (dynmap == null || !dynmap.isEnabled()) {
+            return false;
+        } else {
+            return dynmapEnabled;
+        }
+    }
+
+    /**
+     * @return
+     * the Dynmap faction description
+     */
+    public String getDynmapDescriptionFaction() {
+        return dynmapDescriptionFaction;
+    }
+
+    /**
+     * @return
+     * the Dynmap region description
+     */
+    public String getDynmapDescriptionRegion() {
+        return dynmapDescriptionRegion;
+    }
+
+    /**
+     * @return
+     * the priority of the factions layer
+     */
+    public int getDynmapLayerPriorityFaction() {
+        return dynmapLayerPriorityFaction;
+    }
+
+    /**
+     * @return
+     * the priority of the regions layer
+     */
+    public int getDynmapLayerPriorityRegion() {
+        return dynmapLayerPriorityRegion;
+    }
+
+    /**
+     * @return
+     * the minimum zoom of FXL Dynmaps layers
+     */
+    public int getDynmapLayerMinimumZoom() {
+        return dynmapLayerMinimumZoom;
+    }
+
+    /**
+     * @return
+     * the worlds that are hidden at the dynamic map
+     */
+    public List<String> getDynmapHiddenWorlds() {
+        return dynmapHiddenWorlds;
+    }
+
+    /**
+     * @return
+     * a map of all region type styles
+     */
+    public Map<RegionType, DynmapStyle> getDynmapRegionTypeStyles() {
+        return dynmapRegionTypeStyles;
+    }
+
     /* Actions */
     @Override
     public void initialize() {
@@ -570,6 +648,40 @@ public class FConfig extends BRConfig {
 
         if (!config.contains("scoreboard.factionless")) {
             config.set("scoreboard.factionless", scoreboardFactionless);
+        }
+
+        if (!config.contains("dynmap.enabled")) {
+            config.set("dynmap.enabled", dynmapEnabled);
+        }
+
+        if (!config.contains("dynmap.layer.priority.faction")) {
+            config.set("dynmap.layer.priority.faction", dynmapLayerPriorityFaction);
+        }
+
+        if (!config.contains("dynmap.layer.priority.region")) {
+            config.set("dynmap.layer.priority.region", dynmapLayerPriorityRegion);
+        }
+
+        if (!config.contains("dynmap.layer.minimumZoom")) {
+            config.set("dynmap.layer.minimumZoom", dynmapLayerMinimumZoom);
+        }
+
+        if (!config.contains("dynmap.description.faction")) {
+            config.set("dynmap.description.faction", dynmapDescriptionFaction);
+        }
+
+        if (!config.contains("dynmap.description.region")) {
+            config.set("dynmap.description.region", dynmapDescriptionRegion);
+        }
+
+        if (!config.contains("dynmap.hiddenWorlds")) {
+            config.set("dynmap.hiddenWorlds", dynmapHiddenWorlds);
+        }
+
+        if (!config.contains("dynmap.regionTypeStyles")) {
+            for (Entry<RegionType, DynmapStyle> entry : dynmapRegionTypeStyles.entrySet()) {
+                config.set("dynmap.regionTypeStyles." + entry.getKey().toString(), entry.getValue().fillColor + "/" + entry.getValue().lineColor);
+            }
         }
 
         save();
@@ -702,6 +814,50 @@ public class FConfig extends BRConfig {
 
         if (config.contains("scoreboard.factionless")) {
             scoreboardFactionless = config.getStringList("scoreboard.factionless");
+        }
+
+        if (config.contains("dynmap.enabled")) {
+            dynmapEnabled = config.getBoolean("dynmap.enabled");
+        }
+
+        if (config.contains("dynmap.layer.priority.faction")) {
+            dynmapLayerPriorityFaction = config.getInt("dynmap.layer.priority.faction");
+        }
+
+        if (config.contains("dynmap.layer.priority.region")) {
+            dynmapLayerPriorityRegion = config.getInt("dynmap.layer.priority.region");
+        }
+
+        if (config.contains("dynmap.layer.minimumZoom")) {
+            dynmapLayerMinimumZoom = config.getInt("dynmap.layer.minimumZoom");
+        }
+
+        if (config.contains("dynmap.description.faction")) {
+            dynmapDescriptionFaction = config.getString("dynmap.description.faction");
+        }
+
+        if (config.contains("dynmap.description.region")) {
+            dynmapDescriptionRegion = config.getString("dynmap.description.region");
+        }
+
+        if (config.contains("dynmap.hiddenWorlds")) {
+            dynmapHiddenWorlds = config.getStringList("dynmap.hiddenWorlds");
+        }
+
+        if (config.contains("dynmap.regionTypeStyles")) {
+            for (Entry<String, Object> entry : config.getConfigurationSection("dynmap.regionTypeStyles").getValues(false).entrySet()) {
+                RegionType type = null;
+                if (EnumUtil.isValidEnum(RegionType.class, entry.getKey())) {
+                    type = RegionType.valueOf(entry.getKey());
+                }
+                DynmapStyle style = new DynmapStyle(DynmapStyle.DEFAULT_STYLE);
+                String[] colors = ((String) entry.getValue()).split("/");
+                if (colors.length == 2) {
+                    style.setFillColor(colors[0]);
+                    style.setStrokeColor(colors[1]);
+                }
+                dynmapRegionTypeStyles.put(type, style);
+            }
         }
     }
 

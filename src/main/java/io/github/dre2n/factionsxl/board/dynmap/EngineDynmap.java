@@ -18,10 +18,10 @@ package io.github.dre2n.factionsxl.board.dynmap;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
+import io.github.dre2n.factionsxl.config.FConfig;
 import java.util.ArrayDeque;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.*;
 import org.dynmap.utils.TileFlags;
@@ -35,7 +35,7 @@ public abstract class EngineDynmap {
 
     FactionsXL plugin = FactionsXL.getInstance();
     Board board = plugin.getBoard();
-    Plugin dynmap;
+    FConfig config = plugin.getFConfig();
 
     // -------------------------------------------- //
     // CONSTANTS
@@ -56,14 +56,8 @@ public abstract class EngineDynmap {
     public MarkerSet markerset;
 
     public void init() {
-        dynmap = Bukkit.getServer().getPluginManager().getPlugin("dynmap");
-
-        if (dynmap == null || !dynmap.isEnabled()) {
-            return;
-        }
-
         // Should we even use dynmap?
-        if (!Conf.dynmapUse) {
+        if (!config.isDynmapEnabled()) {
             if (this.markerset != null) {
                 this.markerset.deleteMarkerSet();
                 this.markerset = null;
@@ -94,8 +88,7 @@ public abstract class EngineDynmap {
     public TempMarkerSet createLayer() {
         TempMarkerSet ret = new TempMarkerSet();
         ret.label = layerName;
-        ret.minimumZoom = Conf.dynmapLayerMinimumZoom;
-        ret.priority = Conf.dynmapLayerPriority;
+        ret.minimumZoom = config.getDynmapLayerMinimumZoom();
         ret.hideByDefault = !layerVisible;
         return ret;
     }

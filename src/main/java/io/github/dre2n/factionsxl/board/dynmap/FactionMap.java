@@ -19,11 +19,13 @@ import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
@@ -84,6 +86,13 @@ public class FactionMap extends EngineDynmap {
                 updatePlayersets(playerSets);
             }
         }, 100L, 100L);
+    }
+
+    @Override
+    public TempMarkerSet createLayer() {
+        TempMarkerSet ret = super.createLayer();
+        ret.priority = config.getDynmapLayerPriorityFaction();
+        return ret;
     }
 
     // -------------------------------------------- //
@@ -389,10 +398,6 @@ public class FactionMap extends EngineDynmap {
 
     // Thread Safe / Asynchronous: Yes
     public Map<String, Set<String>> createPlayersets() {
-        if (!Conf.dynmapVisibilityByFaction) {
-            return null;
-        }
-
         Map<String, Set<String>> ret = new HashMap<>();
 
         for (Faction faction : factions.getActive()) {
@@ -528,57 +533,8 @@ public class FactionMap extends EngineDynmap {
     // -------------------------------------------- //
     // Thread Safe / Asynchronous: Yes
     public String getDescription(Faction faction) {
-        String ret = "<div class=\"regioninfo\">" + Conf.dynmapDescription + "</div>";
-
-        // Name
-        String name = faction.getName();
-        name = ChatColor.stripColor(name);
-        name = escapeHtml(name);
-        ret = ret.replace("%name%", name);
-
-        /*// Description
-        String description = faction.getDescription();
-        description = ChatColor.stripColor(description);
-        description = escapeHtml(description);
-        ret = ret.replace("%description%", description);
-
-        // Money
-        String money = "unavailable";
-        if (Conf.bankEnabled && Conf.dynmapDescriptionMoney) {
-            money = String.format("%.2f", Econ.getBalance(faction.getAccountId()));
-        }
-        ret = ret.replace("%money%", money);
-         
-        // Players
-        Set<FPlayer> playersList = faction.getFPlayers();
-        String playersCount = String.valueOf(playersList.size());
-        String players = getHtmlPlayerString(playersList);
-
-        FPlayer playersLeaderObject = faction.getFPlayerAdmin();
-        String playersLeader = getHtmlPlayerName(playersLeaderObject);
-
-        ArrayList<FPlayer> playersAdminsList = faction.getFPlayersWhereRole(Role.ADMIN);
-        String playersAdminsCount = String.valueOf(playersAdminsList.size());
-        String playersAdmins = getHtmlPlayerString(playersAdminsList);
-
-        ArrayList<FPlayer> playersModeratorsList = faction.getFPlayersWhereRole(Role.MODERATOR);
-        String playersModeratorsCount = String.valueOf(playersModeratorsList.size());
-        String playersModerators = getHtmlPlayerString(playersModeratorsList);
-
-        ArrayList<FPlayer> playersNormalsList = faction.getFPlayersWhereRole(Role.NORMAL);
-        String playersNormalsCount = String.valueOf(playersNormalsList.size());
-        String playersNormals = getHtmlPlayerString(playersNormalsList);
-
-        ret = ret.replace("%players%", players);
-        ret = ret.replace("%players.count%", playersCount);
-        ret = ret.replace("%players.leader%", playersLeader);
-        ret = ret.replace("%players.admins%", playersAdmins);
-        ret = ret.replace("%players.admins.count%", playersAdminsCount);
-        ret = ret.replace("%players.moderators%", playersModerators);
-        ret = ret.replace("%players.moderators.count%", playersModeratorsCount);
-        ret = ret.replace("%players.normals%", playersNormals);
-        ret = ret.replace("%players.normals.count%", playersNormalsCount);*/
-        return ret;
+        String ret = "<div class=\"regioninfo\">" + config.getDynmapDescriptionFaction() + "</div>";
+        return ParsingUtil.replaceFactionPlaceholders(ret, faction);
     }
 
     public static String getHtmlPlayerString(Collection<FPlayer> playersOfficersList) {
@@ -604,27 +560,13 @@ public class FactionMap extends EngineDynmap {
         if (faction == null) {
             return false;
         }
-        final String factionId = String.valueOf(faction.getId());
-        if (factionId == null) {
-            return false;
-        }
-        final String factionName = faction.getName();
-        if (factionName == null) {
+
+        List<String> hidden = config.getDynmapHiddenWorlds();
+        if (hidden.contains(world)) {
             return false;
         }
 
-        Set<String> visible = Conf.dynmapVisibleFactions;
-        Set<String> hidden = Conf.dynmapHiddenFactions;
-
-        if (!visible.isEmpty() && !visible.contains(factionId) && !visible.contains(factionName) && !visible.contains("world:" + world)) {
-            return false;
-        }
-
-        if (hidden.contains(factionId) || hidden.contains(factionName) || hidden.contains("world:" + world)) {
-            return false;
-        }
-
-        return true;
+        return faction.isMapVisible();
     }
 
 }

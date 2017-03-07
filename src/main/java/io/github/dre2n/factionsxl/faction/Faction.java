@@ -82,6 +82,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     String mapFillColor = "#E0E0E0";
     String mapLineColor = "#FFFFFF";
     DynmapStyle dynmapStyle;
+    boolean mapVisibility = true;
     GovernmentType type;
     boolean open;
     double prestige;
@@ -172,6 +173,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (fill.matches("#[0-9A-F]{6}") && line.matches("#[0-9A-F]{6}")) {
             mapFillColor = fill;
             mapLineColor = line;
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
         }
     }
 
@@ -181,9 +183,25 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public DynmapStyle getDynmapStyle() {
         if (dynmapStyle == null) {
-            dynmapStyle = new DynmapStyle().setStrokeColor(mapLineColor).setFillColor(mapFillColor).setBoost(false);
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
         }
         return dynmapStyle;
+    }
+
+    /**
+     * @return
+     * the map visibility
+     */
+    public boolean isMapVisible() {
+        return mapVisibility;
+    }
+
+    /**
+     * @param visibility
+     * set the faction to visible or hidden
+     */
+    public void setMapVisibility(boolean visibility) {
+        mapVisibility = visibility;
     }
 
     /**
@@ -817,6 +835,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         bannerColor = (short) config.getInt("bannerColor");
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
+        mapVisibility = config.getBoolean("mapVisibility");
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
         manpowerModifier = config.getInt("manpowerModifier", 0);
@@ -888,6 +907,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         config.set("bannerColor", bannerColor);
         config.set("mapFillColor", mapFillColor);
         config.set("mapLineColor", mapLineColor);
+        config.set("mapVisibility", mapVisibility);
         config.set("creationDate", creationDate);
         config.set("type", type.toString());
         if (!active) {

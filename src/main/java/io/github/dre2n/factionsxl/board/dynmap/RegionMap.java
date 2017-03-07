@@ -16,6 +16,7 @@
 package io.github.dre2n.factionsxl.board.dynmap;
 
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,6 +66,13 @@ public class RegionMap extends EngineDynmap {
                 updateAreas(areas);
             }
         }, 100L, 100L);
+    }
+
+    @Override
+    public TempMarkerSet createLayer() {
+        TempMarkerSet ret = super.createLayer();
+        ret.priority = config.getDynmapLayerPriorityRegion();
+        return ret;
     }
 
     // -------------------------------------------- //
@@ -328,29 +336,14 @@ public class RegionMap extends EngineDynmap {
     // -------------------------------------------- //
     // Thread Safe / Asynchronous: Yes
     public String getDescription(Region region) {
-        String name = region.getName();
-        if (!region.isNeutral()) {
-            name += " (" + region.getOwner().getName() + ")";
-        }
-        // TO DO: Cores, claims, ...
-        return name;
+        String ret = "<div class=\"regioninfo\">" + config.getDynmapDescriptionRegion() + "</div>";
+        return ParsingUtil.replaceRegionPlaceholders(ret, region);
     }
 
     // Thread Safe / Asynchronous: Yes
     public DynmapStyle getStyle(Region region) {
-        DynmapStyle ret;
-
-        ret = Conf.dynmapRegionStyles.get(String.valueOf(region.getId()));
-        if (ret != null) {
-            return ret;
-        }
-
-        ret = Conf.dynmapRegionStyles.get(region.getName());
-        if (ret != null) {
-            return ret;
-        }
-
-        return Conf.dynmapDefaultStyle;
+        DynmapStyle ret = region.getDynmapStyle();
+        return ret != null ? ret : DynmapStyle.DEFAULT_STYLE;
     }
 
 }

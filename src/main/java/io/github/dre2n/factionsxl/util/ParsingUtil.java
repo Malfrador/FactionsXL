@@ -45,6 +45,7 @@ public enum ParsingUtil {
     FACTION_ADMIN("%faction_admin%"),
     FACTION_BALANCE("%faction_balance%"),
     FACTION_CAPITAL("%faction_capital%"),
+    FACTION_DESCRIPTION("%faction_description%"),
     FACTION_GOVERNMENT_TYPE("%faction_gov_type%"),
     FACTION_LONG_TAG("%faction_long_tag%"),
     FACTION_MEMBER_LIST("%faction_member_list%"),
@@ -63,6 +64,14 @@ public enum ParsingUtil {
     PLAYER_POWER("%player_power%"),
     PLAYER_PREFIX("%player_prefix%"),
     PLAYER_TITLE("%player_title%"),
+    REGION_CORE_LIST("%region_core_list%"),
+    REGION_CLAIM_LIST("%region_claim_list%"),
+    REGION_LEVEL("%region_level%"),
+    REGION_NAME("%region_name%"),
+    REGION_OWNER("%region_owner%"),
+    REGION_POPULATION("%region_population%"),
+    REGION_SIZE("%region_size%"),
+    REGION_TYPE("%region_type%"),
     RELATION("%relation%"),
     RELATION_COLOR("%relation_color%");
 
@@ -122,6 +131,7 @@ public enum ParsingUtil {
             string = string.replace(FACTION_BALANCE.getPlaceholder(), faction.getAccount().getFormatted());
         }
         string = string.replace(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
+        string = string.replace(FACTION_DESCRIPTION.getPlaceholder(), faction.getDescription());
         string = string.replace(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
         string = string.replace(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
         string = string.replace(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
@@ -137,7 +147,27 @@ public enum ParsingUtil {
     }
 
     /**
-     * Replace the relation and player placeholders in a String automatically.
+     * Replace the region placeholders in a String automatically.
+     *
+     * @param string
+     * the String that contains the placeholders
+     * @param region
+     * the region the replacements are taken from
+     */
+    public static String replaceRegionPlaceholders(String string, Region region) {
+        string = string.replace(REGION_CLAIM_LIST.getPlaceholder(), factionsToString(region.getClaimFactions().keySet()));
+        string = string.replace(REGION_CORE_LIST.getPlaceholder(), factionsToString(region.getCoreFactions().keySet()));
+        string = string.replace(REGION_LEVEL.getPlaceholder(), String.valueOf(region.getLevel()));
+        string = string.replace(REGION_NAME.getPlaceholder(), region.getName());
+        string = string.replace(REGION_OWNER.getPlaceholder(), region.getOwner() != null ? region.getOwner().getName() : FMessage.MISC_WILDERNESS.getMessage());
+        string = string.replace(REGION_POPULATION.getPlaceholder(), String.valueOf(region.getPopulation()));
+        string = string.replace(REGION_SIZE.getPlaceholder(), String.valueOf(region.getSize()));
+        string = string.replace(REGION_TYPE.getPlaceholder(), region.getType().getName());
+        return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    /**
+     * Replace the relation placeholders in a String automatically.
      *
      * @param string
      * the String that contains the placeholders
@@ -174,6 +204,24 @@ public enum ParsingUtil {
         string = string.replace(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
 
         return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    public static String factionsToString(Collection<Faction> factions) {
+        return factionsToString(factions, ChatColor.WHITE);
+    }
+
+    public static String factionsToString(Collection<Faction> factions, ChatColor comma) {
+        String names = new String();
+        boolean first = true;
+        for (Faction faction : factions) {
+            if (!first) {
+                names += comma + ", ";
+            } else {
+                first = false;
+            }
+            names += faction.getName();
+        }
+        return names;
     }
 
     public static List<String> namesToList(Collection<FPlayer> fPlayers) {
