@@ -71,7 +71,7 @@ public class CreateCommand extends BRCommand {
 
         if (config.isEconomyEnabled()) {
             if (!econ.has(player, config.getPriceCreate())) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage());
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage(), String.valueOf(config.getPriceCreate()));
                 return;
             } else {
                 econ.withdrawPlayer(player, config.getPriceCreate());

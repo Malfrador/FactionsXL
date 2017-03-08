@@ -275,13 +275,13 @@ public enum Relation {
             FConfig config = FactionsXL.getInstance().getFConfig();
             if (config.isEconomyEnabled()) {
                 if (!checkSubject()) {
-                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
-                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
+                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(config.getPriceRelation(relation)));
+                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(config.getPriceRelation(relation)));
                     return;
                 }
                 if (!checkObject()) {
-                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object);
-                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object);
+                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object, String.valueOf(config.getPriceRelation(getObjectRelation())));
+                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object, String.valueOf(config.getPriceRelation(getObjectRelation())));
                     return;
                 }
                 subject.getAccount().withdraw(config.getPriceRelation(relation));

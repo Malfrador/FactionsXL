@@ -82,7 +82,7 @@ public class RelationNeutralCommand extends BRCommand {
                 object.getRelations().remove(subject);
                 if (config.isEconomyEnabled()) {
                     if (subject.getAccount().getBalance() < config.getPriceRelation(Relation.PEACE)) {
-                        subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject);
+                        subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(String.valueOf(config.getPriceRelation(Relation.PEACE))));
                         return;
                     }
                 }

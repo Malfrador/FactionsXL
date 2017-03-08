@@ -83,7 +83,7 @@ public class CreateVassalCommand extends BRCommand {
 
         if (config.isEconomyEnabled()) {
             if (mother.getAccount().getBalance() < config.getPriceCreateVassal()) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), mother);
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), mother, String.valueOf(config.getPriceCreateVassal()));
                 return;
             } else {
                 mother.getAccount().withdraw(config.getPriceCreateVassal());

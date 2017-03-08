@@ -101,7 +101,7 @@ public class HomeCommand extends BRCommand {
             if (teleport) {
                 if (config.isEconomyEnabled()) {
                     if (!econ.has(player, config.getPriceHomeWarp())) {
-                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage());
+                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage(), String.valueOf(config.getPriceHomeWarp()));
                         return;
                     } else {
                         econ.withdrawPlayer(player, config.getPriceHomeWarp());
