@@ -26,6 +26,7 @@ import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
+import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -99,6 +100,13 @@ public class CreateVassalCommand extends BRCommand {
             return;
         }
 
+        mother.getMods().remove(leader);
+        mother.getMembers().remove(leader);
+        if (leader.isOnline()) {
+            mother.getOnlineMods().remove(leader.getPlayer());
+            mother.getOnlineMembers().remove(leader.getPlayer());
+        }
+        FTeamWrapper.updatePrefixes(mother);
         Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);
