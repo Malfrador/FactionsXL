@@ -23,6 +23,7 @@ import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -43,6 +44,7 @@ import org.bukkit.entity.Player;
 public class RegionCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FactionCache factions = plugin.getFactionCache();
     Board board = plugin.getBoard();
 
     public RegionCommand() {
@@ -84,11 +86,15 @@ public class RegionCommand extends BRCommand {
         }
 
         Faction faction = region.getOwner();
-        ChatColor c = faction != null && sender instanceof Player ? faction.getRelation(plugin.getFactionCache().getByMember((Player) sender)).getColor() : Relation.PEACE.getColor();
+        ChatColor c = faction != null && sender instanceof Player ? faction.getRelation(factions.getByMember((Player) sender)).getColor() : Relation.PEACE.getColor();
 
         MessageUtil.sendCenteredMessage(sender, c + "&l=== " + region.getName() + " ===");
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OWNER.getMessage() + c + (faction != null ? faction.getLongName() : "None"));
+        if (region.isNeutral()) {
+            Faction senderFaction = sender instanceof Player ? factions.getByMember((Player) sender) : null;
+            MessageUtil.sendMessage(sender, FMessage.CMD_REGION_PRICE.getMessage() + c + region.getClaimPrice(senderFaction));
+        }
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_TYPE.getMessage() + c + region.getType().getName() + " (" + region.getLevel() + ")");
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_POPULATION.getMessage() + c + region.getPopulation());
 

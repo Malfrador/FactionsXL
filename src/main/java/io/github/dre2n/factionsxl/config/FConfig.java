@@ -47,7 +47,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends BRConfig {
 
-    public static final int CONFIG_VERSION = 0;
+    public static final int CONFIG_VERSION = 1;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -80,6 +80,9 @@ public class FConfig extends BRConfig {
             put(ENEMY, 0D);
         }
     };
+    private double priceClaimBase = 100;
+    private double priceClaimPerChunk = 10;
+    private double priceClaimIncrease = 100;
 
     // Chat
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
@@ -269,6 +272,30 @@ public class FConfig extends BRConfig {
      */
     public double getPriceRelation(Relation relation) {
         return priceRelation.get(relation) != null ? priceRelation.get(relation) : 0;
+    }
+
+    /**
+     * @return
+     * the base price for claiming a region
+     */
+    public double getPriceClaimBase() {
+        return priceClaimBase;
+    }
+
+    /**
+     * @return
+     * the price per chunk for claiming a region
+     */
+    public double getPriceClaimPerChunk() {
+        return priceClaimPerChunk;
+    }
+
+    /**
+     * @return
+     * the claiming price increase per region that the faction already owns
+     */
+    public double getPriceClaimIncrease() {
+        return priceClaimIncrease;
     }
 
     /**
@@ -558,6 +585,18 @@ public class FConfig extends BRConfig {
             }
         }
 
+        if (!config.contains("price.claim.base")) {
+            config.set("price.claim.base", priceClaimBase);
+        }
+
+        if (!config.contains("price.claim.perChunk")) {
+            config.set("price.claim.perChunk", priceClaimPerChunk);
+        }
+
+        if (!config.contains("price.claim.increase")) {
+            config.set("price.claim.increase", priceClaimIncrease);
+        }
+
         if (!config.contains("chatFormat.ally")) {
             config.set("chatFormat.ally", chatFormatAlly);
         }
@@ -722,6 +761,18 @@ public class FConfig extends BRConfig {
             for (Entry<String, Object> entry : section.getValues(false).entrySet()) {
                 priceRelation.put(Relation.fromString(entry.getKey()), (double) entry.getValue());
             }
+        }
+
+        if (config.contains("price.claim.base")) {
+            priceClaimBase = config.getDouble("price.claim.base");
+        }
+
+        if (config.contains("price.claim.perChunk")) {
+            priceClaimPerChunk = config.getDouble("price.claim.perChunk");
+        }
+
+        if (config.contains("price.claim.increase")) {
+            priceClaimIncrease = config.getDouble("price.claim.increase");
         }
 
         if (config.contains("chatFormat.ally")) {

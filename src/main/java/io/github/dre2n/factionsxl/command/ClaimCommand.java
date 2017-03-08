@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -32,6 +33,7 @@ import org.bukkit.entity.Player;
 public class ClaimCommand extends BRCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
 
     public ClaimCommand() {
         setCommand("claim");
@@ -61,6 +63,17 @@ public class ClaimCommand extends BRCommand {
         if (region == null || !region.isNeutral()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
             return;
+        }
+
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            double price = region.getClaimPrice(faction);
+            if (faction.getAccount().getBalance() < price) {
+                ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
+                return;
+            } else {
+                ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
+                faction.getAccount().withdraw(price);
+            }
         }
 
         region.setOwner(faction);

@@ -20,6 +20,7 @@ import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.SerializationUtil;
@@ -314,6 +315,19 @@ public class Region {
      */
     public World getWorld() {
         return chunks.get(0).getWorld();
+    }
+
+    /**
+     * @param faction
+     * the faction to calculate the per claim price increase
+     * @return
+     * the price to claim this region
+     */
+    public double getClaimPrice(Faction faction) {
+        FConfig config = plugin.getFConfig();
+        double base = config.getPriceClaimBase() + config.getPriceClaimPerChunk() * chunks.size();
+        double increase = faction != null ? config.getPriceClaimIncrease() * faction.getRegions().size() : 0;
+        return base + increase;
     }
 
 }

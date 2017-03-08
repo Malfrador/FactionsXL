@@ -30,7 +30,7 @@ public class FPlayerData extends BRConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final int CONFIG_VERSION = 0;
+    public static final int CONFIG_VERSION = 1;
 
     private String lastName;
     private String title;
