@@ -24,6 +24,7 @@ import static io.github.dre2n.factionsxl.board.RegionType.*;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import static io.github.dre2n.factionsxl.board.dynmap.DynmapStyle.DEFAULT_STYLE;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
+import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.relation.Relation;
 import static io.github.dre2n.factionsxl.relation.Relation.*;
 import static io.github.dre2n.factionsxl.util.ParsingUtil.*;
@@ -47,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends BRConfig {
 
-    public static final int CONFIG_VERSION = 1;
+    public static final int CONFIG_VERSION = 2;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -723,6 +724,10 @@ public class FConfig extends BRConfig {
             }
         }
 
+        for (Resource resource : Resource.values()) {
+            config.set("resourcePrices." + resource.toString(), resource.getValue());
+        }
+
         save();
     }
 
@@ -908,6 +913,13 @@ public class FConfig extends BRConfig {
                     style.setStrokeColor(colors[1]);
                 }
                 dynmapRegionTypeStyles.put(type, style);
+            }
+        }
+
+        if (config.contains("resourcePrices")) {
+            ConfigurationSection resourcePrices = config.getConfigurationSection("resourcePrices");
+            if (resourcePrices != null) {
+                Resource.loadPrices(resourcePrices.getValues(false));
             }
         }
     }
