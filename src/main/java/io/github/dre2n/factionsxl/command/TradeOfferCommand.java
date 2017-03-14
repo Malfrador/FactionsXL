@@ -54,11 +54,11 @@ public class TradeOfferCommand extends BRCommand implements Listener {
 
     public final String TRADE_OFFER_CHOOSE_PRICE_AND_AMOUNT = ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
             + FMessage.TRADE_OFFER_AMOUNT.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v1 " + ChatColor.GREEN.toString()
-            + ChatColor.BOLD.toString() + FMessage.TRADE_OFFER_PRICE.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v2";
+            + ChatColor.BOLD.toString() + FMessage.TRADE_PRICE.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v2";
     public final String PLUS = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "+";
     public final String MINUS = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "-";
     public final String AMOUNT = ChatColor.WHITE + FMessage.TRADE_OFFER_AMOUNT.getMessage() + " ";
-    public final String PRICE = ChatColor.WHITE + FMessage.TRADE_OFFER_PRICE.getMessage() + " ";
+    public final String PRICE = ChatColor.WHITE + FMessage.TRADE_PRICE.getMessage() + " ";
 
     private Inventory chooseResource;
     private Inventory chooseExport;

@@ -21,6 +21,9 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -39,32 +42,8 @@ public class ResourceMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack EXPORT_UP;
-    public static final ItemStack EXPORT_DOWN;
-    public static final ItemStack IMPORT_UP;
-    public static final ItemStack IMPORT_DOWN;
-
-    static {
-        EXPORT_UP = ItemUtil.UP.clone();
-        ItemMeta exUpMeta = EXPORT_UP.getItemMeta();
-        exUpMeta.setDisplayName(FMessage.TRADE_EXPORT_UP.getMessage());
-        EXPORT_UP.setItemMeta(exUpMeta);
-
-        EXPORT_DOWN = ItemUtil.DOWN.clone();
-        ItemMeta exDownMeta = EXPORT_DOWN.getItemMeta();
-        exDownMeta.setDisplayName(FMessage.TRADE_EXPORT_DOWN.getMessage());
-        EXPORT_DOWN.setItemMeta(exDownMeta);
-
-        IMPORT_UP = ItemUtil.UP.clone();
-        ItemMeta imUpMeta = IMPORT_UP.getItemMeta();
-        imUpMeta.setDisplayName(FMessage.TRADE_IMPORT_UP.getMessage());
-        IMPORT_UP.setItemMeta(imUpMeta);
-
-        IMPORT_DOWN = ItemUtil.DOWN.clone();
-        ItemMeta imDownMeta = IMPORT_DOWN.getItemMeta();
-        imDownMeta.setDisplayName(FMessage.TRADE_IMPORT_DOWN.getMessage());
-        IMPORT_DOWN.setItemMeta(imDownMeta);
-    }
+    private ItemStack exportButton;
+    private ItemStack importButton;
 
     private Faction faction;
     private Resource resource;
@@ -73,6 +52,22 @@ public class ResourceMenu implements Listener {
     private Inventory gui;
 
     public ResourceMenu(Faction faction, Resource resource, int income, int consume) {
+        exportButton = ItemUtil.DOWN.clone();
+        ItemMeta exMeta = exportButton.getItemMeta();
+        exMeta.setDisplayName(FMessage.TRADE_EXPORT.getMessage());
+        double exValue = resource.getValue() * plugin.getFConfig().getExportModifier();
+        List<String> exLore = new ArrayList<>(Arrays.asList(ChatColor.GREEN + FMessage.TRADE_PRICE.getMessage() + ": +" + exValue));
+        exMeta.setLore(exLore);
+        exportButton.setItemMeta(exMeta);
+
+        importButton = ItemUtil.UP.clone();
+        ItemMeta imMeta = importButton.getItemMeta();
+        imMeta.setDisplayName(FMessage.TRADE_IMPORT.getMessage());
+        double imValue = resource.getValue() * plugin.getFConfig().getImportModifier();
+        List<String> imLore = new ArrayList<>(Arrays.asList(ChatColor.DARK_RED + FMessage.TRADE_PRICE.getMessage() + ": -" + imValue));
+        imMeta.setLore(imLore);
+        importButton.setItemMeta(imMeta);
+
         this.faction = faction;
         this.resource = resource;
         this.income = income;
@@ -97,10 +92,8 @@ public class ResourceMenu implements Listener {
         gui.setItem(6, banner);
         gui.setItem(7, banner);
         gui.setItem(8, banner);
-        gui.setItem(11, IMPORT_UP);
-        gui.setItem(20, IMPORT_DOWN);
-        gui.setItem(15, EXPORT_UP);
-        gui.setItem(24, EXPORT_DOWN);
+        gui.setItem(13, importButton);
+        gui.setItem(22, exportButton);
     }
 
     public int getIncome() {
@@ -120,7 +113,7 @@ public class ResourceMenu implements Listener {
     }
 
     public void update() {
-        gui.setItem(4, TradeMenu.formButton(faction.getRegions(), resource));
+        gui.setItem(4, TradeMenu.formButton(faction, resource));
     }
 
     @EventHandler
@@ -136,9 +129,16 @@ public class ResourceMenu implements Listener {
         if (button == null) {
             return;
         }
+        int current = faction.getImportValue(resource);
         if (button.equals(PageGUI.GUI_BACK)) {
             faction.getTradeMenu().open(player);
+            return;
+        } else if (button.equals(exportButton)) {
+            faction.getGroceryList().put(resource, current - 1);
+        } else if (button.equals(importButton)) {
+            faction.getGroceryList().put(resource, current + 1);
         }
+        update();
     }
 
 }
