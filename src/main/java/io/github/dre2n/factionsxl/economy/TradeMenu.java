@@ -18,14 +18,14 @@ package io.github.dre2n.factionsxl.economy;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -44,13 +44,11 @@ public class TradeMenu implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
 
     private Faction faction;
-    private Set<Region> regions = new HashSet<>();
     private PageGUI gui;
     private Map<Resource, ResourceMenu> resourceMenus = new HashMap<>();
 
     public TradeMenu(Faction faction) {
         this.faction = faction;
-        regions = faction.getRegions();
         update();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -65,7 +63,7 @@ public class TradeMenu implements Listener {
         } else {
             gui = new PageGUI(FMessage.TRADE_TITLE.getMessage(faction.getName()));
             for (Resource resource : Resource.values()) {
-                gui.addButton(formButton(regions, resource));
+                gui.addButton(formButton(faction, resource));
                 if (!resourceMenus.containsKey(resource)) {
                     resourceMenus.put(resource, new ResourceMenu(faction, resource, /*income*/ 1, 2/*consume*/));
                 } else {
@@ -75,12 +73,24 @@ public class TradeMenu implements Listener {
         }
     }
 
-    public static ItemStack formButton(Set<Region> regions, Resource resource) {
+    public static ItemStack formButton(Faction faction, Resource resource) {
+        FactionsXL plugin = FactionsXL.getInstance();
+        FConfig config = plugin.getFConfig();
+        Economy econ = plugin.getEconomyProvider();
         ItemStack icon = new ItemStack(resource.getIcon());
         ItemMeta meta = icon.getItemMeta();
-        int income = 0;
         ArrayList<String> lore = new ArrayList<>();
-        for (Region region : regions) {
+
+        int income = faction.getImportValue(resource);
+        boolean export = income < 0;
+        if (income != 0) {
+            ChatColor color = (export ? ChatColor.DARK_RED : ChatColor.GREEN);
+            ChatColor color2 = (export ? ChatColor.GREEN : ChatColor.DARK_RED);
+            String money = econ.format(-1 * income * resource.getValue() * (export ? config.getExportModifier() : config.getImportModifier()));
+            lore.add(color + (export ? FMessage.TRADE_EXPORT : FMessage.TRADE_IMPORT).getMessage() + ": " + income + color2 + " (" + money + ")");
+        }
+
+        for (Region region : faction.getRegions()) {
             Map<Resource, Integer> resources = region.getType().getResources(region.getLevel());
             if (resources.containsKey(resource)) {
                 int amount = resources.get(resource);
@@ -88,9 +98,8 @@ public class TradeMenu implements Listener {
                 lore.add(ChatColor.GREEN + region.getName() + ": +" + amount);
             }
         }
-        // TODO: IMPORT
-        // TODO: EXPORT
         meta.setLore(lore);
+
         ChatColor color = ChatColor.YELLOW;
         if (income > 0) {
             color = ChatColor.GREEN;
@@ -98,6 +107,7 @@ public class TradeMenu implements Listener {
             color = ChatColor.DARK_RED;
         }
         meta.setDisplayName(color + resource.getName() + " (" + (income > 0 ? "+" : new String()) + income + ")");
+
         icon.setItemMeta(meta);
         return icon;
     }

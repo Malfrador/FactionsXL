@@ -16,12 +16,23 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Saukel
  */
 public class TradeOffer {
+
+    Economy econ = FactionsXL.getInstance().getEconomyProvider();
 
     private Resource good;
     private int amount;
@@ -109,6 +120,71 @@ public class TradeOffer {
 
     public boolean isValid() {
         return importerAccepted && exporterAccepted;
+    }
+
+    public boolean check(CommandSender sender) {
+        if (importer.getAccount().getBalance() < price + getFee()) {
+            String formatted = econ.format(price + getFee());
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), importer, formatted);
+            return false;
+        } else if (!exporter.canAfford(good, amount)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), exporter, amount + " " + good.getName());
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void send() {
+        Faction receiver = null;
+        if (!importerAccepted) {
+            receiver = importer;
+            importer.sendMessage(FMessage.TRADE_OFFER_SEND_TRADE.getMessage(), exporter);
+            importer.sendMessage(FMessage.TRADE_OFFER_SEND_EXPORT.getMessage(), amount + " " + good.getName(), econ.format(price));
+        } else if (!exporterAccepted) {
+            receiver = exporter;
+            exporter.sendMessage(FMessage.TRADE_OFFER_SEND_TRADE.getMessage(), importer);
+            exporter.sendMessage(FMessage.TRADE_OFFER_SEND_IMPORT.getMessage(), amount + " " + good.getName(), econ.format(price));
+        }
+
+        String command = "/factionsxl tradeOffer " + (FactionsXL.getInstance().getCommands().tradeOffer.finishedOffers.size() - 1);
+        ClickEvent onClickConfirm = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
+        TextComponent confirm = new TextComponent(ChatColor.GREEN + FMessage.MISC_ACCEPT.getMessage());
+        confirm.setClickEvent(onClickConfirm);
+
+        ClickEvent onClickDeny = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + " -deny");
+        TextComponent deny = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
+        deny.setClickEvent(onClickDeny);
+
+        for (Player player : receiver.getOnlineMods()) {
+            player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
+        }
+        if (receiver.getAdmin().isOnline()) {
+            receiver.getAdmin().getPlayer().spigot().sendMessage(confirm, new TextComponent(" "), deny);
+        }
+    }
+
+    public double getFee() {
+        return 0;// TO DO
+    }
+
+    public void accept(CommandSender sender) {
+        if (!importerAccepted) {
+            if (importer.isPrivileged(sender)) {
+                importerAccepted = true;
+            }
+        } else if (!exporterAccepted) {
+            if (exporter.isPrivileged(sender)) {
+                exporterAccepted = true;
+            }
+        }
+
+        importer.chargeResource(good, -1 * amount);
+        importer.getAccount().withdraw(price + getFee());
+        exporter.chargeResource(good, amount);
+        exporter.getAccount().deposit(price - getFee());
+        importer.sendMessage(FMessage.TRADE_SUCCESS_IMPORT.getMessage(), amount + " " + good.getName(), econ.format(price), exporter);
+        exporter.sendMessage(FMessage.TRADE_SUCCESS_EXPORT.getMessage(), amount + " " + good.getName(), econ.format(price), importer);
     }
 
 }

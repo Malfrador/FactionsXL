@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -87,6 +88,25 @@ public class FStorage {
                 }
             }
         }
+
+        double importModifier = FactionsXL.getInstance().getFConfig().getImportModifier();
+        double exportModifier = FactionsXL.getInstance().getFConfig().getExportModifier();
+        HashMap<Resource, Integer> importActions = new HashMap<>();
+        for (Entry<Resource, Integer> entry : faction.getGroceryList().entrySet()) {
+            Resource resource = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                importActions.put(resource, amount);
+            } else if (amount < 0) {
+                faction.chargeResource(resource, -1 * amount);
+                faction.getAccount().deposit(-1 * amount * resource.getValue() * exportModifier);
+            }
+        }
+        // Perform import actions later sothat they don't fail if the money generated from exports makes them possible
+        for (Entry<Resource, Integer> entry : importActions.entrySet()) {
+            faction.chargeMoneyForResource(entry.getKey(), entry.getValue(), importModifier);
+        }
+
         for (Player player : faction.getOnlineMembers()) {
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         }

@@ -41,16 +41,21 @@ public class PageGUI {
 
     public static final ItemStack DISABLED = ItemUtil.setDisplayName(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
     public static final ItemStack PLACEHOLDER = ItemUtil.setDisplayName(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), ChatColor.RESET.toString());
-    public static final ItemStack GUI_BACK = ItemUtil.LEFT.clone();
+    public static final ItemStack BACK = ItemUtil.LEFT.clone();
+    public static final ItemStack CONTINUE = ItemUtil.RIGHT.clone();
     public static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
     public static final ItemStack GUI_WATER_BOTTLE = new ItemStack(Material.POTION);
     public static final ItemStack PREVIOUS_PAGE = ItemUtil.setDisplayName(ItemUtil.LEFT.clone(), FMessage.MISC_PREVIOUS_PAGE.getMessage());
     public static final ItemStack NEXT_PAGE = ItemUtil.setDisplayName(ItemUtil.RIGHT.clone(), FMessage.MISC_NEXT_PAGE.getMessage());
 
     static {
-        ItemMeta backMeta = GUI_BACK.getItemMeta();
+        ItemMeta backMeta = BACK.getItemMeta();
         backMeta.setDisplayName(FMessage.MISC_BACK.getMessage());
-        GUI_BACK.setItemMeta(backMeta);
+        BACK.setItemMeta(backMeta);
+
+        ItemMeta continueMeta = CONTINUE.getItemMeta();
+        continueMeta.setDisplayName(FMessage.MISC_CONTINUE.getMessage());
+        CONTINUE.setItemMeta(continueMeta);
 
         ItemMeta swordMeta = GUI_SWORD.getItemMeta();
         swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

@@ -101,6 +101,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Map<Faction, Relation> relations = new HashMap<>();
     TradeMenu tradeMenu;
     FStorage storage;
+    Map<Resource, Integer> groceryList = new HashMap<>();
     PopulationMenu populationMenu;
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
@@ -648,6 +649,29 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @param resource
+     * the resource
+     * @return
+     * how much of the resource is imported (export = negative values)
+     */
+    public int getImportValue(Resource resource) {
+        Integer eximport = groceryList.get(resource);
+        if (eximport == null) {
+            return 0;
+        } else {
+            return eximport;
+        }
+    }
+
+    /**
+     * @return
+     * a Map of exports / imports
+     */
+    public Map<Resource, Integer> getGroceryList() {
+        return groceryList;
+    }
+
+    /**
      * @return
      * the population menu
      */
@@ -741,12 +765,68 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
-     * @param price
-     * a Map of resources and prices
+     * Actions when a day passed.
+     */
+    public void payday() {
+        storage.payday();
+    }
+
+    /**
+     * Makes the faction pay the resource value for the resource
+     *
+     * @param goods
+     * a Map of resources and their amount
+     * @param modifier
+     * a modifier for the price, e.g. for taxes
      * @return
      * true if the faction can afford the price, false if not
      */
-    public boolean charge(Map<Resource, Integer> price) {
+    public boolean chargeMoneyForResource(Map<Resource, Integer> goods, double modifier) {
+        double price = 0;
+        for (Entry<Resource, Integer> entry : goods.entrySet()) {
+            price += entry.getValue() * entry.getKey().getValue();
+        }
+        boolean canAfford = account.getBalance() >= price * modifier;
+        if (canAfford) {
+            account.withdraw(price);
+            for (Entry<Resource, Integer> entry : goods.entrySet()) {
+                storage.getGoods().put(entry.getKey(), storage.getGoods().get(entry.getKey()) + entry.getValue());
+            }
+        }
+        return canAfford;
+    }
+
+    /**
+     * Makes the faction pay the resource value for the resource
+     *
+     * @param type
+     * the resource type
+     * @param amount
+     * the amount of the resource
+     * @param modifier
+     * a modifier for the price, e.g. for taxes
+     * @return
+     * true if the faction can afford the price, false if not
+     */
+    public boolean chargeMoneyForResource(Resource type, int amount, double modifier) {
+        double price = amount * type.getValue();
+        boolean canAfford = account.getBalance() >= price * modifier;
+        if (canAfford) {
+            account.withdraw(price * modifier);
+            storage.getGoods().put(type, storage.getGoods().get(type) + amount);
+        }
+        return canAfford;
+    }
+
+    /**
+     * Makes the faction pay anything with the resource
+     *
+     * @param price
+     * a Map of resources and their amount
+     * @return
+     * true if the faction can afford the price, false if not
+     */
+    public boolean chargeResource(Map<Resource, Integer> price) {
         for (Entry<Resource, Integer> entry : price.entrySet()) {
             if (!canAfford(entry.getKey(), entry.getValue())) {
                 return false;
@@ -762,6 +842,32 @@ public class Faction extends LegalEntity implements RelationParticipator {
             } else {
                 storage.getGoods().put(entry.getKey(), storage.getGoods().get(entry.getKey()) - entry.getValue());
             }
+        }
+        return true;
+    }
+
+    /**
+     * Makes the faction pay anything with the resource
+     *
+     * @param type
+     * the resource type to withdraw
+     * @param price
+     * the amount of resources to withdraw
+     * @return
+     * true if the faction can afford the price, false if not
+     */
+    public boolean chargeResource(Resource type, int price) {
+        if (!canAfford(type, price)) {
+            return false;
+        }
+        if (type == Resource.TAXES) {
+            boolean has = account.getBalance() >= price;
+            account.withdraw(price);
+            return has;
+        } else if (type == Resource.MANPOWER) {
+            // TODO
+        } else {
+            storage.getGoods().put(type, storage.getGoods().get(type) - price);
         }
         return true;
     }
@@ -878,6 +984,15 @@ public class Faction extends LegalEntity implements RelationParticipator {
             storage = new FStorage(this);
         }
 
+        ConfigurationSection grListSection = config.getConfigurationSection("groceryList");
+        if (grListSection != null) {
+            for (Entry<String, Object> entry : grListSection.getValues(false).entrySet()) {
+                if (EnumUtil.isValidEnum(Resource.class, entry.getKey())) {
+                    groceryList.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
+                }
+            }
+        }
+
         populationMenu = new PopulationMenu(this);
 
         List<String> groups = config.getStringList("ideaGroups");
@@ -948,6 +1063,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
 
         config.set("storage", storage.serialize());
+        for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
+            config.set("groceryList." + entry.getKey(), entry.getValue());
+        }
         /* 
          * TODO: POPULATION
          */

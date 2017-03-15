@@ -16,8 +16,11 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.util.PageGUI;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -142,6 +145,7 @@ public enum Resource {
         return this != MANPOWER && this != TAXES;
     }
 
+    /* Statics */
     /**
      * @param icon
      * the icon to check
@@ -165,11 +169,23 @@ public enum Resource {
      */
     public static Resource getByName(String name) {
         for (Resource resource : values()) {
-            if (resource.getName().equals(name)) {
+            if (resource.getName().equalsIgnoreCase(name) || resource.name().equalsIgnoreCase(name)) {
                 return resource;
             }
         }
         return null;
+    }
+
+    /**
+     * Loads the resource prices
+     */
+    public static void loadPrices(Map<String, Object> prices) {
+        for (Entry<String, Object> price : prices.entrySet()) {
+            if (!EnumUtil.isValidEnum(Resource.class, price.getKey())) {
+                continue;
+            }
+            Resource.valueOf(price.getKey()).value = (double) price.getValue();
+        }
     }
 
 }

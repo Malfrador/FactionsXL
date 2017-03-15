@@ -76,7 +76,7 @@ public enum SettlerIdea implements Idea {
 
     @Override
     public boolean purchase(Faction faction) {
-        boolean canAfford = faction.charge(price);
+        boolean canAfford = faction.chargeResource(price);
         if (canAfford) {
             faction.getIdeas().add(this);
         }

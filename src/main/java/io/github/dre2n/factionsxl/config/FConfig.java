@@ -24,6 +24,7 @@ import static io.github.dre2n.factionsxl.board.RegionType.*;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import static io.github.dre2n.factionsxl.board.dynmap.DynmapStyle.DEFAULT_STYLE;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
+import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.relation.Relation;
 import static io.github.dre2n.factionsxl.relation.Relation.*;
 import static io.github.dre2n.factionsxl.util.ParsingUtil.*;
@@ -47,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends BRConfig {
 
-    public static final int CONFIG_VERSION = 1;
+    public static final int CONFIG_VERSION = 3;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -83,6 +84,8 @@ public class FConfig extends BRConfig {
     private double priceClaimBase = 100;
     private double priceClaimPerChunk = 10;
     private double priceClaimIncrease = 100;
+    private double importModifier = 2;
+    private double exportModifier = 0.5;
 
     // Chat
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
@@ -296,6 +299,22 @@ public class FConfig extends BRConfig {
      */
     public double getPriceClaimIncrease() {
         return priceClaimIncrease;
+    }
+
+    /**
+     * @return
+     * the value modifier for importing goods
+     */
+    public double getImportModifier() {
+        return importModifier;
+    }
+
+    /**
+     * @return
+     * the modifier for exporting goods
+     */
+    public double getExportModifier() {
+        return exportModifier;
     }
 
     /**
@@ -597,6 +616,14 @@ public class FConfig extends BRConfig {
             config.set("price.claim.increase", priceClaimIncrease);
         }
 
+        if (!config.contains("importModifier")) {
+            config.set("importModifier", importModifier);
+        }
+
+        if (!config.contains("exportModifier")) {
+            config.set("exportModifier", exportModifier);
+        }
+
         if (!config.contains("chatFormat.ally")) {
             config.set("chatFormat.ally", chatFormatAlly);
         }
@@ -723,6 +750,10 @@ public class FConfig extends BRConfig {
             }
         }
 
+        for (Resource resource : Resource.values()) {
+            config.set("resourcePrices." + resource.toString(), resource.getValue());
+        }
+
         save();
     }
 
@@ -773,6 +804,14 @@ public class FConfig extends BRConfig {
 
         if (config.contains("price.claim.increase")) {
             priceClaimIncrease = config.getDouble("price.claim.increase");
+        }
+
+        if (config.contains("importModifier")) {
+            importModifier = config.getDouble("importModifier");
+        }
+
+        if (config.contains("exportModifier")) {
+            exportModifier = config.getDouble("exportModifier");
         }
 
         if (config.contains("chatFormat.ally")) {
@@ -908,6 +947,13 @@ public class FConfig extends BRConfig {
                     style.setStrokeColor(colors[1]);
                 }
                 dynmapRegionTypeStyles.put(type, style);
+            }
+        }
+
+        if (config.contains("resourcePrices")) {
+            ConfigurationSection resourcePrices = config.getConfigurationSection("resourcePrices");
+            if (resourcePrices != null) {
+                Resource.loadPrices(resourcePrices.getValues(false));
             }
         }
     }

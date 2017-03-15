@@ -83,7 +83,7 @@ public class IdeaMenu implements Listener {
         Class handler = group.getHandler();
         int size = (int) (9 * Math.ceil(((double) (handler.getEnumConstants().length + 1) / 9)));
         ideas.put(group, Bukkit.createInventory(null, size, FMessage.IDEA_MENU_IDEAS_TITLE.getMessage(group.getName())));
-        ideas.get(group).setItem(0, PageGUI.GUI_BACK);
+        ideas.get(group).setItem(0, PageGUI.BACK);
         for (Object ideaObj : handler.getEnumConstants()) {
             Idea idea = (Idea) ideaObj;
             boolean has = faction.getIdeas().contains(idea);
@@ -169,7 +169,7 @@ public class IdeaMenu implements Listener {
         }
 
         HumanEntity player = event.getWhoClicked();
-        if (button.equals(PageGUI.GUI_BACK)) {
+        if (button.equals(PageGUI.BACK)) {
             openGroups(player);
             return;
         } else if (!faction.isPrivileged(player)) {
