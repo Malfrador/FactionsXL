@@ -204,6 +204,7 @@ public enum FMessage implements Messages {
     LOG_NEW_PLAYER_DATA("log.newPlayerData", "&6A new player data file has been created and saved as &v1."),
     MISC_ACCEPT("misc.accept", "[ ACCEPT ]"),
     MISC_BACK("misc.back", "&6&lBACK"),
+    MISC_CONTINUE("misc.continue", "&6&lCONTINUE"),
     MISC_DENY("misc.deny", "[ DENY ]"),
     MISC_NEXT_PAGE("misc.nextPage", "&6&lNEXT PAGE"),
     MISC_PREVIOUS_PAGE("misc.previousPage", "&6&lPREVIOUS PAGE"),
@@ -332,6 +333,11 @@ public enum FMessage implements Messages {
     TRADE_OFFER_CHOOSE_PARTNER("trade.offer.choosePartner", "&2&lChoose your trade partner:"),
     TRADE_OFFER_AMOUNT("trade.offer.amount", "Amount"),
     TRADE_OFFER_CHOOSE_RESOURCE("trade.offer.chooseResource", "&2&lChoose a resource:"),
+    TRADE_OFFER_SEND_TRADE("trade.offer.send.trade", "&aThe faction &v1 &aoffers us a trade."),
+    TRADE_OFFER_SEND_EXPORT("trade.offer.send.export", "&aThey would like to export &6&v1 &afor &6&v2&a."),
+    TRADE_OFFER_SEND_IMPORT("trade.offer.send.import", "&aThey would like to import &6&v1 &afor &6&v2&a."),
+    TRADE_SUCCESS_EXPORT("trade.success.export", "&aYou successfully exported &6&v1 &afor &6&v2 &ato &v3&a."),
+    TRADE_SUCCESS_IMPORT("trade.success.import", "&aYou successfully imported &6&v1 &afor &6&v2 &afrom &v3&a."),
     TRADE_RESOURCE_TITLE("trade.resourceTitle", "&6&l&v1 - &v2");
 
     private String identifier;

@@ -28,7 +28,9 @@ import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,18 +54,19 @@ public class TradeOfferCommand extends BRCommand implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
 
-    public final String TRADE_OFFER_CHOOSE_PRICE_AND_AMOUNT = ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
+    private String tradeOfferChoosePriceAndAmount = ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
             + FMessage.TRADE_OFFER_AMOUNT.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v1 " + ChatColor.GREEN.toString()
             + ChatColor.BOLD.toString() + FMessage.TRADE_PRICE.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v2";
-    public final String PLUS = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "+";
-    public final String MINUS = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "-";
-    public final String AMOUNT = ChatColor.WHITE + FMessage.TRADE_OFFER_AMOUNT.getMessage() + " ";
-    public final String PRICE = ChatColor.WHITE + FMessage.TRADE_PRICE.getMessage() + " ";
+    private String plus = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "+";
+    private String minus = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "-";
+    private String amount = ChatColor.WHITE + FMessage.TRADE_OFFER_AMOUNT.getMessage() + " ";
+    private String price = ChatColor.WHITE + FMessage.TRADE_PRICE.getMessage() + " ";
 
-    private Inventory chooseResource;
+    private PageGUI chooseResource;
     private Inventory chooseExport;
     private ItemStack[] choosePriceAndAmount;
 
+    public List<TradeOffer> finishedOffers = new ArrayList<>();
     private Map<Integer, Faction> factionBySlot = new HashMap<>();
     private Map<HumanEntity, TradeOffer> creatingOffer = new HashMap<>();
 
@@ -81,34 +84,44 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         chooseResource = chooseResource();
         chooseExport = chooseExport();
 
-        ItemStack amountInc100 = ItemUtil.setDisplayName(ItemUtil.UP, AMOUNT + PLUS + 100);
-        ItemStack amountInc10 = ItemUtil.setDisplayName(ItemUtil.UP, AMOUNT + PLUS + 10);
-        ItemStack amountInc1 = ItemUtil.setDisplayName(ItemUtil.UP, AMOUNT + PLUS + 1);
-        ItemStack amountDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, AMOUNT + MINUS + 100);
-        ItemStack amountDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, AMOUNT + MINUS + 10);
-        ItemStack amountDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, AMOUNT + MINUS + 1);
-        ItemStack priceInc1000 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 1000);
-        ItemStack priceInc100 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 100);
-        ItemStack priceInc10 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 10);
-        ItemStack priceInc1 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 1);
-        ItemStack priceInc01 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 0.10);
-        ItemStack priceInc001 = ItemUtil.setDisplayName(ItemUtil.UP, PRICE + PLUS + 0.01);
-        ItemStack priceDec1000 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 1000);
-        ItemStack priceDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 100);
-        ItemStack priceDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 10);
-        ItemStack priceDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 1);
-        ItemStack priceDec01 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 0.10);
-        ItemStack priceDec001 = ItemUtil.setDisplayName(ItemUtil.DOWN, PRICE + MINUS + 0.01);
+        ItemStack amountInc100 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 100);
+        ItemStack amountInc10 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 10);
+        ItemStack amountInc1 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 1);
+        ItemStack amountDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 100);
+        ItemStack amountDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 10);
+        ItemStack amountDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 1);
+        ItemStack priceInc1000 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 1000);
+        ItemStack priceInc100 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 100);
+        ItemStack priceInc10 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 10);
+        ItemStack priceInc1 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 1);
+        ItemStack priceInc01 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 0.10);
+        ItemStack priceInc001 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 0.01);
+        ItemStack priceDec1000 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 1000);
+        ItemStack priceDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 100);
+        ItemStack priceDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 10);
+        ItemStack priceDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 1);
+        ItemStack priceDec01 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 0.10);
+        ItemStack priceDec001 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 0.01);
         choosePriceAndAmount = new ItemStack[]{
             amountInc100, amountInc10, amountInc1,
             priceInc1000, priceInc100, priceInc10, priceInc1, priceInc01, priceInc001,
             amountDec100, amountDec10, amountDec1,
-            priceDec1000, priceDec100, priceDec10, priceDec1, priceDec01, priceDec001
+            priceDec1000, priceDec100, priceDec10, priceDec1, priceDec01, priceDec001,
+            PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER,
+            PageGUI.CONTINUE,
+            PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER
         };
     }
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
+        if (args.length == 2) {
+            int i = NumberUtil.parseInt(args[1], -1);
+            if (i != -1 && finishedOffers.size() > i) {
+                finishedOffers.get(i).accept(sender);
+                return;
+            }
+        }
         Player player = (Player) sender;
         Faction creator = null;
         if (args.length >= 2) {
@@ -149,7 +162,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         Faction exporter = export ? creator : partner;
 
         if (args.length < 5) {
-            player.openInventory(chooseResource);
+            chooseResource.open(player);
             return;
         }
 
@@ -163,16 +176,23 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         int amount = NumberUtil.parseInt(args[5]);
         double price = NumberUtil.parseDouble(args[6]);
 
-        if (args.length < 8 || args[7].equals("-confirm")) {
+        if (args.length < 8) {
             player.openInventory(choosePriceAndAmount(amount, price));
             return;
         }
 
-        TradeOffer offer = creatingOffer.get(player);
-        if (offer == null) {
-            offer = new TradeOffer(good, amount, importer, exporter, price);
+        if (args[7].equals("-confirm")) {
+            TradeOffer offer = new TradeOffer(good, amount, importer, exporter, price);
+            finishedOffers.add(offer);
+            if (export) {
+                offer.setExporterAccepted(true);
+            } else {
+                offer.setImporterAccepted(true);
+            }
+            if (offer.check(sender)) {
+                offer.send();
+            }
         }
-
     }
 
     private Inventory choosePartner(Faction creator) {
@@ -192,8 +212,8 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         return gui;
     }
 
-    private Inventory chooseResource() {
-        Inventory gui = Bukkit.createInventory(null, 54, FMessage.TRADE_OFFER_CHOOSE_RESOURCE.getMessage());
+    private PageGUI chooseResource() {
+        PageGUI gui = new PageGUI(FMessage.TRADE_OFFER_CHOOSE_RESOURCE.getMessage());
         for (Resource resource : Resource.values()) {
             ItemStack icon = null;
             if (resource.isPhysical()) {
@@ -204,7 +224,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
             ItemMeta meta = icon.getItemMeta();
             meta.setDisplayName(ChatColor.GREEN + resource.getName());
             icon.setItemMeta(meta);
-            gui.addItem(icon);
+            gui.addButton(icon);
         }
         return gui;
     }
@@ -225,7 +245,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
     }
 
     private Inventory choosePriceAndAmount(int amount, double price) {
-        Inventory gui = Bukkit.createInventory(null, 18, TRADE_OFFER_CHOOSE_PRICE_AND_AMOUNT.replace("&v1", String.valueOf(amount)).replace("&v2", String.valueOf(price)));
+        Inventory gui = Bukkit.createInventory(null, 27, tradeOfferChoosePriceAndAmount.replace("&v1", String.valueOf(amount)).replace("&v2", String.valueOf(price)));
         gui.setContents(choosePriceAndAmount);
         return gui;
     }
@@ -237,6 +257,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
             onClickChoosePartner(event);
         } else if (title.equals(FMessage.TRADE_OFFER_CHOOSE_RESOURCE.getMessage())) {
             onClickChooseResource(event);
+            return;
         } else if (title.equals(FMessage.TRADE_OFFER_CHOOSE_EXPORT.getMessage())) {
             onClickChooseExport(event);
         } else if (title.startsWith(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + FMessage.TRADE_OFFER_AMOUNT.getMessage())) {
@@ -287,6 +308,10 @@ public class TradeOfferCommand extends BRCommand implements Listener {
     }
 
     private void onClickChooseResource(InventoryClickEvent event) {
+        if (event.getSlot() > 44 && event.getSlot() < 54) {
+            return;
+        }
+
         TradeOffer offer = creatingOffer.get(event.getWhoClicked());
         if (offer == null) {
             return;
@@ -307,39 +332,50 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         Faction creator = offer.hasExporterAccepted() ? offer.getExporter() : offer.getImporter();
         Faction partner = offer.hasExporterAccepted() ? offer.getImporter() : offer.getExporter();
         String exImport = offer.hasExporterAccepted() ? "export" : "import";
-        performCommand(event.getWhoClicked(), creator.getName() + " " + partner.getName() + " " + exImport + " " + resource.getName());
+        performCommand(event.getWhoClicked(), creator.getName() + " " + partner.getName() + " " + exImport + " " + resource.name());
     }
 
     private void onClickChoosePriceAndAmount(InventoryClickEvent event) {
-        TradeOffer offer = creatingOffer.get(event.getWhoClicked());
+        HumanEntity player = event.getWhoClicked();
+        TradeOffer offer = creatingOffer.get(player);
         if (offer == null) {
             return;
         }
         Faction creator = offer.hasExporterAccepted() ? offer.getExporter() : offer.getImporter();
         Faction partner = offer.hasExporterAccepted() ? offer.getImporter() : offer.getExporter();
         String exImport = offer.hasExporterAccepted() ? "export" : "import";
-        int amount = readAmountFromTitle(event.getInventory().getTitle());
-        double price = readPriceFromTitle(event.getInventory().getTitle());
+        int rAmount = readAmountFromTitle(event.getInventory().getTitle());
+        double rPrice = readPriceFromTitle(event.getInventory().getTitle());
+
         ItemStack button = event.getCurrentItem();
         if (button == null) {
             return;
+        }
+
+        if (button.equals(PageGUI.CONTINUE)) {
+            performCommand(player, creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().name() + " " + rAmount + " " + rPrice + " -confirm");
+            if (offer.check(player)) {
+                player.closeInventory();
+            }
+            creatingOffer.remove(player);
+
         } else {
             String name = button.getItemMeta().getDisplayName();
-            if (name.startsWith(AMOUNT)) {
-                if (name.startsWith(AMOUNT + PLUS)) {
-                    amount += NumberUtil.parseInt(name.replace(AMOUNT + PLUS, new String()));
-                } else if (name.startsWith(AMOUNT + MINUS)) {
-                    amount -= NumberUtil.parseInt(name.replace(AMOUNT + MINUS, new String()));
+            if (name.startsWith(amount)) {
+                if (name.startsWith(amount + plus)) {
+                    rAmount += NumberUtil.parseInt(name.replace(amount + plus, new String()));
+                } else if (name.startsWith(amount + minus)) {
+                    rAmount -= NumberUtil.parseInt(name.replace(amount + minus, new String()));
                 }
-            } else if (name.startsWith(PRICE)) {
-                if (name.startsWith(PRICE + PLUS)) {
-                    price += NumberUtil.parseDouble(name.replace(PRICE + PLUS, new String()));
-                } else if (name.startsWith(PRICE + MINUS)) {
-                    price -= NumberUtil.parseDouble(name.replace(PRICE + MINUS, new String()));
+            } else if (name.startsWith(price)) {
+                if (name.startsWith(price + plus)) {
+                    rPrice += NumberUtil.parseDouble(name.replace(price + plus, new String()));
+                } else if (name.startsWith(price + minus)) {
+                    rPrice -= NumberUtil.parseDouble(name.replace(price + minus, new String()));
                 }
             }
+            performCommand(event.getWhoClicked(), creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().name() + " " + rAmount + " " + rPrice);
         }
-        performCommand(event.getWhoClicked(), creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().getName() + " " + amount + " " + price);
     }
 
     private int readAmountFromTitle(String title) {
@@ -364,23 +400,4 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         player.performCommand(COMMAND + args);
     }
 
-    /*@EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (!event.getInventory().getTitle().startsWith("&2&l" + FMessage.TRADE_OFFER_AMOUNT.getMessage())) {
-            return;
-        }
-        TradeOffer offer = creatingOffer.get(event.getPlayer());
-        if (offer == null) {
-            return;
-        }
-        Faction creator = offer.hasExporterAccepted() ? offer.getExporter() : offer.getImporter();
-        Faction partner = offer.hasExporterAccepted() ? offer.getImporter() : offer.getExporter();
-        String exImport = offer.hasExporterAccepted() ? "export" : "import";
-        int amount = readAmountFromTitle(event.getInventory().getTitle());
-        double price = readPriceFromTitle(event.getInventory().getTitle());
-
-        // CHECK
-        performCommand(event.getPlayer(), creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().getName() + " " + amount + " " + price + " -confirm");
-        creatingOffer.remove(event.getPlayer());
-    }*/
 }

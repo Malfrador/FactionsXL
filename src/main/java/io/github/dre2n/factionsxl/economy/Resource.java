@@ -169,7 +169,7 @@ public enum Resource {
      */
     public static Resource getByName(String name) {
         for (Resource resource : values()) {
-            if (resource.getName().equals(name)) {
+            if (resource.getName().equalsIgnoreCase(name) || resource.name().equalsIgnoreCase(name)) {
                 return resource;
             }
         }
