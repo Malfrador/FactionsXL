@@ -120,6 +120,8 @@ public enum FMessage implements Messages {
     ERROR_PERSONAL_UNION_WITH_FACTION("error.personalUnionWithFaction", "&4The faction &v1 &4has a personal union with &v2&4."),
     ERROR_PLAYER_NOT_IN_FACTION("error.playerNotInFaction", "&4The player &6&v1 &4is not member of the faction &6&v2&4."),
     ERROR_PLAYER_NOT_ONLINE("error.playerNotOnline", "&4The player &6&v1 &4is not online."),
+    ERROR_REGION_IS_ALREADY_CLAIMED("error.regionIsAlreadyClaimed", "&v1 &4is already claimed by &v2&4."),
+    ERROR_REGION_IS_CORE("error.regionIsCore", "&v1 &4is a core province of &v2&4."),
     ERROR_SELECT_IDEA_GROUP("error.selectIdeaGroup", "&7You have to select the idea group first."),
     ERROR_SPECIFY_PLAYER("error.specifyFaction", "&4You have to specify a player."),
     ERROR_SPECIFY_FACTION("error.specifyFaction", "&4You have to specify a faction."),

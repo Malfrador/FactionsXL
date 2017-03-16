@@ -62,6 +62,11 @@ public class ClaimCommand extends BRCommand {
         Region region = plugin.getBoard().getByLocation(player.getLocation());
         if (region == null || !region.isNeutral()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
+            if (region.getCoreFactions().containsKey(faction)) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_CORE.getMessage(), region, faction);
+            } else if (region.getClaimFactions().containsKey(faction)) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_ALREADY_CLAIMED.getMessage(), region, faction);
+            }
             return;
         }
 
