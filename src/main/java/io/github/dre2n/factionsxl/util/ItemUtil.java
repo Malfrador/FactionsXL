@@ -121,7 +121,7 @@ public class ItemUtil {
             return (ItemStack) CRAFTITEMSTACK_AS_BUKKIT_COPY.invoke(null, nmsStack);
 
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
-            return null;
+            return itemStack;
         }
     }
 
