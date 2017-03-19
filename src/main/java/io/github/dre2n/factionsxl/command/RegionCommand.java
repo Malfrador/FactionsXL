@@ -22,6 +22,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -31,9 +32,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -95,7 +98,23 @@ public class RegionCommand extends BRCommand {
             Faction senderFaction = sender instanceof Player ? factions.getByMember((Player) sender) : null;
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_PRICE.getMessage() + c + region.getClaimPrice(senderFaction));
         }
-        MessageUtil.sendMessage(sender, FMessage.CMD_REGION_TYPE.getMessage() + c + region.getType().getName() + " (" + region.getLevel() + ")");
+
+        BaseComponent[] income1 = TextComponent.fromLegacyText(FMessage.CMD_REGION_TYPE.getMessage());
+        BaseComponent[] income2 = TextComponent.fromLegacyText(c + region.getType().getName() + " (" + region.getLevel() + ")");
+        BaseComponent[] incomeHover = new BaseComponent[]{};
+        boolean first = true;
+        for (Entry<Resource, Integer> entry : region.getResources().entrySet()) {
+            String legacy = c + "+" + entry.getValue() + " " + entry.getKey().getName();
+            incomeHover = (BaseComponent[]) ArrayUtils.addAll(incomeHover, TextComponent.fromLegacyText((first ? new String() : "\n") + legacy));
+            first = false;
+        }
+        HoverEvent incomeHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, incomeHover);
+        for (BaseComponent comp : income2) {
+            comp.setHoverEvent(incomeHoverEvent);
+        }
+        BaseComponent[] income = (BaseComponent[]) ArrayUtils.addAll(income1, income2);
+        MessageUtil.sendMessage(sender, income);
+
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_POPULATION.getMessage() + c + region.getPopulation());
 
         if (sender instanceof Player) {
