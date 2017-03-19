@@ -17,6 +17,7 @@
 package io.github.dre2n.factionsxl.config;
 
 import io.github.dre2n.commons.config.BRConfig;
+import io.github.dre2n.commons.util.ConfigUtil;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.RegionType;
@@ -37,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -754,6 +754,8 @@ public class FConfig extends BRConfig {
             config.set("resourcePrices." + resource.toString(), resource.getValue());
         }
 
+        config.createSection("regionIncome");
+
         save();
     }
 
@@ -788,8 +790,7 @@ public class FConfig extends BRConfig {
         }
 
         if (config.contains("price.relation")) {
-            ConfigurationSection section = config.getConfigurationSection("price.relation");
-            for (Entry<String, Object> entry : section.getValues(false).entrySet()) {
+            for (Entry<String, Object> entry : ConfigUtil.getMap(config, "price.relation").entrySet()) {
                 priceRelation.put(Relation.fromString(entry.getKey()), (double) entry.getValue());
             }
         }
@@ -934,28 +935,20 @@ public class FConfig extends BRConfig {
             dynmapHiddenWorlds = config.getStringList("dynmap.hiddenWorlds");
         }
 
-        if (config.contains("dynmap.regionTypeStyles")) {
-            for (Entry<String, Object> entry : config.getConfigurationSection("dynmap.regionTypeStyles").getValues(false).entrySet()) {
-                RegionType type = null;
-                if (EnumUtil.isValidEnum(RegionType.class, entry.getKey())) {
-                    type = RegionType.valueOf(entry.getKey());
-                }
-                DynmapStyle style = new DynmapStyle(DynmapStyle.DEFAULT_STYLE);
-                String[] colors = ((String) entry.getValue()).split("/");
-                if (colors.length == 2) {
-                    style.setFillColor(colors[0]);
-                    style.setStrokeColor(colors[1]);
-                }
-                dynmapRegionTypeStyles.put(type, style);
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "dynmap.regionTypeStyles").entrySet()) {
+            RegionType type = null;
+            if (EnumUtil.isValidEnum(RegionType.class, entry.getKey())) {
+                type = RegionType.valueOf(entry.getKey());
             }
-        }
-
-        if (config.contains("resourcePrices")) {
-            ConfigurationSection resourcePrices = config.getConfigurationSection("resourcePrices");
-            if (resourcePrices != null) {
-                Resource.loadPrices(resourcePrices.getValues(false));
+            DynmapStyle style = new DynmapStyle(DynmapStyle.DEFAULT_STYLE);
+            String[] colors = ((String) entry.getValue()).split("/");
+            if (colors.length == 2) {
+                style.setFillColor(colors[0]);
+                style.setStrokeColor(colors[1]);
             }
+            dynmapRegionTypeStyles.put(type, style);
         }
+        Resource.loadPrices(ConfigUtil.getMap(config, "resourcePrices"));
     }
 
 }

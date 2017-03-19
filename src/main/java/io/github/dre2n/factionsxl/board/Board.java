@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.board;
 
+import io.github.dre2n.commons.util.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.io.IOException;
@@ -50,12 +51,9 @@ public class Board {
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(FILE);
         if (config.contains("regions")) {
-            ConfigurationSection regionsSerialized = config.getConfigurationSection("regions");
-            if (regionsSerialized != null) {
-                for (Entry<String, Object> region : regionsSerialized.getValues(false).entrySet()) {
-                    int id = Integer.parseInt(region.getKey());
-                    regions.add(new Region(id, (ConfigurationSection) region.getValue()));
-                }
+            for (Entry<String, Object> region : ConfigUtil.getMap(config, "regions").entrySet()) {
+                int id = Integer.parseInt(region.getKey());
+                regions.add(new Region(id, (ConfigurationSection) region.getValue()));
             }
 
         } else {

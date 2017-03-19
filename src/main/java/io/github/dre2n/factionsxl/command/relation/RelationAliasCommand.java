@@ -18,7 +18,6 @@ package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.command.FCommandCache;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
@@ -57,7 +56,7 @@ public abstract class RelationAliasCommand extends BRCommand {
             return;
         }
         String object = args.length == 3 ? args[2] : args[1];
-        plugin.getCommands().relation.onExecute(new String[]{plugin.getCommands().relation.getCommand(), subject, object, getRelation().toString()}, sender);
+        plugin.getCommandCache().relation.onExecute(new String[]{plugin.getCommandCache().relation.getCommand(), subject, object, getRelation().toString()}, sender);
     }
 
     public abstract Relation getRelation();

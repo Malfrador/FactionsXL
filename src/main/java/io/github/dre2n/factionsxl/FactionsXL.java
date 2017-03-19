@@ -276,7 +276,7 @@ public class FactionsXL extends BRPlugin {
      * the loaded instance of FCommandCache
      */
     @Override
-    public FCommandCache getCommands() {
+    public FCommandCache getCommandCache() {
         return fCommands;
     }
 

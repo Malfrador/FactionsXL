@@ -147,7 +147,7 @@ public class TradeOffer {
             exporter.sendMessage(FMessage.TRADE_OFFER_SEND_IMPORT.getMessage(), amount + " " + good.getName(), econ.format(price));
         }
 
-        String command = "/factionsxl tradeOffer " + (FactionsXL.getInstance().getCommands().tradeOffer.finishedOffers.size() - 1);
+        String command = "/factionsxl tradeOffer " + (FactionsXL.getInstance().getCommandCache().tradeOffer.finishedOffers.size() - 1);
         ClickEvent onClickConfirm = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
         TextComponent confirm = new TextComponent(ChatColor.GREEN + FMessage.MISC_ACCEPT.getMessage());
         confirm.setClickEvent(onClickConfirm);

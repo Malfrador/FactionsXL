@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import io.github.dre2n.commons.config.Messages;
+import io.github.dre2n.commons.config.Message;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import org.bukkit.ChatColor;
@@ -29,7 +29,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author Daniel Saukel
  */
-public enum FMessage implements Messages {
+public enum FMessage implements Message {
 
     CHAT_CHANNEL_SWITCHED("chat.channelSwitched", "&aYour chat channel has been switched to &v1&a."),
     CHAT_PREFIX_ADMIN("chat.prefix.admin", "**"),
@@ -384,8 +384,8 @@ public enum FMessage implements Messages {
      * @param identifer
      * the identifer to set
      */
-    public static Messages getByIdentifier(String identifier) {
-        for (Messages message : values()) {
+    public static Message getByIdentifier(String identifier) {
+        for (Message message : values()) {
             if (message.getIdentifier().equals(identifier)) {
                 return message;
             }

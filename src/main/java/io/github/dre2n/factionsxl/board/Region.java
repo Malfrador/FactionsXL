@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.board;
 
+import io.github.dre2n.commons.util.ConfigUtil;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -79,7 +80,7 @@ public class Region {
         for (String chunk : config.getStringList("chunks")) {
             chunks.add(SerializationUtil.deserializeChunk(chunk));
         }
-        for (Entry<String, Object> entry : config.getConfigurationSection("cores").getValues(true).entrySet()) {
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "cores").entrySet()) {
             Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
             Date date = new Date((long) entry.getValue());
             cores.put(faction, date);

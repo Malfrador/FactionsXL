@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.faction;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import io.github.dre2n.commons.util.ConfigUtil;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -58,7 +59,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -956,11 +956,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
             members.add(Bukkit.getOfflinePlayer(UUID.fromString(member)));
         }
 
-        ConfigurationSection relationsSection = config.getConfigurationSection("relations");
-        if (relationsSection != null) {
-            for (Entry<String, Object> entry : relationsSection.getValues(false).entrySet()) {
-                relations.put(plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey())), Relation.valueOf((String) entry.getValue()));
-            }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "relations").entrySet()) {
+            relations.put(plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey())), Relation.valueOf((String) entry.getValue()));
         }
 
         for (Region region : plugin.getBoard().getRegions()) {
@@ -977,19 +974,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
         tradeMenu = new TradeMenu(this);
 
-        ConfigurationSection storageSection = config.getConfigurationSection("storage");
-        if (storageSection != null) {
-            storage = new FStorage(this, storageSection.getValues(false));
-        } else {
+        storage = new FStorage(this, ConfigUtil.getMap(config, "storage"));
+        if (storage == null) {
             storage = new FStorage(this);
         }
 
-        ConfigurationSection grListSection = config.getConfigurationSection("groceryList");
-        if (grListSection != null) {
-            for (Entry<String, Object> entry : grListSection.getValues(false).entrySet()) {
-                if (EnumUtil.isValidEnum(Resource.class, entry.getKey())) {
-                    groceryList.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
-                }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "groceryList").entrySet()) {
+            if (EnumUtil.isValidEnum(Resource.class, entry.getKey())) {
+                groceryList.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
             }
         }
 

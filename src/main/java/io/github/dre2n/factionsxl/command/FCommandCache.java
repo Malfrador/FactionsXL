@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommands;
+import io.github.dre2n.commons.command.BRCommandCache;
 import io.github.dre2n.commons.javaplugin.BRPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
@@ -26,7 +26,7 @@ import io.github.dre2n.factionsxl.command.relation.*;
  *
  * @author Daniel Saukel
  */
-public class FCommandCache extends BRCommands {
+public class FCommandCache extends BRCommandCache {
 
     public static final String LABEL = "factionsxl";
 

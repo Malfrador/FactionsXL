@@ -184,7 +184,7 @@ public enum Resource {
             if (!EnumUtil.isValidEnum(Resource.class, price.getKey())) {
                 continue;
             }
-            Resource.valueOf(price.getKey()).value = (double) price.getValue();
+            valueOf(price.getKey()).value = (double) price.getValue();
         }
     }
 

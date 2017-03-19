@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.config;
 
+import io.github.dre2n.commons.util.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.io.IOException;
@@ -43,12 +44,8 @@ public class FData {
     public FData() {
         lastNewDay = config.getLong("lastNewDay");
         lastPowerUpdate = config.getLong("lastPowerUpdate");
-
-        ConfigurationSection powerSection = config.getConfigurationSection("power");
-        if (powerSection != null) {
-            for (Entry<String, Object> entry : powerSection.getValues(false).entrySet()) {
-                power.put(UUID.fromString(entry.getKey()), (Double) entry.getValue());
-            }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "power").entrySet()) {
+            power.put(UUID.fromString(entry.getKey()), (Double) entry.getValue());
         }
     }
 
