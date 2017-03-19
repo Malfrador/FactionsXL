@@ -119,7 +119,7 @@ public class FMob implements Listener {
             faction.getPopulationMenu().open(player);
         } else if (isTrader(entity)) {
             event.setCancelled(true);
-            faction.getTradeMenu().open(player);
+            faction.getEconomyMenu().open(player);
         }
     }
 

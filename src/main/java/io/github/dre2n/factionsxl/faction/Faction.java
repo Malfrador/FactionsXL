@@ -26,6 +26,7 @@ import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.economy.EconomyMenu;
 import io.github.dre2n.factionsxl.economy.FAccount;
 import io.github.dre2n.factionsxl.economy.FStorage;
 import io.github.dre2n.factionsxl.economy.Resource;
@@ -99,6 +100,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Set<OfflinePlayer> members = new HashSet<>();
     Set<OfflinePlayer> invited = new HashSet<>();
     Map<Faction, Relation> relations = new HashMap<>();
+    EconomyMenu economyMenu;
     TradeMenu tradeMenu;
     FStorage storage;
     Map<Resource, Integer> groceryList = new HashMap<>();
@@ -634,6 +636,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /**
      * @return
+     * the economy menu of the faction
+     */
+    public EconomyMenu getEconomyMenu() {
+        return economyMenu;
+    }
+
+    /**
+     * @return
      * the trade menu of the faction
      */
     public TradeMenu getTradeMenu() {
@@ -972,6 +982,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (fConfig.isEconomyEnabled()) {
             account = new FAccount(this);
         }
+        economyMenu = new EconomyMenu(this);
         tradeMenu = new TradeMenu(this);
 
         storage = new FStorage(this, ConfigUtil.getMap(config, "storage"));
