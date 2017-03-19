@@ -949,6 +949,7 @@ public class FConfig extends BRConfig {
             dynmapRegionTypeStyles.put(type, style);
         }
         Resource.loadPrices(ConfigUtil.getMap(config, "resourcePrices"));
+        RegionType.loadResources(ConfigUtil.getMap(config, "regionIncome"));
     }
 
 }
