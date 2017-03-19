@@ -85,6 +85,11 @@ public class Region {
             Date date = new Date((long) entry.getValue());
             cores.put(faction, date);
         }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "claims").entrySet()) {
+            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
+            Date date = new Date((long) entry.getValue());
+            claims.put(faction, date);
+        }
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
     }
