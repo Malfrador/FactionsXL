@@ -28,6 +28,7 @@ import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,12 +85,12 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         chooseResource = chooseResource();
         chooseExport = chooseExport();
 
-        ItemStack amountInc100 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 100);
-        ItemStack amountInc10 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 10);
-        ItemStack amountInc1 = ItemUtil.setDisplayName(ItemUtil.UP, amount + plus + 1);
-        ItemStack amountDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 100);
-        ItemStack amountDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 10);
-        ItemStack amountDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, amount + minus + 1);
+        ItemStack amountInc100 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 100);
+        ItemStack amountInc10 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 10);
+        ItemStack amountInc1 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 1);
+        ItemStack amountDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 100);
+        ItemStack amountDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 10);
+        ItemStack amountDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 1);
         ItemStack priceInc1000 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 1000);
         ItemStack priceInc100 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 100);
         ItemStack priceInc10 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 10);
@@ -345,7 +346,7 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         Faction partner = offer.hasExporterAccepted() ? offer.getImporter() : offer.getExporter();
         String exImport = offer.hasExporterAccepted() ? "export" : "import";
         int rAmount = readAmountFromTitle(event.getInventory().getTitle());
-        double rPrice = readPriceFromTitle(event.getInventory().getTitle());
+        BigDecimal rPrice = readPriceFromTitle(event.getInventory().getTitle());
 
         ItemStack button = event.getCurrentItem();
         if (button == null) {
@@ -369,9 +370,9 @@ public class TradeOfferCommand extends BRCommand implements Listener {
                 }
             } else if (name.startsWith(price)) {
                 if (name.startsWith(price + plus)) {
-                    rPrice += NumberUtil.parseDouble(name.replace(price + plus, new String()));
+                    rPrice = rPrice.add(new BigDecimal(name.replace(price + plus, new String())));
                 } else if (name.startsWith(price + minus)) {
-                    rPrice -= NumberUtil.parseDouble(name.replace(price + minus, new String()));
+                    rPrice = rPrice.subtract(new BigDecimal(name.replace(price + minus, new String())));
                 }
             }
             performCommand(event.getWhoClicked(), creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().name() + " " + rAmount + " " + rPrice);
@@ -385,9 +386,9 @@ public class TradeOfferCommand extends BRCommand implements Listener {
         return NumberUtil.parseInt(amount);
     }
 
-    private double readPriceFromTitle(String title) {
+    private BigDecimal readPriceFromTitle(String title) {
         String price = title.split(ChatColor.DARK_AQUA.toString())[2];
-        return NumberUtil.parseDouble(price);
+        return new BigDecimal(price);
     }
 
     private final String COMMAND = FCommandCache.LABEL + " tradeOffer ";
