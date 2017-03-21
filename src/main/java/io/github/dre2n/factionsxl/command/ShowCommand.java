@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -40,13 +39,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class ShowCommand extends BRCommand {
+public class ShowCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
 
     public ShowCommand() {
         setCommand("show");
+        setAliases("who", "f");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_SHOW.getMessage());

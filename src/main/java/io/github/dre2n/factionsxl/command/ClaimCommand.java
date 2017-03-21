@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FConfig;
@@ -30,14 +29,15 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class ClaimCommand extends BRCommand {
+public class ClaimCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
 
     public ClaimCommand() {
         setCommand("claim");
-        setMinArgs(1);
+        setAliases("annex");
+        setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_CLAIM.getMessage());
         setPermission(FPermission.CLAIM.getNode());
@@ -48,9 +48,8 @@ public class ClaimCommand extends BRCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 

@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
@@ -37,7 +36,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class CreateVassalCommand extends BRCommand {
+public class CreateVassalCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     Board board = plugin.getBoard();
@@ -45,6 +44,7 @@ public class CreateVassalCommand extends BRCommand {
 
     public CreateVassalCommand() {
         setCommand("createVassal");
+        setAliases("newVassal");
         setMinArgs(2);
         setMaxArgs(2);
         setHelp(FMessage.HELP_CREATE_VASSAL.getMessage());

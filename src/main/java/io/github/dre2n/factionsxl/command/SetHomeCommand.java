@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -29,13 +28,13 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class SetHomeCommand extends BRCommand {
+public class SetHomeCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
     public SetHomeCommand() {
         setCommand("sethome");
-        setMinArgs(1);
+        setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_SET_HOME.getMessage());
         setPermission(FPermission.SET_HOME.getNode());
@@ -46,10 +45,8 @@ public class SetHomeCommand extends BRCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
-
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[2]);
             return;
         }
 

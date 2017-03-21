@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import static io.github.dre2n.commons.util.messageutil.FatLetters.*;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -27,7 +26,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Daniel Saukel
  */
-public class MainCommand extends BRCommand {
+public class MainCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 

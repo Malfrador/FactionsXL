@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.config.FConfig;
@@ -32,7 +31,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class CreateCommand extends BRCommand {
+public class CreateCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
@@ -40,6 +39,7 @@ public class CreateCommand extends BRCommand {
 
     public CreateCommand() {
         setCommand("create");
+        setAliases("new");
         setMinArgs(1);
         setMaxArgs(1);
         setHelp(FMessage.HELP_CREATE.getMessage());

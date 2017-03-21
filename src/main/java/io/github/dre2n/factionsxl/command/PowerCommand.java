@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -24,17 +23,17 @@ import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Saukel
  */
-public class PowerCommand extends BRCommand {
+public class PowerCommand extends FCommand {
 
     FPlayerCache fPlayers = FactionsXL.getInstance().getFPlayerCache();
 
     public PowerCommand() {
         setCommand("power");
+        setAliases("pow");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_POWER.getMessage());
@@ -45,23 +44,10 @@ public class PowerCommand extends BRCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        FPlayer fPlayer = null;
-        if (args.length == 1) {
-            if (sender instanceof Player) {
-                fPlayer = fPlayers.getByPlayer((Player) sender);
-            } else {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_SPECIFY_PLAYER.getMessage());
-                return;
-            }
-        } else {
-            fPlayer = fPlayers.getByName(args[1]);
-            if (fPlayer == null) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
-                return;
-            }
+        FPlayer fPlayer = getFSenderOrFromArg(sender, args, 1);
+        if (fPlayer != null) {
+            ParsingUtil.sendMessage(sender, FMessage.CMD_POWER.getMessage(), fPlayer, fPlayer.getPower());
         }
-
-        ParsingUtil.sendMessage(sender, FMessage.CMD_POWER.getMessage(), fPlayer, fPlayer.getPower());
     }
 
 }

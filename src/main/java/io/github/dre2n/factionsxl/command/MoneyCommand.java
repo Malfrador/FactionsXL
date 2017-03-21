@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.FAccount;
@@ -30,13 +29,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class MoneyCommand extends BRCommand {
+public class MoneyCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     Economy econ = plugin.getEconomyProvider();
 
     public MoneyCommand() {
         setCommand("money");
+        setAliases("m", "econ", "economy");
         setMinArgs(2);
         setMaxArgs(3);
         setHelp(FMessage.HELP_MONEY.getMessage());

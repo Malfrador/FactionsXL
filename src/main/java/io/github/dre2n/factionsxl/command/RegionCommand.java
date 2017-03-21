@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
@@ -44,7 +43,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class RegionCommand extends BRCommand {
+public class RegionCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
@@ -52,6 +51,7 @@ public class RegionCommand extends BRCommand {
 
     public RegionCommand() {
         setCommand("region");
+        setAliases("province");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_REGION.getMessage());

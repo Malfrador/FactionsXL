@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.EnumUtil;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -35,7 +34,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class RegionsCommand extends BRCommand {
+public class RegionsCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();

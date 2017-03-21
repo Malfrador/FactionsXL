@@ -29,12 +29,13 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Daniel Saukel
  */
-public class HelpCommand extends BRCommand {
+public class HelpCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
     public HelpCommand() {
         setCommand("help");
+        setAliases("h", "?");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_HELP.getMessage());

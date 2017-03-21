@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command.relation;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -31,7 +31,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class RelationNeutralCommand extends BRCommand {
+public class RelationNeutralCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();

@@ -16,21 +16,19 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
-import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Saukel
  */
-public class ChatCommand extends BRCommand {
+public class ChatCommand extends FCommand {
 
     public ChatCommand() {
-        setCommand("c");
+        setCommand("chat");
+        setAliases("c");
         setMinArgs(1);
         setMaxArgs(1);
         setHelp(FMessage.HELP_CHAT.getMessage());
@@ -41,7 +39,7 @@ public class ChatCommand extends BRCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        FactionsXL.getInstance().getFPlayerCache().getByPlayer((Player) sender).setChatChannel(ChatChannel.fromString(args[1]));
+        getFSender(sender).setChatChannel(ChatChannel.fromString(args[1]));
     }
 
 }

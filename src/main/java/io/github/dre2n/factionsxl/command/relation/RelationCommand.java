@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command.relation;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -31,7 +31,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Daniel Saukel
  */
-public class RelationCommand extends BRCommand {
+public class RelationCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -64,7 +64,7 @@ public class RelationCommand extends BRCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[2]);
             return;
         }
-        
+
         if (subjectFaction == objectFaction) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
             return;

@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.commons.util.playerutil.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
@@ -34,7 +33,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class HomeCommand extends BRCommand {
+public class HomeCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
@@ -42,6 +41,7 @@ public class HomeCommand extends BRCommand {
 
     public HomeCommand() {
         setCommand("home");
+        setAliases("spawn");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_HOME.getMessage());

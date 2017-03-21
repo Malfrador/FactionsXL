@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -30,12 +29,13 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class ModCommand extends BRCommand {
+public class ModCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
     public ModCommand() {
         setCommand("mod");
+        setAliases("officer");
         setMinArgs(2);
         setMaxArgs(2);
         setHelp(FMessage.HELP_MOD.getMessage());

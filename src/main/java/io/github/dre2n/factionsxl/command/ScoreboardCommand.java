@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -29,12 +28,13 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class ScoreboardCommand extends BRCommand {
+public class ScoreboardCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
     public ScoreboardCommand() {
         setCommand("scoreboard");
+        setCommand("sb");
         setMinArgs(0);
         setMaxArgs(0);
         setHelp(FMessage.HELP_SCOREBOARD.getMessage());

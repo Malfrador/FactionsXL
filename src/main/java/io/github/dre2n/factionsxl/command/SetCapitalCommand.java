@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -29,7 +28,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class SetCapitalCommand extends BRCommand {
+public class SetCapitalCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 

@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
 import io.github.dre2n.commons.util.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -29,7 +28,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Daniel Saukel
  */
-public class SetPowerCommand extends BRCommand {
+public class SetPowerCommand extends FCommand {
 
     public SetPowerCommand() {
         setCommand("setPower");
