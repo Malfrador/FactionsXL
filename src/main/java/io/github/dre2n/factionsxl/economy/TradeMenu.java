@@ -77,7 +77,7 @@ public class TradeMenu implements Listener {
         FactionsXL plugin = FactionsXL.getInstance();
         FConfig config = plugin.getFConfig();
         Economy econ = plugin.getEconomyProvider();
-        ItemStack icon = new ItemStack(resource.getIcon());
+        ItemStack icon = resource.getIcon();
         ItemMeta meta = icon.getItemMeta();
         ArrayList<String> lore = new ArrayList<>();
 

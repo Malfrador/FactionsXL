@@ -104,7 +104,7 @@ public enum RegionType {
     public Inventory getGUI(int level) {
         Inventory gui = Bukkit.createInventory(null, InventoryType.CHEST, ChatColor.GREEN + name.getMessage() + " - " + level);
         for (Map.Entry<Resource, Integer> resource : resources.get(level - 1).entrySet()) {
-            ItemStack icon = new ItemStack(resource.getKey().getIcon());
+            ItemStack icon = resource.getKey().getIcon();
             icon.setAmount(resource.getValue());
             gui.addItem(icon);
         }

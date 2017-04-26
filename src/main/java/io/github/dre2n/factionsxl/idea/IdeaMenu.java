@@ -64,7 +64,7 @@ public class IdeaMenu implements Listener {
         for (IdeaGroup group : IdeaGroup.values()) {
             boolean has = faction.getIdeaGroups().contains(group);
             boolean freeSlots = plugin.getFConfig().getMaxIdeaGroups() > faction.getIdeaGroups().size();
-            ItemStack button = has || freeSlots ? group.getIcon().clone() : PageGUI.DISABLED.clone();
+            ItemStack button = has || freeSlots ? group.getIcon() : PageGUI.DISABLED.clone();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName((has ? ChatColor.GREEN : ChatColor.DARK_RED) + group.getName());
             List<String> lore = new ArrayList<>();
@@ -87,7 +87,7 @@ public class IdeaMenu implements Listener {
         for (Object ideaObj : handler.getEnumConstants()) {
             Idea idea = (Idea) ideaObj;
             boolean has = faction.getIdeas().contains(idea);
-            ItemStack button = idea.getIcon().clone();
+            ItemStack button = idea.getIcon();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName((has ? ChatColor.GREEN : ChatColor.DARK_RED) + idea.getName());
             List<String> lore = new ArrayList<>(Arrays.asList(idea.getDescription()));

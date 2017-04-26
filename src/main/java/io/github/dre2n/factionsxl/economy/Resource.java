@@ -117,7 +117,7 @@ public enum Resource {
      * the inventory GUI icon
      */
     public ItemStack getIcon() {
-        return icon;
+        return icon.clone();
     }
 
     /**
