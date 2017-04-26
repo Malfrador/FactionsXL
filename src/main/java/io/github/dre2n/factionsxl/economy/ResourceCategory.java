@@ -28,7 +28,7 @@ public enum ResourceCategory {
     FOOD(STAPLES, MEAT, SPICES, WATER),
     HEATING(ResourceSubcategory.HEATING),
     JEWELRY(ResourceSubcategory.JEWELRY),
-    MILITARY(CANNONING, SMITHERY),
+    MILITARY(CANNONING, RIDERS, SMITHERY),
     SCIENCE(ALCHEMY, LITERATURE);
 
     private ResourceSubcategory[] subcategories;
