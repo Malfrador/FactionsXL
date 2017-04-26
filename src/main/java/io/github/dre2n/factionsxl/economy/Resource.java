@@ -154,7 +154,7 @@ public enum Resource {
      */
     public static Resource getByIcon(ItemStack icon) {
         for (Resource resource : values()) {
-            if (icon.getType() == resource.getIcon().getType()) {
+            if (icon.getType() == resource.getIcon().getType() && icon.getDurability() == resource.getIcon().getDurability()) {
                 return resource;
             }
         }
