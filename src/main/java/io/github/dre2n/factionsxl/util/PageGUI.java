@@ -155,7 +155,7 @@ public class PageGUI {
     }
 
     public static boolean isPageGUI(Inventory inventory) {
-        return inventory != null && inventory.getSize() == 54 && inventory.getItem(45).equals(PREVIOUS_PAGE) && inventory.getItem(49).equals(PLACEHOLDER);
+        return inventory != null && inventory.getSize() == 54 && PREVIOUS_PAGE.equals(inventory.getItem(45)) && PLACEHOLDER.equals(inventory.getItem(49));
     }
 
     public static PageGUI getByInventory(Inventory inventory) {
