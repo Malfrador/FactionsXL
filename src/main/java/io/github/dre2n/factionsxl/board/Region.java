@@ -16,9 +16,9 @@
  */
 package io.github.dre2n.factionsxl.board;
 
-import io.github.dre2n.commons.util.ConfigUtil;
-import io.github.dre2n.commons.util.EnumUtil;
-import io.github.dre2n.commons.util.NumberUtil;
+import io.github.dre2n.commons.config.ConfigUtil;
+import io.github.dre2n.commons.misc.EnumUtil;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.config.FConfig;

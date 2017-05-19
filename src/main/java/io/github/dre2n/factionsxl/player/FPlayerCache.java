@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.util.UUIDUtil;
+import io.github.dre2n.commons.misc.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.util.UUID;
@@ -164,7 +164,7 @@ public class FPlayerCache {
     }
 
     public static File getFile(String name) {
-        return getFile(UUIDUtil.getUniqueIdFromName(name));
+        return getFile(PlayerUtil.getUniqueIdFromName(name));
     }
 
 }

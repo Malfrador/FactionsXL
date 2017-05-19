@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.util.NumberUtil;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
@@ -24,7 +24,8 @@ import io.github.dre2n.factionsxl.economy.TradeOffer;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.GUIButton;
+import static io.github.dre2n.factionsxl.util.GUIButton.*;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.math.BigDecimal;
@@ -84,32 +85,32 @@ public class TradeOfferCommand extends FCommand implements Listener {
         chooseResource = chooseResource();
         chooseExport = chooseExport();
 
-        ItemStack amountInc100 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 100);
-        ItemStack amountInc10 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 10);
-        ItemStack amountInc1 = ItemUtil.setDisplayName(ItemUtil.UP_ALT, amount + plus + 1);
-        ItemStack amountDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 100);
-        ItemStack amountDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 10);
-        ItemStack amountDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN_ALT, amount + minus + 1);
-        ItemStack priceInc1000 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 1000);
-        ItemStack priceInc100 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 100);
-        ItemStack priceInc10 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 10);
-        ItemStack priceInc1 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 1);
-        ItemStack priceInc01 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 0.10);
-        ItemStack priceInc001 = ItemUtil.setDisplayName(ItemUtil.UP, price + plus + 0.01);
-        ItemStack priceDec1000 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 1000);
-        ItemStack priceDec100 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 100);
-        ItemStack priceDec10 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 10);
-        ItemStack priceDec1 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 1);
-        ItemStack priceDec01 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 0.10);
-        ItemStack priceDec001 = ItemUtil.setDisplayName(ItemUtil.DOWN, price + minus + 0.01);
+        ItemStack amountInc100 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 100);
+        ItemStack amountInc10 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 10);
+        ItemStack amountInc1 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 1);
+        ItemStack amountDec100 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 100);
+        ItemStack amountDec10 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 10);
+        ItemStack amountDec1 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 1);
+        ItemStack priceInc1000 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 1000);
+        ItemStack priceInc100 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 100);
+        ItemStack priceInc10 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 10);
+        ItemStack priceInc1 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 1);
+        ItemStack priceInc01 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 0.10);
+        ItemStack priceInc001 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 0.01);
+        ItemStack priceDec1000 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 1000);
+        ItemStack priceDec100 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 100);
+        ItemStack priceDec10 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 10);
+        ItemStack priceDec1 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 1);
+        ItemStack priceDec01 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 0.10);
+        ItemStack priceDec001 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 0.01);
         choosePriceAndAmount = new ItemStack[]{
             amountInc100, amountInc10, amountInc1,
             priceInc1000, priceInc100, priceInc10, priceInc1, priceInc01, priceInc001,
             amountDec100, amountDec10, amountDec1,
             priceDec1000, priceDec100, priceDec10, priceDec1, priceDec01, priceDec001,
-            PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER,
-            PageGUI.CONTINUE,
-            PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER, PageGUI.PLACEHOLDER
+            PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER,
+            CONTINUE,
+            PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER
         };
     }
 
@@ -231,11 +232,11 @@ public class TradeOfferCommand extends FCommand implements Listener {
 
     private Inventory chooseExport() {
         Inventory gui = Bukkit.createInventory(null, 9, FMessage.TRADE_OFFER_CHOOSE_EXPORT.getMessage());
-        ItemStack exportIcon = ItemUtil.E.clone();
+        ItemStack exportIcon = GUIButton.E.clone();
         ItemMeta exMeta = exportIcon.getItemMeta();
         exMeta.setDisplayName(ChatColor.GREEN + FMessage.TRADE_EXPORT.getMessage());
         exportIcon.setItemMeta(exMeta);
-        ItemStack importIcon = ItemUtil.I.clone();
+        ItemStack importIcon = GUIButton.I.clone();
         ItemMeta imMeta = importIcon.getItemMeta();
         imMeta.setDisplayName(ChatColor.GREEN + FMessage.TRADE_IMPORT.getMessage());
         importIcon.setItemMeta(imMeta);
@@ -352,7 +353,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
             return;
         }
 
-        if (button.equals(PageGUI.CONTINUE)) {
+        if (button.equals(CONTINUE)) {
             performCommand(player, creator.getName() + " " + partner.getName() + " " + exImport + " " + offer.getGood().name() + " " + rAmount + " " + rPrice + " -confirm");
             if (offer.check(player)) {
                 player.closeInventory();

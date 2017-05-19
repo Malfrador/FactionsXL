@@ -16,9 +16,10 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import io.github.dre2n.commons.config.BRConfig;
-import io.github.dre2n.commons.util.ConfigUtil;
-import io.github.dre2n.commons.util.EnumUtil;
+import io.github.dre2n.commons.config.ConfigUtil;
+import io.github.dre2n.commons.config.DREConfig;
+import io.github.dre2n.commons.misc.EnumUtil;
+import io.github.dre2n.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.RegionType;
 import static io.github.dre2n.factionsxl.board.RegionType.*;
@@ -29,7 +30,6 @@ import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.relation.Relation;
 import static io.github.dre2n.factionsxl.relation.Relation.*;
 import static io.github.dre2n.factionsxl.util.ParsingUtil.*;
-import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @author Daniel Saukel
  */
-public class FConfig extends BRConfig {
+public class FConfig extends DREConfig {
 
     public static final int CONFIG_VERSION = 4;
 

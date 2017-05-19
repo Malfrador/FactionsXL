@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.util.EnumUtil;
+import io.github.dre2n.commons.misc.EnumUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

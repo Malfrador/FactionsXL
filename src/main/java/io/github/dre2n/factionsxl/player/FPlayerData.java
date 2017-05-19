@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.config.BRConfig;
-import io.github.dre2n.commons.util.messageutil.MessageUtil;
+import io.github.dre2n.commons.chat.MessageUtil;
+import io.github.dre2n.commons.config.DREConfig;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import java.io.File;
@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * @author Daniel Saukel
  */
-public class FPlayerData extends BRConfig {
+public class FPlayerData extends DREConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 

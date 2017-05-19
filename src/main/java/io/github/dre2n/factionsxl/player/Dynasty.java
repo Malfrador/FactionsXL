@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.util.NumberUtil;
+import io.github.dre2n.commons.misc.NumberUtil;
 import java.io.File;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

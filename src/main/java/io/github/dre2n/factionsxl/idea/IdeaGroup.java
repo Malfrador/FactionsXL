@@ -18,7 +18,7 @@ package io.github.dre2n.factionsxl.idea;
 
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import java.util.ArrayList;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,9 +30,9 @@ public enum IdeaGroup {
     /*CENTRALIZATION(new ItemStack(Material.STRUCTURE_VOID), FMessage.IDEA_GROUP_CENTRALIZATION, CentralizationIdea.class, true),
     DIPLOMACY(new ItemStack(Material.PAPER), FMessage.IDEA_GROUP_DIPLOMACY, DiplomacyIdea.class, true),
     ECONOMY(new ItemStack(Material.IRON_INGOT), FMessage.IDEA_GROUP_ECONOMY, EconomyIdea.class, true),
-    MERCENARY(ItemUtil.GUI_SWORD, FMessage.IDEA_GROUP_MERCENARY, MercenaryIdea.class, true),
+    MERCENARY(GUIButton.GUI_SWORD, FMessage.IDEA_GROUP_MERCENARY, MercenaryIdea.class, true),
     RELIGION(new ItemStack(Material.TOTEM), FMessage.IDEA_GROUP_RELIGION, ReligionIdea.class, true),*/
-    SETTLER(ItemUtil.SKULL, FMessage.IDEA_GROUP_SETTLER, SettlerIdea.class, true),/*
+    SETTLER(GUIButton.SKULL, FMessage.IDEA_GROUP_SETTLER, SettlerIdea.class, true),/*
     TRADE(new ItemStack(Material.STORAGE_MINECART), FMessage.IDEA_GROUP_TRADE, TradeIdea.class, false)*/;
 
     private ItemStack icon;

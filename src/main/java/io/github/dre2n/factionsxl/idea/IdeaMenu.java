@@ -16,11 +16,12 @@
  */
 package io.github.dre2n.factionsxl.idea;
 
-import io.github.dre2n.commons.util.messageutil.MessageUtil;
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
+import static io.github.dre2n.factionsxl.util.GUIButton.*;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +65,7 @@ public class IdeaMenu implements Listener {
         for (IdeaGroup group : IdeaGroup.values()) {
             boolean has = faction.getIdeaGroups().contains(group);
             boolean freeSlots = plugin.getFConfig().getMaxIdeaGroups() > faction.getIdeaGroups().size();
-            ItemStack button = has || freeSlots ? group.getIcon() : PageGUI.DISABLED.clone();
+            ItemStack button = has || freeSlots ? group.getIcon() : DISABLED.clone();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName((has ? ChatColor.GREEN : ChatColor.DARK_RED) + group.getName());
             List<String> lore = new ArrayList<>();
@@ -83,7 +84,7 @@ public class IdeaMenu implements Listener {
         Class handler = group.getHandler();
         int size = (int) (9 * Math.ceil(((double) (handler.getEnumConstants().length + 1) / 9)));
         ideas.put(group, Bukkit.createInventory(null, size, FMessage.IDEA_MENU_IDEAS_TITLE.getMessage(group.getName())));
-        ideas.get(group).setItem(0, PageGUI.BACK);
+        ideas.get(group).setItem(0, BACK);
         for (Object ideaObj : handler.getEnumConstants()) {
             Idea idea = (Idea) ideaObj;
             boolean has = faction.getIdeas().contains(idea);
@@ -169,7 +170,7 @@ public class IdeaMenu implements Listener {
         }
 
         HumanEntity player = event.getWhoClicked();
-        if (button.equals(PageGUI.BACK)) {
+        if (button.equals(BACK)) {
             openGroups(player);
             return;
         } else if (!faction.isPrivileged(player)) {

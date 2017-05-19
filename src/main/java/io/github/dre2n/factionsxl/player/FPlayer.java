@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.util.UUIDUtil;
+import io.github.dre2n.commons.misc.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -59,7 +59,7 @@ public class FPlayer implements RelationParticipator {
     }
 
     public FPlayer(String name) {
-        this(UUIDUtil.getUniqueIdFromName(name));
+        this(PlayerUtil.getUniqueIdFromName(name));
     }
 
     /* Getters and setters */

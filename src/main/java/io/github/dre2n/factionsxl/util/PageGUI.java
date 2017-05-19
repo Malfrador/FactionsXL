@@ -17,55 +17,23 @@
 package io.github.dre2n.factionsxl.util;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.config.FMessage;
+import static io.github.dre2n.factionsxl.util.GUIButton.*;
 import java.util.Stack;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionType;
 
 /**
  * @author Daniel Saukel
  */
 public class PageGUI {
 
-    public static final ItemStack DISABLED = ItemUtil.setDisplayName(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
-    public static final ItemStack PLACEHOLDER = ItemUtil.setDisplayName(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), ChatColor.RESET.toString());
-    public static final ItemStack BACK = ItemUtil.LEFT.clone();
-    public static final ItemStack CONTINUE = ItemUtil.RIGHT.clone();
-    public static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
-    public static final ItemStack GUI_WATER_BOTTLE = new ItemStack(Material.POTION);
-    public static final ItemStack PREVIOUS_PAGE = ItemUtil.setDisplayName(ItemUtil.LEFT.clone(), FMessage.MISC_PREVIOUS_PAGE.getMessage());
-    public static final ItemStack NEXT_PAGE = ItemUtil.setDisplayName(ItemUtil.RIGHT.clone(), FMessage.MISC_NEXT_PAGE.getMessage());
 
-    static {
-        ItemMeta backMeta = BACK.getItemMeta();
-        backMeta.setDisplayName(FMessage.MISC_BACK.getMessage());
-        BACK.setItemMeta(backMeta);
-
-        ItemMeta continueMeta = CONTINUE.getItemMeta();
-        continueMeta.setDisplayName(FMessage.MISC_CONTINUE.getMessage());
-        CONTINUE.setItemMeta(continueMeta);
-
-        ItemMeta swordMeta = GUI_SWORD.getItemMeta();
-        swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        GUI_SWORD.setItemMeta(swordMeta);
-
-        PotionMeta watMeta = (PotionMeta) GUI_WATER_BOTTLE.getItemMeta();
-        watMeta.setBasePotionData(new PotionData(PotionType.WATER));
-        watMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        GUI_WATER_BOTTLE.setItemMeta(watMeta);
-    }
 
     private String title;
     private Stack<Inventory> pages = new Stack<>();

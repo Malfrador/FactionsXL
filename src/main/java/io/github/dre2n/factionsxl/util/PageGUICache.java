@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.util;
 
+import static io.github.dre2n.factionsxl.util.GUIButton.*;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Material;
@@ -49,9 +50,9 @@ public class PageGUICache implements Listener {
         PageGUI.playSound(event);
         int index = gui.getPages().indexOf(inventory);
         HumanEntity player = event.getWhoClicked();
-        if (button.equals(PageGUI.NEXT_PAGE)) {
+        if (button.equals(NEXT_PAGE)) {
             gui.open(player, index + 1);
-        } else if (button.equals(PageGUI.PREVIOUS_PAGE)) {
+        } else if (button.equals(PREVIOUS_PAGE)) {
             gui.open(player, index - 1);
         }
     }

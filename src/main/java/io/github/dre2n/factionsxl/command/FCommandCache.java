@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommandCache;
-import io.github.dre2n.commons.javaplugin.BRPlugin;
+import io.github.dre2n.commons.command.DRECommandCache;
+import io.github.dre2n.commons.javaplugin.DREPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
 
@@ -26,7 +26,7 @@ import io.github.dre2n.factionsxl.command.relation.*;
  *
  * @author Daniel Saukel
  */
-public class FCommandCache extends BRCommandCache {
+public class FCommandCache extends DRECommandCache {
 
     public static final String LABEL = "factionsxl";
 
@@ -78,7 +78,7 @@ public class FCommandCache extends BRCommandCache {
     public UnclaimCommand unclaim = new UnclaimCommand();
     public UninviteCommand uninvite = new UninviteCommand();
 
-    public FCommandCache(BRPlugin plugin) {
+    public FCommandCache(DREPlugin plugin) {
         super("factionsxl", plugin);
         addCommand(admin);
         addCommand(chat);

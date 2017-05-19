@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
-import io.github.dre2n.commons.util.NumberUtil;
+import io.github.dre2n.commons.command.DRECommand;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public abstract class FCommand extends BRCommand {
+public abstract class FCommand extends DRECommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 

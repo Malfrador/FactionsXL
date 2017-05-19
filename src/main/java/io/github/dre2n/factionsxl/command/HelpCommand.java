@@ -16,9 +16,9 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.BRCommand;
-import io.github.dre2n.commons.util.NumberUtil;
-import io.github.dre2n.commons.util.messageutil.MessageUtil;
+import io.github.dre2n.commons.chat.MessageUtil;
+import io.github.dre2n.commons.command.DRECommand;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -46,8 +46,8 @@ public class HelpCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Set<BRCommand> dCommandList = plugin.getCommandCache().getCommands();
-        ArrayList<BRCommand> toSend = new ArrayList<>();
+        Set<DRECommand> dCommandList = plugin.getCommandCache().getCommands();
+        ArrayList<DRECommand> toSend = new ArrayList<>();
 
         int page = 1;
         if (args.length == 2) {
@@ -56,7 +56,7 @@ public class HelpCommand extends FCommand {
         int send = 0;
         int max = 0;
         int min = 0;
-        for (BRCommand dCommand : dCommandList) {
+        for (DRECommand dCommand : dCommandList) {
             send++;
             if (send >= page * 5 - 4 && send <= page * 5) {
                 min = page * 5 - 4;
@@ -68,7 +68,7 @@ public class HelpCommand extends FCommand {
         MessageUtil.sendPluginTag(sender, plugin);
         MessageUtil.sendCenteredMessage(sender, "&4&l[ &6" + min + "-" + max + " &4/&6 " + send + " &4|&6 " + page + " &4&l]");
 
-        for (BRCommand dCommand : toSend) {
+        for (DRECommand dCommand : toSend) {
             MessageUtil.sendMessage(sender, "&b" + dCommand.getCommand() + "&7 - " + dCommand.getHelp());
         }
     }

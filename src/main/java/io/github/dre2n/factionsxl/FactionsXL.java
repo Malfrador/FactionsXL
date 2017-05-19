@@ -17,13 +17,13 @@
 package io.github.dre2n.factionsxl;
 
 import com.griefcraft.lwc.LWC;
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.compatibility.Internals;
 import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.commons.config.MessageConfig;
-import io.github.dre2n.commons.javaplugin.BRPlugin;
-import io.github.dre2n.commons.javaplugin.BRPluginSettings;
-import io.github.dre2n.commons.util.FileUtil;
-import io.github.dre2n.commons.util.messageutil.MessageUtil;
+import io.github.dre2n.commons.javaplugin.DREPlugin;
+import io.github.dre2n.commons.javaplugin.DREPluginSettings;
+import io.github.dre2n.commons.misc.FileUtil;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.dynmap.Atlas;
 import io.github.dre2n.factionsxl.chat.ChatListener;
@@ -54,7 +54,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Daniel Saukel
  */
-public class FactionsXL extends BRPlugin {
+public class FactionsXL extends DREPlugin {
 
     private static FactionsXL instance;
     private LWC lwc;
@@ -97,7 +97,7 @@ public class FactionsXL extends BRPlugin {
          * ##########################
          */
 
-        settings = new BRPluginSettings(true, true, true, false, true, Internals.INDEPENDENT);
+        settings = new DREPluginSettings(true, true, true, false, true, Internals.INDEPENDENT);
     }
 
     @Override

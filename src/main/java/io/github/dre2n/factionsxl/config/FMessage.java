@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.config;
 
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.Message;
-import io.github.dre2n.commons.util.messageutil.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

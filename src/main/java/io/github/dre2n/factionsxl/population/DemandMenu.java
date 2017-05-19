@@ -16,13 +16,14 @@
  */
 package io.github.dre2n.factionsxl.population;
 
+import io.github.dre2n.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
+import static io.github.dre2n.factionsxl.util.GUIButton.BACK;
 import io.github.dre2n.factionsxl.util.PageGUI;
-import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -96,7 +97,7 @@ public class DemandMenu implements Listener {
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
-        if (PageGUI.BACK.equals(button)) {
+        if (BACK.equals(button)) {
             faction.getPopulationMenu().openDemands(player);
             return;
         }

@@ -18,9 +18,9 @@ package io.github.dre2n.factionsxl.faction;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import io.github.dre2n.commons.util.ConfigUtil;
-import io.github.dre2n.commons.util.EnumUtil;
-import io.github.dre2n.commons.util.NumberUtil;
+import io.github.dre2n.commons.config.ConfigUtil;
+import io.github.dre2n.commons.misc.EnumUtil;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;

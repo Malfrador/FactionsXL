@@ -20,7 +20,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,17 +45,17 @@ public class SaturationMenu implements Listener {
     public static final ItemStack DENY_BUTTON_ZERO;
 
     static {
-        GRANT_BUTTON = ItemUtil.UP.clone();
+        GRANT_BUTTON = GUIButton.UP.clone();
         ItemMeta gMeta = GRANT_BUTTON.getItemMeta();
         gMeta.setDisplayName(FMessage.POPULATION_GRANT_RESOURCE.getMessage());
         GRANT_BUTTON.setItemMeta(gMeta);
 
-        DENY_BUTTON = ItemUtil.DOWN.clone();
+        DENY_BUTTON = GUIButton.DOWN.clone();
         ItemMeta dMeta = DENY_BUTTON.getItemMeta();
         dMeta.setDisplayName(FMessage.POPULATION_DENY_RESOURCE.getMessage());
         DENY_BUTTON.setItemMeta(dMeta);
 
-        DENY_BUTTON_ZERO = ItemUtil.DOWN_ALT.clone();
+        DENY_BUTTON_ZERO = GUIButton.DOWN_ALT.clone();
         ItemMeta zMeta = DENY_BUTTON_ZERO.getItemMeta();
         zMeta.setDisplayName(ChatColor.DARK_GRAY + ChatColor.stripColor(FMessage.POPULATION_DENY_RESOURCE.getMessage()));
         DENY_BUTTON_ZERO.setItemMeta(zMeta);
@@ -78,7 +78,7 @@ public class SaturationMenu implements Listener {
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         banner.setItemMeta(meta);
-        gui.setItem(0, PageGUI.BACK);
+        gui.setItem(0, GUIButton.BACK);
         gui.setItem(1, banner);
         gui.setItem(2, banner);
         gui.setItem(3, banner);
@@ -119,7 +119,7 @@ public class SaturationMenu implements Listener {
         }
         Resource resource = getResource(gui);
         int current = faction.getConsumableResources().get(resource);
-        if (button.equals(PageGUI.BACK)) {
+        if (button.equals(GUIButton.BACK)) {
             faction.getPopulationMenu().openDemands(player);
             return;
         } else if (button.equals(DENY_BUTTON)) {

@@ -16,14 +16,14 @@
  */
 package io.github.dre2n.factionsxl.population;
 
+import io.github.dre2n.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import io.github.dre2n.factionsxl.util.PageGUI;
-import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +46,8 @@ public class PopulationMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack DEMANDS = ItemUtil.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS_BUTTON.getMessage());
-    public static final ItemStack MILITARY = ItemUtil.setDisplayName(PageGUI.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
+    public static final ItemStack DEMANDS = GUIButton.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS_BUTTON.getMessage());
+    public static final ItemStack MILITARY = GUIButton.setDisplayName(GUIButton.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
 
     private Faction faction;
     private Inventory main;
@@ -123,7 +123,7 @@ public class PopulationMenu implements Listener {
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
-        if (PageGUI.BACK.equals(button)) {
+        if (GUIButton.BACK.equals(button)) {
             openMain(player);
         } else if (DEMANDS.equals(button)) {
             openDemands(player);

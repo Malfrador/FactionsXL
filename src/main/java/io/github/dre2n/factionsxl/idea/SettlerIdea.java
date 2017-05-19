@@ -19,7 +19,7 @@ package io.github.dre2n.factionsxl.idea;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.ItemUtil;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public enum SettlerIdea implements Idea {
 
-    COLONIZATION(ItemUtil.SKULL, FMessage.IDEA_NAME_SETTLER_COLONIZATION, FMessage.IDEA_DESC_SETTLER_COLONIZATION, new HashMap<Resource, Integer>() {
+    COLONIZATION(GUIButton.SKULL, FMessage.IDEA_NAME_SETTLER_COLONIZATION, FMessage.IDEA_DESC_SETTLER_COLONIZATION, new HashMap<Resource, Integer>() {
         {
             //put(Resource.COAL, 400);
             put(Resource.GRAVEL, 250);

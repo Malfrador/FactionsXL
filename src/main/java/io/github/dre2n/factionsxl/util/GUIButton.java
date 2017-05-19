@@ -16,70 +16,24 @@
  */
 package io.github.dre2n.factionsxl.util;
 
-import io.github.dre2n.commons.compatibility.CompatibilityHandler;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import static io.github.dre2n.commons.item.ItemUtil.setSkullOwner;
+import io.github.dre2n.factionsxl.config.FMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 /**
  * @author Daniel Saukel
  */
-public class ItemUtil {
+public class GUIButton {
 
-    private static String INTERNALS_VERSION = CompatibilityHandler.getInstance().getInternals().toString();
-    private static String ORG_BUKKIT_CRAFTBUKKIT = "org.bukkit.craftbukkit." + INTERNALS_VERSION;
-    private static String NET_MINECRAFT_SERVER = "net.minecraft.server." + INTERNALS_VERSION;
-
-    private static Class ITEMSTACK;
-    private static Method ITEMSTACK_GET_TAG;
-    private static Method ITEMSTACK_SET_TAG;
-
-    private static Class CRAFTITEMSTACK;
-    private static Method CRAFTITEMSTACK_AS_BUKKIT_COPY;
-    private static Method CRAFTITEMSTACK_AS_NMS_COPY;
-
-    private static Class NBT_BASE;
-
-    private static Class NBT_TAG_COMPOUND;
-    private static Method NBT_TAG_COMPOUND_SET;
-
-    private static Class NBT_TAG_LIST;
-    private static Method NBT_TAG_LIST_ADD;
-
-    private static Class NBT_TAG_STRING;
-    private static Constructor NBT_TAG_STRING_CONSTRUCTOR;
-
-    static {
-        try {
-            NBT_BASE = Class.forName(NET_MINECRAFT_SERVER + ".NBTBase");
-
-            NBT_TAG_COMPOUND = Class.forName(NET_MINECRAFT_SERVER + ".NBTTagCompound");
-            NBT_TAG_COMPOUND_SET = NBT_TAG_COMPOUND.getDeclaredMethod("set", String.class, NBT_BASE);
-
-            NBT_TAG_LIST = Class.forName(NET_MINECRAFT_SERVER + ".NBTTagList");
-            NBT_TAG_LIST_ADD = NBT_TAG_LIST.getDeclaredMethod("add", NBT_BASE);
-
-            NBT_TAG_STRING = Class.forName(NET_MINECRAFT_SERVER + ".NBTTagString");
-            NBT_TAG_STRING_CONSTRUCTOR = NBT_TAG_STRING.getConstructor(String.class);
-
-            ITEMSTACK = Class.forName(NET_MINECRAFT_SERVER + ".ItemStack");
-            ITEMSTACK_GET_TAG = ITEMSTACK.getDeclaredMethod("getTag");
-            ITEMSTACK_SET_TAG = ITEMSTACK.getDeclaredMethod("setTag", NBT_TAG_COMPOUND);
-
-            CRAFTITEMSTACK = Class.forName(ORG_BUKKIT_CRAFTBUKKIT + ".inventory.CraftItemStack");
-            CRAFTITEMSTACK_AS_BUKKIT_COPY = CRAFTITEMSTACK.getDeclaredMethod("asBukkitCopy", ITEMSTACK);
-            CRAFTITEMSTACK_AS_NMS_COPY = CRAFTITEMSTACK.getDeclaredMethod("asNMSCopy", ItemStack.class);
-
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException exception) {
-        }
-    }
-
+    /* Raw skulls */
     public static final ItemStack SKULL = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-
-    // Raw custom textured skulls
     public static final ItemStack UP_ALT = setSkullOwner(SKULL, "e4d7b07b-59fc-4f77-b08b-b0446048dcd4", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThmZTI1MWE0MGU0MTY3ZDM1ZDA4MWMyNzg2OWFjMTUxYWY5NmI2YmQxNmRkMjgzNGQ1ZGM3MjM1ZjQ3NzkxZCJ9fX0=");
     public static final ItemStack DOWN_ALT = setSkullOwner(SKULL, "ccd469f7-1df1-42f9-8915-15de387906e4", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI3Y2U2ODNkMDg2OGFhNDM3OGFlYjYwY2FhNWVhODA1OTZiY2ZmZGFiNmI1YWYyZDEyNTk1ODM3YTg0ODUzIn19fQ==");
     public static final ItemStack UP = setSkullOwner(SKULL, "ff1654b0-10f2-48b6-9c05-483b75f6549e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ4Yjc2OGM2MjM0MzJkZmIyNTlmYjNjMzk3OGU5OGRlYzExMWY3OWRiZDZjZDg4ZjIxMTU1Mzc0YjcwYjNjIn19fQ==");
@@ -91,40 +45,35 @@ public class ItemUtil {
     public static final ItemStack E = setSkullOwner(SKULL, "96eaca3a-0f22-484f-bad7-46153597e191", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGJiMjczN2VjYmY5MTBlZmUzYjI2N2RiN2Q0YjMyN2YzNjBhYmM3MzJjNzdiZDBlNGVmZjFkNTEwY2RlZiJ9fX0=");
     public static final ItemStack I = setSkullOwner(SKULL, "2ab25358-deaa-46b7-b351-d9732a448ff1", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDYxNzhhZDUxZmQ1MmIxOWQwYTM4ODg3MTBiZDkyMDY4ZTkzMzI1MmFhYzZiMTNjNzZlN2U2ZWE1ZDMyMjYifX19");
 
+    /* GUI buttons */
+    public static final ItemStack BACK = setDisplayName(LEFT, FMessage.MISC_BACK.getMessage());
+    public static final ItemStack CONTINUE = setDisplayName(RIGHT, FMessage.MISC_CONTINUE.getMessage());
+    public static final ItemStack NEXT_PAGE = setDisplayName(RIGHT, FMessage.MISC_NEXT_PAGE.getMessage());
+    public static final ItemStack PREVIOUS_PAGE = setDisplayName(LEFT, FMessage.MISC_PREVIOUS_PAGE.getMessage());
+    public static final ItemStack PLACEHOLDER = setDisplayName(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), ChatColor.RESET.toString());
+    public static final ItemStack DISABLED = setDisplayName(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
+
+    /* Blank items that show meta stuff by default */
+    public static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
+    public static final ItemStack GUI_WATER_BOTTLE = new ItemStack(Material.POTION);
+
+    static {
+        ItemMeta swordMeta = GUI_SWORD.getItemMeta();
+        swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        GUI_SWORD.setItemMeta(swordMeta);
+
+        PotionMeta watMeta = (PotionMeta) GUI_WATER_BOTTLE.getItemMeta();
+        watMeta.setBasePotionData(new PotionData(PotionType.WATER));
+        watMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        GUI_WATER_BOTTLE.setItemMeta(watMeta);
+    }
+
     public static ItemStack setDisplayName(ItemStack itemStack, String name) {
         itemStack = itemStack.clone();
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(name);
         itemStack.setItemMeta(meta);
         return itemStack;
-    }
-
-    public static ItemStack setSkullOwner(ItemStack itemStack, String id, String textureValue) {
-        try {
-            Object nmsStack = CRAFTITEMSTACK_AS_NMS_COPY.invoke(null, itemStack);
-
-            Object compound = ITEMSTACK_GET_TAG.invoke(nmsStack);
-            if (compound == null) {
-                compound = NBT_TAG_COMPOUND.newInstance();
-            }
-
-            Object skullOwner = NBT_TAG_COMPOUND.newInstance();
-            NBT_TAG_COMPOUND_SET.invoke(skullOwner, "Id", NBT_TAG_STRING_CONSTRUCTOR.newInstance(id));
-            Object properties = NBT_TAG_COMPOUND.newInstance();
-            Object textures = NBT_TAG_LIST.newInstance();
-            Object value = NBT_TAG_COMPOUND.newInstance();
-            NBT_TAG_COMPOUND_SET.invoke(value, "Value", NBT_TAG_STRING_CONSTRUCTOR.newInstance(textureValue));
-            NBT_TAG_LIST_ADD.invoke(textures, value);
-            NBT_TAG_COMPOUND_SET.invoke(properties, "textures", textures);
-            NBT_TAG_COMPOUND_SET.invoke(skullOwner, "Properties", properties);
-
-            NBT_TAG_COMPOUND_SET.invoke(compound, "SkullOwner", skullOwner);
-            ITEMSTACK_SET_TAG.invoke(nmsStack, compound);
-            return (ItemStack) CRAFTITEMSTACK_AS_BUKKIT_COPY.invoke(null, nmsStack);
-
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
-            return itemStack;
-        }
     }
 
 }
