@@ -165,7 +165,7 @@ public class TradeOffer {
     }
 
     public double getFee() {
-        return 0;// TO DO
+        return 0;//TODO
     }
 
     public void accept(CommandSender sender) {

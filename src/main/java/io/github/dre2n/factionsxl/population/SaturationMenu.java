@@ -14,16 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.economy;
+package io.github.dre2n.factionsxl.population;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -38,43 +36,43 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * @author Daniel Saukel
  */
-public class ResourceMenu implements Listener {
+public class SaturationMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    private ItemStack exportButton;
-    private ItemStack importButton;
+    public static final ItemStack GRANT_BUTTON;
+    public static final ItemStack DENY_BUTTON;
+    public static final ItemStack DENY_BUTTON_ZERO;
+
+    static {
+        GRANT_BUTTON = ItemUtil.UP.clone();
+        ItemMeta gMeta = GRANT_BUTTON.getItemMeta();
+        gMeta.setDisplayName(FMessage.POPULATION_GRANT_RESOURCE.getMessage());
+        GRANT_BUTTON.setItemMeta(gMeta);
+
+        DENY_BUTTON = ItemUtil.DOWN.clone();
+        ItemMeta dMeta = DENY_BUTTON.getItemMeta();
+        dMeta.setDisplayName(FMessage.POPULATION_DENY_RESOURCE.getMessage());
+        DENY_BUTTON.setItemMeta(dMeta);
+
+        DENY_BUTTON_ZERO = ItemUtil.DOWN_ALT.clone();
+        ItemMeta zMeta = DENY_BUTTON_ZERO.getItemMeta();
+        zMeta.setDisplayName(ChatColor.DARK_GRAY + ChatColor.stripColor(FMessage.POPULATION_DENY_RESOURCE.getMessage()));
+        DENY_BUTTON_ZERO.setItemMeta(zMeta);
+    }
 
     private Faction faction;
-    private Resource resource;
     private Inventory gui;
 
-    public ResourceMenu(Faction faction, Resource resource) {
-        exportButton = ItemUtil.DOWN.clone();
-        ItemMeta exMeta = exportButton.getItemMeta();
-        exMeta.setDisplayName(FMessage.TRADE_EXPORT.getMessage());
-        double exValue = resource.getValue() * plugin.getFConfig().getExportModifier();
-        List<String> exLore = new ArrayList<>(Arrays.asList(ChatColor.GREEN + FMessage.TRADE_PRICE.getMessage() + ": +" + exValue));
-        exMeta.setLore(exLore);
-        exportButton.setItemMeta(exMeta);
-
-        importButton = ItemUtil.UP.clone();
-        ItemMeta imMeta = importButton.getItemMeta();
-        imMeta.setDisplayName(FMessage.TRADE_IMPORT.getMessage());
-        double imValue = resource.getValue() * plugin.getFConfig().getImportModifier();
-        List<String> imLore = new ArrayList<>(Arrays.asList(ChatColor.DARK_RED + FMessage.TRADE_PRICE.getMessage() + ": -" + imValue));
-        imMeta.setLore(imLore);
-        importButton.setItemMeta(imMeta);
-
+    public SaturationMenu(Faction faction) {
         this.faction = faction;
-        this.resource = resource;
         setupGUI();
-        update();
+        update(Resource.WATER);
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     private void setupGUI() {
-        gui = Bukkit.createInventory(null, 27, FMessage.TRADE_RESOURCE_TITLE.getMessage(resource.getName(), faction.getName()));
+        gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
         ItemStack banner = faction.getBannerStack();
         ItemMeta meta = banner.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
@@ -88,18 +86,24 @@ public class ResourceMenu implements Listener {
         gui.setItem(6, banner);
         gui.setItem(7, banner);
         gui.setItem(8, banner);
-        gui.setItem(13, importButton);
-        gui.setItem(22, exportButton);
+        gui.setItem(13, GRANT_BUTTON);
     }
 
-    public Inventory getGUI() {
-        return gui;
+    public void open(HumanEntity player, Resource resource) {
+        update(resource);
+        player.openInventory(gui);
     }
 
-    public void update() {
-        gui.setItem(4, TradeMenu.formButton(faction, resource));
+    public void update(Resource resource) {
+        gui.setItem(4, DemandMenu.formButton(faction, resource));
+        if (faction.getConsumableResources().get(resource) > 0) {
+            gui.setItem(22, DENY_BUTTON);
+        } else {
+            gui.setItem(22, DENY_BUTTON_ZERO);
+        }
     }
 
+    /* Listener */
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
@@ -113,16 +117,27 @@ public class ResourceMenu implements Listener {
         if (button == null) {
             return;
         }
-        int current = faction.getImportValue(resource);
+        Resource resource = getResource(gui);
+        int current = faction.getConsumableResources().get(resource);
         if (button.equals(PageGUI.BACK)) {
-            faction.getTradeMenu().open(player);
+            faction.getPopulationMenu().openDemands(player);
             return;
-        } else if (button.equals(exportButton)) {
-            faction.getGroceryList().put(resource, current - 1);
-        } else if (button.equals(importButton)) {
-            faction.getGroceryList().put(resource, current + 1);
+        } else if (button.equals(DENY_BUTTON)) {
+            faction.getConsumableResources().put(resource, current - 1);
+        } else if (button.equals(GRANT_BUTTON)) {
+            faction.getConsumableResources().put(resource, current + 1);
         }
-        update();
+        update(resource);
+    }
+
+    /* Statics */
+    public static Resource getResource(Inventory gui) {
+        ItemStack icon = gui.getItem(4);
+        if (icon == null) {
+            return null;
+        } else {
+            return Resource.getByIcon(icon);
+        }
     }
 
 }

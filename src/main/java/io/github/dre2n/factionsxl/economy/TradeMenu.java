@@ -49,11 +49,10 @@ public class TradeMenu implements Listener {
 
     public TradeMenu(Faction faction) {
         this.faction = faction;
-        update();
+        gui = new PageGUI(FMessage.TRADE_TITLE.getMessage(faction.getName()));
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    /* Getters and setters */
     public void update() {
         if (!plugin.getFConfig().isEconomyEnabled()) {
             gui = new PageGUI(FMessage.ERROR_ECON_DISABLED.getMessage());
@@ -61,11 +60,11 @@ public class TradeMenu implements Listener {
                 gui.getPages().get(0).setItem(i, PageGUI.DISABLED);
             }
         } else {
-            gui = new PageGUI(FMessage.TRADE_TITLE.getMessage(faction.getName()));
+            gui.clear();
             for (Resource resource : Resource.values()) {
                 gui.addButton(formButton(faction, resource));
                 if (!resourceMenus.containsKey(resource)) {
-                    resourceMenus.put(resource, new ResourceMenu(faction, resource, /*income*/ 1, 2/*consume*/));
+                    resourceMenus.put(resource, new ResourceMenu(faction, resource));
                 } else {
                     resourceMenus.get(resource).update();
                 }
@@ -81,13 +80,18 @@ public class TradeMenu implements Listener {
         ItemMeta meta = icon.getItemMeta();
         ArrayList<String> lore = new ArrayList<>();
 
+        int consume = faction.getConsumableResources().get(resource);
         int income = faction.getImportValue(resource);
+        if (consume != 0) {
+            lore.add(FMessage.TRADE_CONSUME.getMessage("-" + consume));
+        }
+
         boolean export = income < 0;
         if (income != 0) {
             ChatColor color = (export ? ChatColor.DARK_RED : ChatColor.GREEN);
             ChatColor color2 = (export ? ChatColor.GREEN : ChatColor.DARK_RED);
             String money = econ.format(-1 * income * resource.getValue() * (export ? config.getExportModifier() : config.getImportModifier()));
-            lore.add(color + (export ? FMessage.TRADE_EXPORT : FMessage.TRADE_IMPORT).getMessage() + ": " + income + color2 + " (" + money + ")");
+            lore.add(color + (export ? FMessage.TRADE_EXPORT : FMessage.TRADE_IMPORT).getMessage() + ": " + (export ? new String() : "+") + income + color2 + " (" + money + ")");
         }
 
         for (Region region : faction.getRegions()) {
@@ -100,13 +104,14 @@ public class TradeMenu implements Listener {
         }
         meta.setLore(lore);
 
+        int balance = income - consume;
         ChatColor color = ChatColor.YELLOW;
-        if (income > 0) {
+        if (balance > 0) {
             color = ChatColor.GREEN;
-        } else if (income < 0) {
+        } else if (balance < 0) {
             color = ChatColor.DARK_RED;
         }
-        meta.setDisplayName(color + resource.getName() + " (" + (income > 0 ? "+" : new String()) + income + ")");
+        meta.setDisplayName(color + resource.getName() + " (" + (balance > 0 ? "+" : new String()) + balance + ")");
 
         icon.setItemMeta(meta);
         return icon;

@@ -62,9 +62,6 @@ public class FPlayer implements RelationParticipator {
         this(UUIDUtil.getUniqueIdFromName(name));
     }
 
-    private FPlayer() {
-    }
-
     /* Getters and setters */
     /**
      * @return

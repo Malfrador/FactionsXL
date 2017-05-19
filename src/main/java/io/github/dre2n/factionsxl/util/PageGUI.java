@@ -169,4 +169,24 @@ public class PageGUI {
         return null;
     }
 
+    public static void addHeader(Inventory gui) {
+        gui.setItem(0, BACK);
+        gui.setItem(1, PLACEHOLDER);
+        gui.setItem(2, PLACEHOLDER);
+        gui.setItem(3, PLACEHOLDER);
+        gui.setItem(4, PLACEHOLDER);
+        gui.setItem(5, PLACEHOLDER);
+        gui.setItem(6, PLACEHOLDER);
+        gui.setItem(7, PLACEHOLDER);
+        gui.setItem(8, PLACEHOLDER);
+    }
+
+    public static void clearHeaderGUI(Inventory gui) {
+        int i = 9;
+        do {
+            gui.clear(i);
+            i++;
+        } while (i < gui.getSize());
+    }
+
 }

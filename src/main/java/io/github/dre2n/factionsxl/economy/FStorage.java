@@ -20,6 +20,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.population.SaturationLevel;
 import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,18 +78,36 @@ public class FStorage {
 
     /* Actions */
     public void payday() {
+        // Region income
         for (Region region : faction.getRegions()) {
             for (Entry<Resource, Integer> entry : region.getResources().entrySet()) {
                 if (entry.getKey() == Resource.TAXES) {
                     faction.getAccount().deposit(entry.getValue());
                 } else if (entry.getKey() == Resource.MANPOWER) {
-                    // TODO
+                    int newPop = (int) Math.round(region.getPopulation() + entry.getValue() * ((double) faction.getStability() / 100));
+                    int maxPop = region.getType().getMaxPopulation(region.getLevel());
+                    if (newPop > maxPop) {
+                        newPop = maxPop;
+                    }
+                    region.setPopulation(newPop);
                 } else {
                     goods.put(entry.getKey(), goods.get(entry.getKey()) + entry.getValue());
                 }
             }
         }
 
+        // Consume
+        for (Entry<Resource, Integer> entry : faction.getConsumableResources().entrySet()) {
+            if (faction.chargeResource(entry.getKey(), entry.getValue())) {
+                int saturation = faction.getSaturatedResources().get(entry.getKey());
+                int demand = faction.getDemand(entry.getKey());
+                int max = demand != 0 ? SaturationLevel.getByPercentage(saturation / demand * 100).getMinPercentage() : 100;
+                int daily = FactionsXL.getInstance().getFConfig().getSaturationPerDay();
+                faction.getSaturatedResources().put(entry.getKey(), (saturation + daily) > max ? max : (saturation + daily));
+            }
+        }
+
+        // Trade
         double importModifier = FactionsXL.getInstance().getFConfig().getImportModifier();
         double exportModifier = FactionsXL.getInstance().getFConfig().getExportModifier();
         HashMap<Resource, Integer> importActions = new HashMap<>();

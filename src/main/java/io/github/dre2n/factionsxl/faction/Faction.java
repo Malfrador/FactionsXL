@@ -30,6 +30,7 @@ import io.github.dre2n.factionsxl.economy.EconomyMenu;
 import io.github.dre2n.factionsxl.economy.FAccount;
 import io.github.dre2n.factionsxl.economy.FStorage;
 import io.github.dre2n.factionsxl.economy.Resource;
+import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.economy.TradeMenu;
 import io.github.dre2n.factionsxl.idea.Idea;
 import io.github.dre2n.factionsxl.idea.IdeaGroup;
@@ -38,6 +39,7 @@ import io.github.dre2n.factionsxl.player.Dynasty;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.population.PopulationMenu;
+import io.github.dre2n.factionsxl.population.SaturationLevel;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
@@ -87,7 +89,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     GovernmentType type;
     boolean open;
     double prestige;
-    byte stability;
+    int stability;
     double exhaustion;
     double manpowerModifier;
     Location home;
@@ -104,6 +106,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
     TradeMenu tradeMenu;
     FStorage storage;
     Map<Resource, Integer> groceryList = new HashMap<>();
+    Map<Resource, Integer> consumableResources = new HashMap<>();
+    Map<Resource, Integer> saturatedResources = new HashMap<>();
+    Map<ResourceSubcategory, Integer> saturatedSubcategories = new HashMap<>();
     PopulationMenu populationMenu;
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
@@ -274,15 +279,17 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * the stability value
      */
-    public byte getStability() {
-        return stability;
+    public int getStability() {
+        int i = (int) Math.round(stability - exhaustion * exhaustion) - (regions.size() - 1 * regions.size() - 1) / 2;
+        //TODO: CONSUME
+        return i;
     }
 
     /**
      * @param stability
      * the stability value to set
      */
-    public void setStability(byte stability) {
+    public void setStability(int stability) {
         this.stability = stability;
     }
 
@@ -304,6 +311,18 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /**
      * @return
+     * the amount of people without the manpower modifier
+     */
+    public int getPopulation() {
+        int manpower = 0;
+        for (Region region : regions) {
+            manpower += region.getPopulation();
+        }
+        return manpower;
+    }
+
+    /**
+     * @return
      * the manpower value
      */
     public int getManpower() {
@@ -312,6 +331,16 @@ public class Faction extends LegalEntity implements RelationParticipator {
             manpower += region.getPopulation() * (manpowerModifier / 100);
         }
         return manpower;
+    }
+
+    /**
+     * @param resource
+     * the resource to check
+     * @return
+     * how much of a resource is needed to saturate a resource at 100%
+     */
+    public int getDemand(Resource resource) {
+        return getManpower() / 100;
     }
 
     /**
@@ -683,6 +712,65 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /**
      * @return
+     * how many resources the people shall consume
+     */
+    public Map<Resource, Integer> getConsumableResources() {
+        return consumableResources;
+    }
+
+    /**
+     * @return
+     * a Map of all saturated resources
+     */
+    public Map<Resource, Integer> getSaturatedResources() {
+        return saturatedResources;
+    }
+
+    /**
+     * @param resource
+     * @param basic
+     * if the resource subcategory is a basic need
+     * @return if the resource is saturated
+     */
+    public SaturationLevel isResourceSaturated(Resource resource, boolean basic) {
+        int value = saturatedResources.get(resource) != null ? saturatedResources.get(resource) : 0;
+        return SaturationLevel.getByPercentage(value, basic);
+    }
+
+    /**
+     * @param resource
+     * @return if the resource is saturated
+     */
+    public SaturationLevel isResourceSaturated(Resource resource) {
+        return isResourceSaturated(resource, false);
+    }
+
+    /**
+     * @return
+     * a Map of all saturated ResourceSubcategories
+     */
+    public Map<ResourceSubcategory, Integer> getSaturatedSubcategories() {
+        return saturatedSubcategories;
+    }
+
+    /**
+     * Ensures that the Map of saturated subcategories matchs the Map of saturated resources
+     */
+    public void updateSaturatedSubcategories() {
+        saturatedSubcategories.clear();
+    }
+
+    /**
+     * @param subcategory
+     * @return if the resource is saturated
+     */
+    public SaturationLevel isSubcategorySaturated(ResourceSubcategory subcategory) {
+        int value = saturatedSubcategories.get(subcategory) != null ? saturatedSubcategories.get(subcategory) : 0;
+        return SaturationLevel.getByPercentage(value, subcategory.isBasic());
+    }
+
+    /**
+     * @return
      * the population menu
      */
     public PopulationMenu getPopulationMenu() {
@@ -954,7 +1042,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         mapVisibility = config.getBoolean("mapVisibility");
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
-        manpowerModifier = config.getInt("manpowerModifier", 0);
+        open = config.getBoolean("open");
+        stability = config.getInt("stability");
+        manpowerModifier = config.getDouble("manpowerModifier", fConfig.getDefaultManpowerModifier());
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
 
@@ -995,6 +1085,26 @@ public class Faction extends LegalEntity implements RelationParticipator {
                 groceryList.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
             }
         }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "consumableResources").entrySet()) {
+            if (EnumUtil.isValidEnum(Resource.class, entry.getKey())) {
+                consumableResources.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
+            }
+        }
+        for (Resource resource : Resource.values()) {
+            if (!consumableResources.containsKey(resource)) {
+                consumableResources.put(resource, 0);
+            }
+        }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "saturatedResources").entrySet()) {
+            if (EnumUtil.isValidEnum(Resource.class, entry.getKey())) {
+                saturatedResources.put(Resource.valueOf(entry.getKey()), (int) entry.getValue());
+            }
+        }
+        for (Resource resource : Resource.values()) {
+            if (!saturatedResources.containsKey(resource)) {
+                saturatedResources.put(resource, 0);
+            }
+        }
 
         populationMenu = new PopulationMenu(this);
 
@@ -1028,6 +1138,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         config.set("mapVisibility", mapVisibility);
         config.set("creationDate", creationDate);
         config.set("type", type.toString());
+        config.set("open", open);
+        config.set("stability", stability);
         if (!active) {
             try {
                 config.save(file);
@@ -1069,9 +1181,22 @@ public class Faction extends LegalEntity implements RelationParticipator {
         for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
             config.set("groceryList." + entry.getKey(), entry.getValue());
         }
-        /* 
-         * TODO: POPULATION
-         */
+        for (Entry<Resource, Integer> entry : consumableResources.entrySet()) {
+            config.set("consumableResources." + entry.getKey(), entry.getValue());
+        }
+        for (Resource resource : Resource.values()) {
+            if (!config.contains("consumableResources." + resource)) {
+                config.set("consumableResources." + resource, 0);
+            }
+        }
+        for (Entry<Resource, Integer> entry : saturatedResources.entrySet()) {
+            config.set("saturatedResources." + entry.getKey(), entry.getValue());
+        }
+        for (Resource resource : Resource.values()) {
+            if (!config.contains("saturatedResources." + resource)) {
+                config.set("saturatedResources." + resource, 0);
+            }
+        }
         List<String> ideaGroupIds = new ArrayList<>();
         for (IdeaGroup ideaGroup : ideaGroups) {
             ideaGroupIds.add(ideaGroup.toString());

@@ -17,17 +17,21 @@
 package io.github.dre2n.factionsxl.population;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
+import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.PageGUI;
+import io.github.dre2n.factionsxl.util.ProgressBar;
 import java.util.ArrayList;
-import java.util.Map;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -39,48 +43,67 @@ public class DemandMenu implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
 
     private Faction faction;
-    private PageGUI gui;
+    private Inventory gui;
+    private SaturationMenu saturationMenu;
 
     public DemandMenu(Faction faction) {
         this.faction = faction;
-        gui = new PageGUI(FMessage.POPULATION_DEMANDS.getMessage());
-        update();
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        saturationMenu = new SaturationMenu(faction);
     }
 
-    public void update() {
-        gui.clear();
-        for (Resource resource : Resource.values()) {
-            ItemStack icon = new ItemStack(resource.getIcon());
-            ItemMeta meta = icon.getItemMeta();
-            int income = 0;
-            ArrayList<String> lore = new ArrayList<>();
-            for (Region region : faction.getRegions()) {
-                Map<Resource, Integer> resources = region.getType().getResources(region.getLevel());
-                if (resources.containsKey(resource)) {
-                    int amount = resources.get(resource);
-                    income += amount;
-                    lore.add(ChatColor.GREEN + region.getName() + ": +" + amount);
-                }
-            }
-            // TODO: IMPORT
-            // TODO: EXPORT
-            meta.setLore(lore);
-            ChatColor color = ChatColor.YELLOW;
-            if (income > 0) {
-                color = ChatColor.GREEN;
-            } else if (income < 0) {
-                color = ChatColor.DARK_RED;
-            }
-            meta.setDisplayName(color + resource.getName());
-            icon.setItemMeta(meta);
-            gui.addButton(icon);
+    public void update(ResourceSubcategory category) {
+        gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(category.getName()));
+        PageGUI.addHeader(gui);
+
+        for (Resource resource : category.getResources()) {
+            gui.addItem(formButton(faction, resource));
         }
     }
 
-    public void open(HumanEntity player) {
-        update();
-        gui.open(player);
+    public static ItemStack formButton(Faction faction, Resource resource) {
+        ItemStack icon = resource.getIcon();
+        ItemMeta meta = icon.getItemMeta();
+        SaturationLevel level = faction.isResourceSaturated(resource);
+        if (level == SaturationLevel.SURPLUS) {
+            meta.addEnchant(Enchantment.LUCK, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        meta.setDisplayName(level.getColor() + resource.getName());
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(ProgressBar.getBar((double) faction.getSaturatedResources().get(resource)));
+        lore.add(level.getColor().toString() + faction.getSaturatedResources().get(resource) + "%");
+        lore.add(FMessage.POPULATION_REQUIRED.getMessage(String.valueOf(faction.getPopulation()), String.valueOf(0), resource.getName()));//TODO: REQUIRED RESOURCE AMOUNT
+        lore.add(FMessage.POPULATION_GRANTING1.getMessage());
+        lore.add(FMessage.POPULATION_GRANTING2.getMessage(String.valueOf(faction.getConsumableResources().get(resource)), resource.getName()));
+        meta.setLore(lore);
+        icon.setItemMeta(meta);
+        return icon;
+    }
+
+    public void open(HumanEntity player, ResourceSubcategory category) {
+        update(category);
+        player.openInventory(gui);
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        HumanEntity player = event.getWhoClicked();
+        Inventory inventory = event.getClickedInventory();
+        if (inventory == null || gui == null || !gui.getTitle().equals(inventory.getTitle())) {
+            return;
+        }
+        event.setCancelled(true);
+        PageGUI.playSound(event);
+        ItemStack button = event.getCurrentItem();
+        if (PageGUI.BACK.equals(button)) {
+            faction.getPopulationMenu().openDemands(player);
+            return;
+        }
+        Resource resource = Resource.getByIcon(button);
+        if (resource != null && faction.isPrivileged(player)) {
+            saturationMenu.open(player, resource);
+        }
     }
 
 }

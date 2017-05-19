@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends BRConfig {
 
-    public static final int CONFIG_VERSION = 3;
+    public static final int CONFIG_VERSION = 4;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -62,7 +62,10 @@ public class FConfig extends BRConfig {
     private String language = "english";
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
-    private double defaultManpowerModifier = 5;
+
+    // Consume
+    private double defaultManpowerModifier = 1;
+    private int saturationPerDay = 10;
 
     // Economy
     private boolean economyEnabled = true;
@@ -232,6 +235,14 @@ public class FConfig extends BRConfig {
      */
     public double getDefaultManpowerModifier() {
         return defaultManpowerModifier;
+    }
+
+    /**
+     * @return
+     * the saturation a faction can get / lose per day
+     */
+    public int getSaturationPerDay() {
+        return saturationPerDay;
     }
 
     /**
@@ -581,6 +592,14 @@ public class FConfig extends BRConfig {
             config.set("maxIdeaGroups", maxIdeaGroups);
         }
 
+        if (!config.contains("defaultManpowerModifier")) {
+            config.set("defaultManpowerModifier", defaultManpowerModifier);
+        }
+
+        if (!config.contains("saturationPerDay")) {
+            config.set("saturationPerDay", saturationPerDay);
+        }
+
         if (!config.contains("economyEnabled")) {
             config.set("economyEnabled", economyEnabled);
         }
@@ -771,6 +790,14 @@ public class FConfig extends BRConfig {
 
         if (config.contains("maxIdeaGroups")) {
             maxIdeaGroups = config.getInt("maxIdeaGroups");
+        }
+
+        if (config.contains("defaultManpowerModifier")) {
+            defaultManpowerModifier = config.getDouble("defaultManpowerModifier");
+        }
+
+        if (config.contains("saturationPerDay")) {
+            saturationPerDay = config.getInt("saturationPerDay");
         }
 
         if (config.contains("economyEnabled")) {

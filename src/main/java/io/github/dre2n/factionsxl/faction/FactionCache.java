@@ -94,11 +94,13 @@ public class FactionCache {
         faction.name = name;
         faction.admin = player;
         faction.type = GovernmentType.MONARCHY;
+        faction.stability = 10;
         faction.setHome(home);
         faction.capital = board.getByLocation(faction.home);
         faction.capital.setOwner(faction);
         faction.capital.getCoreFactions().put(faction, Calendar.getInstance().getTime());
         faction.members.add(player);
+        faction.manpowerModifier = plugin.getFConfig().getDefaultManpowerModifier();
         board.save(Board.FILE);
         faction.save();
         faction.load();

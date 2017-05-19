@@ -18,17 +18,26 @@ package io.github.dre2n.factionsxl.population;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.economy.Resource;
+import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.ItemUtil;
 import io.github.dre2n.factionsxl.util.PageGUI;
+import io.github.dre2n.factionsxl.util.ProgressBar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * @author Daniel Saukel
@@ -37,43 +46,94 @@ public class PopulationMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack DEMANDS = ItemUtil.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS.getMessage());
-    public static final ItemStack MILITARY = ItemUtil.setDisplayName(PageGUI.GUI_SWORD, FMessage.POPULATION_MILITARY.getMessage());
+    public static final ItemStack DEMANDS = ItemUtil.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS_BUTTON.getMessage());
+    public static final ItemStack MILITARY = ItemUtil.setDisplayName(PageGUI.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
 
     private Faction faction;
-    private Inventory gui;
-    private DemandMenu demands;
+    private Inventory main;
+    private Inventory demands;
+    private DemandMenu demandResources;
 
     public PopulationMenu(Faction faction) {
         this.faction = faction;
-        this.demands = new DemandMenu(faction);
+        this.demandResources = new DemandMenu(faction);
         setupGUI();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void setupGUI() {
-        gui = Bukkit.createInventory(null, 9, FMessage.POPULATION_TITLE.getMessage(faction.getName()));
-        gui.setItem(3, DEMANDS);
-        gui.setItem(5, MILITARY);
+        main = Bukkit.createInventory(null, 9, FMessage.POPULATION_TITLE.getMessage(faction.getName()));
+        main.setItem(3, DEMANDS);
+        main.setItem(5, MILITARY);
+        demands = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(faction.getName()));
+        PageGUI.addHeader(demands);
+        update();
     }
 
-    public void open(HumanEntity player) {
-        player.openInventory(gui);
+    public void openMain(HumanEntity player) {
+        player.openInventory(main);
+    }
+
+    public void openDemands(HumanEntity player) {
+        update();
+        player.openInventory(demands);
+    }
+
+    public void update() {
+        PageGUI.clearHeaderGUI(demands);
+        for (ResourceSubcategory subcategory : ResourceSubcategory.values()) {
+            HashMap<SaturationLevel, Integer> saturation = new HashMap<>();
+            int percentage = 0;
+            for (Resource resource : subcategory.getResources()) {
+                SaturationLevel level = faction.isResourceSaturated(resource, subcategory.isBasic());
+                saturation.put(level, (saturation.get(level) != null ? saturation.get(level) : 0) + 1);
+                percentage += faction.getSaturatedResources().get(resource);
+            }
+            percentage = percentage / subcategory.getResources().length;
+            ItemStack icon = subcategory.getIcon();
+            ItemMeta meta = icon.getItemMeta();
+            int max = subcategory.getResources().length;
+            List<String> lore = new ArrayList<>();
+            lore.add(ProgressBar.getBar((double) percentage));
+            SaturationLevel level = SaturationLevel.getByPercentage(percentage, subcategory.isBasic());
+            lore.add(level.getColor().toString() + percentage + "%");
+            for (SaturationLevel sLevel : SaturationLevel.values()) {
+                if (!(subcategory.isBasic() & sLevel == SaturationLevel.NOT_SATURATED || !subcategory.isBasic() & sLevel == SaturationLevel.NOT_SATURATED_BASIC)) {
+                    lore.add(sLevel.getColor() + sLevel.getName() + ": " + (saturation.get(sLevel) != null ? saturation.get(sLevel) : 0) + "/" + max);
+                }
+            }
+            meta.setLore(lore);
+            if (level == SaturationLevel.SURPLUS) {
+                meta.addEnchant(Enchantment.LUCK, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            }
+            meta.setDisplayName(level.getColor() + subcategory.getName());
+            icon.setItemMeta(meta);
+            demands.addItem(icon);
+        }
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !gui.getTitle().equals(inventory.getTitle())) {
+        HumanEntity player = event.getWhoClicked();
+        if (inventory == null || !main.getTitle().equals(inventory.getTitle()) & !demands.getTitle().equals(inventory.getTitle())) {
             return;
         }
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
-        if (DEMANDS.equals(button)) {
-            demands.open(event.getWhoClicked());
+        if (PageGUI.BACK.equals(button)) {
+            openMain(player);
+        } else if (DEMANDS.equals(button)) {
+            openDemands(player);
         } else if (MILITARY.equals(button)) {
             // TODO: MILITARY STATUS
+        } else {
+            ResourceSubcategory category = ResourceSubcategory.getByIcon(button);
+            if (category != null) {
+                demandResources.open(player, category);
+            }
         }
     }
 

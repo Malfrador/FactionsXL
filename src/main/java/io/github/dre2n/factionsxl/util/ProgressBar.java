@@ -89,6 +89,17 @@ public class ProgressBar extends BukkitRunnable {
         }
     }
 
+    /* Statics */
+    public static String getBar(int tenths) {
+        StringBuilder bar = new StringBuilder(BAR);
+        bar.insert(tenths, ChatColor.DARK_RED.toString());
+        return ChatColor.GREEN.toString() + bar.toString();
+    }
+
+    public static String getBar(double percentage) {
+        return getBar((int) Math.round(percentage) / 10);
+    }
+
     /**
      * Send the progress bar to a player
      */
