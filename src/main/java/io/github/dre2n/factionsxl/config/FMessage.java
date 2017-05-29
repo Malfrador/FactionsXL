@@ -226,6 +226,7 @@ public enum FMessage implements Message {
     POPULATION_GRANTING1("population.granting1", "&aThe people are currently granted"),
     POPULATION_GRANTING2("population.granting2", "&6&v1 &aunits of &6&v2&a."),
     POPULATION_MILITARY_BUTTON("population.military.button", "&aMilitary Status"),
+    POPULATION_MILITARY_SOLDIERS("population.military.soldiers", "&aSoldiers"),
     POPULATION_MILITARY_TITLE("population.military.title", "&6&lMilitary Status - &v1"),
     POPULATION_REQUIRED("population.required", "&6&v1 &apeople need &6&v2 &aunits of &6&v3&a."),
     POPULATION_TITLE("population.title", "&6&lPopluation - &v1"),

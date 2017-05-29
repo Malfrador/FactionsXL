@@ -53,15 +53,17 @@ public class PopulationMenu implements Listener {
     private Inventory main;
     private Inventory demands;
     private DemandMenu demandResources;
+    private MilitaryMenu military;
 
     public PopulationMenu(Faction faction) {
         this.faction = faction;
-        this.demandResources = new DemandMenu(faction);
+        demandResources = new DemandMenu(faction);
+        military = new MilitaryMenu(faction);
         setupGUI();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public void setupGUI() {
+    private void setupGUI() {
         main = Bukkit.createInventory(null, 9, FMessage.POPULATION_TITLE.getMessage(faction.getName()));
         main.setItem(3, DEMANDS);
         main.setItem(5, MILITARY);
@@ -128,7 +130,7 @@ public class PopulationMenu implements Listener {
         } else if (DEMANDS.equals(button)) {
             openDemands(player);
         } else if (MILITARY.equals(button)) {
-            // TODO: MILITARY STATUS
+            military.open(player);
         } else {
             ResourceSubcategory category = ResourceSubcategory.getByIcon(button);
             if (category != null) {

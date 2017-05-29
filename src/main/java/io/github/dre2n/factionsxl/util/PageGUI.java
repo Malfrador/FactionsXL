@@ -33,8 +33,6 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PageGUI {
 
-
-
     private String title;
     private Stack<Inventory> pages = new Stack<>();
 

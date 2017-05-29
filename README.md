@@ -12,14 +12,14 @@ The visual appearance of FXL and the command syntax are designed to be similar t
 
 ## Compatibility
 ### Server
-FactionsXL works best with Spigot 1.11.2 and requires at least Spigot 1.9 or a newer version.
+FactionsXL works best with Spigot 1.12 and requires at least Spigot 1.9 or a newer version.
 
 ### Building information and dependencies
 Building FactionsXL from source requires [Apache Maven](https://maven.apache.org/).
 Maven automatically fetches all dependencies and builds FactionsXL; just run _build.bat_ or enter the command _mvn clean install_.
 
-#### BRCommons
-[BRCommons](https://github.com/DRE2N/BRCommons) is a util library for common tasks. FactionsXL contains BRCommons 2.0.
+#### DRECommons
+[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 3.0.
 
 ### Java
 Make sure that your server uses Java 7 or higher.
