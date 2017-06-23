@@ -268,6 +268,20 @@ public enum ParsingUtil {
         return names;
     }
 
+    public static String collectionToString(Collection<String> strings, ChatColor comma) {
+        String names = new String();
+        boolean first = true;
+        for (String string : strings) {
+            if (!first) {
+                names += comma + ", ";
+            } else {
+                first = false;
+            }
+            names += string;
+        }
+        return names;
+    }
+
     public static String getPlayerName(Player subject, Player object) {
         FactionsXL plugin = FactionsXL.getInstance();
         Faction subjectFaction = plugin.getFactionCache().getByMember(subject);

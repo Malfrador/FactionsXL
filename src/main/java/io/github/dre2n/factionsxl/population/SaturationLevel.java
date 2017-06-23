@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.population;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.*;
@@ -25,23 +26,25 @@ import static org.bukkit.ChatColor.*;
  */
 public enum SaturationLevel {
 
-    SURPLUS(FMessage.SATURATION_LEVEL_SURPLUS, BLUE, 100),
-    FULLY_SATURATED(FMessage.SATURATION_LEVEL_FULLY_SATURATED, DARK_AQUA, 90),
-    SATURATED(FMessage.SATURATION_LEVEL_SATURATED, DARK_GREEN, 80),
-    MOSTLY_SATURATED(FMessage.SATURATION_LEVEL_MOSTLY_SATURATED, GREEN, 60),
-    PARTIALLY_SATURATED(FMessage.SATURATION_LEVEL_SATURATED, YELLOW, 40),
-    POOR(FMessage.SATURATION_LEVEL_POOR, GOLD, 20),
-    NOT_SATURATED(FMessage.SATURATION_LEVEL_NOT_SATURATED, RED, 0),
-    NOT_SATURATED_BASIC(FMessage.SATURATION_LEVEL_NOT_SATURATED, DARK_RED, 0);
+    SURPLUS(FMessage.SATURATION_LEVEL_SURPLUS, BLUE, 100, 10),
+    FULLY_SATURATED(FMessage.SATURATION_LEVEL_FULLY_SATURATED, DARK_AQUA, 90, 7),
+    SATURATED(FMessage.SATURATION_LEVEL_SATURATED, DARK_GREEN, 80, 5),
+    MOSTLY_SATURATED(FMessage.SATURATION_LEVEL_MOSTLY_SATURATED, GREEN, 60, 2),
+    PARTIALLY_SATURATED(FMessage.SATURATION_LEVEL_PARTIALLY_SATURATED, YELLOW, 40, 0),
+    POOR(FMessage.SATURATION_LEVEL_POOR, GOLD, 20, -2),
+    NOT_SATURATED(FMessage.SATURATION_LEVEL_NOT_SATURATED, RED, 0, -5),
+    NOT_SATURATED_BASIC(FMessage.SATURATION_LEVEL_NOT_SATURATED, DARK_RED, 0, -50);
 
     private FMessage name;
     private ChatColor color;
     private int minPercentage;
+    private int stabilityBonus;
 
-    SaturationLevel(FMessage name, ChatColor color, int minPercentage) {
+    SaturationLevel(FMessage name, ChatColor color, int minPercentage, int stabilityBonus) {
         this.name = name;
         this.color = color;
         this.minPercentage = minPercentage;
+        this.stabilityBonus = stabilityBonus;
     }
 
     public String getName() {
@@ -54,6 +57,10 @@ public enum SaturationLevel {
 
     public int getMinPercentage() {
         return minPercentage;
+    }
+
+    public int getStabilityBonus() {
+        return stabilityBonus;
     }
 
     /* Statics */
@@ -82,6 +89,16 @@ public enum SaturationLevel {
             }
         }
         return NOT_SATURATED;
+    }
+
+    /**
+     * @param population
+     * the population of a faction
+     * @return
+     * the amount of required resource units for the population
+     */
+    public static int getRequiredResourceUnits(int population) {
+        return (int) ((((double) population) / 1000) * FactionsXL.getInstance().getFConfig().getRequiredResourceUnitsPer1000Persons());
     }
 
 }

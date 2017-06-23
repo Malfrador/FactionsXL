@@ -115,7 +115,7 @@ public class RegionCommand extends FCommand {
         BaseComponent[] income = (BaseComponent[]) ArrayUtils.addAll(income1, income2);
         MessageUtil.sendMessage(sender, income);
 
-        MessageUtil.sendMessage(sender, FMessage.CMD_REGION_POPULATION.getMessage() + c + region.getPopulation());
+        MessageUtil.sendMessage(sender, FMessage.CMD_REGION_POPULATION.getMessage() + c + region.getPopulation() + "/" + region.getType().getMaxPopulation(region.getLevel()));
 
         if (sender instanceof Player) {
             ArrayList<BaseComponent> cores = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_REGION_CORES.getMessage())));

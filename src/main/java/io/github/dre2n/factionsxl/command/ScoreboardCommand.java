@@ -34,7 +34,7 @@ public class ScoreboardCommand extends FCommand {
 
     public ScoreboardCommand() {
         setCommand("scoreboard");
-        setCommand("sb");
+        setAliases("sb");
         setMinArgs(0);
         setMaxArgs(0);
         setHelp(FMessage.HELP_SCOREBOARD.getMessage());

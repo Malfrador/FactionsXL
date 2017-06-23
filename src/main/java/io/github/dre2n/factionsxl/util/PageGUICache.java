@@ -41,11 +41,11 @@ public class PageGUICache implements Listener {
             return;
         }
         Inventory inventory = event.getInventory();
-        if (!PageGUI.isPageGUI(inventory)) {
+        PageGUI gui = PageGUI.getByInventory(inventory);
+        if (gui == null) {
             return;
         }
 
-        PageGUI gui = PageGUI.getByInventory(inventory);
         event.setCancelled(true);
         PageGUI.playSound(event);
         int index = gui.getPages().indexOf(inventory);

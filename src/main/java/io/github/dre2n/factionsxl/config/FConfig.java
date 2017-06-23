@@ -89,6 +89,7 @@ public class FConfig extends DREConfig {
     private double priceClaimIncrease = 100;
     private double importModifier = 2;
     private double exportModifier = 0.5;
+    private int requiredResourceUnitsPer1000Persons = 10;
 
     // Chat
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
@@ -326,6 +327,14 @@ public class FConfig extends DREConfig {
      */
     public double getExportModifier() {
         return exportModifier;
+    }
+
+    /**
+     * @return
+     * the amount of units 1000 persons
+     */
+    public int getRequiredResourceUnitsPer1000Persons() {
+        return requiredResourceUnitsPer1000Persons;
     }
 
     /**
@@ -643,6 +652,10 @@ public class FConfig extends DREConfig {
             config.set("exportModifier", exportModifier);
         }
 
+        if (!config.contains("requiredResourceUnitsPer1000Persons")) {
+            config.set("requiredResourceUnitsPer1000Persons", requiredResourceUnitsPer1000Persons);
+        }
+
         if (!config.contains("chatFormat.ally")) {
             config.set("chatFormat.ally", chatFormatAlly);
         }
@@ -771,6 +784,7 @@ public class FConfig extends DREConfig {
 
         for (Resource resource : Resource.values()) {
             config.set("resourcePrices." + resource.toString(), resource.getValue());
+            config.set("requiredAmountModifiers." + resource.toString(), resource.getRequiredAmountModifier());
         }
 
         config.createSection("regionIncome");
@@ -840,6 +854,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("exportModifier")) {
             exportModifier = config.getDouble("exportModifier");
+        }
+
+        if (config.contains("requiredResourceUnitsPer1000Persons")) {
+            requiredResourceUnitsPer1000Persons = config.getInt("requiredResourceUnitsPer1000Persons");
         }
 
         if (config.contains("chatFormat.ally")) {
@@ -976,6 +994,7 @@ public class FConfig extends DREConfig {
             dynmapRegionTypeStyles.put(type, style);
         }
         Resource.loadPrices(ConfigUtil.getMap(config, "resourcePrices"));
+        Resource.loadRequiredAmountModifiers(ConfigUtil.getMap(config, "requiredAmountModifiers"));
         RegionType.loadResources(ConfigUtil.getMap(config, "regionIncome"));
     }
 

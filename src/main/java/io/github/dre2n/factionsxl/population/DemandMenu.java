@@ -74,7 +74,9 @@ public class DemandMenu implements Listener {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ProgressBar.getBar((double) faction.getSaturatedResources().get(resource)));
         lore.add(level.getColor().toString() + faction.getSaturatedResources().get(resource) + "%");
-        lore.add(FMessage.POPULATION_REQUIRED.getMessage(String.valueOf(faction.getPopulation()), String.valueOf(0), resource.getName()));//TODO: REQUIRED RESOURCE AMOUNT
+        String population = String.valueOf(faction.getPopulation());
+        String units = String.valueOf(faction.getDemand(resource));
+        lore.add(FMessage.POPULATION_REQUIRED.getMessage(population, units, resource.getName()));
         lore.add(FMessage.POPULATION_GRANTING1.getMessage());
         lore.add(FMessage.POPULATION_GRANTING2.getMessage(String.valueOf(faction.getConsumableResources().get(resource)), resource.getName()));
         meta.setLore(lore);

@@ -78,7 +78,7 @@ public enum RegionType {
      * the maximum population
      */
     public int getMaxPopulation(int level) {
-        return (maxPopulation / resources.size() + 1) * level;
+        return (maxPopulation / resources.size()) * level;
     }
 
     /**

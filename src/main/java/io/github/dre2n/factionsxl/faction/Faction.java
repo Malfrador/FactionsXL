@@ -54,7 +54,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -281,8 +283,60 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public int getStability() {
         int i = (int) Math.round(stability - exhaustion * exhaustion) - (regions.size() - 1 * regions.size() - 1) / 2;
-        //TODO: CONSUME
+        if (!members.contains(admin)) {
+            i = i - 25;
+        }
+        if (getPower() > chunks.size()) {
+            i += 10;
+        } else if (getPower() < chunks.size()) {
+            i -= 10;
+        }
+        for (ResourceSubcategory category : ResourceSubcategory.values()) {
+            i += isSubcategorySaturated(category).getStabilityBonus();
+        }
         return i;
+    }
+
+    /**
+     * @return
+     * the stability value with all modifiers as hover texts
+     */
+    public BaseComponent[] getStabilityModifiers(ChatColor c) {
+        String stability = FMessage.CMD_SHOW_STABILITY.getMessage() + c + getStability();
+        String base = FMessage.CMD_SHOW_STABILITY_MOD_BASE.getMessage() + color(this.stability) + "\n";
+        String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + color((int) (this.exhaustion * this.exhaustion)) + "\n";
+        String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((regions.size() - 1 * regions.size() - 1) / 2) + "\n";
+        String adminNotMember = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_ABSENT_MONARCH.getMessage() + color(members.contains(admin) ? 0 : -25) + "\n";
+        String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
+        if (getPower() > chunks.size()) {
+            power += ChatColor.GREEN + "+10";
+        } else if (getPower() < chunks.size()) {
+            power += ChatColor.DARK_RED + "-10";
+        } else {
+            power += ChatColor.YELLOW + "0";
+        }
+        power += "\n";
+        int i = 0;
+        for (ResourceSubcategory category : ResourceSubcategory.values()) {
+            i += isSubcategorySaturated(category).getStabilityBonus();
+        }
+        String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);
+
+        BaseComponent[] msg = TextComponent.fromLegacyText(stability);
+        for (BaseComponent component : msg) {
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(base + exhaustion + size + adminNotMember + power + wealth)));
+        }
+        return msg;
+    }
+
+    private String color(int i) {
+        if (i > 0) {
+            return ChatColor.GREEN + "+" + String.valueOf(i);
+        } else if (i < 0) {
+            return ChatColor.DARK_RED + String.valueOf(i);
+        } else {
+            return ChatColor.YELLOW + String.valueOf(i);
+        }
     }
 
     /**
@@ -340,7 +394,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * how much of a resource is needed to saturate a resource at 100%
      */
     public int getDemand(Resource resource) {
-        return getManpower() / 100;
+        return (int) (SaturationLevel.getRequiredResourceUnits(getPopulation()) * resource.getRequiredAmountModifier());
     }
 
     /**
@@ -757,6 +811,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * Ensures that the Map of saturated subcategories matchs the Map of saturated resources
      */
     public void updateSaturatedSubcategories() {
+        for (ResourceSubcategory category : ResourceSubcategory.values()) {
+            int percentage = 0;
+            for (Resource resource : category.getResources()) {
+                percentage += saturatedResources.get(resource);
+            }
+            percentage = percentage / category.getResources().length;
+            saturatedSubcategories.put(category, percentage);
+        }
         saturatedSubcategories.clear();
     }
 

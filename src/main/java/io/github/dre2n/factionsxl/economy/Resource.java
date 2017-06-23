@@ -102,14 +102,31 @@ public enum Resource {
     MANPOWER(FMessage.RESOURCE_MANPOWER, new ItemStack(Material.SKULL_ITEM, 1, (short) 3), 4),
     TAXES(FMessage.RESOURCE_TAXES, new ItemStack(Material.GOLD_NUGGET), 1);
 
+    private FMessage name;
     private ItemStack icon;
     private double value;
-    private FMessage name;
+    private double requiredAmountModifier;
 
     Resource(FMessage name, ItemStack icon, double value) {
         this.name = name;
         this.icon = icon;
         this.value = value;
+        this.requiredAmountModifier = 1.0;
+    }
+
+    Resource(FMessage name, ItemStack icon, double value, double requiredAmountModifier) {
+        this.name = name;
+        this.icon = icon;
+        this.value = value;
+        this.requiredAmountModifier = requiredAmountModifier;
+    }
+
+    /**
+     * @return
+     * the name of the resource
+     */
+    public String getName() {
+        return name.getMessage();
     }
 
     /**
@@ -130,10 +147,10 @@ public enum Resource {
 
     /**
      * @return
-     * the name of the resource
+     * a modifier that determines relatively how much of this resource people need
      */
-    public String getName() {
-        return name.getMessage();
+    public double getRequiredAmountModifier() {
+        return requiredAmountModifier;
     }
 
     /**
@@ -185,6 +202,18 @@ public enum Resource {
                 continue;
             }
             valueOf(price.getKey()).value = (double) price.getValue();
+        }
+    }
+
+    /**
+     * Loads the required amount modifiers
+     */
+    public static void loadRequiredAmountModifiers(Map<String, Object> modifiers) {
+        for (Entry<String, Object> modifier : modifiers.entrySet()) {
+            if (!EnumUtil.isValidEnum(Resource.class, modifier.getKey())) {
+                continue;
+            }
+            valueOf(modifier.getKey()).requiredAmountModifier = (double) modifier.getValue();
         }
     }
 
