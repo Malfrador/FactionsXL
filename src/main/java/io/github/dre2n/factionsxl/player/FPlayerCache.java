@@ -47,7 +47,7 @@ public class FPlayerCache {
      */
     public FPlayer getByPlayer(OfflinePlayer player) {
         for (FPlayer fPlayer : fPlayers) {
-            if (fPlayer.getPlayer() == player) {
+            if (player.equals(fPlayer.getPlayer())) {
                 return fPlayer;
             }
         }
