@@ -1095,6 +1095,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         active = config.getBoolean("active");
         name = config.getString("name");
         longName = config.getString("longName");
+        shortName = config.getString("shortName");
         desc = config.getString("desc");
         anthem = config.getString("anthem");
         banner = (BannerMeta) config.get("banner");
@@ -1191,6 +1192,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         config.set("active", active);
         config.set("name", name);
         config.set("longName", longName);
+        config.set("shortName", shortName);
         config.set("desc", desc);
         config.set("anthem", anthem);
         config.set("banner", banner);

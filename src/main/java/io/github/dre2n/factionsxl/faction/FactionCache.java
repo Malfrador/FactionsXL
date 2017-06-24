@@ -234,7 +234,7 @@ public class FactionCache {
      */
     public Faction getByName(String name) {
         for (Faction faction : factions) {
-            if (faction.getName().equalsIgnoreCase(name)) {
+            if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
                 return faction;
             }
         }

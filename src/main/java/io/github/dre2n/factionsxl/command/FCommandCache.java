@@ -70,6 +70,7 @@ public class FCommandCache extends DRECommandCache {
     public SetGovernmentCommand setGovernment = new SetGovernmentCommand();
     public SetHomeCommand setHome = new SetHomeCommand();
     public SetPowerCommand setPower = new SetPowerCommand();
+    public ShortTagCommand shortTag = new ShortTagCommand();
     public ShowCommand show = new ShowCommand();
     public StorageCommand storage = new StorageCommand();
     public TagCommand tag = new TagCommand();
@@ -118,6 +119,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(setGovernment);
         addCommand(setHome);
         addCommand(setPower);
+        addCommand(shortTag);
         addCommand(show);
         addCommand(tag);
         addCommand(title);

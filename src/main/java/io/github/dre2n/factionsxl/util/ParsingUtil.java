@@ -55,6 +55,7 @@ public enum ParsingUtil {
     FACTION_PLAYER_COUNT("%faction_player_count%"),
     FACTION_PLAYER_LIST("%faction_player_list%"),
     FACTION_PROVINCE_COUNT("%faction_province_count%"),
+    FACTION_SHORT_TAG("%faction_short_tag%"),
     FACTION_STABILITY("%faction_stability%"),
     FACTION_TAG("%faction_tag%"),
     FEDERATION_TAG("%federation_tag%"),
@@ -141,6 +142,7 @@ public enum ParsingUtil {
         string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getMembers()));
         string = string.replace(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
         string = string.replace(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
+        string = string.replace(FACTION_SHORT_TAG.getPlaceholder(), faction.getShortName());
         string = string.replace(FACTION_STABILITY.getPlaceholder(), String.valueOf(faction.getStability()));
         string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
         return ChatColor.translateAlternateColorCodes('&', string);

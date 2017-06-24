@@ -29,6 +29,7 @@ public abstract class LegalEntity {
     int id;
     String name;
     String longName;
+    String shortName;
     String desc = "Default description :(";
     String anthem;
     BannerMeta banner;
@@ -74,6 +75,22 @@ public abstract class LegalEntity {
      */
     public void setLongName(String name) {
         longName = name;
+    }
+
+    /**
+     * @return
+     * the faction's long name
+     */
+    public String getShortName() {
+        return shortName != null ? shortName : name;
+    }
+
+    /**
+     * @param name
+     * the name to set
+     */
+    public void setShortName(String name) {
+        shortName = name;
     }
 
     /**

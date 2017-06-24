@@ -119,7 +119,7 @@ public class FConfig extends DREConfig {
     ));
 
     // Nametag and scoreboard
-    private String nametagPrefix = "%relation_color%%faction_tag% ";
+    private String nametagPrefix = "%relation_color%%faction_short_tag% ";
     private double scoreboardExpiration = 7;
     private double scoreboardUpdateInterval = 1;
     private boolean defaultScoreboardPrefixes = true;
