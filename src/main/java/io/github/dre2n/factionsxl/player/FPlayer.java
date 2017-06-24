@@ -247,7 +247,7 @@ public class FPlayer implements RelationParticipator {
      * if the player is member of a faction.
      */
     public boolean hasFaction() {
-        return plugin.getFactionCache().getByMember(player) != null;
+        return plugin.getFactionCache().getByFPlayer(this) != null;
     }
 
 }
