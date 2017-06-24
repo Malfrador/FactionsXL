@@ -19,8 +19,9 @@ package io.github.dre2n.factionsxl.player;
 import io.github.dre2n.commons.misc.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ import org.bukkit.entity.Player;
  */
 public class FPlayerCache {
 
-    private CopyOnWriteArrayList<FPlayer> fPlayers = new CopyOnWriteArrayList<>();
+    private Set<FPlayer> fPlayers = new HashSet<>();
 
     public FPlayerCache() {
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -41,6 +42,14 @@ public class FPlayerCache {
     }
 
     /* Getters and setters */
+    /**
+     * @return
+     * the FPlayer instances of all online players
+     */
+    public Set<FPlayer> getFPlayers() {
+        return fPlayers;
+    }
+
     /**
      * @return
      * the FPlayer that represents the player
@@ -81,7 +90,7 @@ public class FPlayerCache {
      */
     public void addPlayer(FPlayer player) {
         for (FPlayer fPlayer : fPlayers) {
-            if (player.getPlayer().equals(player.getPlayer())) {
+            if (fPlayer.getPlayer().equals(player.getPlayer())) {
                 fPlayers.remove(fPlayer);
             }
         }
