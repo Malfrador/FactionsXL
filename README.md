@@ -22,7 +22,7 @@ Maven automatically fetches all dependencies and builds FactionsXL; just run _bu
 [DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 3.0.
 
 ### Java
-Make sure that your server uses Java 7 or higher.
+Make sure that your server uses Java 8 or higher.
 
 ### Known incompatibilities
 _None so far._

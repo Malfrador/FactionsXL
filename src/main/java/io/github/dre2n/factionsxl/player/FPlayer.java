@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.player;
 
 import io.github.dre2n.commons.misc.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -43,6 +44,7 @@ public class FPlayer implements RelationParticipator {
 
     private ChatChannel chatChannel = ChatChannel.PUBLIC;
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
+    private Region autoclaiming;
 
     private FPlayerData data;
 
@@ -163,6 +165,30 @@ public class FPlayer implements RelationParticipator {
      */
     public void setScoreboardEnabled(boolean enabled) {
         scoreboardEnabled = enabled;
+    }
+
+    /**
+     * @return
+     * the region to which the player adds chunks automatically
+     */
+    public Region getAutoclaimingRegion() {
+        return autoclaiming;
+    }
+
+    /**
+     * @return
+     * if the player is currently autoclaiming
+     */
+    public boolean isAutoclaiming() {
+        return autoclaiming != null;
+    }
+
+    /**
+     * @param region
+     * the region to claim automatically
+     */
+    public void setAutoclaiming(Region region) {
+        autoclaiming = region;
     }
 
     /**

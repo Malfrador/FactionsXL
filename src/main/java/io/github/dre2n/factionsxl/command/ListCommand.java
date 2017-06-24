@@ -76,12 +76,11 @@ public class ListCommand extends FCommand implements Listener {
             if (faction.getGovernmentType() == GovernmentType.MONARCHY) {
                 govType += " (" + (faction.getDynasty() != null ? faction.getDynasty().getName() : ChatColor.ITALIC + "Interregnum") + c + ")";
             }
-            String stability = String.valueOf(faction.getStability());
-            String power = String.valueOf(0/*faction.getPower()*/);
+            String power = String.valueOf(faction.getPower());
             String provinces = String.valueOf(faction.getRegions().size());
             meta.setLore(Arrays.asList(FMessage.CMD_SHOW_GOVERNMENT_TYPE.getMessage() + c + govType,
                     FMessage.CMD_SHOW_LEADER.getMessage() + c + leader,
-                    FMessage.CMD_SHOW_INFO.getMessage(c.toString(), stability, power, provinces)
+                    FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces)
             ));
             meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
             banner.setItemMeta(meta);

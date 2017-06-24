@@ -107,11 +107,19 @@ public class PlayerListener implements Listener {
 
         Region fromRegion = board.getByChunk(fromChunk);
         Region toRegion = board.getByChunk(toChunk);
+
+        Player player = event.getPlayer();
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
+        if (fPlayer.isAutoclaiming() && toRegion == null) {
+            fPlayer.getAutoclaimingRegion().getChunks().add(toChunk);
+            ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_ADDED.getMessage(), fPlayer.getAutoclaimingRegion());
+            return;
+        }
+
         if (fromRegion == toRegion) {
             return;
         }
 
-        Player player = event.getPlayer();
         MessageUtil.sendActionBarMessage(event.getPlayer(), ParsingUtil.getRegionName(player, toRegion));
         if (toRegion != null) {
             Faction fromFaction = fromRegion != null ? fromRegion.getOwner() : null;
@@ -123,7 +131,7 @@ public class PlayerListener implements Listener {
                     MessageUtil.sendCenteredMessage(player, toFaction.getDescription());
                     stopSound(player, toFaction);
                     player.playSound(player.getLocation(), toFaction.getAnthem(), 1, 1);
-                    if (fPlayers.getByPlayer(player).isScoreboardEnabled()) {
+                    if (fPlayer.isScoreboardEnabled()) {
                         FScoreboard.get(player).setTemporarySidebar(new FInfoSidebar(toFaction));
                     }
                 }

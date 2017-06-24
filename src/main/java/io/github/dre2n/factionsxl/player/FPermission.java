@@ -74,6 +74,7 @@ public enum FPermission {
     TAG("tag", OP),
     TITLE("title", TRUE),
     TRADE_OFFER("tradeoffer", TRUE),
+    WORLD("world", OP),
     // Kits
     ADMINISTRATOR("*", OP),
     HALF_PLAYER("halfplayer", TRUE, ADMIN, CHAT, CLAIM, DISBAND, HELP, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD, OPEN, POWER,

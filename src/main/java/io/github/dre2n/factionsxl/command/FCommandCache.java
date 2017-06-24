@@ -77,6 +77,7 @@ public class FCommandCache extends DRECommandCache {
     public TradeOfferCommand tradeOffer = new TradeOfferCommand();
     public UnclaimCommand unclaim = new UnclaimCommand();
     public UninviteCommand uninvite = new UninviteCommand();
+    public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
         super("factionsxl", plugin);
@@ -122,6 +123,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(title);
         addCommand(unclaim);
         addCommand(uninvite);
+        addCommand(world);
         if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
             addCommand(idea);
             addCommand(money);
