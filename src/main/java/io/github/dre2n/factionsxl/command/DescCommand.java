@@ -43,14 +43,14 @@ public class DescCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        if (args.length < 3) {
+        i = 1;
+        if (args.length < 2) {
             displayHelp(sender);
             return;
         }
 
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
@@ -61,7 +61,7 @@ public class DescCommand extends FCommand {
 
         String desc = new String();
         for (String arg : args) {
-            if (args[0] != arg && args[1] != arg) {
+            if (args[0] != arg && args[i] != arg) {
                 if (!desc.isEmpty()) {
                     desc += " ";
                 }

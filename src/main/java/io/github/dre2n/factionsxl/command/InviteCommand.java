@@ -34,7 +34,7 @@ public class InviteCommand extends FCommand {
 
     public InviteCommand() {
         setCommand("invite");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_INVITE.getMessage());
         setPermission(FPermission.INVITE.getNode());
@@ -44,25 +44,22 @@ public class InviteCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
-        if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
-            return;
-        }
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
 
         if (!(sender instanceof Player) || !faction.isPrivileged((Player) sender)) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage(), args[i]);
             return;
         }
 
         Player player = Bukkit.getPlayer(args[2]);
         if (!player.isOnline()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[i]);
             return;
         }
 
         if (faction.getMembers().contains(player)) {
-            ParsingUtil.sendMessage(sender, FMessage.CMD_INVITE_FAIL.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.CMD_INVITE_FAIL.getMessage(), args[i]);
             return;
         }
 

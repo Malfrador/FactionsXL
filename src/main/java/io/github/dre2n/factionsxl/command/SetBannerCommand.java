@@ -34,8 +34,8 @@ public class SetBannerCommand extends FCommand {
     FactionsXL plugin = FactionsXL.getInstance();
 
     public SetBannerCommand() {
-        setCommand("setbanner");
-        setMinArgs(1);
+        setCommand("setBanner");
+        setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_SET_BANNER.getMessage());
         setPermission(FPermission.SET_BANNER.getNode());
@@ -46,9 +46,8 @@ public class SetBannerCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 

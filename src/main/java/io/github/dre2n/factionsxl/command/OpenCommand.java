@@ -33,7 +33,7 @@ public class OpenCommand extends FCommand {
     public OpenCommand() {
         setCommand("open");
         setAliases("setOpen");
-        setMinArgs(1);
+        setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_OPEN.getMessage());
         setPermission(FPermission.OPEN.getNode());
@@ -43,9 +43,8 @@ public class OpenCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 

@@ -37,7 +37,7 @@ public class MoneyCommand extends FCommand {
     public MoneyCommand() {
         setCommand("money");
         setAliases("m", "econ", "economy");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(3);
         setHelp(FMessage.HELP_MONEY.getMessage());
         setPermission(FPermission.MONEY.getNode());
@@ -47,23 +47,23 @@ public class MoneyCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
         double amount = 0;
-        if (args.length >= 4) {
+        if (args.length >= i + 2) {
             try {
-                amount = Double.parseDouble(args[3]);
+                amount = Double.parseDouble(args[i + 1]);
             } catch (NumberFormatException exception) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_NUMERIC.getMessage(), args[3]);
                 return;
             }
         }
 
-        switch (args[2].toLowerCase()) {
+        switch (args[i].toLowerCase()) {
             case "b":
             case "balance":
                 ParsingUtil.sendMessage(sender, FMessage.CMD_MONEY_BALANCE.getMessage(), faction, faction.getAccount().getFormatted());

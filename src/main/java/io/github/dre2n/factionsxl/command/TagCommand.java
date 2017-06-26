@@ -34,7 +34,7 @@ public class TagCommand extends FCommand {
     public TagCommand() {
         setCommand("tag");
         setAliases("setTag", "name", "setName");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_TAG.getMessage());
         setPermission(FPermission.TAG.getNode());
@@ -44,9 +44,9 @@ public class TagCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
@@ -55,8 +55,8 @@ public class TagCommand extends FCommand {
             return;
         }
 
-        ParsingUtil.broadcastMessage(FMessage.CMD_TAG_SUCCESS.getMessage(), faction, args[2]);
-        faction.setName(args[2]);
+        ParsingUtil.broadcastMessage(FMessage.CMD_TAG_SUCCESS.getMessage(), faction, args[i]);
+        faction.setName(args[i]);
     }
 
 }

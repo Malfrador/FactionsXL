@@ -35,7 +35,7 @@ public class SetColorCommand extends FCommand {
 
     public SetColorCommand() {
         setCommand("setColor");
-        setMinArgs(3);
+        setMinArgs(2);
         setMaxArgs(3);
         setHelp(FMessage.HELP_SET_COLOR.getMessage());
         setPermission(FPermission.SET_COLOR.getNode());
@@ -45,9 +45,9 @@ public class SetColorCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
@@ -56,11 +56,11 @@ public class SetColorCommand extends FCommand {
             return;
         }
 
-        String fill = args[2];
+        String fill = args[i];
         if (!fill.startsWith("#")) {
             fill = "#" + fill;
         }
-        String line = args[3];
+        String line = args[i + 1];
         if (!line.startsWith("#")) {
             line = "#" + line;
         }

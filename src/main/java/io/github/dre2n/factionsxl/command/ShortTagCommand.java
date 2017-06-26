@@ -44,8 +44,8 @@ public class ShortTagCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        int i = args.length > 2 ? 2 : 1;
-        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
             return;
         }

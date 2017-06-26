@@ -33,6 +33,8 @@ public abstract class FCommand extends DRECommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
+    protected int i = 1;
+
     public FPlayer getFSender(CommandSender sender) {
         return plugin.getFPlayerCache().getByName(sender.getName());
     }
@@ -60,6 +62,10 @@ public abstract class FCommand extends DRECommand {
     }
 
     public Faction getSenderFactionOrFromArg(CommandSender sender, String[] args, int index) {
+        return getSenderFactionOrFromArg(sender, args, index, false);
+    }
+
+    public Faction getSenderFactionOrFromArg(CommandSender sender, String[] args, int index, boolean i) {
         Faction faction = null;
         if (args.length > index) {
             faction = plugin.getFactionCache().getByName(args[index]);
@@ -69,9 +75,14 @@ public abstract class FCommand extends DRECommand {
                     faction = plugin.getFactionCache().getById(id);
                 }
             }
+            if (faction != null && i) {
+                this.i++;
+            }
 
-        } else if (sender instanceof Player) {
-            faction = getFSender(sender) != null ? getFSender(sender).getFaction() : null;
+        }
+
+        if (faction == null && sender instanceof Player) {
+            faction = getSenderFaction(sender);
         }
 
         if (faction == null) {

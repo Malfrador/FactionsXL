@@ -24,6 +24,7 @@ import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Saukel
@@ -34,8 +35,8 @@ public class KickCommand extends FCommand {
 
     public KickCommand() {
         setCommand("kick");
-        setMinArgs(2);
-        setMaxArgs(2);
+        setMinArgs(1);
+        setMaxArgs(1);
         setHelp(FMessage.HELP_KICK.getMessage());
         setPermission(FPermission.KICK.getNode());
         setPlayerCommand(true);
@@ -44,17 +45,24 @@ public class KickCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
-        if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
-            return;
-        }
-
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[2]);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
         if (!player.hasPlayedBefore()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[2]);
             return;
+        } else if (!plugin.getFPlayerCache().getByPlayer(player).hasFaction()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_ANY_FACTION.getMessage(), args[2]);
+            return;
         }
+        Faction faction = plugin.getFactionCache().getByMember(player);
+        if (!faction.isPrivileged(sender)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        } else if (faction.getMods().contains(player) && sender instanceof Player
+                && !FPermission.hasPermission(sender, FPermission.BYPASS) && !faction.getAdmin().equals(sender)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+        faction.kick(sender, player);
     }
 
 }

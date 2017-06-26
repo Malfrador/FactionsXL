@@ -36,7 +36,7 @@ public class ModCommand extends FCommand {
     public ModCommand() {
         setCommand("mod");
         setAliases("officer");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_MOD.getMessage());
         setPermission(FPermission.MOD.getNode());
@@ -46,20 +46,19 @@ public class ModCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(args[1]));
             return;
         }
-
         if (sender instanceof Player && !faction.isPrivileged((Player) sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[2]);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[i]);
         if (!player.hasPlayedBefore()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(args[2]));
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(args[i]));
             return;
         }
 

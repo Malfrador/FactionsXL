@@ -33,7 +33,7 @@ public class SetAnthemCommand extends FCommand {
 
     public SetAnthemCommand() {
         setCommand("setAnthem");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_SET_ANTHEM.getMessage());
         setPermission(FPermission.SET_ANTHEM.getNode());
@@ -43,9 +43,9 @@ public class SetAnthemCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
@@ -54,8 +54,8 @@ public class SetAnthemCommand extends FCommand {
             return;
         }
 
-        faction.setAnthem(args[2]);
-        faction.sendMessage(FMessage.CMD_SET_ANTHEM_SUCCESS.getMessage(), sender, faction, args[2]);
+        faction.setAnthem(args[i]);
+        faction.sendMessage(FMessage.CMD_SET_ANTHEM_SUCCESS.getMessage(), sender, faction, args[i]);
     }
 
 }

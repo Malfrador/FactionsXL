@@ -34,7 +34,7 @@ public class UninviteCommand extends FCommand {
 
     public UninviteCommand() {
         setCommand("uninvite");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_UNINVITE.getMessage());
         setPermission(FPermission.INVITE.getNode());
@@ -44,9 +44,9 @@ public class UninviteCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
@@ -55,14 +55,14 @@ public class UninviteCommand extends FCommand {
             return;
         }
 
-        Player player = Bukkit.getPlayer(args[2]);
+        Player player = Bukkit.getPlayer(args[i]);
         if (!player.isOnline()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[i]);
             return;
         }
 
         if (faction.getMembers().contains(player)) {
-            ParsingUtil.sendMessage(sender, FMessage.CMD_INVITE_FAIL.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.CMD_INVITE_FAIL.getMessage(), args[i]);
             return;
         }
 

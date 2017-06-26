@@ -925,6 +925,18 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @param kicker
+     * the CommandSender who kicked this member
+     * @param member
+     * the member to kick
+     */
+    public void kick(CommandSender kicker, OfflinePlayer member) {
+        sendMessage(FMessage.FACTION_PLAYER_KICKED.getMessage(), kicker, member);
+        members.remove(member);
+        mods.remove(member);
+    }
+
+    /**
      * Actions when a day passed.
      */
     public void payday() {

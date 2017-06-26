@@ -34,7 +34,7 @@ public class SetGovernmentCommand extends FCommand {
 
     public SetGovernmentCommand() {
         setCommand("setGovernment");
-        setMinArgs(2);
+        setMinArgs(1);
         setMaxArgs(2);
         setHelp(FMessage.HELP_SET_GOVERNMENT.getMessage());
         setPermission(FPermission.SET_GOVERNMENT.getNode());
@@ -44,9 +44,9 @@ public class SetGovernmentCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        i = 1;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
         if (faction == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
         if (sender instanceof Player && !faction.getAdmin().equals(sender)) {
@@ -54,9 +54,9 @@ public class SetGovernmentCommand extends FCommand {
             return;
         }
 
-        GovernmentType type = GovernmentType.fromString(args[2]);
+        GovernmentType type = GovernmentType.fromString(args[i]);
         if (type == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_GOVERNMENT_TYPE.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_GOVERNMENT_TYPE.getMessage(), args[i]);
             return;
         }
 
