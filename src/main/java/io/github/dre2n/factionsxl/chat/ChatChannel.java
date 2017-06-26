@@ -29,7 +29,7 @@ public enum ChatChannel {
     ALLY(ChatColor.LIGHT_PURPLE, Relation.ALLIANCE),
     COALITION(ChatColor.RED, Relation.ALLIANCE, Relation.COALITION),
     FACTION(ChatColor.GREEN, Relation.OWN, Relation.LORD, Relation.VASSAL),
-    PUBLIC(ChatColor.WHITE);
+    PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
 
     private ChatColor color;
     private List<Relation> relations;

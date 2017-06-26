@@ -28,12 +28,14 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
  * Partially adapted from FactionsOne by Sataniel.
@@ -74,7 +76,10 @@ public enum ParsingUtil {
     REGION_SIZE("%region_size%"),
     REGION_TYPE("%region_type%"),
     RELATION("%relation%"),
-    RELATION_COLOR("%relation_color%");
+    RELATION_COLOR("%relation_color%"),
+    // External
+    PERM_PREFIX("%perm_prefix%"),
+    PERM_SUFFIX("%perm_suffix%");
 
     private String placeholder;
 
@@ -113,6 +118,19 @@ public enum ParsingUtil {
         string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
         string = string.replace(RELATION.getPlaceholder(), relation.getName());
         string = string.replace(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
+        // External
+        try {
+            RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
+            if (chatProvider != null) {
+                Chat chat = chatProvider.getProvider();
+                if (chat != null) {
+                    string = string.replace(PERM_PREFIX.getPlaceholder(), chat.getPlayerPrefix(sender.getPlayer()));
+                    string = string.replace(PERM_SUFFIX.getPlaceholder(), chat.getPlayerSuffix(sender.getPlayer()));
+                }
+            }
+        } catch (NoClassDefFoundError error) {
+        }
+
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 

@@ -45,7 +45,7 @@ public class ChatListener implements Listener {
             fPlayer.setChatChannel(ChatChannel.PUBLIC);
         }
         ChatChannel channel = fPlayer.getChatChannel();
-        if (channel == ChatChannel.PUBLIC) {
+        if (channel == ChatChannel.PUBLIC && !fConfig.isPublicChatHandled()) {
             return;
         }
 

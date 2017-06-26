@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 4;
+    public static final int CONFIG_VERSION = 5;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -92,6 +92,8 @@ public class FConfig extends DREConfig {
     private int requiredResourceUnitsPer1000Persons = 10;
 
     // Chat
+    private boolean publicChatHandled = false;
+    private String chatFormatPublic = PERM_PREFIX + "&f[" + RELATION_COLOR + FACTION_TAG + "&f] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&f" + ": " + PERM_SUFFIX;
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
     private String chatFormatCoalition = "&c[" + RELATION_COLOR + FACTION_TAG + "&c] " + RELATION_COLOR + PLAYER_PREFIX + "&c" + PLAYER_NAME + ": ";
     private String chatFormatFaction = RELATION_COLOR.getPlaceholder() + PLAYER_PREFIX + "&a" + PLAYER_TITLE + " " + PLAYER_NAME + ": ";
@@ -338,6 +340,14 @@ public class FConfig extends DREConfig {
     }
 
     /**
+     * @return
+     * if FXL should handle the public chat as well
+     */
+    public boolean isPublicChatHandled() {
+        return publicChatHandled;
+    }
+
+    /**
      * @param channel
      * the chat channel
      * @return
@@ -351,6 +361,8 @@ public class FConfig extends DREConfig {
                 return chatFormatCoalition;
             case FACTION:
                 return chatFormatFaction;
+            case PUBLIC:
+                return chatFormatPublic;
             default:
                 return null;
         }
@@ -668,6 +680,14 @@ public class FConfig extends DREConfig {
             config.set("chatFormat.faction", chatFormatFaction);
         }
 
+        if (!config.contains("chatFormat.public")) {
+            config.set("chatFormat.public", chatFormatPublic);
+        }
+
+        if (!config.contains("chatFormat.handlePublic")) {
+            config.set("chatFormat.handlePublic", publicChatHandled);
+        }
+
         if (!config.contains("lwcEnabled")) {
             config.set("lwcEnabled", lwcEnabled);
         }
@@ -870,6 +890,14 @@ public class FConfig extends DREConfig {
 
         if (config.contains("chatFormat.faction")) {
             chatFormatFaction = config.getString("chatFormat.faction");
+        }
+
+        if (config.contains("chatFormat.public")) {
+            chatFormatPublic = config.getString("chatFormat.public");
+        }
+
+        if (config.contains("chatFormat.handlePublic")) {
+            publicChatHandled = config.getBoolean("chatFormat.handlePublic");
         }
 
         if (config.contains("lwcEnabled")) {
