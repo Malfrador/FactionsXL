@@ -56,6 +56,7 @@ public class Region {
     private Map<Faction, Date> claims = new HashMap<>();
     private String mapFillColor;
     private String mapLineColor;
+    private boolean unclaimable;
     private DynmapStyle dynmapStyle;
 
     public Region(String name, Chunk chunk) {
@@ -92,6 +93,7 @@ public class Region {
         }
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
+        unclaimable = config.getBoolean("unclaimable", false);
     }
 
     public ConfigurationSection serialize() {
@@ -129,6 +131,7 @@ public class Region {
 
         config.set("mapFillColor", mapFillColor);
         config.set("mapLineColor", mapLineColor);
+        config.set("unclaimable", unclaimable);
 
         return config;
     }
@@ -309,10 +312,26 @@ public class Region {
 
     /**
      * @return
+     * if the region is unclaimable
+     */
+    public boolean isUnclaimable() {
+        return unclaimable;
+    }
+
+    /**
+     * @return
      * true if the region has no owner
      */
     public boolean isNeutral() {
         return owner == null;
+    }
+
+    /**
+     * @return
+     * true if the region is neutral and not marked as unclaimable
+     */
+    public boolean isAnnexable() {
+        return isNeutral() && !unclaimable;
     }
 
     /**

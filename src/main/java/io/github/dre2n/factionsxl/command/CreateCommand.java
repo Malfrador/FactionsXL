@@ -59,7 +59,7 @@ public class CreateCommand extends FCommand {
 
         Location location = player.getLocation();
         Board board = plugin.getBoard();
-        if (!board.isNeutral(location)) {
+        if (!board.isAnnexable(location)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
             return;
         }

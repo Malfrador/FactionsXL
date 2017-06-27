@@ -160,6 +160,30 @@ public class Board {
      * @param location
      * the location to check
      * @return
+     * true if the region is annexable
+     * false if the chunk is not covered by a region
+     */
+    public boolean isAnnexable(Location location) {
+        Region region = getByLocation(location);
+        return region == null ? false : region.isAnnexable();
+    }
+
+    /**
+     * @param chunk
+     * the chunk to check
+     * @return
+     * true if the region is annexable
+     * false if the chunk is not covered by a region
+     */
+    public boolean isAnnexable(Chunk chunk) {
+        Region region = getByChunk(chunk);
+        return region == null ? false : region.isAnnexable();
+    }
+
+    /**
+     * @param location
+     * the location to check
+     * @return
      * true if the chunk is not covered by a region
      */
     public boolean isWilderness(Location location) {
