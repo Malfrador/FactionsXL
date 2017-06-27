@@ -49,13 +49,16 @@ public class ChatListener implements Listener {
             return;
         }
 
-        event.setCancelled(true);
-        for (Relation relation : channel.getRelations()) {
-            for (Player ally : fPlayer.getFaction().getOnlineByRelation(relation)) {
-                String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(ally));
-                MessageUtil.sendMessage(ally, format + event.getMessage());
+        if (!event.isCancelled()) {
+            for (Relation relation : channel.getRelations()) {
+                for (Player ally : fPlayer.getFaction().getOnlineByRelation(relation)) {
+                    String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(ally));
+                    MessageUtil.sendMessage(ally, format + event.getMessage());
+                    MessageUtil.log("[FXL-Chat] " + format + event.getMessage());
+                }
             }
         }
+        event.setCancelled(true);
     }
 
 }
