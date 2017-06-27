@@ -32,6 +32,7 @@ import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FData;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.IncomeTask;
+import io.github.dre2n.factionsxl.faction.FBull;
 import io.github.dre2n.factionsxl.faction.FMob;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.AsyncPowerTask;
@@ -193,6 +194,7 @@ public class FactionsXL extends DREPlugin {
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
         }
+        manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
     }
 

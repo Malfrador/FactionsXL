@@ -31,6 +31,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public enum FMessage implements Message {
 
+    BULL_ID("bull.id", "&7Bull"),
+    BULL_RIGHT_KLICK("bull.rightClick", "&2Right click to use"),
     CHAT_CHANNEL_SWITCHED("chat.channelSwitched", "&aYour chat channel has been switched to &v1&a."),
     CHAT_PREFIX_ADMIN("chat.prefix.admin", "**"),
     CHAT_PREFIX_MEMBER("chat.prefix.member", new String()),
@@ -38,6 +40,7 @@ public enum FMessage implements Message {
     CMD_ADMIN_SUCCESS("cmd.admin.success", "&v1 &agave &v2 &athe leadership of &v3&a."),
     CMD_CLAIM_SUCCESS("cmd.claim.success", "&aSuccessfully annexed the region &v1&a."),
     CMD_CREATE_SUCCESS("cmd.create.success", "&v1 &acreated the new faction &v2&a."),
+    CMD_CREATE_BULL_SUCCESS("cmd.createBull.success", "&aSuccessfully created the new bull &6&v1&a."),
     CMD_DESC_SUCCESS("cmd.desc.success", "&aThe faction &v1&a changed their description to: &6&v2&a."),
     CMD_DISBAND_SUCCESS("cmd.disband.success", "&v1 &adisbanded the faction &v2&a."),
     CMD_INVITE_FAIL("cmd.invite.fail", "&4Could change the invitation status of &v1&4."),
@@ -165,6 +168,7 @@ public enum FMessage implements Message {
     HELP_CLAIM("help.claim", "/f claim ([faction]) - Claims a territory."),
     HELP_SHORT_TAG("help.shortTag", "/f shortTag ([faction]) [tag] - Changes the short tag of the faction."),
     HELP_CREATE("help.create", "/f create [tag] - Creates a new faction."),
+    HELP_CREATE_BULL("help.create.bull", "/f createBull [name] - Creates a new bull with [name] as the author."),
     HELP_CREATE_VASSAL("help.createVassal", "/f createVassal [tag] [leader] - Creates a new faction as your vassal."),
     HELP_DESC("help.desc", "/f desc [faction] [description] - Changes the description of the faction."),
     HELP_DISBAND("help.disband", "/f disband [faction] - Disbands a faction."),

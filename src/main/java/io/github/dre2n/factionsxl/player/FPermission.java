@@ -38,6 +38,7 @@ public enum FPermission {
     CHAT("chat", TRUE),
     CLAIM("claim", TRUE),
     CREATE("create", OP),
+    CREATE_BULL("createbull", OP),
     CREATE_VASSAL("createvassal", OP),
     DESC("desc", OP),
     DISBAND("disband", TRUE),

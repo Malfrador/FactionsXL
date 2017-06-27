@@ -34,6 +34,7 @@ public class FCommandCache extends DRECommandCache {
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
     public CreateCommand create = new CreateCommand();
+    public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
     public DescCommand desc = new DescCommand();
     public DisbandCommand disband = new DisbandCommand();
@@ -86,6 +87,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(chat);
         addCommand(claim);
         addCommand(create);
+        addCommand(createBull);
         addCommand(createVassal);
         addCommand(desc);
         addCommand(disband);
