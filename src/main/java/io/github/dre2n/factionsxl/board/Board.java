@@ -16,13 +16,14 @@
  */
 package io.github.dre2n.factionsxl.board;
 
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,7 +39,7 @@ public class Board {
 
     public static final File FILE = new File(FactionsXL.getInstance().getDataFolder() + "/board.yml");
 
-    private List<Region> regions = new ArrayList<>();
+    private List<Region> regions = new CopyOnWriteArrayList<>();
 
     public Board() {
         if (!FILE.exists()) {
@@ -64,6 +65,7 @@ public class Board {
                 exception.printStackTrace();
             }
         }
+        MessageUtil.log(FactionsXL.getInstance(), "Loaded board with " + regions.size() + " regions.");
     }
 
     /* Getters and setters */
@@ -117,6 +119,11 @@ public class Board {
         for (Region region : regions) {
             if (region.getChunks().contains(chunk)) {
                 return region;
+            }
+            for (Chunk rChunk : region.getChunks()) {
+                if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
+                    return region;
+                }
             }
         }
         return null;

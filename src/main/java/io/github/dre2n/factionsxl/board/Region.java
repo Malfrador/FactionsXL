@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.board;
 
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,7 +53,7 @@ public class Region {
     private int level;
     private int population;
     private Faction owner;
-    private List<Chunk> chunks = new ArrayList<>();
+    private List<Chunk> chunks = new CopyOnWriteArrayList<>();
     private Map<Faction, Date> cores = new HashMap<>();
     private Map<Faction, Date> claims = new HashMap<>();
     private String mapFillColor;
@@ -94,6 +96,7 @@ public class Region {
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
         unclaimable = config.getBoolean("unclaimable", false);
+        MessageUtil.log(plugin, "Loaded region " + name + " with " + chunks.size() + " chunks.");
     }
 
     public ConfigurationSection serialize() {
