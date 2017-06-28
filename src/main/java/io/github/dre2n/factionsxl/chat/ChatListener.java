@@ -23,6 +23,7 @@ import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,18 +48,27 @@ public class ChatListener implements Listener {
         ChatChannel channel = fPlayer.getChatChannel();
         if (channel == ChatChannel.PUBLIC && !fConfig.isPublicChatHandled()) {
             return;
+
         }
 
         if (!event.isCancelled()) {
-            for (Relation relation : channel.getRelations()) {
-                for (Player ally : fPlayer.getFaction().getOnlineByRelation(relation)) {
-                    String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(ally));
-                    MessageUtil.sendMessage(ally, format + event.getMessage());
+            event.setCancelled(true);
+            if (channel == ChatChannel.PUBLIC) {
+                for (Player receiver : Bukkit.getOnlinePlayers()) {
+                    String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
+                    MessageUtil.sendMessage(receiver, format + event.getMessage());
                     MessageUtil.log("[FXL-Chat] " + format + event.getMessage());
+                }
+            } else {
+                for (Relation relation : channel.getRelations()) {
+                    for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
+                        String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
+                        MessageUtil.sendMessage(receiver, format + event.getMessage());
+                        MessageUtil.log("[FXL-Chat] " + format + event.getMessage());
+                    }
                 }
             }
         }
-        event.setCancelled(true);
     }
 
 }

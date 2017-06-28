@@ -232,6 +232,7 @@ public enum FMessage implements Message {
     MISC_BACK("misc.back", "&6&lBACK"),
     MISC_CONTINUE("misc.continue", "&6&lCONTINUE"),
     MISC_DENY("misc.deny", "[ DENY ]"),
+    MISC_LONER("misc.loner", "Loner"),
     MISC_NEXT_PAGE("misc.nextPage", "&6&lNEXT PAGE"),
     MISC_PREVIOUS_PAGE("misc.previousPage", "&6&lPREVIOUS PAGE"),
     MISC_PURCHASE_FAIL("misc.purchase.success", "&4You cannot afford &6&v1&4."),

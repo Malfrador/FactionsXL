@@ -111,11 +111,21 @@ public enum ParsingUtil {
      */
     public static String replaceChatPlaceholders(String string, FPlayer sender, FPlayer receiver) {
         Faction faction = sender.getFaction();
-        Relation relation = faction.getRelation(receiver);
         string = string.replace(PLAYER_NAME.getPlaceholder(), sender.getName());
         string = string.replace(PLAYER_PREFIX.getPlaceholder(), sender.getPrefix());
         string = string.replace(PLAYER_TITLE.getPlaceholder(), sender.getTitle());
-        string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
+        Relation relation = null;
+        if (faction != null) {
+            relation = faction.getRelation(receiver);
+            string = string.replace(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
+            string = string.replace(FACTION_TAG.getPlaceholder(), faction.getName());
+            string = string.replace(FACTION_SHORT_TAG.getPlaceholder(), faction.getShortName());
+        } else {
+            relation = Relation.PEACE;
+            string = string.replace(FACTION_LONG_TAG.getPlaceholder(), FMessage.MISC_LONER.getMessage());
+            string = string.replace(FACTION_TAG.getPlaceholder(), FMessage.MISC_LONER.getMessage());
+            string = string.replace(FACTION_SHORT_TAG.getPlaceholder(), FMessage.MISC_LONER.getMessage());
+        }
         string = string.replace(RELATION.getPlaceholder(), relation.getName());
         string = string.replace(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
         // External
