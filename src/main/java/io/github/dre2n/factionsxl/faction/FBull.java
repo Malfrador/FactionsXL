@@ -43,13 +43,13 @@ public class FBull implements Listener {
         Player player = event.getPlayer();
         Location location = player.getLocation();
         ItemStack item = event.getItem();
-        BookMeta meta = ((BookMeta) item.getItemMeta());
         if (isBull(item) && event.getAction() == Action.RIGHT_CLICK_AIR | event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (!FactionsXL.getInstance().getBoard().isAnnexable(location)) {
                 ParsingUtil.sendMessage(player, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
                 return;
             }
             FactionCache factions = FactionsXL.getInstance().getFactionCache();
+            BookMeta meta = ((BookMeta) item.getItemMeta());
             String title = meta.getTitle().replace(" ", "-");
             if (factions.getByName(title) != null) {
                 title += NumberUtil.generateRandomInt(0, 100);
