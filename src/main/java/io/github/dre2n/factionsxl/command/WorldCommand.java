@@ -83,7 +83,7 @@ public class WorldCommand extends FCommand {
         } else if (sub.equalsIgnoreCase("addChunk") || sub.equalsIgnoreCase("add") || sub.equalsIgnoreCase("a")) {
             addChunk(player, region, args, i);
 
-        } else if (sub.equalsIgnoreCase("removeChunk") || sub.equalsIgnoreCase("r") && region == null) {
+        } else if (sub.equalsIgnoreCase("removeChunk") || sub.equalsIgnoreCase("r") && region != null) {
             removeChunk(player, region);
 
         } else if (sub.equalsIgnoreCase("renameProvince") || sub.equalsIgnoreCase("rename") || sub.equalsIgnoreCase("n")) {
@@ -205,7 +205,7 @@ public class WorldCommand extends FCommand {
 
     private void removeChunk(Player player, Region region) {
         if (region != null) {
-            board.getRegions().remove(region);
+            region.getChunks().remove(player.getLocation().getChunk());
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_REMOVED.getMessage(), region);
         } else {
             ParsingUtil.sendMessage(player, FMessage.ERROR_NO_SUCH_REGION.getMessage());
