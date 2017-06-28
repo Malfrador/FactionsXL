@@ -205,7 +205,11 @@ public class WorldCommand extends FCommand {
 
     private void removeChunk(Player player, Region region) {
         if (region != null) {
-            region.getChunks().remove(player.getLocation().getChunk());
+            for (Chunk chunk : region.getChunks()) {
+                if (chunk.getX() == player.getLocation().getChunk().getX() && chunk.getZ() == player.getLocation().getChunk().getZ()) {
+                    region.getChunks().remove(chunk);
+                }
+            }
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_REMOVED.getMessage(), region);
         } else {
             ParsingUtil.sendMessage(player, FMessage.ERROR_NO_SUCH_REGION.getMessage());
