@@ -48,6 +48,7 @@ public class WorldCommand extends FCommand {
 
     public WorldCommand() {
         setCommand("world");
+        setAliases("w");
         setMinArgs(0);
         setMaxArgs(5);
         setHelp(FMessage.HELP_WORLD.getMessage());
@@ -83,7 +84,7 @@ public class WorldCommand extends FCommand {
         } else if (sub.equalsIgnoreCase("addChunk") || sub.equalsIgnoreCase("add") || sub.equalsIgnoreCase("a")) {
             addChunk(player, region, args, i);
 
-        } else if (sub.equalsIgnoreCase("removeChunk") || sub.equalsIgnoreCase("r") && region != null) {
+        } else if (sub.equalsIgnoreCase("removeChunk") || sub.equalsIgnoreCase("r")) {
             removeChunk(player, region);
 
         } else if (sub.equalsIgnoreCase("renameProvince") || sub.equalsIgnoreCase("rename") || sub.equalsIgnoreCase("n")) {
@@ -130,7 +131,7 @@ public class WorldCommand extends FCommand {
         Chunk chunk = player.getLocation().getChunk();
         int x = chunk.getX();
         int z = chunk.getZ();
-        boolean override = args.length == i + 3 ? args[i + 2].equalsIgnoreCase("-override") : false;
+        boolean override = args.length > i + 2 ? args[i + 2].equalsIgnoreCase("-override") : false;
 
         if (region == null) {
             ParsingUtil.sendMessage(player, ChatColor.RED + "/f world addChunk [region name] [radius|line|auto] [value] ([-override])");
@@ -143,7 +144,7 @@ public class WorldCommand extends FCommand {
                 z += -1 * r;
                 while (z <= chunk.getZ() + r) {
                     if (board.isWilderness(world.getChunkAt(x, z)) || override) {
-                        region.getChunks().add(world.getChunkAt(x, z));
+                        addChunk(region, world.getChunkAt(x, z), override);
                     }
                     x++;
                     if (x > chunk.getX() + r) {
@@ -158,28 +159,28 @@ public class WorldCommand extends FCommand {
                 if (face == BlockFace.NORTH) {
                     while (l >= 0) {
                         if (board.isWilderness(world.getChunkAt(x, z + l)) || override) {
-                            region.getChunks().add(world.getChunkAt(x, z + l));
+                            addChunk(region, world.getChunkAt(x, z + l), override);
                         }
                         l--;
                     }
                 } else if (face == BlockFace.EAST) {
                     while (l >= 0) {
                         if (board.isWilderness(world.getChunkAt(x - l, z)) || override) {
-                            region.getChunks().add(world.getChunkAt(x - l, z));
+                            addChunk(region, world.getChunkAt(x - l, z), override);
                         }
                         l--;
                     }
                 } else if (face == BlockFace.WEST) {
                     while (l >= 0) {
                         if (board.isWilderness(world.getChunkAt(x + l, z)) || override) {
-                            region.getChunks().add(world.getChunkAt(x + l, z));
+                            addChunk(region, world.getChunkAt(x + l, z), override);
                         }
                         l--;
                     }
                 } else if (face == BlockFace.SOUTH) {
                     while (l >= 0) {
                         if (board.isWilderness(world.getChunkAt(x, z - l)) || override) {
-                            region.getChunks().add(world.getChunkAt(x, z - l));
+                            addChunk(region, world.getChunkAt(x, z - l), override);
                         }
                         l--;
                     }
@@ -198,21 +199,35 @@ public class WorldCommand extends FCommand {
             }
 
         } else {
-            region.getChunks().add(chunk);
+            addChunk(region, chunk, override);
         }
         ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_ADDED.getMessage(), region);
     }
 
     private void removeChunk(Player player, Region region) {
         if (region != null) {
-            for (Chunk chunk : region.getChunks()) {
-                if (chunk.getX() == player.getLocation().getChunk().getX() && chunk.getZ() == player.getLocation().getChunk().getZ()) {
-                    region.getChunks().remove(chunk);
-                }
-            }
+            removeChunk(region, player.getLocation().getChunk());
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_REMOVED.getMessage(), region);
         } else {
             ParsingUtil.sendMessage(player, FMessage.ERROR_NO_SUCH_REGION.getMessage());
+        }
+    }
+
+    private void addChunk(Region region, Chunk chunk, boolean override) {
+        if (override) {
+            Region old = board.getByChunk(chunk);
+            if (old != null) {
+                removeChunk(old, chunk);
+            }
+        }
+        region.getChunks().add(chunk);
+    }
+
+    private void removeChunk(Region region, Chunk chunk) {
+        for (Chunk rChunk : region.getChunks()) {
+            if (chunk.getX() == rChunk.getX() && chunk.getZ() == rChunk.getZ()) {
+                region.getChunks().remove(chunk);
+            }
         }
     }
 
