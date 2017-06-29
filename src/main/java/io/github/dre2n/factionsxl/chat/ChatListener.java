@@ -57,16 +57,16 @@ public class ChatListener implements Listener {
                 for (Player receiver : Bukkit.getOnlinePlayers()) {
                     String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                     MessageUtil.sendMessage(receiver, format + event.getMessage());
-                    MessageUtil.log("[FXL-Chat] " + format + event.getMessage());
                 }
+                MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
             } else {
                 for (Relation relation : channel.getRelations()) {
                     for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
                         String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
-                        MessageUtil.log("[FXL-Chat] " + format + event.getMessage());
                     }
                 }
+                MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
             }
         }
     }
