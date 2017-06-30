@@ -25,16 +25,18 @@ import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.SerializationUtil;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -62,7 +64,8 @@ public class Region {
     private int level;
     private int population;
     private Faction owner;
-    private List<Chunk> chunks = new CopyOnWriteArrayList<>();
+    private World world;
+    private Set<LazyChunk> chunks = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
     private Map<Faction, Date> claims = new HashMap<>();
     private String mapFillColor;
@@ -75,7 +78,8 @@ public class Region {
         id = plugin.getBoard().generateId();
         type = RegionType.BARREN;
         this.name = name;
-        chunks.add(chunk);
+        world = chunk.getWorld();
+        chunks.add(new LazyChunk(chunk));
     }
 
     public Region(File file) {
@@ -204,7 +208,7 @@ public class Region {
      * @return
      * the chunks that belong to this region
      */
-    public List<Chunk> getChunks() {
+    public Set<LazyChunk> getChunks() {
         return chunks;
     }
 
@@ -306,7 +310,7 @@ public class Region {
      * the world where the region is
      */
     public World getWorld() {
-        return chunks.get(0).getWorld();
+        return world;
     }
 
     /**
@@ -330,12 +334,13 @@ public class Region {
         type = EnumUtil.isValidEnum(RegionType.class, typeString) ? RegionType.valueOf(typeString) : RegionType.BARREN;
         level = config.getInt("level");
         population = config.getInt("population");
+        world = Bukkit.getWorld(config.getString("world") != null ? config.getString("world") : "Saragandes");
         if (config.contains("owner")) {
             owner = plugin.getFactionCache().getById(config.getInt("owner"));
         }
 
         for (String chunk : config.getStringList("chunks")) {
-            chunks.add(SerializationUtil.deserializeChunk(chunk));
+            chunks.add(new LazyChunk(chunk));
         }
         for (Entry<String, Object> entry : ConfigUtil.getMap(config, "cores").entrySet()) {
             Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
@@ -366,13 +371,14 @@ public class Region {
         } else {
             config.set("population", 0);
         }
+        config.set("world", world.getName());
         if (owner != null) {
             config.set("owner", owner.getId());
         }
 
         List<String> serializedChunks = new ArrayList<>();
-        for (Chunk chunk : chunks) {
-            serializedChunks.add(SerializationUtil.serializeChunk(chunk));
+        for (LazyChunk chunk : chunks) {
+            serializedChunks.add(chunk.toString());
         }
         config.set("chunks", serializedChunks);
 

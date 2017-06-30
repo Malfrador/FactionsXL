@@ -19,6 +19,7 @@ import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.dynmap.markers.AreaMarker;
@@ -156,7 +156,7 @@ public class FactionMap extends EngineDynmap {
     // Handle specific faction on specific world
     // "handle faction on world"
     public Map<String, TempAreaMarker> createAreas(String world, Faction faction, Set<Region> regions) {
-        Set<Chunk> chunks = new HashSet<>();
+        Set<LazyChunk> chunks = new HashSet<>();
         for (Region region : regions) {
             chunks.addAll(region.getChunks());
         }
@@ -184,8 +184,8 @@ public class FactionMap extends EngineDynmap {
 
         // Loop through chunks: set flags on chunk map
         TileFlags allChunkFlags = new TileFlags();
-        LinkedList<Chunk> allChunks = new LinkedList<>();
-        for (Chunk chunk : chunks) {
+        LinkedList<LazyChunk> allChunks = new LinkedList<>();
+        for (LazyChunk chunk : chunks) {
             allChunkFlags.setFlag(chunk.getX(), chunk.getZ(), true); // Set flag for chunk
             allChunks.addLast(chunk);
         }
@@ -193,12 +193,12 @@ public class FactionMap extends EngineDynmap {
         // Loop through until we don't find more areas
         while (allChunks != null) {
             TileFlags ourChunkFlags = null;
-            LinkedList<Chunk> ourChunks = null;
-            LinkedList<Chunk> newChunks = null;
+            LinkedList<LazyChunk> ourChunks = null;
+            LinkedList<LazyChunk> newChunks = null;
 
             int minimumX = Integer.MAX_VALUE;
             int minimumZ = Integer.MAX_VALUE;
-            for (Chunk chunk : allChunks) {
+            for (LazyChunk chunk : allChunks) {
                 int chunkX = chunk.getX();
                 int chunkZ = chunk.getZ();
 

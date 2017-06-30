@@ -43,6 +43,7 @@ import io.github.dre2n.factionsxl.population.SaturationLevel;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +61,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -97,7 +97,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Location home;
     Hologram homeHolo;
     Region capital;
-    Set<Chunk> chunks = new HashSet<>();
+    Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
     OfflinePlayer admin;
     Set<OfflinePlayer> mods = new HashSet<>();
@@ -466,7 +466,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all chunks owned by this faction
      */
-    public Set<Chunk> getChunks() {
+    public Set<LazyChunk> getChunks() {
         return chunks;
     }
 

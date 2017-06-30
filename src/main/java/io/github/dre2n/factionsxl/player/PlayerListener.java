@@ -28,6 +28,7 @@ import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -111,7 +112,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         FPlayer fPlayer = fPlayers.getByPlayer(player);
         if (fPlayer.isAutoclaiming() && toRegion == null) {
-            fPlayer.getAutoclaimingRegion().getChunks().add(toChunk);
+            fPlayer.getAutoclaimingRegion().getChunks().add(new LazyChunk(toChunk));
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_ADDED.getMessage(), fPlayer.getAutoclaimingRegion());
             return;
         }

@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.board;
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
@@ -103,10 +104,7 @@ public class Board {
      */
     public Region getByChunk(Chunk chunk) {
         for (Region region : regions) {
-            if (region.getChunks().contains(chunk)) {
-                return region;
-            }
-            for (Chunk rChunk : region.getChunks()) {
+            for (LazyChunk rChunk : region.getChunks()) {
                 if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
                     return region;
                 }
