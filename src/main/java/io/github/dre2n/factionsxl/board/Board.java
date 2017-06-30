@@ -20,7 +20,6 @@ import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -37,35 +36,22 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class Board {
 
-    public static final File FILE = new File(FactionsXL.getInstance().getDataFolder() + "/board.yml");
-
     private List<Region> regions = new CopyOnWriteArrayList<>();
 
-    public Board() {
-        if (!FILE.exists()) {
-            try {
-                FILE.createNewFile();
-            } catch (IOException exception) {
-                exception.printStackTrace();
+    public Board(File dir) {
+        for (File file : dir.listFiles()) {
+            regions.add(new Region(file));
+        }
+        File oldBoard = new File(FactionsXL.getInstance().getDataFolder(), "board.yml");
+        if (oldBoard.exists()) {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(oldBoard);
+            if (config.contains("regions")) {
+                for (Entry<String, Object> region : ConfigUtil.getMap(config, "regions").entrySet()) {
+                    int id = Integer.parseInt(region.getKey());
+                    regions.add(new Region(id, (ConfigurationSection) region.getValue()));
+                }
             }
         }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(FILE);
-        if (config.contains("regions")) {
-            for (Entry<String, Object> region : ConfigUtil.getMap(config, "regions").entrySet()) {
-                int id = Integer.parseInt(region.getKey());
-                regions.add(new Region(id, (ConfigurationSection) region.getValue()));
-            }
-
-        } else {
-            config.set("regions", regions);
-            try {
-                config.save(FILE);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        MessageUtil.log(FactionsXL.getInstance(), "Loaded board with " + regions.size() + " regions.");
     }
 
     /* Getters and setters */
@@ -215,18 +201,24 @@ public class Board {
         return regions.size();
     }
 
-    /* Serialize */
-    public void save(File file) {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
+    /* Persistence */
+    /**
+     * Saves all factions
+     */
+    public void saveAll() {
         for (Region region : regions) {
-            config.set("regions." + region.getId(), region.serialize());
+            region.save();
         }
-        try {
-            config.save(FILE);
-        } catch (IOException exception) {
-            exception.printStackTrace();
+    }
+
+    /**
+     * Loads the persistent data of all regions
+     */
+    public void loadAll() {
+        for (Region region : regions) {
+            region.load();
         }
+        MessageUtil.log(FactionsXL.getInstance(), "Loaded board with " + regions.size() + " regions.");
     }
 
 }

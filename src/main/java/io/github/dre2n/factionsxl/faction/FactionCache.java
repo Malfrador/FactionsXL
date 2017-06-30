@@ -49,20 +49,20 @@ public class FactionCache {
     private Set<Federation> federations = new HashSet<>();
     private Set<TradeLeague> leagues = new HashSet<>();
 
-    public FactionCache() {
-        for (File file : FactionsXL.FACTIONS.listFiles()) {
+    public FactionCache(File factionsDir, File federationsDir, File leaguesDir) {
+        for (File file : factionsDir.listFiles()) {
             Faction faction = new Faction(file);
             entities.add(faction);
             factions.add(faction);
         }
 
-        for (File file : FactionsXL.FEDERATIONS.listFiles()) {
+        for (File file : federationsDir.listFiles()) {
             Federation federation = new Federation(file);
             entities.add(federation);
             federations.add(federation);
         }
 
-        for (File file : FactionsXL.TRADE_LEAGUES.listFiles()) {
+        for (File file : leaguesDir.listFiles()) {
             TradeLeague league = new TradeLeague(file);
             entities.add(league);
             leagues.add(league);
@@ -101,7 +101,6 @@ public class FactionCache {
         faction.capital.getCoreFactions().put(faction, Calendar.getInstance().getTime());
         faction.members.add(player);
         faction.manpowerModifier = plugin.getFConfig().getDefaultManpowerModifier();
-        board.save(Board.FILE);
         faction.save();
         faction.load();
         entities.add(faction);
