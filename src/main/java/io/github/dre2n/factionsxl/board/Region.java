@@ -74,8 +74,13 @@ public class Region {
     private DynmapStyle dynmapStyle;
 
     public Region(String name, Chunk chunk) {
-        file = new File(FactionsXL.BOARD, id + YAML);
         id = plugin.getBoard().generateId();
+        file = new File(FactionsXL.BOARD, id + YAML);
+        try {
+            file.createNewFile();
+        } catch (IOException exception) {
+        }
+        config = YamlConfiguration.loadConfiguration(file);
         type = RegionType.BARREN;
         this.name = name;
         world = chunk.getWorld();
