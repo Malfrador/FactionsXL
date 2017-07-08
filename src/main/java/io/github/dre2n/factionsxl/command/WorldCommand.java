@@ -27,6 +27,7 @@ import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Calendar;
 import org.bukkit.ChatColor;
@@ -220,15 +221,17 @@ public class WorldCommand extends FCommand {
                 removeChunk(old, chunk);
             }
         }
-        region.getChunks().add(chunk);
+        region.getChunks().add(new LazyChunk(chunk));
     }
 
     private void removeChunk(Region region, Chunk chunk) {
-        for (Chunk rChunk : region.getChunks()) {
+        LazyChunk remove = null;
+        for (LazyChunk rChunk : region.getChunks()) {
             if (chunk.getX() == rChunk.getX() && chunk.getZ() == rChunk.getZ()) {
-                region.getChunks().remove(chunk);
+                remove = rChunk;
             }
         }
+        region.getChunks().remove(remove);
     }
 
     private void setType(Player player, Region region, String[] args, int i) {

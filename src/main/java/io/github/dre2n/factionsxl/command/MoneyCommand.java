@@ -80,11 +80,6 @@ public class MoneyCommand extends FCommand {
     }
 
     public void deposit(CommandSender sender, Faction faction, double amount) {
-        if (!faction.isPrivileged(sender)) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
-            return;
-        }
-
         FAccount acc = faction.getAccount();
         if (sender instanceof Player) {
             Player player = (Player) sender;

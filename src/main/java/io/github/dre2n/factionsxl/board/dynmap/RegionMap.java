@@ -16,6 +16,7 @@
 package io.github.dre2n.factionsxl.board.dynmap;
 
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.utils.TileFlags;
 
@@ -46,26 +46,8 @@ public class RegionMap extends EngineDynmap {
     @Override
     public void init() {
         super.init();
-
-        // Shedule non thread safe sync at the end!
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-
-                final Map<String, TempAreaMarker> areas = createAreas();
-
-                if (!updateCore()) {
-                    return;
-                }
-
-                // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
-                if (!updateLayer(createLayer())) {
-                    return;
-                }
-
-                updateAreas(areas);
-            }
-        }, 100L, 100L);
+        UpdateTask task = new UpdateTask();
+        task.runTaskTimer(plugin, 100L, plugin.getFConfig().getDynmapUpdateIntervalRegion());
     }
 
     @Override
@@ -127,7 +109,7 @@ public class RegionMap extends EngineDynmap {
     // Handle specific faction on specific world
     // "handle faction on world"
     public Map<String, TempAreaMarker> createAreas(String world, Region region) {
-        Collection<Chunk> chunks = region.getChunks();
+        Collection<LazyChunk> chunks = region.getChunks();
         Map<String, TempAreaMarker> ret = new HashMap<>();
 
         // ... and has any chunks ...
@@ -146,8 +128,8 @@ public class RegionMap extends EngineDynmap {
 
         // Loop through chunks: set flags on chunk map
         TileFlags allChunkFlags = new TileFlags();
-        LinkedList<Chunk> allChunks = new LinkedList<>();
-        for (Chunk chunk : chunks) {
+        LinkedList<LazyChunk> allChunks = new LinkedList<>();
+        for (LazyChunk chunk : chunks) {
             allChunkFlags.setFlag(chunk.getX(), chunk.getZ(), true); // Set flag for chunk
             allChunks.addLast(chunk);
         }
@@ -155,12 +137,12 @@ public class RegionMap extends EngineDynmap {
         // Loop through until we don't find more areas
         while (allChunks != null) {
             TileFlags ourChunkFlags = null;
-            LinkedList<Chunk> ourChunks = null;
-            LinkedList<Chunk> newChunks = null;
+            LinkedList<LazyChunk> ourChunks = null;
+            LinkedList<LazyChunk> newChunks = null;
 
             int minimumX = Integer.MAX_VALUE;
             int minimumZ = Integer.MAX_VALUE;
-            for (Chunk chunk : allChunks) {
+            for (LazyChunk chunk : allChunks) {
                 int chunkX = chunk.getX();
                 int chunkZ = chunk.getZ();
 
@@ -329,6 +311,26 @@ public class RegionMap extends EngineDynmap {
         for (AreaMarker marker : markers.values()) {
             marker.deleteMarker();
         }
+    }
+
+    public class UpdateTask extends BukkitRunnable {
+
+        @Override
+        public void run() {
+            final Map<String, TempAreaMarker> areas = createAreas();
+
+            if (!updateCore()) {
+                return;
+            }
+
+            // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
+            if (!updateLayer(createLayer())) {
+                return;
+            }
+
+            updateAreas(areas);
+        }
+
     }
 
     // -------------------------------------------- //

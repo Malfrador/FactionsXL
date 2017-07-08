@@ -61,6 +61,7 @@ public class FactionsXL extends DREPlugin {
     private LWC lwc;
 
     public static File BACKUPS;
+    public static File BOARD;
     public static File LANGUAGES;
     public static File PLAYERS;
     public static File DYNASTIES;
@@ -135,6 +136,11 @@ public class FactionsXL extends DREPlugin {
             BACKUPS.mkdir();
         }
 
+        BOARD = new File(getDataFolder(), "board");
+        if (!BOARD.exists()) {
+            BOARD.mkdir();
+        }
+
         LANGUAGES = new File(getDataFolder(), "languages");
         if (!LANGUAGES.exists()) {
             LANGUAGES.mkdir();
@@ -176,10 +182,11 @@ public class FactionsXL extends DREPlugin {
         loadMessageConfig(new File(LANGUAGES, fConfig.getLanguage() + ".yml"));
         loadFData();
         loadPageGUIs();
-        loadFactions();
-        loadBoard();
+        loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
+        loadBoard(BOARD);
         loadFPlayers();
         fPlayers.loadAll();
+        board.loadAll();
         factions.loadAll();
         loadAtlas();
         loadFCommands();
@@ -200,19 +207,19 @@ public class FactionsXL extends DREPlugin {
 
     public void saveData() {
         fData.save();
-        board.save(Board.FILE);
+        board.saveAll();
         factions.saveAll();
         fPlayers.saveAll();
         messageConfig.save();
         File backupDir = new File(BACKUPS, String.valueOf(System.currentTimeMillis()));
         backupDir.mkdir();
+        FileUtil.copyDirectory(BOARD, new File(backupDir, "board"), new String[]{});
         FileUtil.copyDirectory(PLAYERS, new File(backupDir, "players"), new String[]{});
         FileUtil.copyDirectory(DYNASTIES, new File(backupDir, "dynasties"), new String[]{});
         FileUtil.copyDirectory(FACTIONS, new File(backupDir, "factions"), new String[]{});
         FileUtil.copyDirectory(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
         FileUtil.copyDirectory(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
         try {
-            FileUtil.copyFile(Board.FILE, new File(backupDir, "board.yml"));
             FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
             FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));
         } catch (IOException exception) {
@@ -316,8 +323,8 @@ public class FactionsXL extends DREPlugin {
     /**
      * load / reload a new instance of FactionCache
      */
-    public void loadFactions() {
-        factions = new FactionCache();
+    public void loadFactions(File factionsDir, File federationsDir, File leaguesDir) {
+        factions = new FactionCache(factionsDir, federationsDir, leaguesDir);
     }
 
     /**
@@ -331,8 +338,8 @@ public class FactionsXL extends DREPlugin {
     /**
      * load / reload a new instance of Board
      */
-    public void loadBoard() {
-        board = new Board();
+    public void loadBoard(File dir) {
+        board = new Board(dir);
     }
 
     /**

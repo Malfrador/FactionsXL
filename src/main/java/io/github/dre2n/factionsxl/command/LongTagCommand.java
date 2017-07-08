@@ -61,7 +61,7 @@ public class LongTagCommand extends FCommand {
 
         String longName = new String();
         for (String arg : args) {
-            if (args[0] != arg && args[i] != arg) {
+            if (args[0] != arg && args[i - 1] != arg) {
                 if (!longName.isEmpty()) {
                     longName += " ";
                 }

@@ -40,7 +40,7 @@ public enum FPermission {
     CREATE("create", OP),
     CREATE_BULL("createbull", OP),
     CREATE_VASSAL("createvassal", OP),
-    DESC("desc", OP),
+    DESC("desc", TRUE),
     DISBAND("disband", TRUE),
     HELP("help", TRUE),
     HOME("home", OP),

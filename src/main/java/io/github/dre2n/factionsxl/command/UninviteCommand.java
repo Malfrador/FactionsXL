@@ -51,7 +51,7 @@ public class UninviteCommand extends FCommand {
         }
 
         if (!(sender instanceof Player) || !faction.isPrivileged((Player) sender)) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
 

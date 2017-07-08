@@ -46,13 +46,16 @@ public class InviteCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         i = 1;
         Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
-
-        if (!(sender instanceof Player) || !faction.isPrivileged((Player) sender)) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage(), args[i]);
+        if (faction == null) {
             return;
         }
 
-        Player player = Bukkit.getPlayer(args[2]);
+        if (!(sender instanceof Player) || !faction.isPrivileged((Player) sender)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+
+        Player player = Bukkit.getPlayer(args[i]);
         if (!player.isOnline()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[i]);
             return;

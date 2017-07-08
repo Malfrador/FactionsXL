@@ -25,17 +25,22 @@ import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.SerializationUtil;
+import io.github.dre2n.factionsxl.util.LazyChunk;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -47,13 +52,20 @@ public class Region {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
+    public static final String YAML = ".yml";
+
+    private File file;
+    private FileConfiguration config;
+    @Deprecated
+    private ConfigurationSection load;
     private int id;
     private String name;
     private RegionType type;
     private int level;
     private int population;
     private Faction owner;
-    private List<Chunk> chunks = new CopyOnWriteArrayList<>();
+    private World world;
+    private Set<LazyChunk> chunks = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
     private Map<Faction, Date> claims = new HashMap<>();
     private String mapFillColor;
@@ -63,80 +75,41 @@ public class Region {
 
     public Region(String name, Chunk chunk) {
         id = plugin.getBoard().generateId();
+        file = new File(FactionsXL.BOARD, id + YAML);
+        try {
+            file.createNewFile();
+        } catch (IOException exception) {
+        }
+        config = YamlConfiguration.loadConfiguration(file);
         type = RegionType.BARREN;
         this.name = name;
-        chunks.add(chunk);
+        world = chunk.getWorld();
+        chunks.add(new LazyChunk(chunk));
     }
 
-    public Region(int id, ConfigurationSection config) {
+    public Region(File file) {
+        this.file = file;
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException exception) {
+            }
+        }
+        config = YamlConfiguration.loadConfiguration(file);
+        id = NumberUtil.parseInt(file.getName().replace(YAML, new String()));
+    }
+
+    @Deprecated
+    Region(int id, ConfigurationSection config) {
+        file = new File(FactionsXL.BOARD, id + YAML);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException exception) {
+            }
+        }
+        load = config;
         this.id = id;
-
-        name = config.getString("name");
-        String typeString = config.getString("type");
-        type = EnumUtil.isValidEnum(RegionType.class, typeString) ? RegionType.valueOf(typeString) : RegionType.BARREN;
-        level = config.getInt("level");
-        population = config.getInt("population");
-        if (config.contains("owner")) {
-            owner = plugin.getFactionCache().getById(config.getInt("owner"));
-        }
-
-        for (String chunk : config.getStringList("chunks")) {
-            chunks.add(SerializationUtil.deserializeChunk(chunk));
-        }
-        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "cores").entrySet()) {
-            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
-            Date date = new Date((long) entry.getValue());
-            cores.put(faction, date);
-        }
-        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "claims").entrySet()) {
-            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
-            Date date = new Date((long) entry.getValue());
-            claims.put(faction, date);
-        }
-        mapFillColor = config.getString("mapFillColor");
-        mapLineColor = config.getString("mapLineColor");
-        unclaimable = config.getBoolean("unclaimable", false);
-        MessageUtil.log(plugin, "Loaded region " + name + " with " + chunks.size() + " chunks.");
-    }
-
-    public ConfigurationSection serialize() {
-        ConfigurationSection config = new YamlConfiguration();
-
-        config.set("name", name);
-        config.set("type", type.toString());
-        config.set("level", level);
-        if (owner != null) {
-            config.set("population", population);
-        } else {
-            config.set("population", 0);
-        }
-        if (owner != null) {
-            config.set("owner", owner.getId());
-        }
-
-        List<String> serializedChunks = new ArrayList<>();
-        for (Chunk chunk : chunks) {
-            serializedChunks.add(SerializationUtil.serializeChunk(chunk));
-        }
-        config.set("chunks", serializedChunks);
-
-        Map<Integer, Long> serializedCores = new HashMap<>();
-        for (Entry<Faction, Date> entry : cores.entrySet()) {
-            serializedCores.put(entry.getKey().getId(), entry.getValue().getTime());
-        }
-        config.set("cores", serializedCores);
-
-        Map<Integer, Long> serializedClaims = new HashMap<>();
-        for (Entry<Faction, Date> entry : claims.entrySet()) {
-            serializedClaims.put(entry.getKey().getId(), entry.getValue().getTime());
-        }
-        config.set("claims", serializedClaims);
-
-        config.set("mapFillColor", mapFillColor);
-        config.set("mapLineColor", mapLineColor);
-        config.set("unclaimable", unclaimable);
-
-        return config;
     }
 
     /* Getters and setters */
@@ -240,7 +213,7 @@ public class Region {
      * @return
      * the chunks that belong to this region
      */
-    public List<Chunk> getChunks() {
+    public Set<LazyChunk> getChunks() {
         return chunks;
     }
 
@@ -342,7 +315,7 @@ public class Region {
      * the world where the region is
      */
     public World getWorld() {
-        return chunks.get(0).getWorld();
+        return world;
     }
 
     /**
@@ -356,6 +329,85 @@ public class Region {
         double base = config.getPriceClaimBase() + config.getPriceClaimPerChunk() * chunks.size();
         double increase = faction != null ? config.getPriceClaimIncrease() * faction.getRegions().size() : 0;
         return base + increase;
+    }
+
+    /* Serialization */
+    public void load() {
+        ConfigurationSection config = this.config != null ? this.config : load;
+        name = config.getString("name");
+        String typeString = config.getString("type");
+        type = EnumUtil.isValidEnum(RegionType.class, typeString) ? RegionType.valueOf(typeString) : RegionType.BARREN;
+        level = config.getInt("level");
+        population = config.getInt("population");
+        world = Bukkit.getWorld(config.getString("world") != null ? config.getString("world") : "Saragandes");
+        if (config.contains("owner")) {
+            owner = plugin.getFactionCache().getById(config.getInt("owner"));
+        }
+
+        for (String chunk : config.getStringList("chunks")) {
+            chunks.add(new LazyChunk(chunk));
+        }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "cores").entrySet()) {
+            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
+            Date date = new Date((long) entry.getValue());
+            cores.put(faction, date);
+        }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "claims").entrySet()) {
+            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
+            Date date = new Date((long) entry.getValue());
+            claims.put(faction, date);
+        }
+        mapFillColor = config.getString("mapFillColor");
+        mapLineColor = config.getString("mapLineColor");
+        unclaimable = config.getBoolean("unclaimable", false);
+
+        if (this.config == null) {
+            this.config = YamlConfiguration.loadConfiguration(file);
+        }
+        MessageUtil.log(plugin, "Loaded region " + name + " with " + chunks.size() + " chunks.");
+    }
+
+    public void save() {
+        config.set("name", name);
+        config.set("type", type.toString());
+        config.set("level", level);
+        if (owner != null) {
+            config.set("population", population);
+        } else {
+            config.set("population", 0);
+        }
+        config.set("world", world.getName());
+        if (owner != null) {
+            config.set("owner", owner.getId());
+        }
+
+        List<String> serializedChunks = new ArrayList<>();
+        for (LazyChunk chunk : chunks) {
+            serializedChunks.add(chunk.toString());
+        }
+        config.set("chunks", serializedChunks);
+
+        Map<Integer, Long> serializedCores = new HashMap<>();
+        for (Entry<Faction, Date> entry : cores.entrySet()) {
+            serializedCores.put(entry.getKey().getId(), entry.getValue().getTime());
+        }
+        config.set("cores", serializedCores);
+
+        Map<Integer, Long> serializedClaims = new HashMap<>();
+        for (Entry<Faction, Date> entry : claims.entrySet()) {
+            serializedClaims.put(entry.getKey().getId(), entry.getValue().getTime());
+        }
+        config.set("claims", serializedClaims);
+
+        config.set("mapFillColor", mapFillColor);
+        config.set("mapLineColor", mapLineColor);
+        config.set("unclaimable", unclaimable);
+
+        try {
+            config.save(file);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
 }
