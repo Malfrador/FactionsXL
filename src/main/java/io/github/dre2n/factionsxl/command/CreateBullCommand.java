@@ -53,7 +53,7 @@ public class CreateBullCommand extends FCommand {
         }
         String author = new String();
         for (String arg : args) {
-            if (args[0] != arg && args[1] != arg) {
+            if (args[0] != arg) {
                 if (!author.isEmpty()) {
                     author += " ";
                 }
