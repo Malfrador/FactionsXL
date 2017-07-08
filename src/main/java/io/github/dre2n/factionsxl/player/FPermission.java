@@ -43,7 +43,7 @@ public enum FPermission {
     DESC("desc", TRUE),
     DISBAND("disband", TRUE),
     HELP("help", TRUE),
-    HOME("home", OP),
+    HOME("home", TRUE),
     HOME_OTHERS("home.others", OP),
     IDEA("idea", TRUE),
     INVITE("invite", TRUE),
