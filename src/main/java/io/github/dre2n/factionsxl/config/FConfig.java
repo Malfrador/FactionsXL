@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 5;
+    public static final int CONFIG_VERSION = 6;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -184,6 +184,8 @@ public class FConfig extends DREConfig {
             + "<span style=\"font-weight: bold;\">Claims:</span> " + REGION_CLAIM_LIST + "<br>\n"
             + "<br>\n"
             + "</div>";
+    private double dynmapUpdateIntervalFaction = 5 * 60;
+    private double dynmapUpdateIntervalRegion = 5 * 60;
     private List<String> dynmapHiddenWorlds = new ArrayList<>();
     private Map<RegionType, DynmapStyle> dynmapRegionTypeStyles = new HashMap<RegionType, DynmapStyle>() {
         {
@@ -560,6 +562,22 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * the Dynmap update interval for factions
+     */
+    public long getDynmapUpdateIntervalFaction() {
+        return (long) (dynmapUpdateIntervalFaction * 20);
+    }
+
+    /**
+     * @return
+     * the Dynmap update interval for regions
+     */
+    public long getDynmapUpdateIntervalRegion() {
+        return (long) (dynmapUpdateIntervalRegion * 20);
+    }
+
+    /**
+     * @return
      * the priority of the factions layer
      */
     public int getDynmapLayerPriorityFaction() {
@@ -792,6 +810,14 @@ public class FConfig extends DREConfig {
             config.set("dynmap.description.region", dynmapDescriptionRegion);
         }
 
+        if (!config.contains("dynmap.updateInterval.faction")) {
+            config.set("dynmap.updateInterval.faction", dynmapUpdateIntervalFaction);
+        }
+
+        if (!config.contains("dynmap.updateInterval.region")) {
+            config.set("dynmap.updateInterval.region", dynmapUpdateIntervalRegion);
+        }
+
         if (!config.contains("dynmap.hiddenWorlds")) {
             config.set("dynmap.hiddenWorlds", dynmapHiddenWorlds);
         }
@@ -1002,6 +1028,14 @@ public class FConfig extends DREConfig {
 
         if (config.contains("dynmap.description.region")) {
             dynmapDescriptionRegion = config.getString("dynmap.description.region");
+        }
+
+        if (config.contains("dynmap.updateInterval.faction")) {
+            dynmapUpdateIntervalFaction = config.getDouble("dynmap.updateInterval.faction");
+        }
+
+        if (config.contains("dynmap.updateInterval.region")) {
+            dynmapUpdateIntervalRegion = config.getDouble("dynmap.updateInterval.region");
         }
 
         if (config.contains("dynmap.hiddenWorlds")) {

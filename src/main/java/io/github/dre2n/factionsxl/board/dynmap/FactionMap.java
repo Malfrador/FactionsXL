@@ -29,10 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.Marker;
 import org.dynmap.markers.PlayerSet;
@@ -64,28 +64,8 @@ public class FactionMap extends EngineDynmap {
         super.init();
 
         // Shedule non thread safe sync at the end!
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-
-                final Map<String, TempMarker> homes = createHomes();
-                final Map<String, TempAreaMarker> areas = createAreas();
-                final Map<String, Set<String>> playerSets = createPlayersets();
-
-                if (!updateCore()) {
-                    return;
-                }
-
-                // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
-                if (!updateLayer(createLayer())) {
-                    return;
-                }
-
-                updateHomes(homes);
-                updateAreas(areas);
-                updatePlayersets(playerSets);
-            }
-        }, 100L, 100L);
+        UpdateTask task = new UpdateTask();
+        task.runTaskTimer(plugin, 100L, plugin.getFConfig().getDynmapUpdateIntervalFaction());
     }
 
     @Override
@@ -367,6 +347,31 @@ public class FactionMap extends EngineDynmap {
         for (AreaMarker marker : markers.values()) {
             marker.deleteMarker();
         }
+    }
+
+    public class UpdateTask extends BukkitRunnable {
+
+        @Override
+        public void run() {
+
+            final Map<String, TempMarker> homes = createHomes();
+            final Map<String, TempAreaMarker> areas = createAreas();
+            final Map<String, Set<String>> playerSets = createPlayersets();
+
+            if (!updateCore()) {
+                return;
+            }
+
+            // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
+            if (!updateLayer(createLayer())) {
+                return;
+            }
+
+            updateHomes(homes);
+            updateAreas(areas);
+            updatePlayersets(playerSets);
+        }
+
     }
 
     // -------------------------------------------- //

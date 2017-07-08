@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.utils.TileFlags;
 
@@ -46,26 +46,8 @@ public class RegionMap extends EngineDynmap {
     @Override
     public void init() {
         super.init();
-
-        // Shedule non thread safe sync at the end!
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-
-                final Map<String, TempAreaMarker> areas = createAreas();
-
-                if (!updateCore()) {
-                    return;
-                }
-
-                // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
-                if (!updateLayer(createLayer())) {
-                    return;
-                }
-
-                updateAreas(areas);
-            }
-        }, 100L, 100L);
+        UpdateTask task = new UpdateTask();
+        task.runTaskTimer(plugin, 100L, plugin.getFConfig().getDynmapUpdateIntervalRegion());
     }
 
     @Override
@@ -329,6 +311,26 @@ public class RegionMap extends EngineDynmap {
         for (AreaMarker marker : markers.values()) {
             marker.deleteMarker();
         }
+    }
+
+    public class UpdateTask extends BukkitRunnable {
+
+        @Override
+        public void run() {
+            final Map<String, TempAreaMarker> areas = createAreas();
+
+            if (!updateCore()) {
+                return;
+            }
+
+            // createLayer() is thread safe but it makes use of fields set in updateCore() so we must have it after.
+            if (!updateLayer(createLayer())) {
+                return;
+            }
+
+            updateAreas(areas);
+        }
+
     }
 
     // -------------------------------------------- //
