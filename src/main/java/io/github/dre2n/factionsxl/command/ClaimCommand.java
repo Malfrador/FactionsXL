@@ -61,9 +61,9 @@ public class ClaimCommand extends FCommand {
         Region region = plugin.getBoard().getByLocation(player.getLocation());
         if (region == null || !region.isAnnexable()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
-            if (region.getCoreFactions().containsKey(faction)) {
+            if (region != null && region.getCoreFactions().containsKey(faction)) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_CORE.getMessage(), region, faction);
-            } else if (region.getClaimFactions().containsKey(faction)) {
+            } else if (region != null && region.getClaimFactions().containsKey(faction)) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_ALREADY_CLAIMED.getMessage(), region, faction);
             }
             return;
