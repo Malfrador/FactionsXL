@@ -51,7 +51,7 @@ public class SetColorCommand extends FCommand {
             return;
         }
 
-        if (!faction.getAdmin().equals(sender) && !(sender instanceof Player)) {
+        if (!faction.isAdmin(sender) && !(sender instanceof Player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

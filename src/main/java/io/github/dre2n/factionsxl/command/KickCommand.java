@@ -57,8 +57,7 @@ public class KickCommand extends FCommand {
         if (!faction.isPrivileged(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
-        } else if (faction.getMods().contains(player) && sender instanceof Player
-                && !FPermission.hasPermission(sender, FPermission.BYPASS) && !faction.getAdmin().equals(sender)) {
+        } else if (faction.getMods().contains(player) && sender instanceof Player && !faction.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

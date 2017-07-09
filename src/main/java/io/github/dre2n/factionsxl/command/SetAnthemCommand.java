@@ -49,7 +49,7 @@ public class SetAnthemCommand extends FCommand {
             return;
         }
 
-        if (sender instanceof Player && !faction.getAdmin().equals((Player) sender)) {
+        if (sender instanceof Player && !faction.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

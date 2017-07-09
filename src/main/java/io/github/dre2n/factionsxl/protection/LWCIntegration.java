@@ -78,7 +78,7 @@ public class LWCIntegration extends JavaModule {
             return false;
         }
         Faction faction = region.getOwner();
-        return faction.getAdmin().getPlayer().equals(player);
+        return faction.isAdmin(player);
     }
 
 }

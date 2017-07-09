@@ -496,6 +496,45 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @param sender
+     * a CommandSender
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(CommandSender sender) {
+        if (admin == null) {
+            return false;
+        }
+        return admin.getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
+    }
+
+    /**
+     * @param uuid
+     * a unique ID of a Player
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(UUID uuid) {
+        if (admin == null) {
+            return false;
+        }
+        return admin.getUniqueId().equals(uuid);
+    }
+
+    /**
+     * @param playerName
+     * the name of a Player
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(String playerName) {
+        if (admin == null) {
+            return false;
+        }
+        return admin.getName().equals(playerName);
+    }
+
+    /**
      * Updates personal unions.
      */
     public void checkForPersonalUnions() {

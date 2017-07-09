@@ -53,6 +53,11 @@ public class MoneyCommand extends FCommand {
             return;
         }
 
+        if (args.length <= i) {
+            displayHelp(sender);
+            return;
+        }
+
         double amount = 0;
         if (args.length >= i + 2) {
             try {

@@ -61,7 +61,7 @@ public class CreateVassalCommand extends FCommand {
         if (mother == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
             return;
-        } else if (!mother.getAdmin().equals(player)) {
+        } else if (!mother.isAdmin(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
@@ -95,7 +95,7 @@ public class CreateVassalCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[2]);
             return;
         }
-        if (mother.getAdmin().equals(leader)) {
+        if (mother.isAdmin(leader.getUniqueId())) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL_IS_MOTHER_ADMIN.getMessage(), fPlayer);
             return;
         }

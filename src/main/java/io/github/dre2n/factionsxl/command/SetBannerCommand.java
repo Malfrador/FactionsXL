@@ -51,7 +51,7 @@ public class SetBannerCommand extends FCommand {
             return;
         }
 
-        if (!faction.getAdmin().equals(player)) {
+        if (!faction.isAdmin(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

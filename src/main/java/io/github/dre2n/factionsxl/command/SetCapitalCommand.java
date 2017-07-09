@@ -50,7 +50,7 @@ public class SetCapitalCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
             return;
         }
-        if (!faction.getAdmin().equals(player)) {
+        if (!faction.isAdmin(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

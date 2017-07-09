@@ -120,7 +120,7 @@ public class FPlayer implements RelationParticipator {
                 return true;
             }
         }
-        if (faction.getAdmin().getUniqueId().equals(uuid)) {
+        if (faction.isAdmin(uuid)) {
             return true;
         }
         return false;
