@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 6;
+    public static final int CONFIG_VERSION = 7;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -60,6 +60,7 @@ public class FConfig extends DREConfig {
     public static final String SCOREBOARD_VALUE_PREFIX = "&7 ";
 
     private String language = "english";
+    private double autoSaveInterval = 10;
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
 
@@ -216,6 +217,14 @@ public class FConfig extends DREConfig {
      */
     public String getLanguage() {
         return language;
+    }
+
+    /**
+     * @return
+     * the auto save interval
+     */
+    public long getAutoSaveInterval() {
+        return (long) (autoSaveInterval * MINUTE);
     }
 
     /**

@@ -47,6 +47,7 @@ import java.io.IOException;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -120,6 +121,7 @@ public class FactionsXL extends DREPlugin {
     public void onDisable() {
         if (instance != null) {
             saveData();
+            backupData();
         }
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
@@ -178,6 +180,14 @@ public class FactionsXL extends DREPlugin {
         loadMessageConfig(new File(LANGUAGES, "english.yml"));
         // Load Config
         loadFConfig(new File(getDataFolder(), "config.yml"));
+        if (fConfig.getAutoSaveInterval() != -1) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    saveData();
+                }
+            }.runTaskTimerAsynchronously(this, fConfig.getAutoSaveInterval(), fConfig.getAutoSaveInterval());
+        }
         // Load Language 2
         loadMessageConfig(new File(LANGUAGES, fConfig.getLanguage() + ".yml"));
         loadFData();
@@ -211,6 +221,9 @@ public class FactionsXL extends DREPlugin {
         factions.saveAll();
         fPlayers.saveAll();
         messageConfig.save();
+    }
+
+    public void backupData() {
         File backupDir = new File(BACKUPS, String.valueOf(System.currentTimeMillis()));
         backupDir.mkdir();
         FileUtil.copyDirectory(BOARD, new File(backupDir, "board"), new String[]{});
