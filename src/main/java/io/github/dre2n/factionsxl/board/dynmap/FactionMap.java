@@ -392,7 +392,7 @@ public class FactionMap extends EngineDynmap {
         }
         Set<String> ret = new HashSet<>();
 
-        for (OfflinePlayer player : faction.getMembers()) {
+        for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
             // NOTE: We add both UUID and name. This might be a good idea for future proofing.
             ret.add(player.getUniqueId().toString());
             ret.add(player.getName());

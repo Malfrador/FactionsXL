@@ -113,7 +113,7 @@ public class ShowCommand extends FCommand {
 
         ArrayList<BaseComponent> memList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_MEMBERS.getMessage())));
         boolean memFirst = true;
-        for (OfflinePlayer member : faction.getMembers()) {
+        for (OfflinePlayer member : faction.getMembers().getOfflinePlayers()) {
             Double memPower = plugin.getFData().power.get(member.getUniqueId());
             if (memPower == null) {
                 memPower = 0D;

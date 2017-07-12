@@ -17,12 +17,14 @@
 package io.github.dre2n.factionsxl.faction;
 
 import io.github.dre2n.commons.chat.MessageUtil;
+import io.github.dre2n.commons.player.PlayerCollection;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
+import io.github.dre2n.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -30,6 +32,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -92,7 +96,7 @@ public class FactionCache {
         faction.creationDate = System.currentTimeMillis();
         faction.active = true;
         faction.name = name;
-        faction.admin = player;
+        faction.admin = player.getUniqueId();
         faction.type = GovernmentType.MONARCHY;
         faction.stability = 10;
         faction.setHome(home);
@@ -142,7 +146,7 @@ public class FactionCache {
      * the real union
      */
     public Faction formRealUnion(Faction faction1, Faction faction2) {
-        Faction union = create(faction1.admin, faction1.home, faction1.name + "-" + faction2.name, false);
+        Faction union = create(Bukkit.getOfflinePlayer(faction1.admin), faction1.home, faction1.name + "-" + faction2.name, false);
         faction1.setActive(false);
         faction2.setActive(false);
 
@@ -180,11 +184,11 @@ public class FactionCache {
                 region.getCoreFactions().put(union, coreDate);
             }
         }
-        union.mods = new HashSet<>(faction1.mods);
+        union.mods = new PlayerCollection(faction1.mods.getUniqueIds());
         union.mods.addAll(faction2.mods);
-        union.members = new HashSet<>(faction1.members);
+        union.members = new PlayerCollection(faction1.members.getUniqueIds());
         union.members.addAll(faction2.members);
-        union.invited = new HashSet<>(faction1.invited);
+        union.invited = new PlayerCollection(faction1.invited.getUniqueIds());
         union.invited.addAll(faction2.invited);
         for (Entry<Faction, Relation> entry : faction1.relations.entrySet()) {
             if (entry.getValue() == Relation.VASSAL) {
@@ -248,10 +252,8 @@ public class FactionCache {
      */
     public Faction getByMember(OfflinePlayer member) {
         for (Faction faction : getActive()) {
-            for (OfflinePlayer player : faction.getMembers()) {
-                if (player.getUniqueId().equals(member.getUniqueId())) {
-                    return faction;
-                }
+            if (faction.getMembers().contains(member)) {
+                return faction;
             }
         }
         return null;
@@ -265,8 +267,8 @@ public class FactionCache {
      */
     public Faction getByFPlayer(FPlayer fPlayer) {
         for (Faction faction : getActive()) {
-            for (OfflinePlayer player : faction.getMembers()) {
-                if (player.getUniqueId().equals(fPlayer.getUniqueId())) {
+            for (UUID uuid : faction.getMembers().getUniqueIds()) {
+                if (uuid.equals(fPlayer.getUniqueId())) {
                     return faction;
                 }
             }
@@ -282,8 +284,10 @@ public class FactionCache {
      */
     public Faction getByChunk(Chunk chunk) {
         for (Faction faction : factions) {
-            if (faction.getChunks().contains(chunk)) {
-                return faction;
+            for (LazyChunk fChunk : faction.getChunks()) {
+                if (chunk.getX() == fChunk.getX() && chunk.getZ() == fChunk.getX()) {
+                    return faction;
+                }
             }
         }
         return null;

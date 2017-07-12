@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -87,7 +88,7 @@ public class FTeamWrapper {
         }
 
         FTeamWrapper wrapper = wrappers.get(faction);
-        Set<OfflinePlayer> factionMembers = faction.getMembers();
+        Collection<OfflinePlayer> factionMembers = faction.getMembers().getOfflinePlayers();
 
         if (wrapper != null && !faction.isActive()) {
             // Faction was disbanded

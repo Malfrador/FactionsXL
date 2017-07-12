@@ -53,9 +53,6 @@ public class AdminCommand extends FCommand {
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[i]);
         if (!player.hasPlayedBefore()) {
-            player = Bukkit.getOfflinePlayer(args[i]);
-        }
-        if (!player.hasPlayedBefore()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[i]);
             return;
         }

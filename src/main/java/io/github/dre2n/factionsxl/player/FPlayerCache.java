@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.misc.PlayerUtil;
+import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.util.HashSet;

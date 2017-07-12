@@ -21,6 +21,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
+import io.github.dre2n.commons.player.PlayerCollection;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;
@@ -48,6 +49,7 @@ import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -99,10 +101,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Region capital;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
-    OfflinePlayer admin;
-    Set<OfflinePlayer> mods = new HashSet<>();
-    Set<OfflinePlayer> members = new HashSet<>();
-    Set<OfflinePlayer> invited = new HashSet<>();
+    UUID admin;
+    PlayerCollection mods = new PlayerCollection();
+    PlayerCollection members = new PlayerCollection();
+    PlayerCollection invited = new PlayerCollection();
     Map<Faction, Relation> relations = new HashMap<>();
     EconomyMenu economyMenu;
     TradeMenu tradeMenu;
@@ -268,8 +270,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public int getPower() {
         Double power = 0D;
-        for (OfflinePlayer member : members) {
-            Double d = plugin.getFData().power.get(member.getUniqueId());
+        for (UUID member : members.getUniqueIds()) {
+            Double d = plugin.getFData().power.get(member);
             if (d != null) {
                 power += d;
             }
@@ -483,7 +485,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the admin of the faction
      */
     public OfflinePlayer getAdmin() {
-        return admin;
+        return Bukkit.getOfflinePlayer(admin);
     }
 
     /**
@@ -491,7 +493,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the new admin to set
      */
     public void setAdmin(OfflinePlayer admin) {
-        this.admin = admin;
+        this.admin = admin.getUniqueId();
         checkForPersonalUnions();
     }
 
@@ -505,7 +507,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (admin == null) {
             return false;
         }
-        return admin.getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
+        return getAdmin().getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
     }
 
     /**
@@ -518,7 +520,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (admin == null) {
             return false;
         }
-        return admin.getUniqueId().equals(uuid);
+        return admin.equals(uuid);
     }
 
     /**
@@ -531,7 +533,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (admin == null) {
             return false;
         }
-        return admin.getName().equals(playerName);
+        return getAdmin().getName().equals(playerName);
     }
 
     /**
@@ -540,7 +542,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     public void checkForPersonalUnions() {
         HashSet<Faction> toRemove = new HashSet<>();
         for (Entry<Faction, Relation> entry : relations.entrySet()) {
-            if (entry.getValue() == Relation.PERSONAL_UNION && !entry.getKey().getAdmin().equals(admin)) {
+            if (entry.getValue() == Relation.PERSONAL_UNION && !entry.getKey().admin.equals(admin)) {
                 toRemove.add(entry.getKey());
             }
         }
@@ -552,7 +554,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             if (faction == this) {
                 continue;
             }
-            if (faction.getAdmin().equals(admin)) {
+            if (faction.admin.equals(admin)) {
                 relations.put(faction, Relation.PERSONAL_UNION);
                 faction.relations.put(this, Relation.PERSONAL_UNION);
                 ParsingUtil.broadcastMessage(FMessage.FACTION_PERSONAL_UNION_FORMED.getMessage(), this, faction, admin);
@@ -567,7 +569,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the faction admin as an FPlayer
      */
     public FPlayer getFAdmin() {
-        return plugin.getFPlayerCache().getByPlayer(admin);
+        return plugin.getFPlayerCache().getByUniqueId(admin);
     }
 
     /**
@@ -581,9 +583,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /**
      * @return
-     * a Set of all mods as OfflinePlayers
+     * a PlayerCollection of all mods as OfflinePlayers
      */
-    public Set<OfflinePlayer> getMods() {
+    public PlayerCollection getMods() {
         return mods;
     }
 
@@ -593,8 +595,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public Set<FPlayer> getFMods() {
         HashSet<FPlayer> fPlayers = new HashSet<>();
-        for (OfflinePlayer member : mods) {
-            fPlayers.add(plugin.getFPlayerCache().getByPlayer(member));
+        for (UUID member : mods.getUniqueIds()) {
+            fPlayers.add(plugin.getFPlayerCache().getByUniqueId(member));
         }
         return fPlayers;
     }
@@ -603,21 +605,15 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all mods that are online
      */
-    public Set<Player> getOnlineMods() {
-        HashSet<Player> online = new HashSet<>();
-        for (OfflinePlayer player : mods) {
-            if (player.isOnline()) {
-                online.add(player.getPlayer());
-            }
-        }
-        return online;
+    public Collection<Player> getOnlineMods() {
+        return mods.getOnlinePlayers();
     }
 
     /**
      * @return
      * a Set of all members as OfflinePlayers
      */
-    public Set<OfflinePlayer> getMembers() {
+    public PlayerCollection getMembers() {
         return members;
     }
 
@@ -625,10 +621,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all members as FPlayerCache
      */
-    public Set<FPlayer> getFPlayers() {
+    public Collection<FPlayer> getFPlayers() {
         HashSet<FPlayer> fPlayers = new HashSet<>();
-        for (OfflinePlayer member : members) {
-            fPlayers.add(plugin.getFPlayerCache().getByPlayer(member));
+        for (UUID member : members.getUniqueIds()) {
+            fPlayers.add(plugin.getFPlayerCache().getByUniqueId(member));
         }
         return fPlayers;
     }
@@ -637,11 +633,11 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all members that are not mod or admin as OfflinePlayers
      */
-    public Set<OfflinePlayer> getNonPrivilegedMembers() {
+    public Collection<OfflinePlayer> getNonPrivilegedMembers() {
         HashSet<OfflinePlayer> players = new HashSet<>();
-        for (OfflinePlayer member : members) {
+        for (UUID member : members.getUniqueIds()) {
             if (!mods.contains(member) && !member.equals(admin)) {
-                players.add(member);
+                players.add(Bukkit.getOfflinePlayer(member));
             }
         }
         return players;
@@ -651,10 +647,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all members that are not mod or admin as FPlayerCache
      */
-    public Set<FPlayer> getNonPrivilegedFPlayers() {
+    public Collection<FPlayer> getNonPrivilegedFPlayers() {
         HashSet<FPlayer> fPlayers = new HashSet<>();
-        for (OfflinePlayer member : members) {
-            FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(member);
+        for (UUID member : members.getUniqueIds()) {
+            FPlayer fPlayer = plugin.getFPlayerCache().getByUniqueId(member);
             if (!isPrivileged(fPlayer)) {
                 fPlayers.add(fPlayer);
             }
@@ -666,14 +662,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all members that are online
      */
-    public Set<Player> getOnlineMembers() {
-        HashSet<Player> online = new HashSet<>();
-        for (OfflinePlayer player : members) {
-            if (player.isOnline()) {
-                online.add(player.getPlayer());
-            }
-        }
-        return online;
+    public Collection<Player> getOnlineMembers() {
+        return members.getOnlinePlayers();
     }
 
     /**
@@ -682,7 +672,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all related players that are online
      */
-    public Set<Player> getOnlineByRelation(Relation relation) {
+    public Collection<Player> getOnlineByRelation(Relation relation) {
         HashSet<Player> online = new HashSet<>();
         for (Faction faction : getRelatedFactions(relation)) {
             online.addAll(faction.getOnlineMembers());
@@ -694,7 +684,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * a Set of all invited players
      */
-    public Set<OfflinePlayer> getInvitedPlayers() {
+    public PlayerCollection getInvitedPlayers() {
         return invited;
     }
 
@@ -746,7 +736,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * @return
      * all factions that have the specified relation to this faction
      */
-    public Set<Faction> getRelatedFactions(Relation relation) {
+    public Collection<Faction> getRelatedFactions(Relation relation) {
         HashSet<Faction> factions = new HashSet<>();
         for (Faction faction : plugin.getFactionCache().getActive()) {
             if (getRelation(faction) == relation || getRelation(faction).getIncludedRelations().contains(relation)) {
@@ -913,7 +903,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             return true;
         }
         Player player = (Player) sender;
-        return mods.contains(player) || admin.equals(player) || FPermission.hasPermission(sender, FPermission.BYPASS);
+        return mods.contains(player.getUniqueId()) || admin.equals(player.getUniqueId()) || FPermission.hasPermission(sender, FPermission.BYPASS);
     }
 
     /**
@@ -923,7 +913,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * true if the player is admin or mod
      */
     public boolean isPrivileged(FPlayer fPlayer) {
-        return fPlayer.isMod(this) || admin.getUniqueId().equals(fPlayer.getUniqueId()) || FPermission.hasPermission(fPlayer.getPlayer(), FPermission.BYPASS);
+        return fPlayer.isMod(this) || admin.equals(fPlayer.getUniqueId()) || FPermission.hasPermission(fPlayer.getPlayer(), FPermission.BYPASS);
     }
 
     /* Actions */
@@ -937,8 +927,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         for (Player player : getOnlineMembers()) {
             ParsingUtil.sendMessage(player, "&a[" + name + "] &r" + message, args);
         }
-        if (admin.isOnline() && !getOnlineMembers().contains(admin.getPlayer())) {
-            ParsingUtil.sendMessage(admin.getPlayer(), "&a[" + name + "] &r" + message, args);
+        Player admin = Bukkit.getPlayer(this.admin);
+        if (admin != null && !getOnlineMembers().contains(admin)) {
+            ParsingUtil.sendMessage(admin, "&a[" + name + "] &r" + message, args);
         }
     }
 
@@ -970,9 +961,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the member to kick
      */
     public void kick(CommandSender kicker, OfflinePlayer member) {
-        sendMessage(FMessage.FACTION_PLAYER_KICKED.getMessage(), kicker, member);
-        members.remove(member);
-        mods.remove(member);
+        sendMessage(FMessage.FACTION_PLAYER_KICKED.getMessage(), member, kicker);
+        members.remove(member.getUniqueId());
+        mods.remove(member.getUniqueId());
     }
 
     /**
@@ -1162,13 +1153,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
 
-        admin = Bukkit.getOfflinePlayer(UUID.fromString(config.getString("admin")));
-        for (String mod : config.getStringList("mods")) {
-            mods.add(Bukkit.getOfflinePlayer(UUID.fromString(mod)));
-        }
-        for (String member : config.getStringList("members")) {
-            members.add(Bukkit.getOfflinePlayer(UUID.fromString(member)));
-        }
+        admin = UUID.fromString(config.getString("admin"));
+        mods.add(config.getStringList("mods"));
+        mods.add(config.getStringList("members"));
 
         for (Entry<String, Object> entry : ConfigUtil.getMap(config, "relations").entrySet()) {
             relations.put(plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey())), Relation.valueOf((String) entry.getValue()));
@@ -1268,18 +1255,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
             homeHolo.delete();
         }
         config.set("capital", capital.getId());
-        config.set("admin", admin.getUniqueId().toString());
+        config.set("admin", admin.toString());
 
-        List<String> modIds = new ArrayList<>();
-        for (OfflinePlayer mod : mods) {
-            modIds.add(mod.getUniqueId().toString());
-        }
-        config.set("mods", modIds);
-        List<String> memberIds = new ArrayList<>();
-        for (OfflinePlayer member : members) {
-            memberIds.add(member.getUniqueId().toString());
-        }
-        config.set("members", memberIds);
+        config.set("mods", mods.serialize());
+        config.set("members", members.serialize());
         if (storage == null) {
             storage = new FStorage(this);
         }

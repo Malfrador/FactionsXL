@@ -164,10 +164,10 @@ public enum ParsingUtil {
         string = string.replace(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
         string = string.replace(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
         string = string.replace(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
-        string = string.replace(FACTION_MOD_LIST.getPlaceholder(), namesToString(faction.getMods()));
+        string = string.replace(FACTION_MOD_LIST.getPlaceholder(), collectionToString(faction.getMods().getNames()));
         string = string.replace(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
         string = string.replace(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getMembers().size()));
-        string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), namesToString(faction.getMembers()));
+        string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), collectionToString(faction.getMembers().getNames()));
         string = string.replace(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
         string = string.replace(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
         string = string.replace(FACTION_SHORT_TAG.getPlaceholder(), faction.getShortName());
@@ -263,7 +263,7 @@ public enum ParsingUtil {
     }
 
     public static String fNamesToString(Collection<FPlayer> fPlayers) {
-        return fNamesToString(fPlayers, ChatColor.WHITE);
+        return fNamesToString(fPlayers, null);
     }
 
     public static String fNamesToString(Collection<FPlayer> fPlayers, ChatColor comma) {
@@ -271,7 +271,7 @@ public enum ParsingUtil {
         boolean first = true;
         for (FPlayer fPlayer : fPlayers) {
             if (!first) {
-                names += comma + ", ";
+                names += (comma != null ? comma : new String()) + ", ";
             } else {
                 first = false;
             }
@@ -281,7 +281,7 @@ public enum ParsingUtil {
     }
 
     public static String namesToString(Collection<OfflinePlayer> players) {
-        return namesToString(players, ChatColor.WHITE);
+        return namesToString(players, null);
     }
 
     public static String namesToString(Collection<OfflinePlayer> players, ChatColor comma) {
@@ -289,7 +289,7 @@ public enum ParsingUtil {
         boolean first = true;
         for (OfflinePlayer player : players) {
             if (!first) {
-                names += comma + ", ";
+                names += (comma != null ? comma : new String()) + ", ";
             } else {
                 first = false;
             }
@@ -298,12 +298,16 @@ public enum ParsingUtil {
         return names;
     }
 
+    public static String collectionToString(Collection<String> strings) {
+        return collectionToString(strings, null);
+    }
+
     public static String collectionToString(Collection<String> strings, ChatColor comma) {
         String names = new String();
         boolean first = true;
         for (String string : strings) {
             if (!first) {
-                names += comma + ", ";
+                names += (comma != null ? comma : new String()) + ", ";
             } else {
                 first = false;
             }

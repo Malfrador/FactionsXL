@@ -16,7 +16,8 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.misc.PlayerUtil;
+import io.github.dre2n.commons.player.PlayerUtil;
+import io.github.dre2n.commons.player.PlayerWrapper;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
@@ -27,7 +28,6 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.UUID;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
  *
  * @author Daniel Saukel
  */
-public class FPlayer implements RelationParticipator {
+public class FPlayer implements RelationParticipator, PlayerWrapper {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -65,25 +65,17 @@ public class FPlayer implements RelationParticipator {
     }
 
     /* Getters and setters */
-    /**
-     * @return
-     * the player's name
-     */
+    @Override
     public String getName() {
         return data.getLastName();
     }
 
-    /**
-     * @return uuid
-     */
+    @Override
     public UUID getUniqueId() {
         return uuid;
     }
 
-    /**
-     * @return
-     * the Bukkit player
-     */
+    @Override
     public Player getPlayer() {
         return player;
     }
@@ -115,10 +107,8 @@ public class FPlayer implements RelationParticipator {
      * if the player is faction mod
      */
     public boolean isMod(Faction faction) {
-        for (OfflinePlayer player : faction.getMods()) {
-            if (player.getUniqueId().equals(uuid)) {
-                return true;
-            }
+        if (faction.getMods().contains(this)) {
+            return true;
         }
         if (faction.isAdmin(uuid)) {
             return true;
