@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.dre2n</groupId>
     <artifactId>factionsxl</artifactId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <packaging>jar</packaging>
     <name>FactionsXL</name>
     <url>https://dre2n.github.io</url>
@@ -94,7 +94,7 @@
         <dependency>
             <groupId>io.github.dre2n</groupId>
             <artifactId>commons</artifactId>
-            <version>3.1</version>
+            <version>3.1.1</version>
         </dependency>
     </dependencies>
     <repositories>

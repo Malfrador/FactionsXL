@@ -1155,7 +1155,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
         admin = UUID.fromString(config.getString("admin"));
         mods.add(config.getStringList("mods"));
-        mods.add(config.getStringList("members"));
+        members.add(config.getStringList("members"));
 
         for (Entry<String, Object> entry : ConfigUtil.getMap(config, "relations").entrySet()) {
             relations.put(plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey())), Relation.valueOf((String) entry.getValue()));
