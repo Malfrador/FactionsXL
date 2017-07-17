@@ -153,21 +153,27 @@ public enum ParsingUtil {
      * the faction the replacements are taken from
      */
     public static String replaceFactionPlaceholders(String string, Faction faction) {
-        if (faction.getAdmin() != null) {
+        if (string.contains(FACTION_ADMIN.getPlaceholder()) && faction.getAdmin() != null) {
             string = string.replace(FACTION_ADMIN.getPlaceholder(), faction.getAdmin().getName());
         }
-        if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
+        if (string.contains(FACTION_BALANCE.getPlaceholder()) && FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
             string = string.replace(FACTION_BALANCE.getPlaceholder(), faction.getAccount().getFormatted());
         }
         string = string.replace(FACTION_CAPITAL.getPlaceholder(), faction.getCapital().getName());
         string = string.replace(FACTION_DESCRIPTION.getPlaceholder(), faction.getDescription());
         string = string.replace(FACTION_GOVERNMENT_TYPE.getPlaceholder(), faction.getGovernmentType().getName());
         string = string.replace(FACTION_LONG_TAG.getPlaceholder(), faction.getLongName());
-        string = string.replace(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
-        string = string.replace(FACTION_MOD_LIST.getPlaceholder(), collectionToString(faction.getMods().getNames()));
+        if (string.contains(FACTION_MEMBER_LIST.getPlaceholder())) {
+            string = string.replace(FACTION_MEMBER_LIST.getPlaceholder(), namesToString(faction.getNonPrivilegedMembers()));
+        }
+        if (string.contains(FACTION_MOD_LIST.getPlaceholder())) {
+            string = string.replace(FACTION_MOD_LIST.getPlaceholder(), collectionToString(faction.getMods().getNames()));
+        }
         string = string.replace(FACTION_ONLINE_COUNT.getPlaceholder(), String.valueOf(faction.getOnlineMembers().size()));
         string = string.replace(FACTION_PLAYER_COUNT.getPlaceholder(), String.valueOf(faction.getMembers().size()));
-        string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), collectionToString(faction.getMembers().getNames()));
+        if (string.contains(FACTION_PLAYER_LIST.getPlaceholder())) {
+            string = string.replace(FACTION_PLAYER_LIST.getPlaceholder(), collectionToString(faction.getMembers().getNames()));
+        }
         string = string.replace(FACTION_POWER.getPlaceholder(), String.valueOf(faction.getPower()));
         string = string.replace(FACTION_PROVINCE_COUNT.getPlaceholder(), String.valueOf(faction.getRegions().size()));
         string = string.replace(FACTION_SHORT_TAG.getPlaceholder(), faction.getShortName());
@@ -185,8 +191,12 @@ public enum ParsingUtil {
      * the region the replacements are taken from
      */
     public static String replaceRegionPlaceholders(String string, Region region) {
-        string = string.replace(REGION_CLAIM_LIST.getPlaceholder(), factionsToString(region.getClaimFactions().keySet()));
-        string = string.replace(REGION_CORE_LIST.getPlaceholder(), factionsToString(region.getCoreFactions().keySet()));
+        if (string.contains(REGION_CLAIM_LIST.getPlaceholder())) {
+            string = string.replace(REGION_CLAIM_LIST.getPlaceholder(), factionsToString(region.getClaimFactions().keySet()));
+        }
+        if (string.contains(REGION_CORE_LIST.getPlaceholder())) {
+            string = string.replace(REGION_CORE_LIST.getPlaceholder(), factionsToString(region.getCoreFactions().keySet()));
+        }
         string = string.replace(REGION_LEVEL.getPlaceholder(), String.valueOf(region.getLevel()));
         string = string.replace(REGION_NAME.getPlaceholder(), region.getName());
         string = string.replace(REGION_OWNER.getPlaceholder(), region.getOwner() != null ? region.getOwner().getName() : FMessage.MISC_WILDERNESS.getMessage());
@@ -207,8 +217,9 @@ public enum ParsingUtil {
      * the FPlayer to compare to the standpoint faction
      */
     public static String replaceRelationPlaceholders(String string, RelationParticipator standpoint, RelationParticipator object) {
-        string = string.replace(RELATION.getPlaceholder(), standpoint.getRelation(object).getName());
-        string = string.replace(RELATION_COLOR.getPlaceholder(), standpoint.getRelation(object).getColor().toString());
+        Relation relation = standpoint.getRelation(object);
+        string = string.replace(RELATION.getPlaceholder(), relation.getName());
+        string = string.replace(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
@@ -224,7 +235,7 @@ public enum ParsingUtil {
         FactionsXL plugin = FactionsXL.getInstance();
         Economy econ = plugin.getEconomyProvider();
 
-        if (plugin.getFConfig().isEconomyEnabled()) {
+        if (string.contains(PLAYER_BALANCE.getPlaceholder()) && plugin.getFConfig().isEconomyEnabled()) {
             string = string.replace(PLAYER_BALANCE.getPlaceholder(), econ.format(econ.getBalance(fPlayer.getPlayer())));
         }
         string = string.replace(PLAYER_DYNASTY.getPlaceholder(), fPlayer.getDynasty() != null ? fPlayer.getDynasty().getName() : "None");
