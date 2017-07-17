@@ -46,7 +46,7 @@ public enum Relation {
     /**
      * vassal faction ===> Relation.LORD ===> lord faction
      */
-    LORD(DARK_AQUA, false, FMessage.RELATION_LORD, ALLIANCE),
+    LORD(DARK_AQUA, true, FMessage.RELATION_LORD, ALLIANCE),
     OWN(GREEN, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
     /**
      * lord faction ===> Relation.VASSAL ===> vassal faction
