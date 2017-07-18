@@ -45,6 +45,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     private ChatChannel chatChannel = ChatChannel.PUBLIC;
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
     private Region autoclaiming;
+    private Region lastRegion;
 
     private FPlayerData data;
 
@@ -264,6 +265,28 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      */
     public boolean hasFaction() {
         return plugin.getFactionCache().getByFPlayer(this) != null;
+    }
+
+    /**
+     * @return
+     * the last region the player was known to be inside
+     */
+    public Region getLastRegion() {
+        if (player == null) {
+            return null;
+        }
+        if (lastRegion == null) {
+            lastRegion = plugin.getBoard().getByLocation(player.getLocation());
+        }
+        return lastRegion;
+    }
+
+    /**
+     * @param region
+     * the region to cache
+     */
+    public void setLastRegion(Region region) {
+        lastRegion = region;
     }
 
 }
