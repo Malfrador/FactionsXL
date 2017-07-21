@@ -19,7 +19,7 @@ Building FactionsXL from source requires [Apache Maven](https://maven.apache.org
 Maven automatically fetches all dependencies and builds FactionsXL; just run _build.bat_ or enter the command _mvn clean install_.
 
 #### DRECommons
-[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 3.0.
+[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 3.1.2.
 
 ### Java
 Make sure that your server uses Java 8 or higher.
