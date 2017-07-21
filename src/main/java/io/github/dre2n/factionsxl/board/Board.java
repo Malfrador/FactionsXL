@@ -104,9 +104,11 @@ public class Board {
      */
     public Region getByChunk(Chunk chunk) {
         for (Region region : regions) {
-            for (LazyChunk rChunk : region.getChunks()) {
-                if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
-                    return region;
+            if (region.getWorld().equals(chunk.getWorld())) {
+                for (LazyChunk rChunk : region.getChunks()) {
+                    if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
+                        return region;
+                    }
                 }
             }
         }
