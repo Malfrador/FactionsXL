@@ -111,6 +111,7 @@ public class PlayerListener implements Listener {
 
         Region fromRegion = fPlayer.getLastRegion();
         Region toRegion = board.getByChunk(toChunk);
+        fPlayer.setLastRegion(toRegion);
 
         if (fPlayer.isAutoclaiming() && toRegion == null) {
             fPlayer.getAutoclaimingRegion().getChunks().add(new LazyChunk(toChunk));
@@ -138,7 +139,6 @@ public class PlayerListener implements Listener {
                     }
                 }
             }
-            fPlayer.setLastRegion(toRegion);
         }
     }
 
