@@ -168,6 +168,13 @@ public class LandProtectionListener implements Listener {
         Faction bFaction = factions.getByMember(breaker);
         Faction owner = region.getOwner();
         Relation rel = owner.getRelation(bFaction);
+        if (rel == Relation.ENEMY) {
+            if (event instanceof BlockBreakEvent) {
+                // DO STUFF
+            } else if (event instanceof BlockPlaceEvent) {
+                // DO STUFF
+            }
+        }
         if (!rel.canBuild()) {
             event.setCancelled(true);
             ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());

@@ -101,7 +101,6 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Region capital;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
-    UUID admin;
     PlayerCollection mods = new PlayerCollection();
     PlayerCollection members = new PlayerCollection();
     PlayerCollection invited = new PlayerCollection();
@@ -480,60 +479,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
         return regions;
     }
 
-    /**
-     * @return
-     * the admin of the faction
-     */
-    public OfflinePlayer getAdmin() {
-        return Bukkit.getOfflinePlayer(admin);
-    }
-
-    /**
-     * @param admin
-     * the new admin to set
-     */
+    @Override
     public void setAdmin(OfflinePlayer admin) {
-        this.admin = admin.getUniqueId();
+        super.setAdmin(admin);
         checkForPersonalUnions();
-    }
-
-    /**
-     * @param sender
-     * a CommandSender
-     * @return
-     * if the sender has admin rights in this faction
-     */
-    public boolean isAdmin(CommandSender sender) {
-        if (admin == null) {
-            return false;
-        }
-        return getAdmin().getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
-    }
-
-    /**
-     * @param uuid
-     * a unique ID of a Player
-     * @return
-     * if the sender has admin rights in this faction
-     */
-    public boolean isAdmin(UUID uuid) {
-        if (admin == null) {
-            return false;
-        }
-        return admin.equals(uuid);
-    }
-
-    /**
-     * @param playerName
-     * the name of a Player
-     * @return
-     * if the sender has admin rights in this faction
-     */
-    public boolean isAdmin(String playerName) {
-        if (admin == null) {
-            return false;
-        }
-        return getAdmin().getName().equals(playerName);
     }
 
     /**

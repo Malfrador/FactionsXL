@@ -14,29 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.faction;
+package io.github.dre2n.factionsxl.war;
 
-import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.economy.FAccount;
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 /**
  * @author Daniel Saukel
  */
-public class Federation extends LegalEntity {
+public class WarListener implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
-    public Federation(File file) {
-        if (plugin.getFConfig().isEconomyEnabled()) {
-            account = new FAccount(this);
-        }
-    }
-
-    public Set<Faction> getFactions() {
-        return new HashSet<>();
     }
 
 }
