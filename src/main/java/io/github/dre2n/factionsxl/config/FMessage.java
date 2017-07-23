@@ -263,6 +263,8 @@ public enum FMessage implements Message {
     PROTECTION_CANNOT_BUILD_WILDERNESS("protection.cannotBuildWilderness", "&4You may not build in the wilderness."),
     PROTECTION_CANNOT_DESTROY_FACTION("protection.cannotDestroyFaction", "&4You may not destroy the territory of &v1&4."),
     PROTECTION_CANNOT_DESTROY_WILDERNESS("protection.cannotDestroyFaction", "&4You may not destroy the wilderness."),
+    PROTECTION_CANNOT_EQUIP_FACTION("protection.cannotEquipFaction", "&4You may not equip armor stands in the territory of &v1&4."),
+    PROTECTION_CANNOT_INTERACT_FACTION("protection.cannotInteractFaction", "&4You may not interact with &6&v1 &4in the territory of &v2&4."),
     PROTECTION_CANNOT_LEASH_FACTION("protection.cannotLeashFaction", "&4You may not leash animals in the territory of &v1&4."),
     PROTECTION_CANNOT_SHEAR_FACTION("protection.cannotShearFaction", "&4You may not sheer animals in the territory of &v1&4."),
     PROTECTION_CANNOT_TAME_FACTION("protection.cannotTameFaction", "&4You may not tame animals in the territory of &v1&4."),

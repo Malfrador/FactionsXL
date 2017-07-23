@@ -37,6 +37,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
@@ -50,6 +51,7 @@ public class EntityProtectionListener implements Listener {
     enum Action {
         ATTACK,
         BUILD,
+        EQUIP,
         LEASH,
         SHEAR,
         TAME,
@@ -80,6 +82,11 @@ public class EntityProtectionListener implements Listener {
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event) {
         forbidIfInProtectedTerritory(event.getPlayer(), event.getEntity(), event, BUILD);
+    }
+
+    @EventHandler
+    public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
+        forbidIfInProtectedTerritory(event.getPlayer(), event.getRightClicked(), event, EQUIP);
     }
 
     @EventHandler
@@ -131,6 +138,9 @@ public class EntityProtectionListener implements Listener {
                     break;
                 case BUILD:
                     message = FMessage.PROTECTION_CANNOT_BUILD_FACTION;
+                    break;
+                case EQUIP:
+                    message = FMessage.PROTECTION_CANNOT_EQUIP_FACTION;
                     break;
                 case LEASH:
                     message = FMessage.PROTECTION_CANNOT_LEASH_FACTION;

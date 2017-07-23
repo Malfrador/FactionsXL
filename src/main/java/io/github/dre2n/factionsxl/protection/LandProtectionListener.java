@@ -26,6 +26,11 @@ import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import org.bukkit.Material;
+import static org.bukkit.Material.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -36,6 +41,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * @author Daniel Saukel
@@ -71,6 +77,75 @@ public class LandProtectionListener implements Listener {
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         forbidIfInProtectedTerritory(event.getPlayer(), event.getBlockClicked(), event, false);
+    }
+
+    private static final Set<Material> NO_INTERACT = new HashSet<>(Arrays.asList(
+            ANVIL,
+            BEACON,
+            BLACK_SHULKER_BOX,
+            BLUE_SHULKER_BOX,
+            BREWING_STAND,
+            BROWN_SHULKER_BOX,
+            BURNING_FURNACE,
+            CAKE_BLOCK,
+            CAULDRON,
+            CHEST,
+            CYAN_SHULKER_BOX,
+            DIODE_BLOCK_OFF,
+            DIODE_BLOCK_ON,
+            DISPENSER,
+            DRAGON_EGG,
+            DROPPER,
+            ENCHANTMENT_TABLE,
+            ENDER_CHEST,
+            ENDER_PORTAL_FRAME,
+            FIRE,
+            FURNACE,
+            GOLD_PLATE,
+            GRASS,
+            GRAY_SHULKER_BOX,
+            GREEN_SHULKER_BOX,
+            HOPPER,
+            IRON_PLATE,
+            LIGHT_BLUE_SHULKER_BOX,
+            LIME_SHULKER_BOX,
+            MAGENTA_SHULKER_BOX,
+            NOTE_BLOCK,
+            ORANGE_SHULKER_BOX,
+            PINK_SHULKER_BOX,
+            PURPLE_SHULKER_BOX,
+            RED_SHULKER_BOX,
+            REDSTONE_COMPARATOR_OFF,
+            REDSTONE_COMPARATOR_ON,
+            SILVER_SHULKER_BOX,
+            WHITE_SHULKER_BOX,
+            YELLOW_SHULKER_BOX
+    ));
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.hasBlock() && NO_INTERACT.contains(event.getClickedBlock().getType())) {
+            Player breaker = event.getPlayer();
+            if (breaker == null) {
+                return;
+            }
+            if (FPermission.hasPermission(breaker, FPermission.BUILD)) {
+                return;
+            }
+
+            Region region = board.getByChunk(event.getClickedBlock().getChunk());
+            if (region == null || region.isNeutral()) {
+                return;
+            }
+
+            Faction bFaction = factions.getByMember(breaker);
+            Faction owner = region.getOwner();
+            Relation rel = owner.getRelation(bFaction);
+            if (!rel.canBuild()) {
+                event.setCancelled(true);
+                ParsingUtil.sendMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
+            }
+        }
     }
 
     private void forbidIfInProtectedTerritory(Player breaker, Block destroyed, Cancellable event, boolean destroy) {
