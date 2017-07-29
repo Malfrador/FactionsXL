@@ -58,6 +58,10 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
+        if (subjectFaction.isVassal()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subjectFaction);
+            return;
+        }
 
         Faction objectFaction = plugin.getFactionCache().getByName(args[2]);
         if (objectFaction == null) {
