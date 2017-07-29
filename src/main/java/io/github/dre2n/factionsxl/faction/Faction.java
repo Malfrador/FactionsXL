@@ -656,24 +656,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
             faction = (Faction) object;
         }
 
-        if (relations.containsKey(faction)) {
+        Faction lord = getLord();
+        if (lord != null) {
+            Relation relation = lord.getRelations().get(faction);
+            return relation.doVassalsInherit() ? relation : relations.get(faction);
+        } else if (relations.containsKey(faction)) {
             return relations.get(faction);
         } else if (faction == this) {
             return Relation.OWN;
-        } else {
-            return Relation.PEACE;
-        }
-    }
-
-    /**
-     * @param fPlayer
-     * another fPlayer
-     * @return
-     * the relation of this faction to the faction of the player
-     */
-    public Relation getRelation(FPlayer fPlayer) {
-        if (fPlayer.hasFaction()) {
-            return getRelation(fPlayer.getFaction());
         } else {
             return Relation.PEACE;
         }
@@ -693,6 +683,27 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         return factions;
+    }
+
+    /**
+     * @return
+     * if the faction is a vassal
+     */
+    public boolean isVassal() {
+        return !getRelatedFactions(Relation.LORD).isEmpty();
+    }
+
+    /**
+     * @return
+     * the lord faciton
+     */
+    public Faction getLord() {
+        Collection<Faction> lord = getRelatedFactions(Relation.LORD);
+        assert lord.size() <= 1;
+        for (Faction faction : lord) {
+            return faction;
+        }
+        return null;
     }
 
     /**
