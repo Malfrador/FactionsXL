@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.player.FPlayerCache;
@@ -45,7 +46,8 @@ public class TitleCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        if (sender instanceof Player && !fPlayers.getByPlayer((Player) sender).isMod()) {
+        FPlayer fSender = getFSender(sender);
+        if (sender instanceof Player && !fSender.isMod()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
@@ -53,6 +55,11 @@ public class TitleCommand extends FCommand {
         FPlayer fPlayer = fPlayers.getByName(args[1]);
         if (fPlayer == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
+            return;
+        }
+        Faction faction = fPlayer.getFaction();
+        if (sender instanceof Player && faction != fSender.getFaction() && !faction.isAdmin(fSender.getUniqueId())) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_FACTION.getMessage(), args[1], fSender.getFaction().getName());
             return;
         }
         fPlayer.setTitle(args[2]);
