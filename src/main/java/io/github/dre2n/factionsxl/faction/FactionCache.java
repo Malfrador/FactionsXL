@@ -360,7 +360,13 @@ public class FactionCache {
      * a new, unused entity ID.
      */
     public int generateId() {
-        return entities.size();
+        int highest = 0;
+        for (LegalEntity entity : entities) {
+            if (entity.getId() > highest) {
+                highest = entity.getId() + 1;
+            }
+        }
+        return highest;
     }
 
     /* Persistence */
