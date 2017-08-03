@@ -69,7 +69,8 @@ public class LongTagCommand extends FCommand {
             }
         }
 
-        faction.setLongName(longName.replace("&", new String()));
+        longName = longName.replace("&", new String());
+        faction.setLongName(longName);
         ParsingUtil.broadcastMessage(FMessage.CMD_TAG_SUCCESS.getMessage(), faction, longName);
     }
 
