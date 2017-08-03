@@ -55,7 +55,7 @@ public class ShortTagCommand extends FCommand {
             return;
         }
 
-        String shortTag = args[i].toUpperCase();
+        String shortTag = args[i].replace("&", new String()).toUpperCase();
         if (shortTag.length() > 11) {
             shortTag = shortTag.substring(0, 10);
         }

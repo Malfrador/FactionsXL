@@ -62,7 +62,7 @@ public class TitleCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_FACTION.getMessage(), args[1], fSender.getFaction().getName());
             return;
         }
-        fPlayer.setTitle(args[2]);
+        fPlayer.setTitle(args[2].replace("&", new String()));
         fPlayer.getFaction().sendMessage(FMessage.CMD_TITLE_SUCCESS.getMessage(), sender, fPlayer, args[2]);
     }
 

@@ -69,7 +69,7 @@ public class DescCommand extends FCommand {
             }
         }
 
-        faction.setDescription(desc);
+        faction.setDescription(desc.replace("&", new String()));
         ParsingUtil.broadcastMessage(FMessage.CMD_DESC_SUCCESS.getMessage(), faction, desc);
     }
 

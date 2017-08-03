@@ -56,7 +56,7 @@ public class TagCommand extends FCommand {
         }
 
         ParsingUtil.broadcastMessage(FMessage.CMD_TAG_SUCCESS.getMessage(), faction, args[i]);
-        faction.setName(args[i]);
+        faction.setName(args[i].replace("&", new String()));
     }
 
 }
