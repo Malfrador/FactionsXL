@@ -46,6 +46,7 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.war.CasusBelli;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -116,6 +118,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
     Set<Idea> ideas = new HashSet<>();
+    List<CasusBelli> casusBelli = new ArrayList<>();
 
     public Faction(File file) {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
@@ -1184,6 +1187,12 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         ideaMenu = new IdeaMenu(this);
+        ConfigurationSection cbs = config.getConfigurationSection("casusBelli");
+        if (cbs != null) {
+            for (String cb : cbs.getKeys(false)) {
+                casusBelli.add(new CasusBelli(config.getConfigurationSection("casusBelli." + cb)));
+            }
+        }
     }
 
     public void save() {
@@ -1262,6 +1271,11 @@ public class Faction extends LegalEntity implements RelationParticipator {
             ideaIds.add(idea.toString());
         }
         config.set("ideas", ideaIds);
+        int i = 0;
+        for (CasusBelli cb : casusBelli) {
+            config.set("casusBelli." + i, cb.serialize());
+            i++;
+        }
 
         try {
             config.save(file);

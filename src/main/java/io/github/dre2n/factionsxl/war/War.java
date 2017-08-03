@@ -58,6 +58,9 @@ public class War {
         this.file = file;
         config = YamlConfiguration.loadConfiguration(file);
         attacker = new WarParty(config.getConfigurationSection("attacker"));
+        defender = new WarParty(config.getConfigurationSection("defender"));
+        cb = new CasusBelli(config.getConfigurationSection("casusBelli"));
+        startDate = new Date(config.getLong("startDate"));
     }
 
     /* Getters */
@@ -81,7 +84,8 @@ public class War {
     public void save() {
         config.set("attacker", attacker.serialize());
         config.set("defender", defender.serialize());
-        config.set("casusBelli", cb.toString());
+        config.set("casusBelli", cb.serialize());
+        config.set("startDate", startDate.getTime());
         try {
             config.save(file);
         } catch (IOException exception) {
