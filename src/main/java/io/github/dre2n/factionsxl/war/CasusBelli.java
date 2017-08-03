@@ -14,13 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.war.casusbelli;
+package io.github.dre2n.factionsxl.war;
 
 /**
  * A reason to start a war.
  *
  * @author Daniel Saukel
  */
-public abstract class CasusBelli {
+public enum CasusBelli {
+
+    // When two factions share a border
+    BORDER_FRICTION,
+    // When the leader of the attacker has a claim on the throne of the defender
+    CLAIM_ON_THRONE,
+    // When a factions has claims on foreign land
+    CONQUEST,
+    // When a member of a federation is disloyal
+    IMPERIAL_BAN,
+    // Vassals may declare war on their lord to gain independence
+    INDEPENDENCE,
+    // When an ally of the faction got vassalized
+    LIBERATION,
+    // Permanent CB with no possible demands 
+    RAID,
+    // When a PU broke
+    RESTORATION_OF_UNION,
+    // When a faction has cores on foreign land
+    RECONQUEST,
+    // When a vassal declared its independence
+    RESUBJAGATION
 
 }

@@ -43,6 +43,7 @@ import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
 import io.github.dre2n.factionsxl.protection.LWCIntegration;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.util.PageGUICache;
+import io.github.dre2n.factionsxl.war.WarCache;
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.event.HandlerList;
@@ -70,6 +71,7 @@ public class FactionsXL extends DREPlugin {
     public static File FACTIONS;
     public static File FEDERATIONS;
     public static File TRADE_LEAGUES;
+    public static File WARS;
 
     private FConfig fConfig;
     private FData fData;
@@ -77,6 +79,7 @@ public class FactionsXL extends DREPlugin {
     private FCommandCache fCommands;
     private FPlayerCache fPlayers;
     private FactionCache factions;
+    private WarCache wars;
     private PageGUICache pageGUIs;
     private Board board;
     private ChatListener chatListener;
@@ -174,6 +177,11 @@ public class FactionsXL extends DREPlugin {
         if (!TRADE_LEAGUES.exists()) {
             TRADE_LEAGUES.mkdir();
         }
+
+        WARS = new File(getDataFolder(), "wars");
+        if (!WARS.exists()) {
+            WARS.mkdir();
+        }
     }
 
     public void loadCore() {
@@ -196,6 +204,7 @@ public class FactionsXL extends DREPlugin {
         loadPageGUIs();
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
+        loadWars(WARS);
         loadFPlayers();
         fPlayers.loadAll();
         board.loadAll();
@@ -367,6 +376,21 @@ public class FactionsXL extends DREPlugin {
         } else {
             MessageUtil.log(this, FMessage.LOG_DYNMAP_NOT_ENABLED.getMessage());
         }
+    }
+
+    /**
+     * @return
+     * the loaded instance of WarCache
+     */
+    public WarCache getWarCache() {
+        return wars;
+    }
+
+    /**
+     * load / reload a new instance of WarCache
+     */
+    public void loadWars(File dir) {
+        wars = new WarCache(dir);
     }
 
     /**

@@ -16,21 +16,76 @@
  */
 package io.github.dre2n.factionsxl.war;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.faction.LegalEntity;
-import io.github.dre2n.factionsxl.war.casusbelli.CasusBelli;
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Daniel Saukel
  */
 public class War {
 
+    private File file;
+    private FileConfiguration config;
     private WarParty attacker;
     private WarParty defender;
-    private long startDate;
+    private CasusBelli cb;
+    private Date startDate;
+
+    public War(WarParty attacker, LegalEntity defender, CasusBelli cb) {
+        this.attacker = attacker;
+        this.defender = new WarParty(defender);
+        this.cb = cb;
+        startDate = Calendar.getInstance().getTime();
+        this.file = new File(FactionsXL.WARS, System.currentTimeMillis() + ".yml");
+        try {
+            file.createNewFile();
+        } catch (IOException exception) {
+        }
+        config = YamlConfiguration.loadConfiguration(file);
+    }
 
     public War(LegalEntity attacker, LegalEntity defender, CasusBelli cb) {
-        this.attacker = new WarParty(attacker);
-        this.defender = new WarParty(defender);
+        this(new WarParty(attacker), defender, cb);
+    }
+
+    public War(File file) {
+        this.file = file;
+        config = YamlConfiguration.loadConfiguration(file);
+        attacker = new WarParty(config.getConfigurationSection("attacker"));
+    }
+
+    /* Getters */
+    public WarParty getAttacker() {
+        return attacker;
+    }
+
+    public WarParty getDefender() {
+        return defender;
+    }
+
+    public CasusBelli getCasusBelli() {
+        return cb;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /* Serialization */
+    public void save() {
+        config.set("attacker", attacker.serialize());
+        config.set("defender", defender.serialize());
+        config.set("casusBelli", cb.toString());
+        try {
+            config.save(file);
+        } catch (IOException exception) {
+        }
     }
 
 }
