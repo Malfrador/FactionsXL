@@ -118,7 +118,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
     Set<Idea> ideas = new HashSet<>();
-    List<CasusBelli> casusBelli = new ArrayList<>();
+    Set<CasusBelli> casusBelli = new HashSet<>();
 
     public Faction(File file) {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
@@ -853,6 +853,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public Set<Idea> getIdeas() {
         return ideas;
+    }
+
+    /**
+     * @return
+     * the casus belli of this faction
+     */
+    public Set<CasusBelli> getCasusBelli() {
+        return casusBelli;
     }
 
     /**

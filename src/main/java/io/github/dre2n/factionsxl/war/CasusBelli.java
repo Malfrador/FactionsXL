@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.war;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.LegalEntity;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
@@ -56,15 +57,16 @@ public class CasusBelli {
     private Type type;
     private LegalEntity target;
     private Faction liberate;
+    private Date expiration;
 
-    public CasusBelli(Type type, LegalEntity target) {
+    public CasusBelli(Type type, LegalEntity target, Date expiration) {
         this.type = type;
         this.target = target;
+        this.expiration = expiration;
     }
 
-    public CasusBelli(LegalEntity target, Faction liberate) {
-        type = Type.LIBERATION;
-        this.target = target;
+    public CasusBelli(LegalEntity target, Faction liberate, Date expiration) {
+        this(Type.LIBERATION, target, expiration);
         this.liberate = liberate;
     }
 
@@ -74,6 +76,7 @@ public class CasusBelli {
         if (type == Type.LIBERATION) {
             liberate = FactionsXL.getInstance().getFactionCache().getById(config.getInt("liberate"));
         }
+        expiration = new Date(config.getLong("expiration"));
     }
 
     /**
@@ -101,11 +104,22 @@ public class CasusBelli {
         return liberate;
     }
 
+    /**
+     * @return
+     * the date when the CB expires
+     */
+    public Date getExpirationDate() {
+        return expiration;
+    }
+
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<>();
         serialized.put("target", target.getId());
         serialized.put("type", type.toString());
-        serialized.put("liberate", liberate.getId());
+        if (liberate != null) {
+            serialized.put("liberate", liberate.getId());
+        }
+        serialized.put("expiration", expiration.getTime());
         return serialized;
     }
 

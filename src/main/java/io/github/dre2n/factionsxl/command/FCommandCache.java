@@ -30,7 +30,9 @@ public class FCommandCache extends DRECommandCache {
 
     public static final String LABEL = "factionsxl";
 
+    public AddCasusBelliCommand addCasusBelli = new AddCasusBelliCommand();
     public AdminCommand admin = new AdminCommand();
+    public AddCasusBelliCommand casusBelli = new AddCasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
     public CreateCommand create = new CreateCommand();
@@ -83,7 +85,9 @@ public class FCommandCache extends DRECommandCache {
 
     public FCommandCache(DREPlugin plugin) {
         super("factionsxl", plugin);
+        addCommand(addCasusBelli);
         addCommand(admin);
+        addCommand(casusBelli);
         addCommand(chat);
         addCommand(claim);
         addCommand(create);
