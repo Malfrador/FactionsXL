@@ -92,4 +92,9 @@ public class War {
         }
     }
 
+    @Override
+    public String toString() {
+        return "War{attacker=" + attacker.toString() + "defender=" + defender.toString() + "}";
+    }
+
 }

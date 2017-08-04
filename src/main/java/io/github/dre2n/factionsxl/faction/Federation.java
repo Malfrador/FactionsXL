@@ -38,5 +38,10 @@ public class Federation extends LegalEntity {
     public Set<Faction> getFactions() {
         return new HashSet<>();
     }
+    
+    @Override
+    public String toString() {
+        return "Federation{ID=" + id + "name=" + name + "}";
+    }
 
 }

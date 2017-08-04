@@ -101,11 +101,16 @@ public class WarParty {
         Map<String, Object> serialized = new HashMap<>();
         serialized.put("leader", leader.getId());
         ArrayList<Integer> participants = new ArrayList<>();
-        this.participants.forEach(p->participants.add(p.getId()));
+        this.participants.forEach(p -> participants.add(p.getId()));
         serialized.put("partcipants", participants);
         serialized.put("kills", kills);
         serialized.put("fights", fights);
         return serialized;
+    }
+
+    @Override
+    public String toString() {
+        return "WarParty{leader=" + leader.toString() + "}";
     }
 
 }

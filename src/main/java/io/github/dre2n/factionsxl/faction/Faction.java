@@ -1292,4 +1292,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Faction{ID=" + id + "name=" + name + "}";
+    }
+
 }

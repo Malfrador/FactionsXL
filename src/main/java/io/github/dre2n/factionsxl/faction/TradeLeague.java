@@ -24,7 +24,12 @@ import java.io.File;
 public class TradeLeague extends LegalEntity {
 
     public TradeLeague(File file) {
-        
+
+    }
+
+    @Override
+    public String toString() {
+        return "TradeLeague{ID=" + id + "name=" + name + "}";
     }
 
 }

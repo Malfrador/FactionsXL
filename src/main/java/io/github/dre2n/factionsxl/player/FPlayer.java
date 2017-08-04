@@ -289,4 +289,9 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
         lastRegion = region;
     }
 
+    @Override
+    public String toString() {
+        return "FPlayer{name=" + getName() + "}";
+    }
+
 }

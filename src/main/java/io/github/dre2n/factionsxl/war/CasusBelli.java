@@ -123,4 +123,9 @@ public class CasusBelli {
         return serialized;
     }
 
+    @Override
+    public String toString() {
+        return "CasusBelli{type=" + type.name() + "target=" + target.toString() + "}";
+    }
+
 }
