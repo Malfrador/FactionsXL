@@ -179,7 +179,7 @@ public class EntityProtectionListener implements Listener {
         }
     }
 
-    private Player getDamageSource(Entity damager) {
+    public static Player getDamageSource(Entity damager) {
         if (damager instanceof Player) {
             return (Player) damager;
         } else if (damager instanceof Arrow) {
