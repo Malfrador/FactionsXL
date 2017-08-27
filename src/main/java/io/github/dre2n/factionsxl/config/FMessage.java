@@ -216,6 +216,7 @@ public enum FMessage implements Message {
     HELP_UNINVITE("help.uninvite", "/f uninvite ([faction]) [player] - Removes a player's invitation."),
     HELP_UNITE("help.unite", "/f unite ([faction]) [target] - Forms a real union with another faction."),
     HELP_VASSALIZE("help.vassalize", "/f vassalize ([faction]) [target] - Vassalizes the target faction."),
+    HELP_WAR("help.war", "/f war [faction] - Declares war on a faction."),
     HELP_WORLD("help.world", "/f world - World management commands for server admins."),
     IDEA_GROUP_CENTRALIZATION("idea.group.centralization", "Centralization"),
     IDEA_GROUP_DIPLOMACY("idea.group.diplomacy", "Diplomacy"),

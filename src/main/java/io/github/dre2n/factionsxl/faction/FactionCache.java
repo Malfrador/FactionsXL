@@ -277,6 +277,23 @@ public class FactionCache {
     }
 
     /**
+     * @param leader
+     * the leader to check
+     * @return
+     * a Set of all factions led by this player
+     */
+    public Set<Faction> getByLeader(Player leader) {
+        UUID uuid = leader.getUniqueId();
+        Set<Faction> factions = new HashSet<>();
+        for (Faction faction : getActive()) {
+            if (uuid.equals(faction.admin)) {
+                factions.add(faction);
+            }
+        }
+        return factions;
+    }
+
+    /**
      * @param chunk
      * the chunk to check
      * @return

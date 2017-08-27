@@ -25,6 +25,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,8 +37,29 @@ public class PageGUI {
     private String title;
     private Stack<Inventory> pages = new Stack<>();
 
+    private int partitions;
+    private Inventory base;
+    private Stack<ItemStack[]> pages1 = new Stack<>();
+    private Stack<ItemStack[]> pages2 = new Stack<>();
+    private Stack<ItemStack[]> pages3 = new Stack<>();
+
     public PageGUI(String title) {
         this.title = title;
+        newPage();
+        FactionsXL.getInstance().getPageGUIs().guis.add(this);
+    }
+
+    /**
+     * partitions must be between 0 and 2
+     */
+    public PageGUI(String title, int partitions) {
+        if (partitions < 0) {
+            partitions = 0;
+        } else if (partitions > 2) {
+            partitions = 2;
+        }
+        this.title = title;
+        this.partitions = partitions;
         newPage();
         FactionsXL.getInstance().getPageGUIs().guis.add(this);
     }
@@ -53,7 +75,41 @@ public class PageGUI {
         gui.setItem(51, PLACEHOLDER);
         gui.setItem(52, PLACEHOLDER);
         gui.setItem(53, NEXT_PAGE);
-        pages.add(gui);
+        if (partitions == 1) {
+            gui.setItem(18, PREVIOUS_PAGE);
+            gui.setItem(19, PLACEHOLDER);
+            gui.setItem(20, PLACEHOLDER);
+            gui.setItem(21, PLACEHOLDER);
+            gui.setItem(22, PLACEHOLDER);
+            gui.setItem(23, PLACEHOLDER);
+            gui.setItem(24, PLACEHOLDER);
+            gui.setItem(25, PLACEHOLDER);
+            gui.setItem(26, NEXT_PAGE);
+        } else if (partitions == 2) {
+            gui.setItem(9, PREVIOUS_PAGE);
+            gui.setItem(10, PLACEHOLDER);
+            gui.setItem(11, PLACEHOLDER);
+            gui.setItem(12, PLACEHOLDER);
+            gui.setItem(13, PLACEHOLDER);
+            gui.setItem(14, PLACEHOLDER);
+            gui.setItem(15, PLACEHOLDER);
+            gui.setItem(16, PLACEHOLDER);
+            gui.setItem(17, NEXT_PAGE);
+            gui.setItem(27, PREVIOUS_PAGE);
+            gui.setItem(28, PLACEHOLDER);
+            gui.setItem(29, PLACEHOLDER);
+            gui.setItem(30, PLACEHOLDER);
+            gui.setItem(31, PLACEHOLDER);
+            gui.setItem(32, PLACEHOLDER);
+            gui.setItem(33, PLACEHOLDER);
+            gui.setItem(34, PLACEHOLDER);
+            gui.setItem(35, NEXT_PAGE);
+        }
+        if (partitions == 0) {
+            pages.add(gui);
+        } else {
+            base = gui;
+        }
         return gui;
     }
 
@@ -81,6 +137,29 @@ public class PageGUI {
         if (pages.size() - 1 >= page && page >= 0) {
             player.openInventory(pages.get(page));
         }
+    }
+
+    public void open(HumanEntity player, int page1, int page2) {
+        boolean check1 = pages1.size() - 1 >= page1;
+        boolean check2 = pages2.size() - 1 >= page2;
+        if (!check1 || !check2) {
+            return;
+        }
+        Inventory gui = base;
+        
+    }
+
+    public void open(HumanEntity player, int page1, int page2, int page3) {
+        boolean check1 = pages1.size() - 1 >= page1;
+        boolean check2 = pages2.size() - 1 >= page2;
+        boolean check3 = pages3.size() - 1 >= page3;
+        if (!check1 || !check2 || !check3) {
+            return;
+        }
+        Inventory gui = base;
+        gui.addItem(pages1.get(page1));
+        gui.addItem(pages2.get(page2));
+        gui.addItem(pages3.get(page3));
     }
 
     public void clear() {
