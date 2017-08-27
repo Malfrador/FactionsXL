@@ -51,6 +51,10 @@ public class AdminCommand extends FCommand {
             return;
         }
 
+        if (!faction.isAdmin(sender) && !FPermission.hasPermission(sender, FPermission.BYPASS)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage(), args[i]);
+            return;
+        }
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[i]);
         if (!player.hasPlayedBefore()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[i]);
