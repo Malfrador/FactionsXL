@@ -302,7 +302,7 @@ public class FactionCache {
     public Faction getByChunk(Chunk chunk) {
         for (Faction faction : factions) {
             for (LazyChunk fChunk : faction.getChunks()) {
-                if (chunk.getX() == fChunk.getX() && chunk.getZ() == fChunk.getX()) {
+                if (chunk.getX() == fChunk.getX() && chunk.getZ() == fChunk.getZ()) {
                     return faction;
                 }
             }
