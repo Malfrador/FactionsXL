@@ -21,6 +21,7 @@ import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.CallToArmsMenu;
 import io.github.dre2n.factionsxl.war.WarParty;
@@ -48,6 +49,11 @@ public class WarCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
+        Faction object = plugin.getFactionCache().getByName(args[1]);
+        if (object == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
+            return;
+        }
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         if (factions.isEmpty()) {
@@ -55,6 +61,21 @@ public class WarCommand extends FCommand {
             return;
         }
         for (Faction faction : factions) {
+            Relation relation = object.getRelation(faction);
+            switch (relation) {
+                case ALLIANCE:
+                case COALITION:
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_CANNOT_ATTACK_ALLIED_FACTION.getMessage());
+                    return;
+                case PERSONAL_UNION:
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION.getMessage(), faction, object);
+                    return;
+                case OWN:
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
+                    return;
+                case ENEMY:
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage(), object);
+            }
             if (faction.getMembers().contains(player)) {
                 subject = new WarParty(faction);
                 break;
@@ -66,11 +87,6 @@ public class WarCommand extends FCommand {
         }
         for (Faction faction : factions) {
             subject.addParticipant(faction);
-        }
-        Faction object = plugin.getFactionCache().getByName(args[1]);
-        if (object == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
-            return;
         }
         new CallToArmsMenu(subject, object).open(player);
     }
