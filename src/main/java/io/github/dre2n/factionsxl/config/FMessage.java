@@ -416,7 +416,22 @@ public enum FMessage implements Message {
     TRADE_RESOURCE_TITLE("trade.resourceTitle", "&6&l&v1 - &v2"),
     TRADE_SUCCESS_EXPORT("trade.success.export", "&aYou successfully exported &6&v1 &afor &6&v2 &ato &v3&a."),
     TRADE_SUCCESS_IMPORT("trade.success.import", "&aYou successfully imported &6&v1 &afor &6&v2 &afrom &v3&a."),
-    TRADE_TITLE("trade.title", "&6&lTrade - &v1");
+    TRADE_TITLE("trade.title", "&6&lTrade - &v1"),
+    WAR_CALL_TO_ARMS_ALLY_1("war.callToArms.ally.1", "&dYou are allied to &v1."),
+    WAR_CALL_TO_ARMS_ALLY_2_ALLIED("war.callToArms.ally.2.allied", "&4They are allied to your enemy. Your alliance"),
+    WAR_CALL_TO_ARMS_ALLY_3_ALLIED("war.callToArms.ally.3.allied", "&4will break if you declare war."),
+    WAR_CALL_TO_ARMS_ALLY_2_NOT_ALLIED("war.callToArms.ally.2.notAllied", "&eYou may ask, but not force them"),
+    WAR_CALL_TO_ARMS_ALLY_3_NOT_ALLIED("war.callToArms.ally.3.notAllied", "&eto join an offensive war."),
+    WAR_CALL_TO_ARMS_COALITION_1("war.callToArms.coalition.1", "&5You've prepared a coalition with &v1."),
+    WAR_CALL_TO_ARMS_COALITION_2("war.callToArms.coalition.2", "&2They already agreed to side with you."),
+    WAR_CALL_TO_ARMS_OWN("war.callToArms.own", "&a&v1 is your faction."),
+    WAR_CALL_TO_ARMS_VASSAL_1("war.callToArms.vassal.1", "&bv1 is your vassal."),
+    WAR_CALL_TO_ARMS_VASSAL_2_STRONGER("war.callToArms.vassal.2.stronger", "&2You are strong enough to enforce their help."),
+    WAR_CALL_TO_ARMS_VASSAL_2_WEAKER("war.callToArms.vassal.2.weaker", "&eYou are not strong enough to enforce their help."),
+    WAR_CALL_TO_ARMS_DEFENDER("war.callToArms.defender", "&4&v1 will side with your enemy."),
+    WAR_CALL_TO_ARMS_ADD("war.callToArms.add", "&6&lClick to call them to arms."),
+    WAR_CALL_TO_ARMS_REMOVE("war.callToArms.remove", "&6&lClick to retract the call to arms."),
+    WAR_CALL_TO_ARMS_TITLE("war.callToArms.title", "&4&lCall to arms");
 
     private String identifier;
     private String message;

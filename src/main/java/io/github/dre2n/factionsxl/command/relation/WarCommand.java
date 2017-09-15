@@ -21,7 +21,10 @@ import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.war.CallToArmsMenu;
 import io.github.dre2n.factionsxl.war.WarParty;
+import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -46,14 +49,30 @@ public class WarCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
         WarParty subject = null;
-        for (Faction faction : plugin.getFactionCache().getByLeader(player)) {
-            if (subject == null) {
+        Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
+        if (factions.isEmpty()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+        for (Faction faction : factions) {
+            if (faction.getMembers().contains(player)) {
                 subject = new WarParty(faction);
-            } else {
-                subject.addParticipant(faction);
+                break;
             }
         }
-        
+        if (subject == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
+            return;
+        }
+        for (Faction faction : factions) {
+            subject.addParticipant(faction);
+        }
+        Faction object = plugin.getFactionCache().getByName(args[1]);
+        if (object == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
+            return;
+        }
+        new CallToArmsMenu(subject, object).open(player);
     }
 
 }

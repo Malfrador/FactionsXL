@@ -43,6 +43,7 @@ public class WarParty {
 
     public WarParty(LegalEntity entity) {
         leader = entity;
+        participants.add(entity);
     }
 
     public WarParty(ConfigurationSection config) {

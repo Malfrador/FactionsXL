@@ -18,6 +18,9 @@ package io.github.dre2n.factionsxl.util;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import static io.github.dre2n.factionsxl.util.GUIButton.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -38,10 +41,10 @@ public class PageGUI {
     private Stack<Inventory> pages = new Stack<>();
 
     private int partitions;
-    private Inventory base;
-    private Stack<ItemStack[]> pages1 = new Stack<>();
-    private Stack<ItemStack[]> pages2 = new Stack<>();
-    private Stack<ItemStack[]> pages3 = new Stack<>();
+    private ItemStack[] base;
+    private Stack<List<ItemStack>> pages1;
+    private Stack<List<ItemStack>> pages2;
+    private Stack<List<ItemStack>> pages3;
 
     public PageGUI(String title) {
         this.title = title;
@@ -60,6 +63,16 @@ public class PageGUI {
         }
         this.title = title;
         this.partitions = partitions;
+        if (partitions > 0) {
+            pages1 = new Stack<>();
+            pages1.add(new ArrayList<>());
+            pages2 = new Stack<>();
+            pages2.add(new ArrayList<>());
+            if (partitions == 2) {
+                pages3 = new Stack<>();
+                pages3.add(new ArrayList<>());
+            }
+        }
         newPage();
         FactionsXL.getInstance().getPageGUIs().guis.add(this);
     }
@@ -108,17 +121,65 @@ public class PageGUI {
         if (partitions == 0) {
             pages.add(gui);
         } else {
-            base = gui;
+            base = gui.getContents();
         }
         return gui;
     }
 
     public void addButton(ItemStack button) {
-        if (hasSpace(pages.peek())) {
+        if (pages.size() > 0 && hasSpace(pages.peek())) {
             pages.peek().addItem(button);
         } else {
             newPage().addItem(button);
         }
+    }
+
+    public void addButton1(ItemStack button) {
+        if (pages1.size() > 0 && hasSpace(pages1.peek())) {
+            pages1.peek().add(button);
+        } else {
+            pages1.add(new ArrayList<>(Arrays.asList(button)));
+        }
+    }
+
+    public void removeButtons1(int index) {
+        pages1.remove(index);
+    }
+
+    public void clearButtons1() {
+        pages1.clear();
+    }
+
+    public void addButton2(ItemStack button) {
+        if (pages2.size() > 0 && hasSpace(pages2.peek())) {
+            pages2.peek().add(button);
+        } else {
+            pages2.add(new ArrayList<>(Arrays.asList(button)));
+        }
+    }
+
+    public void removeButtons2(int index) {
+        pages2.remove(index);
+    }
+
+    public void clearButtons2() {
+        pages2.clear();
+    }
+
+    public void addButton3(ItemStack button) {
+        if (pages3.size() > 0 && hasSpace(pages3.peek())) {
+            pages3.peek().add(button);
+        } else {
+            pages3.add(new ArrayList<>(Arrays.asList(button)));
+        }
+    }
+
+    public void removeButtons3(int index) {
+        pages3.remove(index);
+    }
+
+    public void clearButtons3() {
+        pages3.clear();
     }
 
     public String getTitle() {
@@ -145,8 +206,10 @@ public class PageGUI {
         if (!check1 || !check2) {
             return;
         }
-        Inventory gui = base;
-        
+        Inventory gui = generateBase();
+        fillWithItems(gui, pages1.get(page1), 0, 17);
+        fillWithItems(gui, pages2.get(page2), 27, 44);
+        player.openInventory(gui);
     }
 
     public void open(HumanEntity player, int page1, int page2, int page3) {
@@ -156,10 +219,17 @@ public class PageGUI {
         if (!check1 || !check2 || !check3) {
             return;
         }
-        Inventory gui = base;
-        gui.addItem(pages1.get(page1));
-        gui.addItem(pages2.get(page2));
-        gui.addItem(pages3.get(page3));
+        Inventory gui = generateBase();
+        fillWithItems(gui, pages1.get(page1), 0, 8);
+        fillWithItems(gui, pages2.get(page2), 18, 27);
+        fillWithItems(gui, pages3.get(page3), 36, 44);
+        player.openInventory(gui);
+    }
+
+    private Inventory generateBase() {
+        Inventory gui = Bukkit.createInventory(null, 54, title);
+        gui.setContents(base);
+        return gui;
     }
 
     public void clear() {
@@ -167,7 +237,43 @@ public class PageGUI {
         newPage();
     }
 
+    private boolean hasSpace(List<ItemStack> buttons) {
+        if ((getPartitions() == 1 && buttons.size() > 18) || (getPartitions() == 2 && buttons.size() > 9)) {
+            return false;
+        } else if ((getPartitions() == 1 && buttons.size() < 18) || (getPartitions() == 2 && buttons.size() < 9)) {
+            return true;
+        } else if ((getPartitions() == 1 && buttons.size() == 18) || (getPartitions() == 2 && buttons.size() == 9)) {
+            for (ItemStack stack : buttons) {
+                if (stack == null || stack.getType() == Material.AIR) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int getPartitions() {
+        if (pages1 == null) {
+            return 0;
+        } else {
+            return pages3 == null ? 1 : 2;
+        }
+    }
+
     /* Statics */
+    public static void fillWithItems(Inventory inventory, List<ItemStack> items, int start, int stop) {
+        if (start > stop || items.isEmpty()) {
+            return;
+        }
+        int i = 0;
+        do {
+            if (inventory.getItem(start + i) == null || inventory.getItem(start + i).getType() == Material.AIR) {
+                inventory.setItem(start + i, items.get(i));
+            }
+            i++;
+        } while (start + i <= stop && items.size() > i);
+    }
+
     public static boolean hasSpace(Inventory inventory) {
         for (ItemStack stack : inventory.getContents()) {
             if (stack == null || stack.getType() == Material.AIR) {

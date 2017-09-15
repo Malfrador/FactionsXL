@@ -693,7 +693,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * if the faction is a vassal
      */
     public boolean isVassal() {
-        return !getRelatedFactions(Relation.LORD).isEmpty();
+        return getLord() != null;
     }
 
     /**
@@ -701,10 +701,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * the lord faciton
      */
     public Faction getLord() {
-        Collection<Faction> lord = getRelatedFactions(Relation.LORD);
-        assert lord.size() <= 1;
-        for (Faction faction : lord) {
-            return faction;
+        for (Entry<Faction, Relation> entry : relations.entrySet()) {
+            if (entry.getValue() == Relation.LORD) {
+                return entry.getKey();
+            }
         }
         return null;
     }
