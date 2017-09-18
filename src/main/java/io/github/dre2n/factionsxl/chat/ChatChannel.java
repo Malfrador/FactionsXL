@@ -29,8 +29,8 @@ public enum ChatChannel {
     ALLY(ChatColor.LIGHT_PURPLE, Relation.ALLIANCE),
     COALITION(ChatColor.RED, Relation.ALLIANCE, Relation.COALITION),
     FACTION(ChatColor.GREEN, Relation.OWN, Relation.LORD, Relation.VASSAL),
+    LOCAL(ChatColor.GRAY, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY),
     PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
-
     private ChatColor color;
     private List<Relation> relations;
 
@@ -61,7 +61,6 @@ public enum ChatChannel {
             case "a":
             case "ally":
             case "alliance":
-            case "l":
             case "lord":
             case "pu":
             case "personalunion":
@@ -79,6 +78,11 @@ public enum ChatChannel {
             case "o":
             case "own":
                 return FACTION;
+            case "l":
+            case "local":
+            case "h":
+            case "here":
+                return LOCAL;
             default:
                 return PUBLIC;
         }

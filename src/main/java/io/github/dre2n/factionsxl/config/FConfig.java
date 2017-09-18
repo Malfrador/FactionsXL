@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 7;
+    public static final int CONFIG_VERSION = 8;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -94,6 +94,8 @@ public class FConfig extends DREConfig {
 
     // Chat
     private boolean publicChatHandled = false;
+    private int localChatRange = 50;
+    private String chatFormatLocal = PERM_PREFIX + "&6[" + RELATION_COLOR + FACTION_TAG + "&6] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&6" + ": " + PERM_SUFFIX;
     private String chatFormatPublic = PERM_PREFIX + "&f[" + RELATION_COLOR + FACTION_TAG + "&f] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&f" + ": " + PERM_SUFFIX;
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
     private String chatFormatCoalition = "&c[" + RELATION_COLOR + FACTION_TAG + "&c] " + RELATION_COLOR + PLAYER_PREFIX + "&c" + PLAYER_NAME + ": ";
@@ -359,6 +361,14 @@ public class FConfig extends DREConfig {
     }
 
     /**
+     * @return
+     * the block range of the local chat
+     */
+    public int getLocalChatRange() {
+        return localChatRange;
+    }
+
+    /**
      * @param channel
      * the chat channel
      * @return
@@ -372,6 +382,8 @@ public class FConfig extends DREConfig {
                 return chatFormatCoalition;
             case FACTION:
                 return chatFormatFaction;
+            case LOCAL:
+                return chatFormatLocal;
             case PUBLIC:
                 return chatFormatPublic;
             default:
@@ -707,6 +719,10 @@ public class FConfig extends DREConfig {
             config.set("chatFormat.faction", chatFormatFaction);
         }
 
+        if (!config.contains("chatFormat.local")) {
+            config.set("chatFormat.local", chatFormatLocal);
+        }
+
         if (!config.contains("chatFormat.public")) {
             config.set("chatFormat.public", chatFormatPublic);
         }
@@ -925,6 +941,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("chatFormat.faction")) {
             chatFormatFaction = config.getString("chatFormat.faction");
+        }
+
+        if (config.contains("chatFormat.local")) {
+            chatFormatLocal = config.getString("chatFormat.local");
         }
 
         if (config.contains("chatFormat.public")) {
