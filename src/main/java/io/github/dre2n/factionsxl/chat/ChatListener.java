@@ -43,7 +43,7 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         FPlayer fPlayer = fPlayers.getByPlayer(player);
-        if (!fPlayer.hasFaction() && fPlayer.getChatChannel() != ChatChannel.PUBLIC) {
+        if (!fPlayer.hasFaction() && fPlayer.getChatChannel() != ChatChannel.PUBLIC && fPlayer.getChatChannel() != ChatChannel.LOCAL) {
             fPlayer.setChatChannel(ChatChannel.PUBLIC);
         }
         ChatChannel channel = fPlayer.getChatChannel();
