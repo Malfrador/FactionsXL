@@ -28,7 +28,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -142,8 +141,8 @@ public class PageGUI {
         }
     }
 
-    public void removeButtons1(int index) {
-        pages1.remove(index);
+    public void removeButton1(ItemStack button) {
+        pages1.forEach(p -> p.remove(button));
     }
 
     public void clearButtons1() {
@@ -158,8 +157,8 @@ public class PageGUI {
         }
     }
 
-    public void removeButtons2(int index) {
-        pages2.remove(index);
+    public void removeButton2(ItemStack button) {
+        pages2.forEach(p -> p.remove(button));
     }
 
     public void clearButtons2() {
@@ -174,8 +173,8 @@ public class PageGUI {
         }
     }
 
-    public void removeButtons3(int index) {
-        pages3.remove(index);
+    public void removeButton3(ItemStack button) {
+        pages3.forEach(p -> p.remove(button));
     }
 
     public void clearButtons3() {
@@ -311,10 +310,8 @@ public class PageGUI {
 
     public static PageGUI getByInventory(Inventory inventory) {
         for (PageGUI gui : FactionsXL.getInstance().getPageGUIs().guis) {
-            for (Inventory page : gui.pages) {
-                if (page.getTitle().equals(inventory.getTitle())) {
-                    return gui;
-                }
+            if (gui.title.equals(inventory.getTitle())) {
+                return gui;
             }
         }
         return null;

@@ -26,6 +26,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,7 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * @author Daniel Saukel
  */
-public class CallToArmsMenu {
+public class CallToArmsMenu implements Listener {
 
     enum Status {
         ATTACKER,
@@ -115,6 +120,36 @@ public class CallToArmsMenu {
         meta.setLore(lore);
         button.setItemMeta(meta);
         return button;
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        Inventory inventory = event.getClickedInventory();
+        int slot = event.getSlot();
+        if (inventory == null || !gui.getTitle().equals(inventory.getTitle()) || (slot > 8 & slot < 18 || slot > 26 & slot < 36 || slot >= 45)) {
+            return;
+        }
+        ItemStack button = event.getCurrentItem();
+        if (button == null) {
+            return;
+        }
+        assert button.getItemMeta().hasLore();
+        if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
+            gui.removeButton2(button);
+            gui.addButton1(button);
+            gui.open(event.getWhoClicked(), 0, 0, 0);
+        } else if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage())) {
+            gui.removeButton1(button);
+            gui.addButton2(button);
+            gui.open(event.getWhoClicked(), 0, 0, 0);
+        }
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        if (gui.getTitle().equals(event.getInventory().getTitle())) {
+            //continue
+        }
     }
 
 }
