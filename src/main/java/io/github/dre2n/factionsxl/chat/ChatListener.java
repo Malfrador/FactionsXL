@@ -58,7 +58,6 @@ public class ChatListener implements Listener {
                     String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                     MessageUtil.sendMessage(receiver, format + event.getMessage());
                 }
-                MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
             } else if (channel == ChatChannel.LOCAL) {
                 for (Entity entity : player.getNearbyEntities(fConfig.getLocalChatRange(), fConfig.getLocalChatRange(), fConfig.getLocalChatRange())) {
                     if (entity instanceof Player) {
@@ -67,6 +66,8 @@ public class ChatListener implements Listener {
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }
                 }
+                String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayer);
+                MessageUtil.sendMessage(player, format + event.getMessage());
             } else {
                 for (Relation relation : channel.getRelations()) {
                     for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
@@ -74,8 +75,8 @@ public class ChatListener implements Listener {
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }
                 }
-                MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
             }
+            MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
         }
     }
 

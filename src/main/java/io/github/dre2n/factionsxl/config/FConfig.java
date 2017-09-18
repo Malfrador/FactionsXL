@@ -95,7 +95,7 @@ public class FConfig extends DREConfig {
     // Chat
     private boolean publicChatHandled = false;
     private int localChatRange = 50;
-    private String chatFormatLocal = PERM_PREFIX + "&6[" + RELATION_COLOR + FACTION_TAG + "&6] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&6" + ": " + PERM_SUFFIX;
+    private String chatFormatLocal = PERM_PREFIX + "&7[" + RELATION_COLOR + FACTION_TAG + "&7] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&7" + ": " + PERM_SUFFIX;
     private String chatFormatPublic = PERM_PREFIX + "&f[" + RELATION_COLOR + FACTION_TAG + "&f] " + RELATION_COLOR + PLAYER_PREFIX + PLAYER_NAME + "&f" + ": " + PERM_SUFFIX;
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
     private String chatFormatCoalition = "&c[" + RELATION_COLOR + FACTION_TAG + "&c] " + RELATION_COLOR + PLAYER_PREFIX + "&c" + PLAYER_NAME + ": ";
