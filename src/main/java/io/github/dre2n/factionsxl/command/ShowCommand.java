@@ -17,6 +17,7 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.commons.chat.MessageUtil;
+import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -29,6 +30,7 @@ import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -64,6 +66,9 @@ public class ShowCommand extends FCommand {
         } else if (args.length == 2) {
             faction = factions.getByName(args[1]);
             if (faction == null) {
+                faction = factions.getById(NumberUtil.parseInt(args[1], -1));
+            }
+            if (faction == null) {
                 FPlayer fPlayer = plugin.getFPlayerCache().getByName(args[1]);
                 faction = fPlayer != null ? fPlayer.getFaction() : null;
             }
@@ -75,9 +80,14 @@ public class ShowCommand extends FCommand {
 
         ChatColor c = faction.getRelation(factions.getByMember(player)).getColor();
 
-        MessageUtil.sendCenteredMessage(sender, c + "&l=== " + faction.getLongName() + " ===");
+        MessageUtil.sendCenteredMessage(sender, c + "&l=== " + faction.getLongName() + (faction.isActive() ? new String() : " (\u271d)") + " ===");
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_TAG.getMessage() + c + faction.getShortName());
+        BaseComponent[] tag = TextComponent.fromLegacyText(FMessage.CMD_SHOW_TAG.getMessage() + c + faction.getShortName());
+        HoverEvent tagHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("ID: "+ faction.getId()).create());
+        for (BaseComponent component: tag) {
+            component.setHoverEvent(tagHover);
+        }
+        MessageUtil.sendMessage(sender, tag);
         MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_DESCRIPTION.getMessage() + c + faction.getDescription());
         if (plugin.getFConfig().isEconomyEnabled()) {
             MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_BALANCE.getMessage() + c + plugin.getEconomyProvider().format(faction.getAccount().getBalance()));
