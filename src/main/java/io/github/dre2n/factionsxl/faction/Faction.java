@@ -1267,6 +1267,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (!config.contains(relPath)) {
             config.createSection(relPath);
         }
+        config.set("relations", null);
         for (Entry<Faction, Relation> entry : relations.entrySet()) {
             config.set(relPath + "." + entry.getKey().getId(), entry.getValue().toString());
         }
