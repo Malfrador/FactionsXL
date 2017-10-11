@@ -62,7 +62,28 @@ public class EntityProtectionListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        forbidIfInProtectedTerritory(getDamageSource(event.getDamager()), event.getEntity(), event, ATTACK);
+        Player attacker = getDamageSource(event.getDamager());
+        Entity eDefender = event.getEntity();
+        if (!(eDefender instanceof Player)) {
+            forbidIfInProtectedTerritory(attacker, eDefender, event, ATTACK);
+            return;
+        }
+        Player defender = (Player) eDefender;
+        Faction aFaction = plugin.getFactionCache().getByMember(attacker);
+        Faction dFaction = plugin.getFactionCache().getByMember(defender);
+        Faction rFaction = plugin.getFactionCache().getByLocation(defender.getLocation());
+        if (aFaction.getRelation(dFaction).isProtected()) {
+            ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
+            event.setCancelled(true);
+        } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected()) {
+            if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
+                    || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
+                ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_FACTION.getMessage(), rFaction);
+                event.setCancelled(true);
+            } else if (plugin.getFConfig().getTerritoryShield() != 0) {
+                event.setDamage(event.getDamage() * plugin.getFConfig().getTerritoryShield());
+            }
+        }
     }
 
     @EventHandler

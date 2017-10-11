@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 8;
+    public static final int CONFIG_VERSION = 9;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -104,6 +104,11 @@ public class FConfig extends DREConfig {
     // Protection
     private boolean lwcEnabled = true;
     private boolean wildernessProtected = true;
+
+    // PvP
+    private boolean territoryProtectionEnabled = true;
+    private double territoryShield = 0.66;
+    private boolean capitalProtectionEnabled = false;
 
     // Power
     private int maxPower = 100;
@@ -405,6 +410,30 @@ public class FConfig extends DREConfig {
      */
     public boolean isWildernessProtected() {
         return wildernessProtected;
+    }
+
+    /**
+     * @return
+     * if players shall be protected in their territory
+     */
+    public boolean isTerritoryProtectionEnabled() {
+        return territoryProtectionEnabled;
+    }
+
+    /**
+     * @return
+     * how much of the PVP damage in foreign territories shall be absorbed
+     */
+    public double getTerritoryShield() {
+        return territoryShield;
+    }
+
+    /**
+     * @return
+     * if players shall only be protected in their capital province
+     */
+    public boolean isCapitalProtectionEnabled() {
+        return capitalProtectionEnabled;
     }
 
     /**
@@ -739,6 +768,18 @@ public class FConfig extends DREConfig {
             config.set("wildernessProtected", wildernessProtected);
         }
 
+        if (!config.contains("territoryProtectionEnabled")) {
+            config.set("territoryProtectionEnabled", territoryProtectionEnabled);
+        }
+
+        if (!config.contains("territoryShield")) {
+            config.set("territoryShield", territoryShield);
+        }
+
+        if (!config.contains("capitalProtectionEnabled")) {
+            config.set("capitalProtectionEnabled", capitalProtectionEnabled);
+        }
+
         if (!config.contains("maxPower")) {
             config.set("maxPower", maxPower);
         }
@@ -961,6 +1002,18 @@ public class FConfig extends DREConfig {
 
         if (config.contains("wildernessProtected")) {
             wildernessProtected = config.getBoolean("wildernessProtected");
+        }
+
+        if (config.contains("territoryProtectionEnabled")) {
+            territoryProtectionEnabled = config.getBoolean("territoryProtectionEnabled");
+        }
+
+        if (config.contains("territoryShield")) {
+            territoryShield = config.getDouble("territoryShield");
+        }
+
+        if (config.contains("capitalProtectionEnabled")) {
+            capitalProtectionEnabled = config.getBoolean("capitalProtectionEnabled");
         }
 
         if (config.contains("maxPower")) {

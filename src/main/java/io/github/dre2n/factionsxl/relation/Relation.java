@@ -40,30 +40,32 @@ import org.bukkit.entity.Player;
  */
 public enum Relation {
 
-    REAL_UNION(DARK_GREEN, true, FMessage.RELATION_REAL_UNION),
-    ALLIANCE(LIGHT_PURPLE, true, FMessage.RELATION_ALLIANCE),
-    PERSONAL_UNION(YELLOW, true, FMessage.RELATION_PERSONAL_UNION, ALLIANCE),
+    REAL_UNION(DARK_GREEN, true, true, FMessage.RELATION_REAL_UNION),
+    ALLIANCE(LIGHT_PURPLE, true, true, FMessage.RELATION_ALLIANCE),
+    PERSONAL_UNION(YELLOW, true, true, FMessage.RELATION_PERSONAL_UNION, ALLIANCE),
     /**
      * vassal faction ===> Relation.LORD ===> lord faction
      */
-    LORD(DARK_AQUA, true, FMessage.RELATION_LORD, ALLIANCE),
-    OWN(GREEN, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
+    LORD(DARK_AQUA, true, true, FMessage.RELATION_LORD, ALLIANCE),
+    OWN(GREEN, true, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
     /**
      * lord faction ===> Relation.VASSAL ===> vassal faction
      */
-    VASSAL(AQUA, true, FMessage.RELATION_VASSAL, ALLIANCE),
-    COALITION(DARK_PURPLE, true, FMessage.RELATION_COALITION),
-    PEACE(WHITE, false, FMessage.RELATION_PEACE),
-    ENEMY(RED, false, FMessage.RELATION_ENEMY);
+    VASSAL(AQUA, true, true, FMessage.RELATION_VASSAL, ALLIANCE),
+    COALITION(DARK_PURPLE, true, true, FMessage.RELATION_COALITION),
+    PEACE(WHITE, false, false, FMessage.RELATION_PEACE),
+    ENEMY(RED, false, false, FMessage.RELATION_ENEMY);
 
     private ChatColor color;
     private boolean build;
+    private boolean protection;
     private FMessage name;
     private Set<Relation> included = new HashSet<>();
 
-    Relation(ChatColor color, boolean build, FMessage name, Relation... included) {
+    Relation(ChatColor color, boolean build, boolean protection, FMessage name, Relation... included) {
         this.color = color;
         this.build = build;
+        this.protection = protection;
         this.name = name;
         this.included.addAll(Arrays.asList(included));
     }
@@ -78,10 +80,18 @@ public enum Relation {
 
     /**
      * @return
-     * if you can build
+     * if players may build
      */
     public boolean canBuild() {
         return build;
+    }
+
+    /**
+     * @return
+     * if players are protected from PvP
+     */
+    public boolean isProtected() {
+        return protection;
     }
 
     /**

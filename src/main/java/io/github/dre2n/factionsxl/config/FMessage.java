@@ -259,6 +259,7 @@ public enum FMessage implements Message {
     POPULATION_WARNING_TOO_MANY_RESOURCES_GRANTED("population.warning.tooManyResourcesGranted",
             "&4Your faction grants more resources of the following types than your people need:"),
     PROTECTION_CANNOT_ATTACK_FACTION("protection.cannotAttackFaction", "&4You may not attack in the territory of &v1&4."),
+    PROTECTION_CANNOT_ATTACK_PLAYER("protection.cannotAttackPlayer", "&4You may not attack a member of &v1&4."),
     PROTECTION_CANNOT_BUILD_FACTION("protection.cannotBuildFaction", "&4You may not build in the territory of &v1&4."),
     PROTECTION_CANNOT_BUILD_WILDERNESS("protection.cannotBuildWilderness", "&4You may not build in the wilderness."),
     PROTECTION_CANNOT_DESTROY_FACTION("protection.cannotDestroyFaction", "&4You may not destroy the territory of &v1&4."),
