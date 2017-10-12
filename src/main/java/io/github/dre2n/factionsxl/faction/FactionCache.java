@@ -380,10 +380,10 @@ public class FactionCache {
         int highest = 0;
         for (LegalEntity entity : entities) {
             if (entity.getId() > highest) {
-                highest = entity.getId() + 1;
+                highest = entity.getId();
             }
         }
-        return highest;
+        return highest + 1;
     }
 
     /* Persistence */
