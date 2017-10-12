@@ -659,17 +659,23 @@ public class Faction extends LegalEntity implements RelationParticipator {
             faction = (Faction) object;
         }
 
-        Faction lord = getLord();
-        if (lord != null) {
-            Relation relation = lord.getRelations().get(faction);
-            return relation.doVassalsInherit() ? relation : relations.get(faction);
-        } else if (relations.containsKey(faction)) {
-            return relations.get(faction);
+        Relation relation = null;
+        if (relations.containsKey(faction)) {
+            relation = relations.get(faction);
         } else if (faction == this) {
-            return Relation.OWN;
+            relation = Relation.OWN;
         } else {
-            return Relation.PEACE;
+            relation = Relation.PEACE;
         }
+
+        Faction lord = getLord();
+        if (lord == faction) {
+            return Relation.LORD;
+        }
+        if (lord != null && !relation.doVassalsOverride()) {
+            relation = lord.relations.get(faction);
+        }
+        return relation;
     }
 
     /**
