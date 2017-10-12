@@ -103,6 +103,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Region capital;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
+    PlayerCollection formerAdmins = new PlayerCollection();
     PlayerCollection mods = new PlayerCollection();
     PlayerCollection members = new PlayerCollection();
     PlayerCollection invited = new PlayerCollection();
@@ -484,8 +485,17 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     @Override
     public void setAdmin(OfflinePlayer admin) {
+        formerAdmins.add(this.admin);
         super.setAdmin(admin);
         checkForPersonalUnions();
+    }
+
+    /**
+     * @return
+     * the players who used to be faction admins
+     */
+    public PlayerCollection getFormerAdmins() {
+        return formerAdmins;
     }
 
     /**
@@ -669,7 +679,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
 
         Faction lord = getLord();
-        if (lord == faction) {
+        if (lord != null && lord == faction) {
             return Relation.LORD;
         }
         if (lord != null && !relation.doVassalsOverride()) {
@@ -1095,7 +1105,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         regions.clear();
-        admin = null;
+        setAdmin(null);
         mods.clear();
         members.clear();
         invited.clear();
@@ -1239,6 +1249,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
         config.set("capital", capital.getId());
         config.set("admin", admin.toString());
+        config.set("formerAdmins", formerAdmins.serialize());
 
         config.set("mods", mods.serialize());
         config.set("members", members.serialize());

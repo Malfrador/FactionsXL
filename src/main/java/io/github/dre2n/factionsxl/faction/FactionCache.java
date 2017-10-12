@@ -96,7 +96,7 @@ public class FactionCache {
         faction.creationDate = System.currentTimeMillis();
         faction.active = true;
         faction.name = name;
-        faction.admin = player.getUniqueId();
+        faction.setAdmin(player);
         faction.type = GovernmentType.MONARCHY;
         faction.stability = 10;
         faction.setHome(home);

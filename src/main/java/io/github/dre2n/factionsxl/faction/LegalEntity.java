@@ -183,7 +183,11 @@ public abstract class LegalEntity {
      * the new admin to set
      */
     public void setAdmin(OfflinePlayer admin) {
-        this.admin = admin.getUniqueId();
+        if (admin != null) {
+            this.admin = admin.getUniqueId();
+        } else {
+            admin = null;
+        }
     }
 
     /**

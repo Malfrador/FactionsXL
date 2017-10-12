@@ -95,6 +95,8 @@ public class FTeamWrapper {
             wrapper.unregister();
             wrappers.remove(faction);
             return;
+        } else if (!faction.isActive()) {
+            return;
         }
 
         if (wrapper == null) {

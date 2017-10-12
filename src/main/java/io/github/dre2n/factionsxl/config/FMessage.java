@@ -73,6 +73,7 @@ public enum FMessage implements Message {
     CMD_SHOW_BALANCE("cmd.show.balance", "&6Balance: "),
     CMD_SHOW_CAPITAL("cmd.show.capital", "&6Capital: "),
     CMD_SHOW_DESCRIPTION("cmd.show.description", "&6Description: "),
+    CMD_SHOW_FORMER_LEADERS("cmd.show.formerLeaders", "&6Former leaders: "),
     CMD_SHOW_GOVERNMENT_TYPE("cmd.show.governmentType", "&6Type of government: "),
     CMD_SHOW_INFO("cmd.show.info", "&6Power / Amount of provinces: &v1&v2 / &v3"),
     CMD_SHOW_INVITATION("cmd.show.invitation", "&6Invitation required: "),
