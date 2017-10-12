@@ -367,6 +367,20 @@ public enum ParsingUtil {
      * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
      */
     public static void sendMessage(CommandSender sender, String message, Object... args) {
+        MessageUtil.sendMessage(sender, parseMessage(sender, message, args));
+    }
+
+    /**
+     * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
+     */
+    public static void sendActionBarMessage(Player player, String message, Object... args) {
+        MessageUtil.sendActionBarMessage(player, parseMessage(player, message, args));
+    }
+
+    /**
+     * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
+     */
+    public static String parseMessage(CommandSender sender, String message, Object... args) {
         FactionsXL plugin = FactionsXL.getInstance();
         FactionCache factions = plugin.getFactionCache();
         Faction subjectFaction = null;
@@ -410,7 +424,7 @@ public enum ParsingUtil {
                 messageParsed = messageParsed.replace("&v" + i, "null");
             }
         }
-        MessageUtil.sendMessage(sender, messageParsed);
+        return messageParsed;
     }
 
 }

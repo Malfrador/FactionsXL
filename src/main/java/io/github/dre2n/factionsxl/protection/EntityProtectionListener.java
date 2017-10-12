@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.protection;
 
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -72,16 +73,18 @@ public class EntityProtectionListener implements Listener {
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
         Faction rFaction = plugin.getFactionCache().getByLocation(defender.getLocation());
-        if (aFaction.getRelation(dFaction).isProtected()) {
-            ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
+        double shield = plugin.getFConfig().getTerritoryShield();
+        if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
+            ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected()) {
             if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
                     || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
-                ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_FACTION.getMessage(), rFaction);
+                ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_FACTION.getMessage(), rFaction);
                 event.setCancelled(true);
-            } else if (plugin.getFConfig().getTerritoryShield() != 0) {
-                event.setDamage(event.getDamage() * plugin.getFConfig().getTerritoryShield());
+            } else if (shield != 0) {
+                event.setDamage(event.getDamage() - event.getDamage() * shield);
+                ParsingUtil.sendActionBarMessage(attacker, FMessage.PVP_DAMAGE_REDUCED.getMessage(), (int) (shield * 100), rFaction);
             }
         }
     }
@@ -175,7 +178,7 @@ public class EntityProtectionListener implements Listener {
                 case UNLEASH:
                     message = FMessage.PROTECTION_CANNOT_UNLEASH_FACTION;
             }
-            ParsingUtil.sendMessage(attacker, message.getMessage(), region.getOwner());
+            ParsingUtil.sendActionBarMessage(attacker, message.getMessage(), region.getOwner());
         }
     }
 

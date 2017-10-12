@@ -279,6 +279,7 @@ public enum FMessage implements Message {
     PROTECTION_CANNOT_TAME_FACTION("protection.cannotTameFaction", "&4You may not tame animals in the territory of &v1&4."),
     PROTECTION_CANNOT_UNLEASH_FACTION("protection.cannotLeashFaction", "&4You may not unleash animals in the territory of &v1&4."),
     PROTECTION_CANNOT_REGISTER_FACTION("protection.cannotRegisterFaction", "&4You may not register LWC protections in the territory of &v1&4."),
+    PVP_DAMAGE_REDUCED("pvp.damageReduced", "&4Your damage is reduced by &v1% in the territory of &v2&4!"),
     REGION_BARREN("region.barren", "Barren"),
     REGION_CITY("region.city", "City"),
     REGION_DESERT("region.desert", "Desert"),
