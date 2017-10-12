@@ -64,7 +64,11 @@ public class EntityProtectionListener implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player attacker = getDamageSource(event.getDamager());
+        Entity eAttacker = attacker != null ? attacker : event.getDamager();
         Entity eDefender = event.getEntity();
+        if (!(eAttacker instanceof Player)) {
+            return;
+        }
         if (!(eDefender instanceof Player)) {
             forbidIfInProtectedTerritory(attacker, eDefender, event, ATTACK);
             return;
@@ -80,11 +84,12 @@ public class EntityProtectionListener implements Listener {
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected()) {
             if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
                     || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
-                ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_FACTION.getMessage(), rFaction);
+                ParsingUtil.sendActionBarMessage(attacker, (plugin.getFConfig().isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
+                        : FMessage.PROTECTION_CANNOT_ATTACK_FACTION).getMessage(), rFaction);
                 event.setCancelled(true);
             } else if (shield != 0) {
                 event.setDamage(event.getDamage() - event.getDamage() * shield);
-                ParsingUtil.sendActionBarMessage(attacker, FMessage.PVP_DAMAGE_REDUCED.getMessage(), (int) (shield * 100), rFaction);
+                ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_DAMAGE_REDUCED.getMessage(), (int) (shield * 100), rFaction);
             }
         }
     }
