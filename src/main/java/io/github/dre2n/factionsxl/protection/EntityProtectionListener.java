@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.protection;
 
-import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -35,7 +34,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -55,6 +56,7 @@ public class EntityProtectionListener implements Listener {
         EQUIP,
         LEASH,
         SHEAR,
+        SPLASH_POTION,
         TAME,
         UNLEASH
     }
@@ -138,6 +140,27 @@ public class EntityProtectionListener implements Listener {
         forbidIfInProtectedTerritory(getDamageSource(event.getAttacker()), event.getVehicle(), event, ATTACK);
     }
 
+    @EventHandler
+    public void onPotionSplash(PotionSplashEvent event) {
+        ProjectileSource shooter = event.getPotion().getShooter();
+        if (!(shooter instanceof Player)) {
+            return;
+        }
+        if (event.getAffectedEntities().isEmpty()) {
+            return;
+        }
+        forbidIfInProtectedTerritory((Player) shooter, event.getAffectedEntities().iterator().next(), event, SPLASH_POTION);
+    }
+
+    @EventHandler
+    public void onLingeringPotionSplash(LingeringPotionSplashEvent event) {
+        ProjectileSource shooter = event.getAreaEffectCloud().getSource();
+        if (!(shooter instanceof Player)) {
+            return;
+        }
+        forbidIfInProtectedTerritory((Player) shooter, event.getAreaEffectCloud(), event, SPLASH_POTION);
+    }
+
     private void forbidIfInProtectedTerritory(Player attacker, Entity damaged, Cancellable event, Action action) {
         if (attacker == null) {
             return;
@@ -173,6 +196,9 @@ public class EntityProtectionListener implements Listener {
                     break;
                 case LEASH:
                     message = FMessage.PROTECTION_CANNOT_LEASH_FACTION;
+                    break;
+                case SPLASH_POTION:
+                    message = FMessage.PROTECTION_CANNOT_SPLASH_POTION_FACTION;
                     break;
                 case SHEAR:
                     message = FMessage.PROTECTION_CANNOT_SHEAR_FACTION;

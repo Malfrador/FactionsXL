@@ -278,6 +278,7 @@ public enum FMessage implements Message {
     PROTECTION_CANNOT_INTERACT_FACTION("protection.cannotInteractFaction", "&4You may not interact with &6&v1 &4in the territory of &v2&4."),
     PROTECTION_CANNOT_LEASH_FACTION("protection.cannotLeashFaction", "&4You may not leash animals in the territory of &v1&4."),
     PROTECTION_CANNOT_SHEAR_FACTION("protection.cannotShearFaction", "&4You may not sheer animals in the territory of &v1&4."),
+    PROTECTION_CANNOT_SPLASH_POTION_FACTION("protection.cannotSplashPotionFaction", "&4You may not splash potions in the territory of &v1&4."),
     PROTECTION_CANNOT_TAME_FACTION("protection.cannotTameFaction", "&4You may not tame animals in the territory of &v1&4."),
     PROTECTION_CANNOT_UNLEASH_FACTION("protection.cannotLeashFaction", "&4You may not unleash animals in the territory of &v1&4."),
     PROTECTION_CANNOT_REGISTER_FACTION("protection.cannotRegisterFaction", "&4You may not register LWC protections in the territory of &v1&4."),
