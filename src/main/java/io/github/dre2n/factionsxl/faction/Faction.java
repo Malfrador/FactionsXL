@@ -685,7 +685,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (lord != null && !relation.doVassalsOverride()) {
             relation = lord.relations.get(faction);
         }
-        return relation;
+        return relation != null ? relation : Relation.PEACE;
     }
 
     /**
