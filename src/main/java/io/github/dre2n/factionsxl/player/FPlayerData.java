@@ -30,12 +30,13 @@ public class FPlayerData extends DREConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final int CONFIG_VERSION = 1;
+    public static final int CONFIG_VERSION = 2;
 
     private String lastName;
     private String title;
     private long timeLastPlayed;
     private double powerBase;
+    private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -103,6 +104,22 @@ public class FPlayerData extends DREConfig {
         return powerBase;
     }
 
+    /**
+     * @return
+     * if the scoreboard is enabled
+     */
+    public boolean isScoreboardEnabled() {
+        return scoreboardEnabled;
+    }
+
+    /**
+     * @param enabled
+     * if the scoreboard shall be enabled
+     */
+    public void setScoreboardEnabled(boolean enabled) {
+        scoreboardEnabled = enabled;
+    }
+
     /* Serialization */
     @Override
     public void initialize() {
@@ -115,12 +132,11 @@ public class FPlayerData extends DREConfig {
         if (config.contains("lastName")) {
             lastName = config.getString("lastName");
         }
-
         title = config.getString("title", new String());
-
         if (config.contains("timeLastPlayed")) {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
+        scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
     }
 
     @Override
@@ -128,6 +144,7 @@ public class FPlayerData extends DREConfig {
         config.set("lastName", lastName);
         config.set("title", title);
         config.set("timeLastPlayed", timeLastPlayed);
+        config.set("scoreboardEnabled", scoreboardEnabled);
         try {
             config.save(file);
         } catch (IOException exception) {

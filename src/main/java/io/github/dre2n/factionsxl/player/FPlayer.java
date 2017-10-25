@@ -43,7 +43,6 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     private UUID uuid;
 
     private ChatChannel chatChannel = ChatChannel.PUBLIC;
-    private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
     private Region autoclaiming;
     private Region lastRegion;
 
@@ -147,7 +146,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      * true if the scoreboard is enabled
      */
     public boolean isScoreboardEnabled() {
-        return scoreboardEnabled;
+        return data.isScoreboardEnabled();
     }
 
     /**
@@ -155,7 +154,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      * if the scoreboard is enabled
      */
     public void setScoreboardEnabled(boolean enabled) {
-        scoreboardEnabled = enabled;
+        data.setScoreboardEnabled(enabled);
     }
 
     /**
