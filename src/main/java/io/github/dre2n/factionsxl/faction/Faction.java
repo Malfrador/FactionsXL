@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.faction;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
@@ -979,7 +980,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (canAfford) {
             account.withdraw(price);
             for (Entry<Resource, Integer> entry : goods.entrySet()) {
-                storage.getGoods().put(entry.getKey(), storage.getGoods().get(entry.getKey()) + entry.getValue());
+                int oldAmount = storage.getGoods().get(entry.getKey()) != null ? storage.getGoods().get(entry.getKey()) : 0;
+                storage.getGoods().put(entry.getKey(), oldAmount + entry.getValue());
             }
         }
         return canAfford;
@@ -1002,7 +1004,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         boolean canAfford = account.getBalance() >= price * modifier;
         if (canAfford) {
             account.withdraw(price * modifier);
-            storage.getGoods().put(type, storage.getGoods().get(type) + amount);
+            int oldAmount = storage.getGoods().get(type) != null ? storage.getGoods().get(type) : 0;
+            storage.getGoods().put(type, oldAmount + amount);
         }
         return canAfford;
     }
@@ -1220,98 +1223,99 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     public void save() {
-        config.set("active", active);
-        config.set("name", name);
-        config.set("longName", longName);
-        config.set("shortName", shortName);
-        config.set("desc", desc);
-        config.set("anthem", anthem);
-        config.set("banner", banner);
-        config.set("bannerColor", bannerColor);
-        config.set("mapFillColor", mapFillColor);
-        config.set("mapLineColor", mapLineColor);
-        config.set("mapVisibility", mapVisibility);
-        config.set("creationDate", creationDate);
-        config.set("type", type.toString());
-        config.set("open", open);
-        config.set("stability", stability);
-        if (!active) {
-            try {
-                config.save(file);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-            return;
-        }
-        config.set("home", home);
-        if (homeHolo != null) {
-            homeHolo.delete();
-        }
-        config.set("capital", capital.getId());
-        config.set("admin", admin.toString());
-        config.set("formerAdmins", formerAdmins.serialize());
-
-        config.set("mods", mods.serialize());
-        config.set("members", members.serialize());
-        if (storage == null) {
-            storage = new FStorage(this);
-        }
-
-        String relPath = "relations";
-        if (!config.contains(relPath)) {
-            config.createSection(relPath);
-        }
-        config.set("relations", null);
-        for (Entry<Faction, Relation> entry : relations.entrySet()) {
-            config.set(relPath + "." + entry.getKey().getId(), entry.getValue().toString());
-        }
-
-        config.set("storage", storage.serialize());
-        for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
-            config.set("groceryList." + entry.getKey(), entry.getValue());
-        }
-        for (Entry<Resource, Integer> entry : consumableResources.entrySet()) {
-            config.set("consumableResources." + entry.getKey(), entry.getValue());
-        }
-        for (Resource resource : Resource.values()) {
-            if (!config.contains("consumableResources." + resource)) {
-                config.set("consumableResources." + resource, 0);
-            }
-        }
-        for (Entry<Resource, Integer> entry : saturatedResources.entrySet()) {
-            config.set("saturatedResources." + entry.getKey(), entry.getValue());
-        }
-        for (Resource resource : Resource.values()) {
-            if (!config.contains("saturatedResources." + resource)) {
-                config.set("saturatedResources." + resource, 0);
-            }
-        }
-        List<String> ideaGroupIds = new ArrayList<>();
-        for (IdeaGroup ideaGroup : ideaGroups) {
-            ideaGroupIds.add(ideaGroup.toString());
-        }
-        config.set("ideaGroups", ideaGroupIds);
-        List<String> ideaIds = new ArrayList<>();
-        for (Idea idea : ideas) {
-            ideaIds.add(idea.toString());
-        }
-        config.set("ideas", ideaIds);
-        int i = 0;
-        for (CasusBelli cb : casusBelli) {
-            config.set("casusBelli." + i, cb.serialize());
-            i++;
-        }
-
         try {
+            config.set("active", active);
+            config.set("name", name);
+            config.set("longName", longName);
+            config.set("shortName", shortName);
+            config.set("desc", desc);
+            config.set("anthem", anthem);
+            config.set("banner", banner);
+            config.set("bannerColor", bannerColor);
+            config.set("mapFillColor", mapFillColor);
+            config.set("mapLineColor", mapLineColor);
+            config.set("mapVisibility", mapVisibility);
+            config.set("creationDate", creationDate);
+            config.set("type", type.toString());
+            config.set("open", open);
+            config.set("stability", stability);
+            if (!active) {
+                try {
+                    config.save(file);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                return;
+            }
+            config.set("home", home);
+            if (homeHolo != null) {
+                homeHolo.delete();
+            }
+            config.set("capital", capital.getId());
+            config.set("admin", admin.toString());
+            config.set("formerAdmins", formerAdmins.serialize());
+
+            config.set("mods", mods.serialize());
+            config.set("members", members.serialize());
+            if (storage == null) {
+                storage = new FStorage(this);
+            }
+
+            String relPath = "relations";
+            if (!config.contains(relPath)) {
+                config.createSection(relPath);
+            }
+            config.set("relations", null);
+            for (Entry<Faction, Relation> entry : relations.entrySet()) {
+                config.set(relPath + "." + entry.getKey().getId(), entry.getValue().toString());
+            }
+
+            config.set("storage", storage.serialize());
+            for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
+                config.set("groceryList." + entry.getKey(), entry.getValue());
+            }
+            for (Entry<Resource, Integer> entry : consumableResources.entrySet()) {
+                config.set("consumableResources." + entry.getKey(), entry.getValue());
+            }
+            for (Resource resource : Resource.values()) {
+                if (!config.contains("consumableResources." + resource)) {
+                    config.set("consumableResources." + resource, 0);
+                }
+            }
+            for (Entry<Resource, Integer> entry : saturatedResources.entrySet()) {
+                config.set("saturatedResources." + entry.getKey(), entry.getValue());
+            }
+            for (Resource resource : Resource.values()) {
+                if (!config.contains("saturatedResources." + resource)) {
+                    config.set("saturatedResources." + resource, 0);
+                }
+            }
+            List<String> ideaGroupIds = new ArrayList<>();
+            for (IdeaGroup ideaGroup : ideaGroups) {
+                ideaGroupIds.add(ideaGroup.toString());
+            }
+            config.set("ideaGroups", ideaGroupIds);
+            List<String> ideaIds = new ArrayList<>();
+            for (Idea idea : ideas) {
+                ideaIds.add(idea.toString());
+            }
+            config.set("ideas", ideaIds);
+            int i = 0;
+            for (CasusBelli cb : casusBelli) {
+                config.set("casusBelli." + i, cb.serialize());
+                i++;
+            }
+
             config.save(file);
-        } catch (IOException exception) {
+        } catch (Exception exception) {
+            MessageUtil.log(plugin, "An error occured while saving " + this);
             exception.printStackTrace();
         }
     }
 
     @Override
     public String toString() {
-        return "Faction{ID=" + id + "name=" + name + "}";
+        return "Faction{ID=" + id + "; name=" + name + "}";
     }
 
 }
