@@ -102,6 +102,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Location home;
     Hologram homeHolo;
     Region capital;
+    long timeLastCapitalMove;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
     PlayerCollection formerAdmins = new PlayerCollection();
@@ -466,6 +467,15 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setCapital(Region capital) {
         this.capital = capital;
+        timeLastCapitalMove = System.currentTimeMillis();
+    }
+
+    /**
+     * @return
+     * the time millis when the capital was moved for the last time
+     */
+    public long getTimeLastCapitalMove() {
+        return timeLastCapitalMove;
     }
 
     /**
@@ -1142,6 +1152,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         manpowerModifier = config.getDouble("manpowerModifier", fConfig.getDefaultManpowerModifier());
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
+        timeLastCapitalMove = config.getLong("timeLastCapitalMove", 0);
 
         admin = UUID.fromString(config.getString("admin"));
         mods.add(config.getStringList("mods"));
@@ -1252,6 +1263,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
                 homeHolo.delete();
             }
             config.set("capital", capital.getId());
+            config.set("timeLastCapitalMove", timeLastCapitalMove);
             config.set("admin", admin.toString());
             config.set("formerAdmins", formerAdmins.serialize());
 

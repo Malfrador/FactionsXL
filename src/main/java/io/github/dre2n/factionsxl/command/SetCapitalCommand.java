@@ -22,6 +22,8 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -62,6 +64,15 @@ public class SetCapitalCommand extends FCommand {
         }
         if (!region.getOwner().equals(faction)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
+            return;
+        }
+        if (!region.getCoreFactions().containsKey(faction)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NO_CORE.getMessage());
+            return;
+        }
+        long moveAllowedTime = faction.getTimeLastCapitalMove() + plugin.getFConfig().getMoveCapitalCooldown();
+        if (moveAllowedTime > System.currentTimeMillis()) {
+            ParsingUtil.sendMessage(player, FMessage.ERROR_CAPITAL_MOVE_COOLDOWN.getMessage(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(moveAllowedTime)));
             return;
         }
 

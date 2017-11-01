@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 9;
+    public static final int CONFIG_VERSION = 10;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -63,6 +63,7 @@ public class FConfig extends DREConfig {
     private double autoSaveInterval = 10;
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
+    private int moveCapitalCooldown = 30;
 
     // Consume
     private double defaultManpowerModifier = 1;
@@ -248,6 +249,14 @@ public class FConfig extends DREConfig {
      */
     public int getMaxIdeaGroups() {
         return maxIdeaGroups;
+    }
+
+    /**
+     * @return
+     * the time millis until a faction may move its capital again.
+     */
+    public long getMoveCapitalCooldown() {
+        return moveCapitalCooldown * DAY;
     }
 
     /**
@@ -681,6 +690,10 @@ public class FConfig extends DREConfig {
             config.set("maxIdeaGroups", maxIdeaGroups);
         }
 
+        if (!config.contains("moveCapitalCooldown")) {
+            config.set("moveCapitalCooldown", moveCapitalCooldown);
+        }
+
         if (!config.contains("defaultManpowerModifier")) {
             config.set("defaultManpowerModifier", defaultManpowerModifier);
         }
@@ -916,6 +929,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("maxIdeaGroups")) {
             maxIdeaGroups = config.getInt("maxIdeaGroups");
+        }
+
+        if (config.contains("moveCapitalCooldown")) {
+            moveCapitalCooldown = config.getInt("moveCapitalCooldown");
         }
 
         if (config.contains("defaultManpowerModifier")) {
