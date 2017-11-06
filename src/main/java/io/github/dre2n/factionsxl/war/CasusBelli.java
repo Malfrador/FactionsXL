@@ -119,7 +119,9 @@ public class CasusBelli {
         if (liberate != null) {
             serialized.put("liberate", liberate.getId());
         }
-        serialized.put("expiration", expiration.getTime());
+        if (expiration != null) {
+            serialized.put("expiration", expiration.getTime());
+        }
         return serialized;
     }
 

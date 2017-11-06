@@ -17,7 +17,6 @@
 package io.github.dre2n.factionsxl.war;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.faction.LegalEntity;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -37,9 +36,9 @@ public class War {
     private CasusBelli cb;
     private Date startDate;
 
-    public War(WarParty attacker, LegalEntity defender, CasusBelli cb) {
+    public War(WarParty attacker, WarParty defender, CasusBelli cb) {
         this.attacker = attacker;
-        this.defender = new WarParty(defender);
+        this.defender = defender;
         this.cb = cb;
         startDate = Calendar.getInstance().getTime();
         this.file = new File(FactionsXL.WARS, System.currentTimeMillis() + ".yml");
@@ -48,10 +47,6 @@ public class War {
         } catch (IOException exception) {
         }
         config = YamlConfiguration.loadConfiguration(file);
-    }
-
-    public War(LegalEntity attacker, LegalEntity defender, CasusBelli cb) {
-        this(new WarParty(attacker), defender, cb);
     }
 
     public War(File file) {

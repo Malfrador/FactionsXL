@@ -40,6 +40,7 @@ public enum FMessage implements Message {
     CMD_ADD_CASUS_BELLI_SUCCESS("cmd.addCasusBelli.success", "&aSuccessfully added a &6&v1 &acasus belli against &v2 &afor &v3&a."),
     CMD_ADMIN_SUCCESS("cmd.admin.success", "&v1 &agave &v2 &athe leadership of &v3&a."),
     CMD_CASUS_BELLI_HEAD("cmd.casusBelli.head", "&aTarget &4| &aType &4| &aExpiration"),
+    CMD_CASUS_BELLI_NO_EXPIRATION("cmd.casusBelli.noExpiration", "No expiration"),
     CMD_CLAIM_SUCCESS("cmd.claim.success", "&aSuccessfully annexed the region &v1&a."),
     CMD_CREATE_SUCCESS("cmd.create.success", "&v1 &acreated the new faction &v2&a."),
     CMD_CREATE_BULL_SUCCESS("cmd.createBull.success", "&aSuccessfully created the new bull &6&v1&a."),

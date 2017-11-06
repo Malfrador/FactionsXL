@@ -50,9 +50,10 @@ public class CallToArmsMenu implements Listener {
     private Faction attackerLeader;
     private Set<Faction> attackerCandidates = new HashSet<>();
     private WarParty defender;
+    private CasusBelli cb;
     private PageGUI gui;
 
-    public CallToArmsMenu(WarParty attacker, Faction defender) {
+    public CallToArmsMenu(WarParty attacker, Faction defender, CasusBelli cb) {
         this.attacker = attacker;
         attackerLeader = (Faction) attacker.getLeader(); // TODO: Might break after government update
         attackerLeader.getRelatedFactions(Relation.ALLIANCE).forEach(f -> attackerCandidates.add(f));
@@ -147,9 +148,10 @@ public class CallToArmsMenu implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (gui.getTitle().equals(event.getInventory().getTitle())) {
-            //continue
+        if (!gui.equals(event.getInventory())) {
+            return;
         }
+        War war = new War(attacker, defender, cb);
     }
 
 }
