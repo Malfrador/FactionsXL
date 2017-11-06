@@ -24,6 +24,7 @@ import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.CallToArmsMenu;
+import io.github.dre2n.factionsxl.war.CasusBelli;
 import io.github.dre2n.factionsxl.war.WarParty;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
@@ -88,7 +89,7 @@ public class WarCommand extends FCommand {
         for (Faction faction : factions) {
             subject.addParticipant(faction);
         }
-        new CallToArmsMenu(subject, object).open(player);
+        new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
     }
 
 }

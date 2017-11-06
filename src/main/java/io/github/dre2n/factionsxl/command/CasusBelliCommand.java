@@ -58,7 +58,7 @@ public class CasusBelliCommand extends FCommand {
             String msg = ChatColor.GOLD.toString();
             msg += cb.getTarget().getShortName() + " | ";
             msg += cb.getType() + " | ";
-            msg += cb.getExpirationDate();
+            msg += cb.getExpirationDate() != null ? cb.getExpirationDate() : FMessage.CMD_CASUS_BELLI_NO_EXPIRATION.getMessage();
             ParsingUtil.sendMessage(sender, msg);
         }
     }
