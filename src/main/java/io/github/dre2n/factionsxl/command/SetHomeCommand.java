@@ -52,7 +52,7 @@ public class SetHomeCommand extends FCommand {
 
         Region region = plugin.getBoard().getByLocation(player.getLocation());
         if (region == null || region.getOwner() != faction) {
-            ParsingUtil.sendMessage(sender, FMessage.CMD_SET_HOME_FAIL.getMessage());
+            ParsingUtil.sendMessage(sender, FMessage.CMD_SET_HOME_FACTION_FAIL.getMessage());
             return;
         }
 
@@ -62,7 +62,7 @@ public class SetHomeCommand extends FCommand {
         }
 
         faction.setHome(player.getLocation());
-        faction.sendMessage(FMessage.CMD_SET_HOME_SUCCESS.getMessage(), player);
+        faction.sendMessage(FMessage.CMD_SET_HOME_FACTION_SUCCESS.getMessage(), player);
     }
 
 }

@@ -20,8 +20,8 @@ import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.CooldownTeleportationTask;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import net.milkbowl.vault.economy.Economy;
@@ -31,18 +31,18 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class HomeCommand extends FCommand {
+public class PlayerHomeCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
     Economy econ = plugin.getEconomyProvider();
 
-    public HomeCommand() {
-        setCommand("home");
-        setAliases("spawn");
+    public PlayerHomeCommand() {
+        setCommand("playerHome");
+        setAliases("playerSpawn", "pHome", "pSpawn");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_HOME.getMessage());
+        setHelp(FMessage.HELP_PLAYER_HOME.getMessage());
         setPermission(FPermission.HOME.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -51,28 +51,32 @@ public class HomeCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction;
+        FPlayer fPlayer;
         if (args.length == 2 && FPermission.hasPermission(sender, FPermission.HOME_OTHERS)) {
-            faction = plugin.getFactionCache().getByName(args[1]);
+            fPlayer = plugin.getFPlayerCache().getByName(args[1]);
         } else {
-            faction = plugin.getFactionCache().getByMember(player);
+            fPlayer = plugin.getFPlayerCache().getByPlayer(player);
         }
 
-        if (faction == null) {
-            if (args.length == 1) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
-            } else if (args.length == 2) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
-            }
+        if (fPlayer == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
+        }
+
+        if (fPlayer.getHome() == null) {
+            plugin.getCommandCache().setPlayerHome.displayHelp(sender);
+            return;
+        }
+        if (!fPlayer.checkHome()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_HOME_NOT_IN_ALLIED_TERRITORY.getMessage());
             return;
         }
 
         if (FPermission.hasPermission(sender, FPermission.BYPASS)) {
-            PlayerUtil.secureTeleport(player, faction.getHome());
+            PlayerUtil.secureTeleport(player, fPlayer.getHome());
             return;
         }
 
-        new CooldownTeleportationTask(player, faction.getHome(), true).runTaskTimer(plugin, 0L, 20L);
+        new CooldownTeleportationTask(player, fPlayer.getHome(), true).runTaskTimer(plugin, 0L, 20L);
     }
 
 }

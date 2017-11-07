@@ -28,6 +28,7 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.UUID;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -233,6 +234,29 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     public Relation getRelation(RelationParticipator object) {
         Faction own = getFaction();
         return own != null ? own.getRelation(object) : Relation.PEACE;
+    }
+
+    public Location getHome() {
+        return data.getHome();
+    }
+
+    public void setHome(Location location) {
+        data.setHome(location);
+    }
+
+    public boolean checkHome() {
+        if (getHome() == null) {
+            return true;
+        }
+        Region region = plugin.getBoard().getByLocation(getHome());
+        if (region == null || region.getOwner() == null) {
+            return true;
+        }
+        if (!region.getOwner().getRelation(this).canBuild()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

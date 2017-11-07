@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 10;
+    public static final int CONFIG_VERSION = 11;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -74,6 +74,7 @@ public class FConfig extends DREConfig {
     private double priceCreate = 1000;
     private double priceCreateVassal = 1000;
     private double priceHomeWarp = 5;
+    private boolean playerHomesEnabled = true;
     private Map<Relation, Double> priceRelation = new HashMap<Relation, Double>() {
         {
             put(REAL_UNION, 500D);
@@ -306,6 +307,14 @@ public class FConfig extends DREConfig {
      */
     public double getPriceHomeWarp() {
         return priceHomeWarp;
+    }
+
+    /**
+     * @return
+     * if per player homes (/f playerHome) are enabled
+     */
+    public boolean arePlayerHomesEnabled() {
+        return playerHomesEnabled;
     }
 
     /**
@@ -706,6 +715,10 @@ public class FConfig extends DREConfig {
             config.set("economyEnabled", economyEnabled);
         }
 
+        if (!config.contains("playerHomesEnabled")) {
+            config.set("playerHomesEnabled", playerHomesEnabled);
+        }
+
         if (!config.contains("price.create")) {
             config.set("price.create", priceCreate);
         }
@@ -945,6 +958,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("economyEnabled")) {
             economyEnabled = config.getBoolean("economyEnabled");
+        }
+
+        if (config.contains("playerHomesEnabled")) {
+            playerHomesEnabled = config.getBoolean("playerHomesEnabled");
         }
 
         if (config.contains("price.create")) {

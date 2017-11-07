@@ -319,6 +319,7 @@ public class FactionsXL extends DREPlugin {
     public void loadFCommands() {
         fCommands = new FCommandCache(this);
         fCommands.register(this);
+        fCommands.registerAliases();
     }
 
     /**

@@ -20,6 +20,7 @@ import io.github.dre2n.commons.command.DRECommandCache;
 import io.github.dre2n.commons.javaplugin.DREPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
+import io.github.dre2n.factionsxl.config.FConfig;
 
 /**
  * An enumeration of all command instances.
@@ -29,6 +30,8 @@ import io.github.dre2n.factionsxl.command.relation.*;
 public class FCommandCache extends DRECommandCache {
 
     public static final String LABEL = "factionsxl";
+
+    DREPlugin plugin;
 
     public AddCasusBelliCommand addCasusBelli = new AddCasusBelliCommand();
     public AdminCommand admin = new AdminCommand();
@@ -55,6 +58,7 @@ public class FCommandCache extends DRECommandCache {
     public MoneyCommand money = new MoneyCommand();
     public OpenCommand open = new OpenCommand();
     public PaydayCommand payday = new PaydayCommand();
+    public PlayerHomeCommand playerHome = new PlayerHomeCommand();
     public PowerCommand power = new PowerCommand();
     public RegionCommand region = new RegionCommand();
     public RegionsCommand regions = new RegionsCommand();
@@ -72,6 +76,7 @@ public class FCommandCache extends DRECommandCache {
     public SetColorCommand setColor = new SetColorCommand();
     public SetGovernmentCommand setGovernment = new SetGovernmentCommand();
     public SetHomeCommand setHome = new SetHomeCommand();
+    public SetPlayerHomeCommand setPlayerHome = new SetPlayerHomeCommand();
     public SetPowerCommand setPower = new SetPowerCommand();
     public ShortTagCommand shortTag = new ShortTagCommand();
     public ShowCommand show = new ShowCommand();
@@ -85,7 +90,8 @@ public class FCommandCache extends DRECommandCache {
     public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
-        super("factionsxl", plugin);
+        super(LABEL, plugin);
+        this.plugin = plugin;
         addCommand(addCasusBelli);
         addCommand(admin);
         addCommand(casusBelli);
@@ -134,13 +140,24 @@ public class FCommandCache extends DRECommandCache {
         addCommand(uninvite);
         addCommand(war);
         addCommand(world);
-        if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
+        FConfig config = FactionsXL.getInstance().getFConfig();
+        if (config.isEconomyEnabled()) {
             addCommand(idea);
             addCommand(money);
             addCommand(payday);
             addCommand(storage);
             addCommand(tradeOffer);
         }
+        if (config.arePlayerHomesEnabled()) {
+            addCommand(playerHome);
+            addCommand(setPlayerHome);
+        }
+    }
+
+    public void registerAliases() {
+        FCommandAlias alias = new FCommandAlias(this);
+        plugin.getCommand("home").setExecutor(alias);
+        plugin.getCommand("setHome").setExecutor(alias);
     }
 
 }

@@ -22,6 +22,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import java.io.File;
 import java.io.IOException;
+import org.bukkit.Location;
 
 /**
  * @author Daniel Saukel
@@ -30,13 +31,14 @@ public class FPlayerData extends DREConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final int CONFIG_VERSION = 2;
+    public static final int CONFIG_VERSION = 3;
 
     private String lastName;
     private String title;
     private long timeLastPlayed;
     private double powerBase;
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
+    private Location home;
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -120,6 +122,22 @@ public class FPlayerData extends DREConfig {
         scoreboardEnabled = enabled;
     }
 
+    /**
+     * @return
+     * the home location
+     */
+    public Location getHome() {
+        return home;
+    }
+
+    /**
+     * @param location
+     * the location to set as the home location
+     */
+    public void setHome(Location location) {
+        home = location;
+    }
+
     /* Serialization */
     @Override
     public void initialize() {
@@ -137,6 +155,7 @@ public class FPlayerData extends DREConfig {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
         scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
+        home = (Location) config.get("home");
     }
 
     @Override
@@ -145,6 +164,7 @@ public class FPlayerData extends DREConfig {
         config.set("title", title);
         config.set("timeLastPlayed", timeLastPlayed);
         config.set("scoreboardEnabled", scoreboardEnabled);
+        config.set("home", home);
         try {
             config.save(file);
         } catch (IOException exception) {
