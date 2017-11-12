@@ -38,6 +38,7 @@ public class FPlayerData extends DREConfig {
     private long timeLastPlayed;
     private double powerBase;
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
+    private boolean anthemsEnabled = true;
     private Location home;
 
     public FPlayerData(File file) {
@@ -124,6 +125,22 @@ public class FPlayerData extends DREConfig {
 
     /**
      * @return
+     * if the scoreboard is enabled
+     */
+    public boolean areAnthemsEnabled() {
+        return anthemsEnabled;
+    }
+
+    /**
+     * @param enabled
+     * if faction anthems shall be enabled
+     */
+    public void setAnthemsEnabled(boolean enabled) {
+        anthemsEnabled = enabled;
+    }
+
+    /**
+     * @return
      * the home location
      */
     public Location getHome() {
@@ -155,6 +172,7 @@ public class FPlayerData extends DREConfig {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
         scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
+        anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
     }
 
@@ -164,6 +182,7 @@ public class FPlayerData extends DREConfig {
         config.set("title", title);
         config.set("timeLastPlayed", timeLastPlayed);
         config.set("scoreboardEnabled", scoreboardEnabled);
+        config.set("anthemsEnabled", anthemsEnabled);
         config.set("home", home);
         try {
             config.save(file);

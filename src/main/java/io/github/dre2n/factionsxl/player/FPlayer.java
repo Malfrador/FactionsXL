@@ -160,6 +160,22 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
 
     /**
      * @return
+     * if the scoreboard is enabled
+     */
+    public boolean areAnthemsEnabled() {
+        return data.areAnthemsEnabled();
+    }
+
+    /**
+     * @param enabled
+     * if faction anthems shall be enabled
+     */
+    public void setAnthemsEnabled(boolean enabled) {
+        data.setAnthemsEnabled(enabled);
+    }
+
+    /**
+     * @return
      * the region to which the player adds chunks automatically
      */
     public Region getAutoclaimingRegion() {

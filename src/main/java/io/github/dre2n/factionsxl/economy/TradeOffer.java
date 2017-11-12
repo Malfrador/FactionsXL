@@ -19,7 +19,9 @@ package io.github.dre2n.factionsxl.economy;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
@@ -149,11 +151,11 @@ public class TradeOffer {
 
         String command = "/factionsxl tradeOffer " + (FactionsXL.getInstance().getCommandCache().tradeOffer.finishedOffers.size() - 1);
         ClickEvent onClickConfirm = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
-        TextComponent confirm = new TextComponent(ChatColor.GREEN + FMessage.MISC_ACCEPT.getMessage());
+        BaseComponent confirm = GUIButton.CONFIRM.duplicate();
         confirm.setClickEvent(onClickConfirm);
 
         ClickEvent onClickDeny = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + " -deny");
-        TextComponent deny = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
+        BaseComponent deny = GUIButton.DENY.duplicate();
         deny.setClickEvent(onClickDeny);
 
         for (Player player : receiver.getOnlineMods()) {

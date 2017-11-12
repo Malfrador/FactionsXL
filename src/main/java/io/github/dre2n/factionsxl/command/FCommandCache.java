@@ -38,6 +38,7 @@ public class FCommandCache extends DRECommandCache {
     public AddCasusBelliCommand casusBelli = new AddCasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
+    public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
@@ -97,6 +98,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(casusBelli);
         addCommand(chat);
         addCommand(claim);
+        addCommand(confirmWar);
         addCommand(create);
         addCommand(createBull);
         addCommand(createVassal);

@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.war;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.LegalEntity;
 import java.io.File;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import java.util.Set;
 public class WarCache {
 
     private Set<War> wars = new HashSet<>();
+    private Set<War> unconfirmedWars = new HashSet<>();
 
     public WarCache(File dir) {
         assert dir.isDirectory();
@@ -39,10 +41,48 @@ public class WarCache {
     /* Getters and setters */
     /**
      * @return
-     * all wars
+     * all confirmed wars
      */
     public Set<War> getWars() {
         return wars;
+    }
+
+    /**
+     * @return
+     * all wars that are not confirmed yet
+     */
+    public Set<War> getUnconfirmedWars() {
+        return unconfirmedWars;
+    }
+
+    /**
+     * @param date
+     * the start date
+     * @return
+     * the war with the matching date ID
+     */
+    public War getByDate(Date date) {
+        for (War war : wars) {
+            if (war.getStartDate().equals(date)) {
+                return war;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param date
+     * the start date
+     * @return
+     * the war with the matching date ID
+     */
+    public War getByDate(long date) {
+        for (War war : wars) {
+            if (war.getStartDate().getTime() == date) {
+                return war;
+            }
+        }
+        return null;
     }
 
     /**

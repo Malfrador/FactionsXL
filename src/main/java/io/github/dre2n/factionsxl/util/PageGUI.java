@@ -189,40 +189,47 @@ public class PageGUI {
         return pages;
     }
 
-    public void open(HumanEntity player) {
-        player.openInventory(pages.get(0));
+    public Inventory open(HumanEntity player) {
+        Inventory gui = pages.get(0);
+        player.openInventory(gui);
+        return gui;
     }
 
-    public void open(HumanEntity player, int page) {
+    public Inventory open(HumanEntity player, int page) {
         if (pages.size() - 1 >= page && page >= 0) {
-            player.openInventory(pages.get(page));
+            Inventory gui = pages.get(page);
+            player.openInventory(gui);
+            return gui;
         }
+        return null;
     }
 
-    public void open(HumanEntity player, int page1, int page2) {
+    public Inventory open(HumanEntity player, int page1, int page2) {
         boolean check1 = pages1.size() - 1 >= page1;
         boolean check2 = pages2.size() - 1 >= page2;
         if (!check1 || !check2) {
-            return;
+            return null;
         }
         Inventory gui = generateBase();
         fillWithItems(gui, pages1.get(page1), 0, 17);
         fillWithItems(gui, pages2.get(page2), 27, 44);
         player.openInventory(gui);
+        return gui;
     }
 
-    public void open(HumanEntity player, int page1, int page2, int page3) {
+    public Inventory open(HumanEntity player, int page1, int page2, int page3) {
         boolean check1 = pages1.size() - 1 >= page1;
         boolean check2 = pages2.size() - 1 >= page2;
         boolean check3 = pages3.size() - 1 >= page3;
         if (!check1 || !check2 || !check3) {
-            return;
+            return null;
         }
         Inventory gui = generateBase();
         fillWithItems(gui, pages1.get(page1), 0, 8);
         fillWithItems(gui, pages2.get(page2), 18, 27);
         fillWithItems(gui, pages3.get(page3), 36, 44);
         player.openInventory(gui);
+        return gui;
     }
 
     private Inventory generateBase() {

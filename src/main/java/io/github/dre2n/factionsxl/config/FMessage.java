@@ -180,7 +180,7 @@ public enum FMessage implements Message {
     HELP_CASUS_BELLI("help.casusBelli", "/f casusBelli ([faction] - Shows all of your casus belli (except raid)."),
     HELP_CHAT("help.chat", "/f chat [f(action)|p(ublic)] [faction] - Changes the chat mode."),
     HELP_CLAIM("help.claim", "/f claim ([faction]) - Claims a territory."),
-    HELP_SHORT_TAG("help.shortTag", "/f shortTag ([faction]) [tag] - Changes the short tag of the faction."),
+    HELP_CONFIRM_WAR("help.confirmWar", "/f confirmWar [date] - Technical command used to confirm wars."),
     HELP_CREATE("help.create", "/f create [tag] - Creates a new faction."),
     HELP_CREATE_BULL("help.create.bull", "/f createBull [name] - Creates a new bull with [name] as the author."),
     HELP_CREATE_VASSAL("help.createVassal", "/f createVassal [tag] [leader] - Creates a new faction as your vassal."),
@@ -218,6 +218,7 @@ public enum FMessage implements Message {
     HELP_SET_HOME("help.setHome", "/f setHome [faction] - Sets the home point of the faction to the current position."),
     HELP_SET_PLAYER_HOME("help.setPlayerHome", "/sethome ([player]) - Sets a player's home location."),
     HELP_SET_POWER("help.setPower", "/f setPower [player] [value] - Sets a player's power to a specific value."),
+    HELP_SHORT_TAG("help.shortTag", "/f shortTag ([faction]) [tag] - Changes the short tag of the faction."),
     HELP_SHOW("help.show", "/f show [faction] - Shows a faction's status information."),
     HELP_STORAGE("help.storage", "/f storage [faction] - Shows a faction's storage."),
     HELP_TAG("help.tag", "/f tag ([faction]) [tag] - Changes the name of the faction."),
@@ -247,6 +248,7 @@ public enum FMessage implements Message {
     LOG_NEW_PLAYER_DATA("log.newPlayerData", "&6A new player data file has been created and saved as &v1."),
     MISC_ACCEPT("misc.accept", "[ ACCEPT ]"),
     MISC_BACK("misc.back", "&6&lBACK"),
+    MISC_CANCEL("misc.cancel", "[ CANCEL ]"),
     MISC_CONTINUE("misc.continue", "&6&lCONTINUE"),
     MISC_DENY("misc.deny", "[ DENY ]"),
     MISC_LONER("misc.loner", "Loner"),
@@ -445,7 +447,13 @@ public enum FMessage implements Message {
     WAR_CALL_TO_ARMS_DEFENDER("war.callToArms.defender", "&4&v1 will side with your enemy."),
     WAR_CALL_TO_ARMS_ADD("war.callToArms.add", "&6&lClick to call them to arms."),
     WAR_CALL_TO_ARMS_REMOVE("war.callToArms.remove", "&6&lClick to retract the call to arms."),
-    WAR_CALL_TO_ARMS_TITLE("war.callToArms.title", "&4&lCall to arms");
+    WAR_CALL_TO_ARMS_TITLE("war.callToArms.title", "&4&lCall to arms"),
+    WAR_DECLARATION_ALLIES("war.declaration.allies", "&9Allies: "),
+    WAR_DECLARATION_CANCELLED("war.declaration.cancelled", "&6War cancelled."),
+    WAR_DECLARATION_CASUS_BELLI("war.declaration.casusBelli", "&eCasus Belli: "),
+    WAR_DECLARATION_DEFENDERS("war.declaration.defenders", "&cDefenders: "),
+    WAR_DECLARATION_START_DATE("war.declaration.startDate", "&4&oThe war will start in 24 hours."),
+    WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== DÉCLARATION DE GUERRE ===#");
 
     private String identifier;
     private String message;

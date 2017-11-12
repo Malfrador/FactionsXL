@@ -48,6 +48,7 @@ import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.CasusBelli;
+import io.github.dre2n.factionsxl.war.War;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Set<IdeaGroup> ideaGroups = new HashSet<>();
     Set<Idea> ideas = new HashSet<>();
     Set<CasusBelli> casusBelli = new HashSet<>();
+    Set<War> callsToArms = new HashSet<>();
 
     public Faction(File file) {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
@@ -1229,6 +1231,12 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (cbs != null) {
             for (String cb : cbs.getKeys(false)) {
                 casusBelli.add(new CasusBelli(config.getConfigurationSection("casusBelli." + cb)));
+            }
+        }
+        for (long date : config.getLongList("callsToArms")) {
+            War war = plugin.getWarCache().getByDate(date);
+            if (war != null) {
+                callsToArms.add(war);
             }
         }
     }

@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.war;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.relation.Relation;
@@ -25,8 +26,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -52,8 +56,10 @@ public class CallToArmsMenu implements Listener {
     private WarParty defender;
     private CasusBelli cb;
     private PageGUI gui;
+    private HumanEntity cachedViewer;
 
     public CallToArmsMenu(WarParty attacker, Faction defender, CasusBelli cb) {
+        Bukkit.getPluginManager().registerEvents(this, FactionsXL.getInstance());
         this.attacker = attacker;
         attackerLeader = (Faction) attacker.getLeader(); // TODO: Might break after government update
         attackerLeader.getRelatedFactions(Relation.ALLIANCE).forEach(f -> attackerCandidates.add(f));
@@ -74,9 +80,11 @@ public class CallToArmsMenu implements Listener {
             }
         }
         this.defender.getFactions().forEach(f -> gui.addButton3(generateFactionButton(f, Status.DEFENDER))); // Enemies
+        this.cb = cb;
     }
 
     public void open(HumanEntity player) {
+        cachedViewer = player;
         gui.open(player, 0, 0, 0);
     }
 
@@ -127,14 +135,13 @@ public class CallToArmsMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
         int slot = event.getSlot();
-        if (inventory == null || !gui.getTitle().equals(inventory.getTitle()) || (slot > 8 & slot < 18 || slot > 26 & slot < 36 || slot >= 45)) {
+        if (inventory == null || event.getWhoClicked() != cachedViewer || (slot > 8 & slot < 18 || slot > 26 & slot < 36 || slot >= 45)) {
             return;
         }
         ItemStack button = event.getCurrentItem();
-        if (button == null) {
+        if (button == null || !button.hasItemMeta()) {
             return;
         }
-        assert button.getItemMeta().hasLore();
         if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
             gui.removeButton2(button);
             gui.addButton1(button);
@@ -148,10 +155,13 @@ public class CallToArmsMenu implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!gui.equals(event.getInventory())) {
+        if (event.getPlayer() != cachedViewer || !(event.getPlayer() instanceof Player)) {
             return;
         }
         War war = new War(attacker, defender, cb);
+        FactionsXL.getInstance().getWarCache().getUnconfirmedWars().add(war);
+        war.sendConfirmRequest((Player) event.getPlayer());
+        HandlerList.unregisterAll(this);
     }
 
 }
