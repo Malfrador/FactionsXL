@@ -301,6 +301,7 @@ public enum FMessage implements Message {
     REGION_MAGIC("region.magic", "Magic"),
     REGION_MOUNTAINOUS("region.mountainous", "Mountainous"),
     REGION_SEA("region.sea", "Sea"),
+    REGION_WAR_ZONE("region.warZone", "War Zone"),
     RELATION_ALLIANCE("relation.alliance", "Alliance"),
     RELATION_ALLIANCE_DESC("relation.allianceDesc", "Two friendly factions form an alliance to defend each other."),
     RELATION_COALITION("relation.coalition", "Coalition"),

@@ -22,6 +22,7 @@ import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.board.RegionType;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -31,6 +32,7 @@ import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,6 +52,8 @@ public class PlayerListener implements Listener {
     Board board;
     FConfig fConfig;
 
+    public static final String SPACE = " " + ChatColor.RESET;
+
     public PlayerListener(FactionsXL plugin) {
         this.plugin = plugin;
         fPlayers = plugin.getFPlayerCache();
@@ -64,7 +68,7 @@ public class PlayerListener implements Listener {
         fPlayers.addPlayer(fPlayer);
 
         Region region = fPlayer.getLastRegion();
-        MessageUtil.sendActionBarMessage(player, ParsingUtil.getRegionName(player, region));
+        MessageUtil.sendActionBarMessage(player, getRegionName(player, region));
 
         if (fConfig.isScoreboardEnabledByDefault()) {
             FScoreboard.init(fPlayer);
@@ -123,7 +127,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        MessageUtil.sendActionBarMessage(event.getPlayer(), ParsingUtil.getRegionName(player, toRegion));
+        MessageUtil.sendActionBarMessage(event.getPlayer(), getRegionName(player, toRegion));
         if (toRegion != null) {
             Faction fromFaction = fromRegion != null ? fromRegion.getOwner() : null;
             Faction toFaction = toRegion != null ? toRegion.getOwner() : null;
@@ -150,6 +154,16 @@ public class PlayerListener implements Listener {
             player.stopSound(faction.getAnthem());
         } else {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + player.getName() + " master " + faction.getAnthem());
+        }
+    }
+
+    private String getRegionName(Player player, Region region) {
+        String main = ParsingUtil.getRegionName(player, region);
+        if (region == null || region.getType() != RegionType.WARZONE) {
+            return main;
+        } else {
+            String warZone = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "[ " + FMessage.REGION_WAR_ZONE.getMessage().toUpperCase() + "]";
+            return warZone + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + main + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + warZone;
         }
     }
 

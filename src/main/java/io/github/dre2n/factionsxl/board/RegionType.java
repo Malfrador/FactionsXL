@@ -44,7 +44,8 @@ public enum RegionType {
     FOREST(10000, FMessage.REGION_FOREST),
     MAGIC(5000, FMessage.REGION_MAGIC),
     MOUNTAINOUS(4000, FMessage.REGION_MOUNTAINOUS),
-    SEA(20000, FMessage.REGION_SEA);
+    SEA(20000, FMessage.REGION_SEA),
+    WARZONE(0, FMessage.REGION_WAR_ZONE);
 
     private int maxPopulation;
     private List<Map<Resource, Integer>> resources = new ArrayList<>();

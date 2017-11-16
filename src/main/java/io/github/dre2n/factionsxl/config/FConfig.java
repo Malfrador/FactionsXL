@@ -207,6 +207,7 @@ public class FConfig extends DREConfig {
             put(MAGIC, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#F8AB00").setFillColor("#DF3418"));
             put(MOUNTAINOUS, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#EDEDED").setFillColor("#DADADA"));
             put(SEA, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#00C7C2").setFillColor("#0088C2"));
+            put(WARZONE, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#FF3333").setFillColor("#CC0000"));
         }
     };
 

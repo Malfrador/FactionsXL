@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.protection;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.board.RegionType;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -76,9 +77,13 @@ public class EntityProtectionListener implements Listener {
             return;
         }
         Player defender = (Player) eDefender;
+        Region region = plugin.getBoard().getByLocation(defender.getLocation());
+        if (region.getType() == RegionType.WARZONE) {
+            return;
+        }
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
-        Faction rFaction = plugin.getFactionCache().getByLocation(defender.getLocation());
+        Faction rFaction = region.getOwner();
         double shield = plugin.getFConfig().getTerritoryShield();
         if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
