@@ -231,6 +231,7 @@ public class FactionsXL extends DREPlugin {
         board.saveAll();
         factions.saveAll();
         fPlayers.saveAll();
+        wars.saveAll();
         messageConfig.save();
     }
 

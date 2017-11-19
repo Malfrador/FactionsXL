@@ -48,7 +48,7 @@ public class WarParty {
 
     public WarParty(ConfigurationSection config) {
         leader = factions.getById(config.getInt("leader"));
-        config.getList("participants").forEach(p -> participants.add(factions.getById((Integer) p)));
+        config.getIntegerList("participants").forEach(p -> participants.add(factions.getById(p)));
         kills = config.getInt("kills");
         fights = config.getInt("fights");
     }

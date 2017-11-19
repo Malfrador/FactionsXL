@@ -1132,6 +1132,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
         ideaGroups.clear();
         ideas.clear();
         FTeamWrapper.applyUpdates(this);
+        for (War war : plugin.getWarCache().getWars()) {
+            war.getAttacker().getParticipants().remove(this);
+            war.getDefender().getParticipants().remove(this);
+        }
     }
 
     /* Serialization */

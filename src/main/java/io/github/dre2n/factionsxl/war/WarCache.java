@@ -133,4 +133,14 @@ public class WarCache {
         return null;
     }
 
+    /* Persistence */
+    /**
+     * Saves all wars
+     */
+    public void saveAll() {
+        for (War war : wars) {
+            war.save();
+        }
+    }
+
 }
