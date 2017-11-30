@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command;
 
+import io.github.dre2n.commons.misc.SimpleDateUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
@@ -72,7 +73,7 @@ public class SetCapitalCommand extends FCommand {
         }
         long moveAllowedTime = faction.getTimeLastCapitalMove() + plugin.getFConfig().getMoveCapitalCooldown();
         if (moveAllowedTime > System.currentTimeMillis()) {
-            ParsingUtil.sendMessage(player, FMessage.ERROR_CAPITAL_MOVE_COOLDOWN.getMessage(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(moveAllowedTime)));
+            ParsingUtil.sendMessage(player, FMessage.ERROR_CAPITAL_MOVE_COOLDOWN.getMessage(), SimpleDateUtil.ddMMyyyyhhmm(moveAllowedTime));
             return;
         }
 
