@@ -56,6 +56,11 @@ public class SetColorCommand extends FCommand {
             return;
         }
 
+        if (i == 2 && args.length < 4) {
+            displayHelp(sender);
+            return;
+        }
+
         String fill = args[i];
         if (!fill.startsWith("#")) {
             fill = "#" + fill;
