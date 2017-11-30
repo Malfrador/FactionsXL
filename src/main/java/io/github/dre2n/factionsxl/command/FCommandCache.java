@@ -20,6 +20,7 @@ import io.github.dre2n.commons.command.DRECommandCache;
 import io.github.dre2n.commons.javaplugin.DREPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
+import io.github.dre2n.factionsxl.command.war.*;
 import io.github.dre2n.factionsxl.config.FConfig;
 
 /**
@@ -88,6 +89,7 @@ public class FCommandCache extends DRECommandCache {
     public UnclaimCommand unclaim = new UnclaimCommand();
     public UninviteCommand uninvite = new UninviteCommand();
     public WarCommand war = new WarCommand();
+    public WarStatusCommand warStatus = new WarStatusCommand();
     public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
@@ -141,6 +143,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(unclaim);
         addCommand(uninvite);
         addCommand(war);
+        addCommand(warStatus);
         addCommand(world);
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

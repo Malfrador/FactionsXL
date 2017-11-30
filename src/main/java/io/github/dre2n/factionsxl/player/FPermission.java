@@ -79,12 +79,13 @@ public enum FPermission {
     TITLE("title", TRUE),
     TRADE_OFFER("tradeoffer", TRUE),
     WAR("war", TRUE),
+    WAR_STATUS("warstatus", TRUE),
     WORLD("world", OP),
     // Kits
     ADMINISTRATOR("*", OP),
     HALF_PLAYER("halfplayer", TRUE, ADMIN, CASUS_BELLI, CASUS_BELLI_OTHERS, CHAT, CLAIM, DISBAND, HELP, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD,
             OPEN, POWER, REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SET_HOME, SHOW, STORAGE, TITLE,
-            TRADE_OFFER, WAR),
+            TRADE_OFFER, WAR, WAR_STATUS),
     FULL_PLAYER("fullplayer", OP, HALF_PLAYER, HOME, CREATE, CREATE_VASSAL, TAG);
 
     public static final String PREFIX = "fxl.";

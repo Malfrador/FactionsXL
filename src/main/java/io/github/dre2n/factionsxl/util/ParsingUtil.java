@@ -328,11 +328,19 @@ public enum ParsingUtil {
     }
 
     public static String getPlayerName(Player subject, Player object) {
+        return getPlayerName(subject, object, false);
+    }
+
+    public static String getPlayerName(Player subject, Player object, boolean title) {
         FactionsXL plugin = FactionsXL.getInstance();
+        String objectTitle = null;
+        if (title) {
+            objectTitle = plugin.getFPlayerCache().getByPlayer(object).getTitle();
+        }
         Faction subjectFaction = plugin.getFactionCache().getByMember(subject);
         Faction objectFaction = plugin.getFactionCache().getByMember(object);
         ChatColor color = subjectFaction != null ? subjectFaction.getRelation(objectFaction).getColor() : ChatColor.WHITE;
-        return color + object.getName();
+        return color + (title ? objectTitle + ' ' + object.getName() : object.getName());
     }
 
     public static String getFactionName(Player subject, Faction object) {

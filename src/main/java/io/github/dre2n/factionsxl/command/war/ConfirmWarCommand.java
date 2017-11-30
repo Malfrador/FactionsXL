@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.command.relation;
+package io.github.dre2n.factionsxl.command.war;
 
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.War;
 import io.github.dre2n.factionsxl.war.WarCache;
 import org.bukkit.command.CommandSender;
@@ -58,6 +59,7 @@ public class ConfirmWarCommand extends FCommand {
                     MessageUtil.sendMessage(sender, FMessage.WAR_DECLARATION_CANCELLED.getMessage());
                 } else {
                     war.confirm();
+                    ParsingUtil.broadcastMessage(FMessage.WAR_DECLARATION_BROADCAST.getMessage(), getFSender(sender), getSenderFaction(sender), war.getDefender().getLeader());
                 }
             }
         }
