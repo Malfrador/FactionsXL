@@ -893,6 +893,37 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @return
+     * true if the faction is in war
+     */
+    public boolean isInWar() {
+        return plugin.getWarCache().getByFaction(this) != null;
+    }
+
+    @Override
+    public boolean isInWar(RelationParticipator object) {
+        Set<War> wars = plugin.getWarCache().getByFaction(this);
+        if (object instanceof Faction) {
+            for (War war : wars) {
+                Set<Faction> factions = war.getAttacker().getFactions().contains(this) ? war.getDefender().getFactions() : war.getAttacker().getFactions();
+                if (factions.contains((Faction) object)) {
+                    return true;
+                }
+            }
+        } else if (object instanceof FPlayer) {
+            for (War war : wars) {
+                Set<Faction> factions = war.getAttacker().getFactions().contains(this) ? war.getDefender().getFactions() : war.getAttacker().getFactions();
+                for (Faction faction : factions) {
+                    if (faction.getMembers().contains((FPlayer) object)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param sender
      * the CommandSender to check
      * @return

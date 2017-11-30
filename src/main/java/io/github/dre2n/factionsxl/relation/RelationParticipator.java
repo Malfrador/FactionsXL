@@ -29,4 +29,10 @@ public interface RelationParticipator {
      */
     public Relation getRelation(RelationParticipator object);
 
+    /**
+     * @return
+     * true if the faction is in war with the object
+     */
+    public boolean isInWar(RelationParticipator object);
+
 }

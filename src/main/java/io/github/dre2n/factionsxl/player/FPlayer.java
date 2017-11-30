@@ -252,6 +252,12 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
         return own != null ? own.getRelation(object) : Relation.PEACE;
     }
 
+    @Override
+    public boolean isInWar(RelationParticipator object) {
+        Faction own = getFaction();
+        return own != null ? own.isInWar(object) : false;
+    }
+
     public Location getHome() {
         return data.getHome();
     }
