@@ -260,6 +260,21 @@ public class FactionCache {
     }
 
     /**
+     * @param member
+     * the UUID of the member to check
+     * @return
+     * the faction that has this member
+     */
+    public Faction getByMember(UUID member) {
+        for (Faction faction : getActive()) {
+            if (faction.getMembers().contains(member)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param fPlayer
      * the FPlayer to check
      * @return
