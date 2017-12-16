@@ -143,7 +143,7 @@ public class LandProtectionListener implements Listener {
             Relation rel = owner.getRelation(bFaction);
             if (!rel.canBuild()) {
                 event.setCancelled(true);
-                ParsingUtil.sendMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
+                ParsingUtil.sendActionBarMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
             }
         }
     }
@@ -160,7 +160,7 @@ public class LandProtectionListener implements Listener {
         if (region == null || region.isNeutral()) {
             if (wildernessProtected) {
                 event.setCancelled(true);
-                ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS : FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS).getMessage());
+                ParsingUtil.sendActionBarMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS : FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS).getMessage());
             }
             return;
         }
@@ -177,7 +177,7 @@ public class LandProtectionListener implements Listener {
         }
         if (!rel.canBuild()) {
             event.setCancelled(true);
-            ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
+            ParsingUtil.sendActionBarMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
         }
     }
 

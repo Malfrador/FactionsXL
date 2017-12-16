@@ -27,6 +27,7 @@ import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -177,7 +178,7 @@ public class EntityProtectionListener implements Listener {
             return;
         }
 
-        boolean living = damaged instanceof LivingEntity;
+        boolean living = damaged instanceof LivingEntity && damaged.getType() != EntityType.ARMOR_STAND;
         Region region = plugin.getBoard().getByLocation(damaged.getLocation());
         if (region == null || region.isNeutral()) {
             return;
