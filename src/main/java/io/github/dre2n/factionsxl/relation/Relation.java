@@ -315,9 +315,11 @@ public enum Relation {
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, relation.getName());
             } else if (relation == VASSAL) {
                 object.getRelations().put(subject, LORD);
+                object.setAllod(true);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), subject, object);
             } else if (relation == LORD) {
                 object.getRelations().put(subject, VASSAL);
+                subject.setAllod(true);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
             }
             FTeamWrapper.updatePrefixes(subject);
