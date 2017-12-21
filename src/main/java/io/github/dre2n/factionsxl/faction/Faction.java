@@ -124,6 +124,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Set<Idea> ideas = new HashSet<>();
     Set<CasusBelli> casusBelli = new HashSet<>();
     Set<War> callsToArms = new HashSet<>();
+    boolean allod = true;
 
     public Faction(File file) {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
@@ -894,6 +895,22 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /**
      * @return
+     * if the faction is an allod
+     */
+    public boolean isAllod() {
+        return allod;
+    }
+
+    /**
+     * @param allod
+     * set if the faction is an allod
+     */
+    public void setAllod(boolean allod) {
+        this.allod = allod;
+    }
+
+    /**
+     * @return
      * true if the faction is in war
      */
     public boolean isInWar() {
@@ -1274,6 +1291,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
                 callsToArms.add(war);
             }
         }
+        allod = config.getBoolean("isAllod", true);
     }
 
     public void save() {
@@ -1360,6 +1378,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
                 config.set("casusBelli." + i, cb.serialize());
                 i++;
             }
+            config.set("isAllod", allod);
 
             config.save(file);
         } catch (Exception exception) {

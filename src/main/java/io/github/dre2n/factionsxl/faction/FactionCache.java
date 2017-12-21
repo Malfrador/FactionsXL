@@ -25,6 +25,7 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.LazyChunk;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -211,6 +212,38 @@ public class FactionCache {
 
         union.checkForPersonalUnions();
         return union;
+    }
+
+    /**
+     * Integrate one faction into the other.
+     *
+     * @param integrating
+     * the first faction
+     * @param integrated
+     * the faction that gets integrated
+     */
+    public void integrate(Faction integrating, Faction integrated) {
+        for (Region region : integrated.getRegions()) {
+            region.setOwner(integrating);
+            Date coreDate = null;
+            for (Entry<Faction, Date> entry : region.getCoreFactions().entrySet()) {
+                if (entry.getKey() == integrating || entry.getKey() == integrated) {
+                    coreDate = entry.getValue();
+                }
+            }
+            if (coreDate != null) {
+                region.getCoreFactions().put(integrating, coreDate);
+            }
+        }
+        for (UUID uuid : integrated.members.getUniqueIds()) {
+            integrating.members.add(uuid);
+        }
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            integrating.account.deposit(integrated.account.getBalance());
+            integrated.account.setBalance(0);
+        }
+        integrated.disband();
+        ParsingUtil.broadcastMessage(FMessage.FACTION_INTEGRATED_VASSAL.getMessage(), integrating, integrated);
     }
 
     /* Getters and setters */
