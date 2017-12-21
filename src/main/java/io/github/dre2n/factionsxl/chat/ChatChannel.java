@@ -31,6 +31,7 @@ public enum ChatChannel {
     FACTION(ChatColor.GREEN, Relation.OWN, Relation.LORD, Relation.VASSAL),
     LOCAL(ChatColor.GRAY, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY),
     PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
+
     private ChatColor color;
     private List<Relation> relations;
 

@@ -657,6 +657,23 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @param relation
+     * the relation type
+     * @return
+     * a Set of all related players that are online and their vassals
+     */
+    public Collection<Player> getOnlineByRelationAndVassals(Relation relation) {
+        HashSet<Player> online = new HashSet<>();
+        for (Faction faction : getRelatedFactions(relation)) {
+            online.addAll(faction.getOnlineMembers());
+            for (Faction vassal : faction.getRelatedFactions(Relation.VASSAL)) {
+                online.addAll(vassal.getOnlineMembers());
+            }
+        }
+        return online;
+    }
+
+    /**
      * @return
      * a Set of all invited players
      */
