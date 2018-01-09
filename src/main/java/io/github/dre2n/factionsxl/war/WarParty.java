@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,8 +38,9 @@ public class WarParty {
 
     private LegalEntity leader;
     private Set<LegalEntity> participants = new HashSet<>();
-    private int kills;
-    private int fights;
+    public int kills;
+    public int deaths;
+    public int fights;
 
     public WarParty(LegalEntity entity) {
         leader = entity;
@@ -50,6 +51,7 @@ public class WarParty {
         leader = factions.getById(config.getInt("leader"));
         config.getIntegerList("participants").forEach(p -> participants.add(factions.getById(p)));
         kills = config.getInt("kills");
+        this.deaths = config.getInt("deaths");
         fights = config.getInt("fights");
     }
 
@@ -97,6 +99,13 @@ public class WarParty {
         participants.add(participant);
     }
 
+    public double getKD() {
+        if (deaths != 0) {
+            return kills / deaths;
+        }
+        return kills;
+    }
+
     /* Serialization */
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<>();
@@ -105,6 +114,7 @@ public class WarParty {
         this.participants.forEach(p -> participants.add(p.getId()));
         serialized.put("partcipants", participants);
         serialized.put("kills", kills);
+        serialized.put("deaths", this.deaths);
         serialized.put("fights", fights);
         return serialized;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,8 +104,16 @@ public enum FMessage implements Message {
     CMD_UNCLAIM_FAIL("cmd.unclaim.fail", "&4You cannot unclaim your capital province."),
     CMD_UNCLAIM_SUCCESS("cmd.unclaim.success", "&aSuccessfully unclaimed the region &v1&a."),
     CMD_UNINVITE_SUCCESS("cmd.uninvite.success", "&v1 &aremoved &v2&a's invitation to join your faction."),
+    CMD_WAR_STATUS_ATTACKERS("cmd.warStatus.attackers", "&4Attackers: &a"),
+    CMD_WAR_STATUS_CASUS_BELLI("cmd.warStatus.casusBelli", "&4Casus Belli: &a"),
+    CMD_WAR_STATUS_DATE("cmd.warStatus.date", "&4Date: &a"),
+    CMD_WAR_STATUS_DEATHS("cmd.warStatus.deaths", "&4Deaths: &a"),
+    CMD_WAR_STATUS_DEFENDERS("cmd.warStatus.deFfenders", "&4Defenders: &a"),
     CMD_WAR_STATUS_HEADLINE("cmd.warStatus.headline", "&aATTACKER &2| &aDEFENDER &2| &aCASUS BELLI &2| &aSTART DATE"),
+    CMD_WAR_STATUS_KD("cmd.warStatus.kd", "&4K/D: &a"),
+    CMD_WAR_STATUS_KILLS_AND_DEATHS("cmd.warStatus.killsAndDeaths", " &4Kills/Deaths: &a&v1&4/&a&v2&4 => &a&v3"),
     CMD_WAR_STATUS_NO_WARS("cmd.warStatus.noWars", "&aThe faction &v1 &ais currently not at war."),
+    CMD_WAR_STATUS_POINTS("cmd.warStatus.points", " &4Points: &a"),
     CMD_WORLD_AUTOCLAIM_END("cmd.world.autoclaim.end", "&aYou are not adding chunks to the region any longer."),
     CMD_WORLD_AUTOCLAIM_START("cmd.world.autoclaim.start", "&aYou are now autocmatically adding chunks to the region &v1&a while moving."),
     CMD_WORLD_CHUNK_ADDED("cmd.world.chunkAdded", "&aSuccessfully added this chunk to the region &v1&a."),
@@ -162,6 +170,7 @@ public enum FMessage implements Message {
     ERROR_SPECIFY_FACTION("error.specifyFaction", "&4You have to specify a faction."),
     ERROR_VASSAL("error.vassal", "&4The faction &v1 &4is a vassal."),
     ERROR_VASSAL_IS_MOTHER_ADMIN("error.vassalIsMotherAdmin", "&4The player &v1 &4is already leader of the mother faction."),
+    FACTION_INTEGRATED_VASSAL("faction.integratedVassal", "&aThe faction &v1 &aintegrated their vassal &v2&a."),
     FACTION_INVITE("faction.invite", "&aThe faction &v1&a would like to have you as a comrade. Join them?"),
     FACTION_JOIN_ACCEPT("faction.join.accept", "&v1 &ajoined the faction."),
     FACTION_JOIN_DENY("faction.join.deny", "&v1 &adecided not to join the faction."),
@@ -456,11 +465,12 @@ public enum FMessage implements Message {
     WAR_CALL_TO_ARMS_REMOVE("war.callToArms.remove", "&6&lClick to retract the call to arms."),
     WAR_CALL_TO_ARMS_TITLE("war.callToArms.title", "&4&lCall to arms"),
     WAR_DECLARATION_ALLIES("war.declaration.allies", "&9Allies: "),
+    WAR_DECLARATION_BROADCAST("war.declaration.broadcast", "&v1 &4 of &v2 &4declared war on &v3&4!"),
     WAR_DECLARATION_CANCELLED("war.declaration.cancelled", "&6War cancelled."),
     WAR_DECLARATION_CASUS_BELLI("war.declaration.casusBelli", "&eCasus Belli: "),
     WAR_DECLARATION_DEFENDERS("war.declaration.defenders", "&cDefenders: "),
     WAR_DECLARATION_START_DATE("war.declaration.startDate", "&4&oThe war will start in 24 hours."),
-    WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== DÉCLARATION DE GUERRE ===#");
+    WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== D\u00c9CLARATION DE GUERRE ===#");
 
     private String identifier;
     private String message;

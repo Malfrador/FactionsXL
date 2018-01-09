@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -237,7 +237,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      */
     public String getPrefix() {
         Faction faction = getFaction();
-        if (faction != null && faction.getAdmin().getUniqueId().equals(uuid)) {
+        if (faction != null && faction.isAdmin(uuid)) {
             return FMessage.CHAT_PREFIX_ADMIN.getMessage();
         } else if (faction != null && isMod(faction)) {
             return FMessage.CHAT_PREFIX_MOD.getMessage();
