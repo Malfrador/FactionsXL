@@ -51,7 +51,7 @@ public class ModCommand extends FCommand {
         if (faction == null) {
             return;
         }
-        if (sender instanceof Player && !faction.isPrivileged((Player) sender)) {
+        if (sender instanceof Player && !faction.isAdmin((Player) sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
