@@ -54,7 +54,7 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
-        if (!subjectFaction.isPrivileged(sender)) {
+        if (!subjectFaction.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

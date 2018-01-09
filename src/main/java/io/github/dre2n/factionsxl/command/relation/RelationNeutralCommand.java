@@ -64,7 +64,7 @@ public class RelationNeutralCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subject);
             return;
         }
-        if (!subject.isPrivileged(sender)) {
+        if (!subject.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
