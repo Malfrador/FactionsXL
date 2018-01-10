@@ -92,6 +92,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     boolean active;
     String mapFillColor = "#E0E0E0";
     String mapLineColor = "#FFFFFF";
+    String mapIcon = "redflag";
     DynmapStyle dynmapStyle;
     boolean mapVisibility = true;
     GovernmentType type;
@@ -184,16 +185,29 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @return
+     * the Dynmap home icon
+     */
+    public String getMapIcon() {
+        return mapIcon;
+    }
+
+    /**
      * @param fill
      * the Dynmap fill color to set
      * @param line
      * the Dynmap line color to set
+     * @param icon
+     * the Dynmap icon name to set
      */
-    public void setMapColor(String fill, String line) {
+    public void setMapStyle(String fill, String line, String icon) {
         if (fill.matches("#[0-9A-F]{6}") && line.matches("#[0-9A-F]{6}")) {
             mapFillColor = fill;
             mapLineColor = line;
-            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+            if (icon != null) {
+                mapIcon = icon;
+            }
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor).setHomeMarker(mapIcon);
         }
     }
 
@@ -203,7 +217,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public DynmapStyle getDynmapStyle() {
         if (dynmapStyle == null) {
-            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor).setHomeMarker(mapIcon);
         }
         return dynmapStyle;
     }

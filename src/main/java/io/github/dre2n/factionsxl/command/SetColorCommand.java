@@ -36,7 +36,7 @@ public class SetColorCommand extends FCommand {
     public SetColorCommand() {
         setCommand("setColor");
         setMinArgs(2);
-        setMaxArgs(3);
+        setMaxArgs(4);
         setHelp(FMessage.HELP_SET_COLOR.getMessage());
         setPermission(FPermission.SET_COLOR.getNode());
         setPlayerCommand(true);
@@ -73,8 +73,12 @@ public class SetColorCommand extends FCommand {
             displayHelp(sender);
             return;
         }
-        faction.setMapColor(fill, line);
-        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line);
+        String icon = null;
+        if (args.length == i + 3) {
+            icon = args[i + 2];
+        }
+        faction.setMapStyle(fill, line, icon);
+        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line, faction.getMapIcon());
     }
 
 }
