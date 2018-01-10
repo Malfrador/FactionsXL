@@ -1046,6 +1046,18 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * Kick by auto task
+     *
+     * @param member
+     * the member to kick
+     */
+    public void kick(OfflinePlayer member) {
+        sendMessage(FMessage.FACTION_PLAYER_KICKED_AUTO.getMessage(), member);
+        members.remove(member.getUniqueId());
+        mods.remove(member.getUniqueId());
+    }
+
+    /**
      * Actions when a day passed.
      */
     public void payday() {

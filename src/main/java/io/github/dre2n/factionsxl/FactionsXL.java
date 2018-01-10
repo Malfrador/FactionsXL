@@ -224,6 +224,13 @@ public class FactionsXL extends DREPlugin {
         }
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                fPlayers.autoKick();
+            }
+        }.runTaskTimer(this, 0L, FConfig.HOUR);
     }
 
     public void saveData() {

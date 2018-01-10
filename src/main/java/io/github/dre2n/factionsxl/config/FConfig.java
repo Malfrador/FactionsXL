@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 11;
+    public static final int CONFIG_VERSION = 12;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -112,13 +112,14 @@ public class FConfig extends DREConfig {
     private double territoryShield = 0.66;
     private boolean capitalProtectionEnabled = false;
 
-    // Power
+    // Power etc.
     private int maxPower = 100;
     private int minPower = -100;
     private long powerUpdateInterval = MINUTE;
     private double powerIncreaseRate = 1;
     private double powerDecreaseRate = 0.01;
     private double powerDeathLoss = 25;
+    private int autoKickDays = 30;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -505,6 +506,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * the time in milliseconds until a player gets kicked from his faction
+     */
+    public long getAutoKickTime() {
+        return (long) autoKickDays * 86400000;
+    }
+
+    /**
+     * @return
      * true if hologram features are enabled;
      * false if not or if HolographicDisplays is not installed
      */
@@ -831,6 +840,10 @@ public class FConfig extends DREConfig {
             config.set("powerDeathLoss", powerDeathLoss);
         }
 
+        if (!config.contains("autoKickDays")) {
+            config.set("autoKickDays", autoKickDays);
+        }
+
         if (!config.contains("hologramsEnabled")) {
             config.set("hologramsEnabled", hologramsEnabled);
         }
@@ -1073,6 +1086,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("powerDeathLoss")) {
             powerDeathLoss = config.getDouble("powerDeathLoss");
+        }
+
+        if (config.contains("autoKickDays")) {
+            autoKickDays = config.getInt("autoKickDays");
         }
 
         if (config.contains("hologramsEnabled")) {
