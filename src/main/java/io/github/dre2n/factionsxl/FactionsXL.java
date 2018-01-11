@@ -251,6 +251,7 @@ public class FactionsXL extends DREPlugin {
         FileUtil.copyDirectory(FACTIONS, new File(backupDir, "factions"), new String[]{});
         FileUtil.copyDirectory(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
         FileUtil.copyDirectory(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
+        FileUtil.copyDirectory(WARS, new File(backupDir, "wars"), new String[]{});
         try {
             FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
             FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));

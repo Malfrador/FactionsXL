@@ -98,8 +98,8 @@ public enum Relation {
 
     /**
      * @return
-     * true if a vassals override this relation to other factions
-     * for themselves instead of using the lord's relatin
+     * true if vassals override this relation to other factions
+     * for themselves instead of using the lord's relation
      */
     public boolean doVassalsOverride() {
         return vassalsOverride;
@@ -149,8 +149,10 @@ public enum Relation {
     public BaseComponent[] getFormatted(Faction faction) {
         BaseComponent[] components = TextComponent.fromLegacyText(color + faction.getName());
         HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(getDescription()));
+        ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/factionsxl show " + faction.getId());
         for (BaseComponent component : components) {
             component.setHoverEvent(hover);
+            component.setClickEvent(click);
         }
         return components;
     }

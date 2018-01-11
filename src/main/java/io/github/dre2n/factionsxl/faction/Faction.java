@@ -131,12 +131,14 @@ public class Faction extends LegalEntity implements RelationParticipator {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
         this.file = file;
         config = YamlConfiguration.loadConfiguration(file);
+        active = config.getBoolean("active");
     }
 
     public Faction(int id) {
         this.id = id;
         file = new File(FactionsXL.FACTIONS, id + ".yml");
         config = YamlConfiguration.loadConfiguration(file);
+        active = config.getBoolean("active");
     }
 
     /* Getters and setters */
@@ -166,6 +168,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setActive(boolean active) {
         this.active = active;
+        if (active) {
+            plugin.getFactionCache().removeEntity(this);
+            plugin.getFactionCache().addEntity(this);
+        }
     }
 
     /**
@@ -719,14 +725,13 @@ public class Faction extends LegalEntity implements RelationParticipator {
             relation = relations.get(faction);
         } else if (faction == this) {
             relation = Relation.OWN;
+        } else if (isInWar(faction)) {
+            relation = Relation.ENEMY;
         } else {
             relation = Relation.PEACE;
         }
 
         Faction lord = getLord();
-        if (lord != null && lord == faction) {
-            return Relation.LORD;
-        }
         if (lord != null && !relation.doVassalsOverride()) {
             relation = lord.relations.get(faction);
         }
@@ -1236,7 +1241,6 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     /* Serialization */
     public void load() {
-        active = config.getBoolean("active");
         name = config.getString("name");
         longName = config.getString("longName");
         shortName = config.getString("shortName");

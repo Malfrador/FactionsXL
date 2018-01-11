@@ -51,6 +51,7 @@ public class FactionCache {
 
     private Set<LegalEntity> entities = new HashSet<>();
     private Set<Faction> factions = new HashSet<>();
+    private Set<Faction> inactiveFactions = new HashSet<>();
     private Set<Federation> federations = new HashSet<>();
     private Set<TradeLeague> leagues = new HashSet<>();
 
@@ -58,7 +59,11 @@ public class FactionCache {
         for (File file : factionsDir.listFiles()) {
             Faction faction = new Faction(file);
             entities.add(faction);
-            factions.add(faction);
+            if (faction.isActive()) {
+                factions.add(faction);
+            } else {
+                inactiveFactions.add(faction);
+            }
         }
 
         for (File file : federationsDir.listFiles()) {
@@ -260,6 +265,11 @@ public class FactionCache {
                 return faction;
             }
         }
+        for (Faction faction : inactiveFactions) {
+            if (faction.getId() == id) {
+                return faction;
+            }
+        }
         return null;
     }
 
@@ -267,10 +277,25 @@ public class FactionCache {
      * @param name
      * the name to check
      * @return
-     * the faction that has this name
+     * the active faction that has this name
      */
     public Faction getByName(String name) {
         for (Faction faction : factions) {
+            if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param name
+     * the name to check
+     * @return
+     * the inactive faction that has this name
+     */
+    public Faction getInactiveByName(String name) {
+        for (Faction faction : inactiveFactions) {
             if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
                 return faction;
             }
@@ -374,13 +399,15 @@ public class FactionCache {
      * all active factions
      */
     public Set<Faction> getActive() {
-        HashSet<Faction> toReturn = new HashSet<>();
-        for (Faction faction : factions) {
-            if (faction.isActive()) {
-                toReturn.add(faction);
-            }
-        }
-        return toReturn;
+        return factions;
+    }
+
+    /**
+     * @return
+     * all inactive factions
+     */
+    public Set<Faction> getInactive() {
+        return inactiveFactions;
     }
 
     /**
@@ -388,7 +415,10 @@ public class FactionCache {
      * all factions
      */
     public Set<Faction> getAll() {
-        return factions;
+        HashSet<Faction> toReturn = new HashSet<>();
+        toReturn.addAll(factions);
+        toReturn.addAll(inactiveFactions);
+        return toReturn;
     }
 
     /**
@@ -398,7 +428,11 @@ public class FactionCache {
     public void addEntity(LegalEntity entity) {
         entities.add(entity);
         if (entity instanceof Faction) {
-            factions.add((Faction) entity);
+            if (((Faction) entity).isActive()) {
+                factions.add((Faction) entity);
+            } else {
+                inactiveFactions.add((Faction) entity);
+            }
         } else if (entity instanceof Federation) {
             federations.add((Federation) entity);
         } else if (entity instanceof TradeLeague) {
@@ -414,6 +448,7 @@ public class FactionCache {
         entities.remove(entity);
         if (entity instanceof Faction) {
             factions.remove((Faction) entity);
+            inactiveFactions.remove((Faction) entity);
         } else if (entity instanceof Federation) {
             federations.remove((Federation) entity);
         } else if (entity instanceof TradeLeague) {
@@ -449,9 +484,8 @@ public class FactionCache {
      * Loads the persistent data of all factions
      */
     public void loadAll() {
-        for (Faction faction : factions) {
-            faction.load();
-        }
+        factions.forEach(f -> f.load());
+        inactiveFactions.forEach(f -> f.load());
     }
 
 }
