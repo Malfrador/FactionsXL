@@ -46,13 +46,21 @@ public class IntegrateCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         i = 1;
-        Player player = (Player) sender;
-        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
-        if (faction == null) {
-            return;
+        Faction faction = null;
+        if (args.length == 3) {
+            faction = getSenderFactionOrFromArg(sender, args, 1, true);
+            if (faction == null) {
+                return;
+            }
+        } else {
+            faction = getSenderFaction(sender);
+            if (faction == null) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_SPECIFY_FACTION.getMessage());
+                return;
+            }
         }
 
-        if (!faction.getAdmin().equals(player)) {
+        if (sender instanceof Player && !faction.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

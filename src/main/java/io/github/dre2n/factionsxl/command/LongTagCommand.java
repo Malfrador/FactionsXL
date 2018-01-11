@@ -68,6 +68,9 @@ public class LongTagCommand extends FCommand {
                 longName += arg;
             }
         }
+        if (longName.isEmpty()) {
+            longName = faction.getName();
+        }
 
         longName = longName.replace("&", new String());
         faction.setLongName(longName);
