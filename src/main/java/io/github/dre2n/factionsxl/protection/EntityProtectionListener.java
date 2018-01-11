@@ -79,12 +79,12 @@ public class EntityProtectionListener implements Listener {
         }
         Player defender = (Player) eDefender;
         Region region = plugin.getBoard().getByLocation(defender.getLocation());
-        if (region.getType() == RegionType.WARZONE) {
+        if (region != null && region.getType() == RegionType.WARZONE) {
             return;
         }
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
-        Faction rFaction = region.getOwner();
+        Faction rFaction = region != null ? region.getOwner() : null;
         double shield = plugin.getFConfig().getTerritoryShield();
         if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
