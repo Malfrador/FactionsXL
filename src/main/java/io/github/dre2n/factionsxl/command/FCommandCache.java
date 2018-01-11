@@ -36,7 +36,7 @@ public class FCommandCache extends DRECommandCache {
 
     public AddCasusBelliCommand addCasusBelli = new AddCasusBelliCommand();
     public AdminCommand admin = new AdminCommand();
-    public AddCasusBelliCommand casusBelli = new AddCasusBelliCommand();
+    public CasusBelliCommand casusBelli = new CasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
     public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
