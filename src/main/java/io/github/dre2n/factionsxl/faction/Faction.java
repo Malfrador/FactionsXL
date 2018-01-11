@@ -1215,6 +1215,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         regions.clear();
+        formerAdmins.add(admin);
         setAdmin(null);
         mods.clear();
         members.clear();
@@ -1245,6 +1246,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         bannerColor = (short) config.getInt("bannerColor");
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
+        mapIcon = config.getString("mapIcon");
         mapVisibility = config.getBoolean("mapVisibility");
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
@@ -1353,6 +1355,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             config.set("bannerColor", bannerColor);
             config.set("mapFillColor", mapFillColor);
             config.set("mapLineColor", mapLineColor);
+            config.set("mapIcon", mapIcon);
             config.set("mapVisibility", mapVisibility);
             config.set("creationDate", creationDate);
             config.set("type", type.toString());
