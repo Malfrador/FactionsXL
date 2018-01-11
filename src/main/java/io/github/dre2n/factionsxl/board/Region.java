@@ -210,7 +210,9 @@ public class Region {
             owner.getRegions().remove(this);
         }
         owner = faction;
-        owner.getRegions().add(this);
+        if (owner != null) {
+            owner.getRegions().add(this);
+        }
     }
 
     /**
