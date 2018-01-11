@@ -242,6 +242,7 @@ public class FactionCache {
             integrating.account.deposit(integrated.account.getBalance());
             integrated.account.setBalance(0);
         }
+        integrated.relations.clear();
         integrated.disband();
         ParsingUtil.broadcastMessage(FMessage.FACTION_INTEGRATED_VASSAL.getMessage(), integrating, integrated);
     }

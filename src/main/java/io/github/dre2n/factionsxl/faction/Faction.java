@@ -1198,6 +1198,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * if the land owner of the land of this faction shall be set to null.
      */
     public void disband(boolean unclaim) {
+        if (isVassal()) {
+            plugin.getFactionCache().integrate(getLord(), this);
+            return;
+        }
         active = false;
         open = false;
         home = null;
