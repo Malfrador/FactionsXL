@@ -81,7 +81,6 @@ public class ClaimCommand extends FCommand {
         }
 
         region.setOwner(faction);
-        faction.getRegions().add(region);
         ParsingUtil.sendMessage(sender, FMessage.CMD_CLAIM_SUCCESS.getMessage(), region);
     }
 

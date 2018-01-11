@@ -206,7 +206,11 @@ public class Region {
      * the new owner
      */
     public void setOwner(Faction faction) {
+        if (owner != null) {
+            owner.getRegions().remove(this);
+        }
         owner = faction;
+        owner.getRegions().add(this);
     }
 
     /**

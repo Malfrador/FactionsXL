@@ -224,7 +224,6 @@ public class FactionCache {
      */
     public void integrate(Faction integrating, Faction integrated) {
         for (Region region : integrated.getRegions()) {
-            region.setOwner(integrating);
             Date coreDate = null;
             for (Entry<Faction, Date> entry : region.getCoreFactions().entrySet()) {
                 if (entry.getKey() == integrating || entry.getKey() == integrated) {
@@ -234,6 +233,7 @@ public class FactionCache {
             if (coreDate != null) {
                 region.getCoreFactions().put(integrating, coreDate);
             }
+            region.setOwner(integrating);
         }
         for (UUID uuid : integrated.members.getUniqueIds()) {
             integrating.members.add(uuid);

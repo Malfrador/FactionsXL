@@ -81,7 +81,6 @@ public class UnclaimCommand extends FCommand {
         region.setOwner(null);
         region.getClaimFactions().remove(faction);
         region.getCoreFactions().remove(faction);
-        faction.getRegions().remove(region);
         ParsingUtil.sendMessage(sender, FMessage.CMD_UNCLAIM_SUCCESS.getMessage(), region);
     }
 

@@ -110,6 +110,7 @@ public class CreateVassalCommand extends FCommand {
         Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);
+        vassal.setAllod(false);
         ParsingUtil.broadcastMessage(FMessage.CMD_CREATE_SUCCESS.getMessage(), sender.getName(), args[1]);
         ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), mother, vassal);
     }

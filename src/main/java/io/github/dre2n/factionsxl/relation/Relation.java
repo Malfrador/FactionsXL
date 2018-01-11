@@ -322,6 +322,12 @@ public enum Relation {
                 subject.setAllod(true);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
             }
+            if (!subject.isVassal()) {
+                subject.setAllod(true);
+            }
+            if (!object.isVassal()) {
+                object.setAllod(true);
+            }
             FTeamWrapper.updatePrefixes(subject);
             FTeamWrapper.updatePrefixes(object);
         }
