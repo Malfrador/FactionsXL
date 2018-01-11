@@ -55,10 +55,13 @@ public class WarStatusCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         if (args.length == 2) {
-            War war = wars.getByDate(Long.parseLong(args[1]));
-            if (war != null) {
-                showWarInfo(sender, war);
-                return;
+            try {
+                War war = wars.getByDate(Long.parseLong(args[1]));
+                if (war != null) {
+                    showWarInfo(sender, war);
+                    return;
+                }
+            } catch (NumberFormatException exception) {
             }
         }
         Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
