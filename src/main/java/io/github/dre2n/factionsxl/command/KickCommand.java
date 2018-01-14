@@ -47,10 +47,10 @@ public class KickCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
         if (!player.hasPlayedBefore()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
             return;
         } else if (!plugin.getFPlayerCache().getByPlayer(player).hasFaction()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_ANY_FACTION.getMessage(), args[2]);
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_ANY_FACTION.getMessage(), args[1]);
             return;
         }
         Faction faction = plugin.getFactionCache().getByMember(player);
