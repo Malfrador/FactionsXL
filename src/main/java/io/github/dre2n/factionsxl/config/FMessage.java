@@ -160,6 +160,7 @@ public enum FMessage implements Message {
     ERROR_NOT_WILDERNESS("error.notWilderness", "&4You can only do this in the wilderness."),
     ERROR_OWN_FACTION("error.ownFaction", "&4This is your own faction."),
     ERROR_PERSONAL_UNION_WITH_FACTION("error.personalUnionWithFaction", "&4The faction &v1 &4has a personal union with &v2&4."),
+    ERROR_PERSONAL_UNION_WITH_FACTION_REQUIRED("error.personalUnionWithFaction", "&4The faction &v1 &4does not have a personal union with &v2&4."),
     ERROR_PLAYER_NOT_IN_ANY_FACTION("error.notInAnyFaction", "&4The player &6&v1 &4is not member of a faction."),
     ERROR_PLAYER_NOT_IN_FACTION("error.playerNotInFaction", "&4The player &6&v1 &4is not member of the faction &6&v2&4."),
     ERROR_PLAYER_NOT_ONLINE("error.playerNotOnline", "&4The player &6&v1 &4is not online."),

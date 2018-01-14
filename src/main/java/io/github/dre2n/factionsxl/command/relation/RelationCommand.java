@@ -91,6 +91,10 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION.getMessage(), subjectFaction, objectFaction);
             return;
         }
+        if (subjectFaction.getRelation(objectFaction) != Relation.PERSONAL_UNION && relation == Relation.REAL_UNION) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION_REQUIRED.getMessage(), subjectFaction, objectFaction);
+            return;
+        }
         Request matching = null;
         for (Request request : requests) {
             if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction) && request.getRelation() == relation) {
