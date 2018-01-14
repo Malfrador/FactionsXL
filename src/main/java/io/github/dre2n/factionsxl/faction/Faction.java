@@ -1239,6 +1239,29 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
     }
 
+    /**
+     * When the faction leader resigns / gets kicked automatically
+     */
+    public void doSuccession() {
+        /*if (type == GovernmentType.MONARCHY) {
+            // Dynasty member
+        } else if (type == GovernmentType.REPUBLIC) {
+            // Reelect
+        } else if (type == GovernmentType.THEOCRACY) {
+            // Random?
+        }*/
+        FPlayer newAdmin = null;
+        for (OfflinePlayer mod : mods.getOfflinePlayers()) {
+            FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(mod);
+            if (newAdmin == null || fPlayer.getData().getTimeLastPlayed() > newAdmin.getData().getTimeLastPlayed() || mod.isOnline()) {
+                newAdmin = fPlayer;
+            }
+        }
+        if (newAdmin == null) {
+            disband();
+        }
+    }
+
     /* Serialization */
     public void load() {
         name = config.getString("name");

@@ -163,6 +163,9 @@ public class FPlayerCache {
             for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
                 if (System.currentTimeMillis() > player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
                     faction.kick(player);
+                    if (faction.getAdmin().getUniqueId().equals(player.getUniqueId())) {
+                        faction.doSuccession();
+                    }
                 }
             }
         }
