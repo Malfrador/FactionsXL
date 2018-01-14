@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.board;
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Stores all regions and claim ownerships.
@@ -53,6 +55,7 @@ public class Board {
                 }
             }
         }
+        new CleanerTask().runTaskTimer(FactionsXL.getInstance(), FConfig.HOUR, FConfig.HOUR);
     }
 
     /* Getters and setters */
@@ -219,6 +222,20 @@ public class Board {
             region.load();
         }
         MessageUtil.log(FactionsXL.getInstance(), "Loaded board with " + regions.size() + " regions.");
+    }
+
+    @Deprecated
+    public class CleanerTask extends BukkitRunnable {
+
+        @Override
+        public void run() {
+            for (Region region : regions) {
+                if (region.getOwner() != null && !region.getOwner().isActive()) {
+                    region.setOwner(null);
+                }
+            }
+        }
+
     }
 
 }
