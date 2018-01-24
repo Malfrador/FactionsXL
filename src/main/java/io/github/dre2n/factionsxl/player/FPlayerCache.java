@@ -162,6 +162,7 @@ public class FPlayerCache {
         for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
             for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
                 if (System.currentTimeMillis() > player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
+                    FactionsXL.debug("Kicking " + player + " / Last played: " + new java.util.Date(player.getLastPlayed()));
                     faction.kick(player);
                     if (faction.getAdmin().getUniqueId().equals(player.getUniqueId())) {
                         faction.doSuccession();

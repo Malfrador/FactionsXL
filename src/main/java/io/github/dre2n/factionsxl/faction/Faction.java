@@ -1368,6 +1368,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         allod = config.getBoolean("isAllod", true);
+        FactionsXL.debug("Loaded " + this);
     }
 
     public void save() {
@@ -1466,7 +1467,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
 
     @Override
     public String toString() {
-        return "Faction{ID=" + id + "; name=" + name + "}";
+        return "Faction{ID=" + id + "; name=" + name + "; active=" + active + "}";
     }
 
 }

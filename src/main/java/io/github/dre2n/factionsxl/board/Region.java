@@ -370,7 +370,7 @@ public class Region {
         if (this.config == null) {
             this.config = YamlConfiguration.loadConfiguration(file);
         }
-        MessageUtil.log(plugin, "Loaded region " + name + " with " + chunks.size() + " chunks.");
+        FactionsXL.debug("Loaded " + this + " with " + chunks.size() + " chunks.");
     }
 
     public void save() {
@@ -414,6 +414,11 @@ public class Region {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Region{ID=" + id + "; name=" + name + "}";
     }
 
 }

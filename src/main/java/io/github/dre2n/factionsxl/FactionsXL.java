@@ -45,7 +45,9 @@ import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.util.PageGUICache;
 import io.github.dre2n.factionsxl.war.WarCache;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -72,6 +74,7 @@ public class FactionsXL extends DREPlugin {
     public static File FEDERATIONS;
     public static File TRADE_LEAGUES;
     public static File WARS;
+    private static File DEBUG;
 
     private FConfig fConfig;
     private FData fData;
@@ -89,6 +92,8 @@ public class FactionsXL extends DREPlugin {
     private LWCIntegration lwcIntegration;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
+    private boolean debugEnabled = true;
+    private PrintWriter out;
 
     public FactionsXL() {
         /*
@@ -111,6 +116,8 @@ public class FactionsXL extends DREPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        initFolders();
+        debugToFile("Enabling...");
         if (!compat.isSpigot() || !Version.andHigher(Version.MC1_9).contains(compat.getVersion())) {
             MessageUtil.log(this, "&4This plugin requires Spigot 1.9 or higher to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
@@ -120,6 +127,7 @@ public class FactionsXL extends DREPlugin {
 
         FPermission.register();
         loadCore();
+        debugToFile("Enabled!");
     }
 
     @Override
@@ -130,6 +138,10 @@ public class FactionsXL extends DREPlugin {
         }
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
+        debugToFile("Disabled!");
+        if (out != null) {
+            out.close();
+        }
     }
 
     // Initialize
@@ -182,10 +194,19 @@ public class FactionsXL extends DREPlugin {
         if (!WARS.exists()) {
             WARS.mkdir();
         }
+
+        if (debugEnabled) {
+            DEBUG = new File(getDataFolder(), "debug.txt");
+            if (!DEBUG.exists()) {
+                try {
+                    DEBUG.createNewFile();
+                } catch (IOException exception) {
+                }
+            }
+        }
     }
 
     public void loadCore() {
-        initFolders();
         // Load Language
         loadMessageConfig(new File(LANGUAGES, "english.yml"));
         // Load Config
@@ -555,6 +576,22 @@ public class FactionsXL extends DREPlugin {
         long dayLength = fConfig.getDayLength();
         long passed = System.currentTimeMillis() - fData.lastNewDay;
         incomeTask = new IncomeTask().runTaskTimer(this, dayLength - passed, dayLength);
+    }
+
+    public void debugToFile(String message) {
+        if (debugEnabled) {
+            if (out == null) {
+                try {
+                    out = new PrintWriter(DEBUG);
+                } catch (FileNotFoundException exception) {
+                }
+            }
+            out.println(message);
+        }
+    }
+
+    public static void debug(String message) {
+        instance.debugToFile(message);
     }
 
 }

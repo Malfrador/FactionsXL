@@ -174,6 +174,7 @@ public class FPlayerData extends DREConfig {
         scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
+        FactionsXL.debug("Loaded " + this);
     }
 
     @Override
@@ -189,6 +190,11 @@ public class FPlayerData extends DREConfig {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "FPlayerData{lastName=" + lastName + "}";
     }
 
 }

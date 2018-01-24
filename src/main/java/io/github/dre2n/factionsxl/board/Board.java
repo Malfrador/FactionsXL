@@ -221,7 +221,7 @@ public class Board {
         for (Region region : regions) {
             region.load();
         }
-        MessageUtil.log(FactionsXL.getInstance(), "Loaded board with " + regions.size() + " regions.");
+        FactionsXL.debug("Loaded board with " + regions.size() + " regions.");
     }
 
     @Deprecated
@@ -231,6 +231,7 @@ public class Board {
         public void run() {
             for (Region region : regions) {
                 if (region.getOwner() != null && !region.getOwner().isActive()) {
+                    FactionsXL.debug("Cleaned " + region + ". It was owned by " + region.getOwner());
                     region.setOwner(null);
                 }
             }
