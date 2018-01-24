@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,8 +54,12 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
-        if (!subjectFaction.isPrivileged(sender)) {
+        if (!subjectFaction.isAdmin(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+        if (subjectFaction.isVassal()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subjectFaction);
             return;
         }
 
@@ -85,6 +89,10 @@ public class RelationCommand extends FCommand {
         Relation relation = Relation.fromString(args[3]);
         if (subjectFaction.getRelation(objectFaction) == Relation.PERSONAL_UNION && relation != Relation.REAL_UNION) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION.getMessage(), subjectFaction, objectFaction);
+            return;
+        }
+        if (subjectFaction.getRelation(objectFaction) != Relation.PERSONAL_UNION && relation == Relation.REAL_UNION) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION_REQUIRED.getMessage(), subjectFaction, objectFaction);
             return;
         }
         Request matching = null;

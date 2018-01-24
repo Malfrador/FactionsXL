@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,6 +67,9 @@ public class LongTagCommand extends FCommand {
                 }
                 longName += arg;
             }
+        }
+        if (longName.isEmpty()) {
+            longName = faction.getName();
         }
 
         longName = longName.replace("&", new String());

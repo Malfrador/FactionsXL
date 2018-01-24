@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import java.io.File;
 import java.io.IOException;
+import org.bukkit.Location;
 
 /**
  * @author Daniel Saukel
@@ -30,12 +31,15 @@ public class FPlayerData extends DREConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final int CONFIG_VERSION = 1;
+    public static final int CONFIG_VERSION = 3;
 
     private String lastName;
     private String title;
     private long timeLastPlayed;
     private double powerBase;
+    private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
+    private boolean anthemsEnabled = true;
+    private Location home;
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -103,6 +107,54 @@ public class FPlayerData extends DREConfig {
         return powerBase;
     }
 
+    /**
+     * @return
+     * if the scoreboard is enabled
+     */
+    public boolean isScoreboardEnabled() {
+        return scoreboardEnabled;
+    }
+
+    /**
+     * @param enabled
+     * if the scoreboard shall be enabled
+     */
+    public void setScoreboardEnabled(boolean enabled) {
+        scoreboardEnabled = enabled;
+    }
+
+    /**
+     * @return
+     * if the scoreboard is enabled
+     */
+    public boolean areAnthemsEnabled() {
+        return anthemsEnabled;
+    }
+
+    /**
+     * @param enabled
+     * if faction anthems shall be enabled
+     */
+    public void setAnthemsEnabled(boolean enabled) {
+        anthemsEnabled = enabled;
+    }
+
+    /**
+     * @return
+     * the home location
+     */
+    public Location getHome() {
+        return home;
+    }
+
+    /**
+     * @param location
+     * the location to set as the home location
+     */
+    public void setHome(Location location) {
+        home = location;
+    }
+
     /* Serialization */
     @Override
     public void initialize() {
@@ -115,12 +167,14 @@ public class FPlayerData extends DREConfig {
         if (config.contains("lastName")) {
             lastName = config.getString("lastName");
         }
-
         title = config.getString("title", new String());
-
         if (config.contains("timeLastPlayed")) {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
+        scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
+        anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
+        home = (Location) config.get("home");
+        FactionsXL.debug("Loaded " + this);
     }
 
     @Override
@@ -128,11 +182,19 @@ public class FPlayerData extends DREConfig {
         config.set("lastName", lastName);
         config.set("title", title);
         config.set("timeLastPlayed", timeLastPlayed);
+        config.set("scoreboardEnabled", scoreboardEnabled);
+        config.set("anthemsEnabled", anthemsEnabled);
+        config.set("home", home);
         try {
             config.save(file);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "FPlayerData{lastName=" + lastName + "}";
     }
 
 }

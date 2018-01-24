@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.protection;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
+import io.github.dre2n.factionsxl.board.RegionType;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -26,6 +27,7 @@ import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -34,7 +36,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -54,6 +58,7 @@ public class EntityProtectionListener implements Listener {
         EQUIP,
         LEASH,
         SHEAR,
+        SPLASH_POTION,
         TAME,
         UNLEASH
     }
@@ -63,25 +68,36 @@ public class EntityProtectionListener implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player attacker = getDamageSource(event.getDamager());
+        Entity eAttacker = attacker != null ? attacker : event.getDamager();
         Entity eDefender = event.getEntity();
+        if (!(eAttacker instanceof Player)) {
+            return;
+        }
         if (!(eDefender instanceof Player)) {
             forbidIfInProtectedTerritory(attacker, eDefender, event, ATTACK);
             return;
         }
         Player defender = (Player) eDefender;
+        Region region = plugin.getBoard().getByLocation(defender.getLocation());
+        if (region != null && region.getType() == RegionType.WARZONE) {
+            return;
+        }
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
-        Faction rFaction = plugin.getFactionCache().getByLocation(defender.getLocation());
-        if (aFaction.getRelation(dFaction).isProtected()) {
-            ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
+        Faction rFaction = region != null ? region.getOwner() : null;
+        double shield = plugin.getFConfig().getTerritoryShield();
+        if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
+            ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected()) {
             if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
                     || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
-                ParsingUtil.sendMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_FACTION.getMessage(), rFaction);
+                ParsingUtil.sendActionBarMessage(attacker, (plugin.getFConfig().isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
+                        : FMessage.PROTECTION_CANNOT_ATTACK_FACTION).getMessage(), rFaction);
                 event.setCancelled(true);
-            } else if (plugin.getFConfig().getTerritoryShield() != 0) {
-                event.setDamage(event.getDamage() * plugin.getFConfig().getTerritoryShield());
+            } else if (shield != 0) {
+                event.setDamage(event.getDamage() - event.getDamage() * shield);
+                ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_DAMAGE_REDUCED.getMessage(), (int) (shield * 100), rFaction);
             }
         }
     }
@@ -130,6 +146,27 @@ public class EntityProtectionListener implements Listener {
         forbidIfInProtectedTerritory(getDamageSource(event.getAttacker()), event.getVehicle(), event, ATTACK);
     }
 
+    @EventHandler
+    public void onPotionSplash(PotionSplashEvent event) {
+        ProjectileSource shooter = event.getPotion().getShooter();
+        if (!(shooter instanceof Player)) {
+            return;
+        }
+        if (event.getAffectedEntities().isEmpty()) {
+            return;
+        }
+        forbidIfInProtectedTerritory((Player) shooter, event.getAffectedEntities().iterator().next(), event, SPLASH_POTION);
+    }
+
+    @EventHandler
+    public void onLingeringPotionSplash(LingeringPotionSplashEvent event) {
+        ProjectileSource shooter = event.getAreaEffectCloud().getSource();
+        if (!(shooter instanceof Player)) {
+            return;
+        }
+        forbidIfInProtectedTerritory((Player) shooter, event.getAreaEffectCloud(), event, SPLASH_POTION);
+    }
+
     private void forbidIfInProtectedTerritory(Player attacker, Entity damaged, Cancellable event, Action action) {
         if (attacker == null) {
             return;
@@ -141,7 +178,7 @@ public class EntityProtectionListener implements Listener {
             return;
         }
 
-        boolean living = damaged instanceof LivingEntity;
+        boolean living = damaged instanceof LivingEntity && damaged.getType() != EntityType.ARMOR_STAND;
         Region region = plugin.getBoard().getByLocation(damaged.getLocation());
         if (region == null || region.isNeutral()) {
             return;
@@ -166,6 +203,9 @@ public class EntityProtectionListener implements Listener {
                 case LEASH:
                     message = FMessage.PROTECTION_CANNOT_LEASH_FACTION;
                     break;
+                case SPLASH_POTION:
+                    message = FMessage.PROTECTION_CANNOT_SPLASH_POTION_FACTION;
+                    break;
                 case SHEAR:
                     message = FMessage.PROTECTION_CANNOT_SHEAR_FACTION;
                     break;
@@ -175,11 +215,11 @@ public class EntityProtectionListener implements Listener {
                 case UNLEASH:
                     message = FMessage.PROTECTION_CANNOT_UNLEASH_FACTION;
             }
-            ParsingUtil.sendMessage(attacker, message.getMessage(), region.getOwner());
+            ParsingUtil.sendActionBarMessage(attacker, message.getMessage(), region.getOwner());
         }
     }
 
-    private Player getDamageSource(Entity damager) {
+    public static Player getDamageSource(Entity damager) {
         if (damager instanceof Player) {
             return (Player) damager;
         } else if (damager instanceof Arrow) {

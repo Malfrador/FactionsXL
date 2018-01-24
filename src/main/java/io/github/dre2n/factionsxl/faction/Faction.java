@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.faction;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
@@ -46,6 +47,8 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.war.CasusBelli;
+import io.github.dre2n.factionsxl.war.War;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +69,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -88,6 +92,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     boolean active;
     String mapFillColor = "#E0E0E0";
     String mapLineColor = "#FFFFFF";
+    String mapIcon = "redflag";
     DynmapStyle dynmapStyle;
     boolean mapVisibility = true;
     GovernmentType type;
@@ -99,9 +104,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Location home;
     Hologram homeHolo;
     Region capital;
+    long timeLastCapitalMove;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
-    UUID admin;
+    PlayerCollection formerAdmins = new PlayerCollection();
     PlayerCollection mods = new PlayerCollection();
     PlayerCollection members = new PlayerCollection();
     PlayerCollection invited = new PlayerCollection();
@@ -117,17 +123,22 @@ public class Faction extends LegalEntity implements RelationParticipator {
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
     Set<Idea> ideas = new HashSet<>();
+    Set<CasusBelli> casusBelli = new HashSet<>();
+    Set<War> callsToArms = new HashSet<>();
+    boolean allod = true;
 
     public Faction(File file) {
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
         this.file = file;
         config = YamlConfiguration.loadConfiguration(file);
+        active = config.getBoolean("active");
     }
 
     public Faction(int id) {
         this.id = id;
         file = new File(FactionsXL.FACTIONS, id + ".yml");
         config = YamlConfiguration.loadConfiguration(file);
+        active = config.getBoolean("active");
     }
 
     /* Getters and setters */
@@ -157,6 +168,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setActive(boolean active) {
         this.active = active;
+        if (active) {
+            plugin.getFactionCache().removeEntity(this);
+            plugin.getFactionCache().addEntity(this);
+        }
     }
 
     /**
@@ -176,16 +191,29 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @return
+     * the Dynmap home icon
+     */
+    public String getMapIcon() {
+        return mapIcon;
+    }
+
+    /**
      * @param fill
      * the Dynmap fill color to set
      * @param line
      * the Dynmap line color to set
+     * @param icon
+     * the Dynmap icon name to set
      */
-    public void setMapColor(String fill, String line) {
+    public void setMapStyle(String fill, String line, String icon) {
         if (fill.matches("#[0-9A-F]{6}") && line.matches("#[0-9A-F]{6}")) {
             mapFillColor = fill;
             mapLineColor = line;
-            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+            if (icon != null) {
+                mapIcon = icon;
+            }
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor).setHomeMarker(mapIcon);
         }
     }
 
@@ -195,7 +223,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public DynmapStyle getDynmapStyle() {
         if (dynmapStyle == null) {
-            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor);
+            dynmapStyle = new DynmapStyle(DynmapStyle.DEFAULT_STYLE).setStrokeColor(mapLineColor).setFillColor(mapFillColor).setHomeMarker(mapIcon);
         }
         return dynmapStyle;
     }
@@ -462,6 +490,15 @@ public class Faction extends LegalEntity implements RelationParticipator {
      */
     public void setCapital(Region capital) {
         this.capital = capital;
+        timeLastCapitalMove = System.currentTimeMillis();
+    }
+
+    /**
+     * @return
+     * the time millis when the capital was moved for the last time
+     */
+    public long getTimeLastCapitalMove() {
+        return timeLastCapitalMove;
     }
 
     /**
@@ -480,60 +517,19 @@ public class Faction extends LegalEntity implements RelationParticipator {
         return regions;
     }
 
-    /**
-     * @return
-     * the admin of the faction
-     */
-    public OfflinePlayer getAdmin() {
-        return Bukkit.getOfflinePlayer(admin);
-    }
-
-    /**
-     * @param admin
-     * the new admin to set
-     */
+    @Override
     public void setAdmin(OfflinePlayer admin) {
-        this.admin = admin.getUniqueId();
+        formerAdmins.add(this.admin);
+        super.setAdmin(admin);
         checkForPersonalUnions();
     }
 
     /**
-     * @param sender
-     * a CommandSender
      * @return
-     * if the sender has admin rights in this faction
+     * the players who used to be faction admins
      */
-    public boolean isAdmin(CommandSender sender) {
-        if (admin == null) {
-            return false;
-        }
-        return getAdmin().getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
-    }
-
-    /**
-     * @param uuid
-     * a unique ID of a Player
-     * @return
-     * if the sender has admin rights in this faction
-     */
-    public boolean isAdmin(UUID uuid) {
-        if (admin == null) {
-            return false;
-        }
-        return admin.equals(uuid);
-    }
-
-    /**
-     * @param playerName
-     * the name of a Player
-     * @return
-     * if the sender has admin rights in this faction
-     */
-    public boolean isAdmin(String playerName) {
-        if (admin == null) {
-            return false;
-        }
-        return getAdmin().getName().equals(playerName);
+    public PlayerCollection getFormerAdmins() {
+        return formerAdmins;
     }
 
     /**
@@ -681,6 +677,23 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @param relation
+     * the relation type
+     * @return
+     * a Set of all related players that are online and their vassals
+     */
+    public Collection<Player> getOnlineByRelationAndVassals(Relation relation) {
+        HashSet<Player> online = new HashSet<>();
+        for (Faction faction : getRelatedFactions(relation)) {
+            online.addAll(faction.getOnlineMembers());
+            for (Faction vassal : faction.getRelatedFactions(Relation.VASSAL)) {
+                online.addAll(vassal.getOnlineMembers());
+            }
+        }
+        return online;
+    }
+
+    /**
      * @return
      * a Set of all invited players
      */
@@ -707,27 +720,22 @@ public class Faction extends LegalEntity implements RelationParticipator {
             faction = (Faction) object;
         }
 
+        Relation relation = null;
         if (relations.containsKey(faction)) {
-            return relations.get(faction);
+            relation = relations.get(faction);
         } else if (faction == this) {
-            return Relation.OWN;
+            relation = Relation.OWN;
+        } else if (isInWar(faction)) {
+            relation = Relation.ENEMY;
         } else {
-            return Relation.PEACE;
+            relation = Relation.PEACE;
         }
-    }
 
-    /**
-     * @param fPlayer
-     * another fPlayer
-     * @return
-     * the relation of this faction to the faction of the player
-     */
-    public Relation getRelation(FPlayer fPlayer) {
-        if (fPlayer.hasFaction()) {
-            return getRelation(fPlayer.getFaction());
-        } else {
-            return Relation.PEACE;
+        Faction lord = getLord();
+        if (lord != null && !relation.doVassalsOverride()) {
+            relation = lord.relations.get(faction);
         }
+        return relation != null ? relation : Relation.PEACE;
     }
 
     /**
@@ -744,6 +752,27 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         return factions;
+    }
+
+    /**
+     * @return
+     * if the faction is a vassal
+     */
+    public boolean isVassal() {
+        return getLord() != null;
+    }
+
+    /**
+     * @return
+     * the lord faciton
+     */
+    public Faction getLord() {
+        for (Entry<Faction, Relation> entry : relations.entrySet()) {
+            if (entry.getValue() == Relation.LORD) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     /**
@@ -893,6 +922,61 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * @return
+     * the casus belli of this faction
+     */
+    public Set<CasusBelli> getCasusBelli() {
+        return casusBelli;
+    }
+
+    /**
+     * @return
+     * if the faction is an allod
+     */
+    public boolean isAllod() {
+        return allod;
+    }
+
+    /**
+     * @param allod
+     * set if the faction is an allod
+     */
+    public void setAllod(boolean allod) {
+        this.allod = allod;
+    }
+
+    /**
+     * @return
+     * true if the faction is in war
+     */
+    public boolean isInWar() {
+        return plugin.getWarCache().getByFaction(this) != null;
+    }
+
+    @Override
+    public boolean isInWar(RelationParticipator object) {
+        Set<War> wars = plugin.getWarCache().getByFaction(this);
+        if (object instanceof Faction) {
+            for (War war : wars) {
+                Set<Faction> factions = war.getAttacker().getFactions().contains(this) ? war.getDefender().getFactions() : war.getAttacker().getFactions();
+                if (factions.contains((Faction) object)) {
+                    return true;
+                }
+            }
+        } else if (object instanceof FPlayer) {
+            for (War war : wars) {
+                Set<Faction> factions = war.getAttacker().getFactions().contains(this) ? war.getDefender().getFactions() : war.getAttacker().getFactions();
+                for (Faction faction : factions) {
+                    if (faction.getMembers().contains((FPlayer) object)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param sender
      * the CommandSender to check
      * @return
@@ -967,6 +1051,18 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     /**
+     * Kick by auto task
+     *
+     * @param member
+     * the member to kick
+     */
+    public void kick(OfflinePlayer member) {
+        sendMessage(FMessage.FACTION_PLAYER_KICKED_AUTO.getMessage(), member);
+        members.remove(member.getUniqueId());
+        mods.remove(member.getUniqueId());
+    }
+
+    /**
      * Actions when a day passed.
      */
     public void payday() {
@@ -992,7 +1088,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (canAfford) {
             account.withdraw(price);
             for (Entry<Resource, Integer> entry : goods.entrySet()) {
-                storage.getGoods().put(entry.getKey(), storage.getGoods().get(entry.getKey()) + entry.getValue());
+                int oldAmount = storage.getGoods().get(entry.getKey()) != null ? storage.getGoods().get(entry.getKey()) : 0;
+                storage.getGoods().put(entry.getKey(), oldAmount + entry.getValue());
             }
         }
         return canAfford;
@@ -1015,7 +1112,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         boolean canAfford = account.getBalance() >= price * modifier;
         if (canAfford) {
             account.withdraw(price * modifier);
-            storage.getGoods().put(type, storage.getGoods().get(type) + amount);
+            int oldAmount = storage.getGoods().get(type) != null ? storage.getGoods().get(type) : 0;
+            storage.getGoods().put(type, oldAmount + amount);
         }
         return canAfford;
     }
@@ -1105,6 +1203,10 @@ public class Faction extends LegalEntity implements RelationParticipator {
      * if the land owner of the land of this faction shall be set to null.
      */
     public void disband(boolean unclaim) {
+        if (isVassal()) {
+            plugin.getFactionCache().integrate(getLord(), this);
+            return;
+        }
         active = false;
         open = false;
         home = null;
@@ -1118,7 +1220,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         regions.clear();
-        admin = null;
+        formerAdmins.add(admin);
+        setAdmin(null);
         mods.clear();
         members.clear();
         invited.clear();
@@ -1130,11 +1233,37 @@ public class Faction extends LegalEntity implements RelationParticipator {
         ideaGroups.clear();
         ideas.clear();
         FTeamWrapper.applyUpdates(this);
+        for (War war : plugin.getWarCache().getWars()) {
+            war.getAttacker().getParticipants().remove(this);
+            war.getDefender().getParticipants().remove(this);
+        }
+    }
+
+    /**
+     * When the faction leader resigns / gets kicked automatically
+     */
+    public void doSuccession() {
+        /*if (type == GovernmentType.MONARCHY) {
+            // Dynasty member
+        } else if (type == GovernmentType.REPUBLIC) {
+            // Reelect
+        } else if (type == GovernmentType.THEOCRACY) {
+            // Random?
+        }*/
+        FPlayer newAdmin = null;
+        for (OfflinePlayer mod : mods.getOfflinePlayers()) {
+            FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(mod);
+            if (newAdmin == null || fPlayer.getData().getTimeLastPlayed() > newAdmin.getData().getTimeLastPlayed() || mod.isOnline()) {
+                newAdmin = fPlayer;
+            }
+        }
+        if (newAdmin == null) {
+            disband();
+        }
     }
 
     /* Serialization */
     public void load() {
-        active = config.getBoolean("active");
         name = config.getString("name");
         longName = config.getString("longName");
         shortName = config.getString("shortName");
@@ -1144,6 +1273,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         bannerColor = (short) config.getInt("bannerColor");
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
+        mapIcon = config.getString("mapIcon");
         mapVisibility = config.getBoolean("mapVisibility");
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
@@ -1152,6 +1282,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         manpowerModifier = config.getDouble("manpowerModifier", fConfig.getDefaultManpowerModifier());
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
+        timeLastCapitalMove = config.getLong("timeLastCapitalMove", 0);
 
         admin = UUID.fromString(config.getString("admin"));
         mods.add(config.getStringList("mods"));
@@ -1224,90 +1355,119 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         ideaMenu = new IdeaMenu(this);
+        ConfigurationSection cbs = config.getConfigurationSection("casusBelli");
+        if (cbs != null) {
+            for (String cb : cbs.getKeys(false)) {
+                casusBelli.add(new CasusBelli(config.getConfigurationSection("casusBelli." + cb)));
+            }
+        }
+        for (long date : config.getLongList("callsToArms")) {
+            War war = plugin.getWarCache().getByDate(date);
+            if (war != null) {
+                callsToArms.add(war);
+            }
+        }
+        allod = config.getBoolean("isAllod", true);
+        FactionsXL.debug("Loaded " + this);
     }
 
     public void save() {
-        config.set("active", active);
-        config.set("name", name);
-        config.set("longName", longName);
-        config.set("shortName", shortName);
-        config.set("desc", desc);
-        config.set("anthem", anthem);
-        config.set("banner", banner);
-        config.set("bannerColor", bannerColor);
-        config.set("mapFillColor", mapFillColor);
-        config.set("mapLineColor", mapLineColor);
-        config.set("mapVisibility", mapVisibility);
-        config.set("creationDate", creationDate);
-        config.set("type", type.toString());
-        config.set("open", open);
-        config.set("stability", stability);
-        if (!active) {
-            try {
-                config.save(file);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-            return;
-        }
-        config.set("home", home);
-        if (homeHolo != null) {
-            homeHolo.delete();
-        }
-        config.set("capital", capital.getId());
-        config.set("admin", admin.toString());
-
-        config.set("mods", mods.serialize());
-        config.set("members", members.serialize());
-        if (storage == null) {
-            storage = new FStorage(this);
-        }
-
-        String relPath = "relations";
-        if (!config.contains(relPath)) {
-            config.createSection(relPath);
-        }
-        config.set("relations", null);
-        for (Entry<Faction, Relation> entry : relations.entrySet()) {
-            config.set(relPath + "." + entry.getKey().getId(), entry.getValue().toString());
-        }
-
-        config.set("storage", storage.serialize());
-        for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
-            config.set("groceryList." + entry.getKey(), entry.getValue());
-        }
-        for (Entry<Resource, Integer> entry : consumableResources.entrySet()) {
-            config.set("consumableResources." + entry.getKey(), entry.getValue());
-        }
-        for (Resource resource : Resource.values()) {
-            if (!config.contains("consumableResources." + resource)) {
-                config.set("consumableResources." + resource, 0);
-            }
-        }
-        for (Entry<Resource, Integer> entry : saturatedResources.entrySet()) {
-            config.set("saturatedResources." + entry.getKey(), entry.getValue());
-        }
-        for (Resource resource : Resource.values()) {
-            if (!config.contains("saturatedResources." + resource)) {
-                config.set("saturatedResources." + resource, 0);
-            }
-        }
-        List<String> ideaGroupIds = new ArrayList<>();
-        for (IdeaGroup ideaGroup : ideaGroups) {
-            ideaGroupIds.add(ideaGroup.toString());
-        }
-        config.set("ideaGroups", ideaGroupIds);
-        List<String> ideaIds = new ArrayList<>();
-        for (Idea idea : ideas) {
-            ideaIds.add(idea.toString());
-        }
-        config.set("ideas", ideaIds);
-
         try {
+            config.set("active", active);
+            config.set("name", name);
+            config.set("longName", longName);
+            config.set("shortName", shortName);
+            config.set("desc", desc);
+            config.set("anthem", anthem);
+            config.set("banner", banner);
+            config.set("bannerColor", bannerColor);
+            config.set("mapFillColor", mapFillColor);
+            config.set("mapLineColor", mapLineColor);
+            config.set("mapIcon", mapIcon);
+            config.set("mapVisibility", mapVisibility);
+            config.set("creationDate", creationDate);
+            config.set("type", type.toString());
+            config.set("open", open);
+            config.set("stability", stability);
+            if (!active) {
+                try {
+                    config.save(file);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                return;
+            }
+            config.set("home", home);
+            if (homeHolo != null) {
+                homeHolo.delete();
+            }
+            config.set("capital", capital.getId());
+            config.set("timeLastCapitalMove", timeLastCapitalMove);
+            config.set("admin", admin.toString());
+            config.set("formerAdmins", formerAdmins.serialize());
+
+            config.set("mods", mods.serialize());
+            config.set("members", members.serialize());
+            if (storage == null) {
+                storage = new FStorage(this);
+            }
+
+            String relPath = "relations";
+            if (!config.contains(relPath)) {
+                config.createSection(relPath);
+            }
+            config.set("relations", null);
+            for (Entry<Faction, Relation> entry : relations.entrySet()) {
+                config.set(relPath + "." + entry.getKey().getId(), entry.getValue().toString());
+            }
+
+            config.set("storage", storage.serialize());
+            for (Entry<Resource, Integer> entry : groceryList.entrySet()) {
+                config.set("groceryList." + entry.getKey(), entry.getValue());
+            }
+            for (Entry<Resource, Integer> entry : consumableResources.entrySet()) {
+                config.set("consumableResources." + entry.getKey(), entry.getValue());
+            }
+            for (Resource resource : Resource.values()) {
+                if (!config.contains("consumableResources." + resource)) {
+                    config.set("consumableResources." + resource, 0);
+                }
+            }
+            for (Entry<Resource, Integer> entry : saturatedResources.entrySet()) {
+                config.set("saturatedResources." + entry.getKey(), entry.getValue());
+            }
+            for (Resource resource : Resource.values()) {
+                if (!config.contains("saturatedResources." + resource)) {
+                    config.set("saturatedResources." + resource, 0);
+                }
+            }
+            List<String> ideaGroupIds = new ArrayList<>();
+            for (IdeaGroup ideaGroup : ideaGroups) {
+                ideaGroupIds.add(ideaGroup.toString());
+            }
+            config.set("ideaGroups", ideaGroupIds);
+            List<String> ideaIds = new ArrayList<>();
+            for (Idea idea : ideas) {
+                ideaIds.add(idea.toString());
+            }
+            config.set("ideas", ideaIds);
+            int i = 0;
+            for (CasusBelli cb : casusBelli) {
+                config.set("casusBelli." + i, cb.serialize());
+                i++;
+            }
+            config.set("isAllod", allod);
+
             config.save(file);
-        } catch (IOException exception) {
+        } catch (Exception exception) {
+            MessageUtil.log(plugin, "An error occured while saving " + this);
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Faction{ID=" + id + "; name=" + name + "; active=" + active + "}";
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +43,11 @@ import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
 import io.github.dre2n.factionsxl.protection.LWCIntegration;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.util.PageGUICache;
+import io.github.dre2n.factionsxl.war.WarCache;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -70,6 +73,8 @@ public class FactionsXL extends DREPlugin {
     public static File FACTIONS;
     public static File FEDERATIONS;
     public static File TRADE_LEAGUES;
+    public static File WARS;
+    private static File DEBUG;
 
     private FConfig fConfig;
     private FData fData;
@@ -77,6 +82,7 @@ public class FactionsXL extends DREPlugin {
     private FCommandCache fCommands;
     private FPlayerCache fPlayers;
     private FactionCache factions;
+    private WarCache wars;
     private PageGUICache pageGUIs;
     private Board board;
     private ChatListener chatListener;
@@ -86,6 +92,8 @@ public class FactionsXL extends DREPlugin {
     private LWCIntegration lwcIntegration;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
+    private boolean debugEnabled = true;
+    private PrintWriter out;
 
     public FactionsXL() {
         /*
@@ -108,8 +116,10 @@ public class FactionsXL extends DREPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        if (!compat.isSpigot() || !Version.andHigher(Version.MC1_9).contains(compat.getVersion())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.9 or higher to work. It is not compatible with CraftBukkit and older versions.");
+        initFolders();
+        debugToFile("Enabling...");
+        if (!compat.isSpigot() || compat.getInternals() != Internals.v1_12_R1) {
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.12.2 to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }
@@ -117,6 +127,7 @@ public class FactionsXL extends DREPlugin {
 
         FPermission.register();
         loadCore();
+        debugToFile("Enabled!");
     }
 
     @Override
@@ -127,6 +138,10 @@ public class FactionsXL extends DREPlugin {
         }
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
+        debugToFile("Disabled!");
+        if (out != null) {
+            out.close();
+        }
     }
 
     // Initialize
@@ -174,10 +189,24 @@ public class FactionsXL extends DREPlugin {
         if (!TRADE_LEAGUES.exists()) {
             TRADE_LEAGUES.mkdir();
         }
+
+        WARS = new File(getDataFolder(), "wars");
+        if (!WARS.exists()) {
+            WARS.mkdir();
+        }
+
+        if (debugEnabled) {
+            DEBUG = new File(getDataFolder(), "debug.txt");
+            if (!DEBUG.exists()) {
+                try {
+                    DEBUG.createNewFile();
+                } catch (IOException exception) {
+                }
+            }
+        }
     }
 
     public void loadCore() {
-        initFolders();
         // Load Language
         loadMessageConfig(new File(LANGUAGES, "english.yml"));
         // Load Config
@@ -196,6 +225,7 @@ public class FactionsXL extends DREPlugin {
         loadPageGUIs();
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
+        loadWars(WARS);
         loadFPlayers();
         fPlayers.loadAll();
         board.loadAll();
@@ -215,6 +245,13 @@ public class FactionsXL extends DREPlugin {
         }
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                fPlayers.autoKick();
+            }
+        }.runTaskTimer(this, 0L, FConfig.HOUR);
     }
 
     public void saveData() {
@@ -222,6 +259,7 @@ public class FactionsXL extends DREPlugin {
         board.saveAll();
         factions.saveAll();
         fPlayers.saveAll();
+        wars.saveAll();
         messageConfig.save();
     }
 
@@ -234,6 +272,7 @@ public class FactionsXL extends DREPlugin {
         FileUtil.copyDirectory(FACTIONS, new File(backupDir, "factions"), new String[]{});
         FileUtil.copyDirectory(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
         FileUtil.copyDirectory(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
+        FileUtil.copyDirectory(WARS, new File(backupDir, "wars"), new String[]{});
         try {
             FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
             FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));
@@ -310,6 +349,7 @@ public class FactionsXL extends DREPlugin {
     public void loadFCommands() {
         fCommands = new FCommandCache(this);
         fCommands.register(this);
+        fCommands.registerAliases();
     }
 
     /**
@@ -367,6 +407,21 @@ public class FactionsXL extends DREPlugin {
         } else {
             MessageUtil.log(this, FMessage.LOG_DYNMAP_NOT_ENABLED.getMessage());
         }
+    }
+
+    /**
+     * @return
+     * the loaded instance of WarCache
+     */
+    public WarCache getWarCache() {
+        return wars;
+    }
+
+    /**
+     * load / reload a new instance of WarCache
+     */
+    public void loadWars(File dir) {
+        wars = new WarCache(dir);
     }
 
     /**
@@ -521,6 +576,22 @@ public class FactionsXL extends DREPlugin {
         long dayLength = fConfig.getDayLength();
         long passed = System.currentTimeMillis() - fData.lastNewDay;
         incomeTask = new IncomeTask().runTaskTimer(this, dayLength - passed, dayLength);
+    }
+
+    public void debugToFile(String message) {
+        if (debugEnabled) {
+            if (out == null) {
+                try {
+                    out = new PrintWriter(DEBUG);
+                } catch (FileNotFoundException exception) {
+                }
+            }
+            out.println(message);
+        }
+    }
+
+    public static void debug(String message) {
+        instance.debugToFile(message);
     }
 
 }

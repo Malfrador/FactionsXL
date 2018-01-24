@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,9 +32,12 @@ import static org.bukkit.permissions.PermissionDefault.*;
 public enum FPermission {
 
     // Main nodes
+    ADD_CASUS_BELLI("addcasusbelli", OP),
     ADMIN("admin", TRUE),
     BUILD("build", OP),
     BYPASS("bypass", OP),
+    CASUS_BELLI("casusbelli", TRUE),
+    CASUS_BELLI_OTHERS("casusbelli.others", TRUE),
     CHAT("chat", TRUE),
     CLAIM("claim", TRUE),
     CREATE("create", OP),
@@ -46,6 +49,7 @@ public enum FPermission {
     HOME("home", TRUE),
     HOME_OTHERS("home.others", OP),
     IDEA("idea", TRUE),
+    INTEGRATE("integrate", TRUE),
     INVITE("invite", TRUE),
     JOIN("join", TRUE),
     KICK("kick", TRUE),
@@ -75,11 +79,14 @@ public enum FPermission {
     TAG("tag", OP),
     TITLE("title", TRUE),
     TRADE_OFFER("tradeoffer", TRUE),
+    WAR("war", TRUE),
+    WAR_STATUS("warstatus", TRUE),
     WORLD("world", OP),
     // Kits
     ADMINISTRATOR("*", OP),
-    HALF_PLAYER("halfplayer", TRUE, ADMIN, CHAT, CLAIM, DISBAND, HELP, IDEA, INVITE, JOIN, LEAVE, KICK, LIST, MAIN, MOB, MOD, OPEN, POWER,
-            REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SET_HOME, SHOW, STORAGE, TITLE, TRADE_OFFER),
+    HALF_PLAYER("halfplayer", TRUE, ADMIN, CASUS_BELLI, CASUS_BELLI_OTHERS, CHAT, CLAIM, DISBAND, HELP, IDEA, INTEGRATE, INVITE, JOIN, LEAVE, KICK, LIST, MAIN,
+            MOB, MOD, OPEN, POWER, REGION, RELATION, SCOREBOARD, SET_ANTHEM, SET_BANNER, SET_CAPITAL, SET_COLOR, SET_GOVERNMENT, SET_HOME, SHOW, STORAGE, TITLE,
+            TRADE_OFFER, WAR, WAR_STATUS),
     FULL_PLAYER("fullplayer", OP, HALF_PLAYER, HOME, CREATE, CREATE_VASSAL, TAG);
 
     public static final String PREFIX = "fxl.";

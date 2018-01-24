@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,12 @@
 package io.github.dre2n.factionsxl.faction;
 
 import io.github.dre2n.factionsxl.economy.FAccount;
+import io.github.dre2n.factionsxl.player.FPermission;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
@@ -34,6 +39,7 @@ public abstract class LegalEntity {
     String anthem;
     BannerMeta banner;
     short bannerColor;
+    UUID admin;
     long creationDate;
     FAccount account;
 
@@ -162,6 +168,65 @@ public abstract class LegalEntity {
      */
     public short getBannerColor() {
         return bannerColor;
+    }
+
+    /**
+     * @return
+     * the admin of the faction
+     */
+    public OfflinePlayer getAdmin() {
+        return Bukkit.getOfflinePlayer(admin);
+    }
+
+    /**
+     * @param admin
+     * the new admin to set
+     */
+    public void setAdmin(OfflinePlayer admin) {
+        if (admin != null) {
+            this.admin = admin.getUniqueId();
+        } else {
+            admin = null;
+        }
+    }
+
+    /**
+     * @param sender
+     * a CommandSender
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(CommandSender sender) {
+        if (admin == null) {
+            return false;
+        }
+        return getAdmin().getName().equals(sender.getName()) || FPermission.hasPermission(sender, FPermission.BYPASS);
+    }
+
+    /**
+     * @param uuid
+     * a unique ID of a Player
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(UUID uuid) {
+        if (admin == null) {
+            return false;
+        }
+        return admin.equals(uuid);
+    }
+
+    /**
+     * @param playerName
+     * the name of a Player
+     * @return
+     * if the sender has admin rights in this faction
+     */
+    public boolean isAdmin(String playerName) {
+        if (admin == null) {
+            return false;
+        }
+        return getAdmin().getName().equals(playerName);
     }
 
     /**

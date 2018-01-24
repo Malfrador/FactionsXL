@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,9 +45,18 @@ public class TagCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         i = 1;
-        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
-        if (faction == null) {
-            return;
+        Faction faction = null;
+        if (args.length == 3) {
+            faction = getSenderFactionOrFromArg(sender, args, 1, true);
+            if (faction == null) {
+                return;
+            }
+        } else {
+            faction = getSenderFaction(sender);
+            if (faction == null) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_SPECIFY_FACTION.getMessage());
+                return;
+            }
         }
 
         if (sender instanceof Player && !faction.isAdmin(sender)) {

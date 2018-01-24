@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ import io.github.dre2n.commons.command.DRECommandCache;
 import io.github.dre2n.commons.javaplugin.DREPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
+import io.github.dre2n.factionsxl.command.war.*;
+import io.github.dre2n.factionsxl.config.FConfig;
 
 /**
  * An enumeration of all command instances.
@@ -30,9 +32,14 @@ public class FCommandCache extends DRECommandCache {
 
     public static final String LABEL = "factionsxl";
 
+    DREPlugin plugin;
+
+    public AddCasusBelliCommand addCasusBelli = new AddCasusBelliCommand();
     public AdminCommand admin = new AdminCommand();
+    public CasusBelliCommand casusBelli = new CasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
+    public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
@@ -41,6 +48,7 @@ public class FCommandCache extends DRECommandCache {
     public HelpCommand help = new HelpCommand();
     public HomeCommand home = new HomeCommand();
     public IdeaCommand idea = new IdeaCommand();
+    public IntegrateCommand integrate = new IntegrateCommand();
     public InviteCommand invite = new InviteCommand();
     public JoinCommand join = new JoinCommand();
     public KickCommand kick = new KickCommand();
@@ -53,6 +61,7 @@ public class FCommandCache extends DRECommandCache {
     public MoneyCommand money = new MoneyCommand();
     public OpenCommand open = new OpenCommand();
     public PaydayCommand payday = new PaydayCommand();
+    public PlayerHomeCommand playerHome = new PlayerHomeCommand();
     public PowerCommand power = new PowerCommand();
     public RegionCommand region = new RegionCommand();
     public RegionsCommand regions = new RegionsCommand();
@@ -70,6 +79,7 @@ public class FCommandCache extends DRECommandCache {
     public SetColorCommand setColor = new SetColorCommand();
     public SetGovernmentCommand setGovernment = new SetGovernmentCommand();
     public SetHomeCommand setHome = new SetHomeCommand();
+    public SetPlayerHomeCommand setPlayerHome = new SetPlayerHomeCommand();
     public SetPowerCommand setPower = new SetPowerCommand();
     public ShortTagCommand shortTag = new ShortTagCommand();
     public ShowCommand show = new ShowCommand();
@@ -79,13 +89,19 @@ public class FCommandCache extends DRECommandCache {
     public TradeOfferCommand tradeOffer = new TradeOfferCommand();
     public UnclaimCommand unclaim = new UnclaimCommand();
     public UninviteCommand uninvite = new UninviteCommand();
+    public WarCommand war = new WarCommand();
+    public WarStatusCommand warStatus = new WarStatusCommand();
     public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
-        super("factionsxl", plugin);
+        super(LABEL, plugin);
+        this.plugin = plugin;
+        addCommand(addCasusBelli);
         addCommand(admin);
+        addCommand(casusBelli);
         addCommand(chat);
         addCommand(claim);
+        addCommand(confirmWar);
         addCommand(create);
         addCommand(createBull);
         addCommand(createVassal);
@@ -93,6 +109,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(disband);
         addCommand(help);
         addCommand(home);
+        addCommand(integrate);
         addCommand(invite);
         addCommand(join);
         addCommand(kick);
@@ -127,14 +144,27 @@ public class FCommandCache extends DRECommandCache {
         addCommand(title);
         addCommand(unclaim);
         addCommand(uninvite);
+        addCommand(war);
+        addCommand(warStatus);
         addCommand(world);
-        if (FactionsXL.getInstance().getFConfig().isEconomyEnabled()) {
+        FConfig config = FactionsXL.getInstance().getFConfig();
+        if (config.isEconomyEnabled()) {
             addCommand(idea);
             addCommand(money);
             addCommand(payday);
             addCommand(storage);
             addCommand(tradeOffer);
         }
+        if (config.arePlayerHomesEnabled()) {
+            addCommand(playerHome);
+            addCommand(setPlayerHome);
+        }
+    }
+
+    public void registerAliases() {
+        FCommandAlias alias = new FCommandAlias(this);
+        plugin.getCommand("home").setExecutor(alias);
+        plugin.getCommand("setHome").setExecutor(alias);
     }
 
 }

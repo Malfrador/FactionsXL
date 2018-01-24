@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,6 +110,7 @@ public class CreateVassalCommand extends FCommand {
         Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);
+        vassal.setAllod(false);
         ParsingUtil.broadcastMessage(FMessage.CMD_CREATE_SUCCESS.getMessage(), sender.getName(), args[1]);
         ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), mother, vassal);
     }

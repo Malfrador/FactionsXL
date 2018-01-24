@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,5 +28,11 @@ public interface RelationParticipator {
      * the relation of this faction to the other one
      */
     public Relation getRelation(RelationParticipator object);
+
+    /**
+     * @return
+     * true if the faction is in war with the object
+     */
+    public boolean isInWar(RelationParticipator object);
 
 }

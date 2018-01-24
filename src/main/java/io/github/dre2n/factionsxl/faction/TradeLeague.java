@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,12 @@ import java.io.File;
 public class TradeLeague extends LegalEntity {
 
     public TradeLeague(File file) {
-        
+
+    }
+
+    @Override
+    public String toString() {
+        return "TradeLeague{ID=" + id + "name=" + name + "}";
     }
 
 }

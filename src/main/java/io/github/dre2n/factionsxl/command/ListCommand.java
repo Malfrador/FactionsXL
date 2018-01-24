@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class ListCommand extends FCommand implements Listener {
         setCommand("list");
         setAliases("l");
         setMinArgs(0);
-        setMaxArgs(0);
+        setMaxArgs(1);
         setHelp(FMessage.HELP_LIST.getMessage());
         setPermission(FPermission.LIST.getNode());
         setPlayerCommand(true);
@@ -60,11 +60,16 @@ public class ListCommand extends FCommand implements Listener {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Set<Faction> factions = plugin.getFactionCache().getActive();
+        Set<Faction> factions = null;
+        if (args.length == 2 && args[1].equalsIgnoreCase("disbanded")) {
+            factions = plugin.getFactionCache().getInactive();
+        } else {
+            factions = plugin.getFactionCache().getActive();
+        }
 
         int size = (int) (9 * Math.ceil(((double) factions.size() / 9)));
         Inventory gui = Bukkit.createInventory(null, size, FMessage.CMD_LIST_TITLE.getMessage());
-        for (Faction faction : plugin.getFactionCache().getActive()) {
+        for (Faction faction : factions) {
             int members = faction.getMembers().contains(faction.getAdmin()) ? faction.getMembers().size() : faction.getMembers().size() + 1;
             ItemStack banner = new ItemStack(Material.BANNER, members, faction.getBannerColor());
             ItemMeta meta = faction.getBanner() != null ? faction.getBanner().clone() : banner.getItemMeta();
@@ -96,6 +101,16 @@ public class ListCommand extends FCommand implements Listener {
         }
         event.setCancelled(true);
         PageGUI.playSound(event);
+        ItemStack button = event.getCurrentItem();
+        if (button != null && button.hasItemMeta() && button.getItemMeta().hasDisplayName()) {
+            Faction faction = plugin.getFactionCache().getByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+            if (faction == null) {
+                faction = plugin.getFactionCache().getInactiveByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+            }
+            Player player = (Player) event.getWhoClicked();
+            player.closeInventory();
+            plugin.getCommandCache().show.showFaction(player, faction);
+        }
     }
 
 }

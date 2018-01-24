@@ -9,3 +9,7 @@ commands:
   factionsxl:
     description: Reference command for FactionsXL.
     aliases: [fxl,f,faction]
+  home:
+    description: Alias for /f playerHome.
+  setHome:
+    description: Alias for /f setPlayerHome.

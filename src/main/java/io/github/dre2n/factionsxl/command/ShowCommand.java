@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,6 @@ public class ShowCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Player player = (Player) sender;
         Faction faction = null;
         if (args.length == 1 && sender instanceof Player) {
             faction = factions.getByMember((Player) sender);
@@ -77,71 +76,80 @@ public class ShowCommand extends FCommand {
             ParsingUtil.sendMessage(sender, args.length >= 2 ? FMessage.ERROR_NO_SUCH_FACTION.getMessage(args[1]) : FMessage.ERROR_SPECIFY_FACTION.getMessage());
             return;
         }
+        showFaction((Player) sender, faction);
+    }
 
+    public void showFaction(Player player, Faction faction) {
         ChatColor c = faction.getRelation(factions.getByMember(player)).getColor();
 
-        MessageUtil.sendCenteredMessage(sender, c + "&l=== " + faction.getLongName() + (faction.isActive() ? new String() : " (\u271d)") + " ===");
-        MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
+        MessageUtil.sendCenteredMessage(player, c + "&l=== " + faction.getLongName() + (faction.isActive() ? new String() : " (\u271d)") + " ===");
+        MessageUtil.sendCenteredMessage(player, "&6____________________________________________________");
         BaseComponent[] tag = TextComponent.fromLegacyText(FMessage.CMD_SHOW_TAG.getMessage() + c + faction.getShortName());
-        HoverEvent tagHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("ID: "+ faction.getId()).create());
-        for (BaseComponent component: tag) {
+        HoverEvent tagHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("ID: " + faction.getId()).create());
+        for (BaseComponent component : tag) {
             component.setHoverEvent(tagHover);
         }
-        MessageUtil.sendMessage(sender, tag);
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_DESCRIPTION.getMessage() + c + faction.getDescription());
+        MessageUtil.sendMessage(player, tag);
+        MessageUtil.sendMessage(player, FMessage.CMD_SHOW_DESCRIPTION.getMessage() + c + faction.getDescription());
         if (plugin.getFConfig().isEconomyEnabled()) {
-            MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_BALANCE.getMessage() + c + plugin.getEconomyProvider().format(faction.getAccount().getBalance()));
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_BALANCE.getMessage() + c + plugin.getEconomyProvider().format(faction.getAccount().getBalance()));
         }
         String govType = faction.getGovernmentType().getName();
         if (faction.getGovernmentType() == GovernmentType.MONARCHY) {
             govType += " (" + (faction.getDynasty() != null ? faction.getDynasty().getName() : "&oInterregnum") + c + ")";
         }
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_GOVERNMENT_TYPE.getMessage() + c + govType);
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_INVITATION.getMessage() + c + !faction.isOpen());
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_CAPITAL.getMessage() + c + faction.getCapital().getName());
-        String power = String.valueOf(faction.getPower());
-        String provinces = String.valueOf(faction.getRegions().size());
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces));
-        MessageUtil.sendMessage(player, faction.getStabilityModifiers(c));
+        MessageUtil.sendMessage(player, FMessage.CMD_SHOW_GOVERNMENT_TYPE.getMessage() + c + govType);
+        if (faction.isActive()) {
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INVITATION.getMessage() + c + !faction.isOpen());
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_CAPITAL.getMessage() + c + faction.getCapital().getName());
+            String power = String.valueOf(faction.getPower());
+            String provinces = String.valueOf(faction.getRegions().size());
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces));
+            MessageUtil.sendMessage(player, faction.getStabilityModifiers(c));
 
-        ArrayList<BaseComponent> relList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));
-        boolean relFirst = true;
-        for (Faction other : factions.getActive()) {
-            Relation relation = faction.getRelation(other);
-            if (relation != Relation.PEACE && relation != Relation.OWN) {
-                if (!relFirst) {
-                    relList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+            ArrayList<BaseComponent> relList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));
+            boolean relFirst = true;
+            for (Faction other : factions.getActive()) {
+                Relation relation = faction.getRelation(other);
+                if (relation != Relation.PEACE && relation != Relation.OWN) {
+                    if (!relFirst) {
+                        relList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+                    }
+                    relFirst = false;
+                    relList.addAll(Arrays.asList(relation.getFormatted(other)));
                 }
-                relFirst = false;
-                relList.addAll(Arrays.asList(relation.getFormatted(other)));
             }
+            player.spigot().sendMessage(relList.toArray(new BaseComponent[]{}));
+
+            String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : "&oInterregnum";
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_LEADER.getMessage() + c + leader);
+
+            ArrayList<BaseComponent> memList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_MEMBERS.getMessage())));
+            boolean memFirst = true;
+            for (OfflinePlayer member : faction.getMembers().getOfflinePlayers()) {
+                Double memPower = plugin.getFData().power.get(member.getUniqueId());
+                if (memPower == null) {
+                    memPower = 0D;
+                }
+                String memPowerHover = FMessage.CMD_POWER.getMessage(ChatColor.GOLD + member.getName(), String.valueOf(memPower.intValue()));
+                HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(memPowerHover));
+                BaseComponent[] components = TextComponent.fromLegacyText(c + member.getName());
+                for (BaseComponent component : components) {
+                    component.setHoverEvent(onHover);
+                }
+
+                if (!memFirst) {
+                    memList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+                }
+                memFirst = false;
+                memList.addAll(Arrays.asList(components));
+            }
+            player.spigot().sendMessage(memList.toArray(new BaseComponent[]{}));
+
+        } else {
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_FORMER_LEADERS.getMessage()
+                    + c + ParsingUtil.namesToString(faction.getFormerAdmins().getOfflinePlayers(), ChatColor.GOLD));
         }
-        player.spigot().sendMessage(relList.toArray(new BaseComponent[]{}));
-
-        String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : "&oInterregnum";
-        MessageUtil.sendMessage(sender, FMessage.CMD_SHOW_LEADER.getMessage() + c + leader);
-
-        ArrayList<BaseComponent> memList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_MEMBERS.getMessage())));
-        boolean memFirst = true;
-        for (OfflinePlayer member : faction.getMembers().getOfflinePlayers()) {
-            Double memPower = plugin.getFData().power.get(member.getUniqueId());
-            if (memPower == null) {
-                memPower = 0D;
-            }
-            String memPowerHover = FMessage.CMD_POWER.getMessage(ChatColor.GOLD + member.getName(), String.valueOf(memPower.intValue()));
-            HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(memPowerHover));
-            BaseComponent[] components = TextComponent.fromLegacyText(c + member.getName());
-            for (BaseComponent component : components) {
-                component.setHoverEvent(onHover);
-            }
-
-            if (!memFirst) {
-                memList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
-            }
-            memFirst = false;
-            memList.addAll(Arrays.asList(components));
-        }
-        player.spigot().sendMessage(memList.toArray(new BaseComponent[]{}));
     }
 
 }

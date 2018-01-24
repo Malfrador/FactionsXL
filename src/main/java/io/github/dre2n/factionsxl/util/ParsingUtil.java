@@ -328,11 +328,19 @@ public enum ParsingUtil {
     }
 
     public static String getPlayerName(Player subject, Player object) {
+        return getPlayerName(subject, object, false);
+    }
+
+    public static String getPlayerName(Player subject, Player object, boolean title) {
         FactionsXL plugin = FactionsXL.getInstance();
+        String objectTitle = null;
+        if (title) {
+            objectTitle = plugin.getFPlayerCache().getByPlayer(object).getTitle();
+        }
         Faction subjectFaction = plugin.getFactionCache().getByMember(subject);
         Faction objectFaction = plugin.getFactionCache().getByMember(object);
         ChatColor color = subjectFaction != null ? subjectFaction.getRelation(objectFaction).getColor() : ChatColor.WHITE;
-        return color + object.getName();
+        return color + (title ? objectTitle + ' ' + object.getName() : object.getName());
     }
 
     public static String getFactionName(Player subject, Faction object) {
@@ -367,6 +375,20 @@ public enum ParsingUtil {
      * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
      */
     public static void sendMessage(CommandSender sender, String message, Object... args) {
+        MessageUtil.sendMessage(sender, parseMessage(sender, message, args));
+    }
+
+    /**
+     * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
+     */
+    public static void sendActionBarMessage(Player player, String message, Object... args) {
+        MessageUtil.sendActionBarMessage(player, parseMessage(player, message, args));
+    }
+
+    /**
+     * Handles CommandSenders, OfflinePlayers, Players, FPlayers, FactionCache and Regions as arguments
+     */
+    public static String parseMessage(CommandSender sender, String message, Object... args) {
         FactionsXL plugin = FactionsXL.getInstance();
         FactionCache factions = plugin.getFactionCache();
         Faction subjectFaction = null;
@@ -410,7 +432,7 @@ public enum ParsingUtil {
                 messageParsed = messageParsed.replace("&v" + i, "null");
             }
         }
-        MessageUtil.sendMessage(sender, messageParsed);
+        return messageParsed;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ public class SetColorCommand extends FCommand {
     public SetColorCommand() {
         setCommand("setColor");
         setMinArgs(2);
-        setMaxArgs(3);
+        setMaxArgs(4);
         setHelp(FMessage.HELP_SET_COLOR.getMessage());
         setPermission(FPermission.SET_COLOR.getNode());
         setPlayerCommand(true);
@@ -56,6 +56,11 @@ public class SetColorCommand extends FCommand {
             return;
         }
 
+        if (i == 2 && args.length < 4) {
+            displayHelp(sender);
+            return;
+        }
+
         String fill = args[i];
         if (!fill.startsWith("#")) {
             fill = "#" + fill;
@@ -68,8 +73,12 @@ public class SetColorCommand extends FCommand {
             displayHelp(sender);
             return;
         }
-        faction.setMapColor(fill, line);
-        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line);
+        String icon = null;
+        if (args.length == i + 3) {
+            icon = args[i + 2];
+        }
+        faction.setMapStyle(fill, line, icon);
+        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line, faction.getMapIcon());
     }
 
 }

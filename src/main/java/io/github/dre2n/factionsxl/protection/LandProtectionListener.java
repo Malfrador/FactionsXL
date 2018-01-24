@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ public class LandProtectionListener implements Listener {
             Relation rel = owner.getRelation(bFaction);
             if (!rel.canBuild()) {
                 event.setCancelled(true);
-                ParsingUtil.sendMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
+                ParsingUtil.sendActionBarMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
             }
         }
     }
@@ -160,7 +160,7 @@ public class LandProtectionListener implements Listener {
         if (region == null || region.isNeutral()) {
             if (wildernessProtected) {
                 event.setCancelled(true);
-                ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS : FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS).getMessage());
+                ParsingUtil.sendActionBarMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_WILDERNESS : FMessage.PROTECTION_CANNOT_BUILD_WILDERNESS).getMessage());
             }
             return;
         }
@@ -168,9 +168,16 @@ public class LandProtectionListener implements Listener {
         Faction bFaction = factions.getByMember(breaker);
         Faction owner = region.getOwner();
         Relation rel = owner.getRelation(bFaction);
+        if (rel == Relation.ENEMY) {
+            if (event instanceof BlockBreakEvent) {
+                // DO STUFF
+            } else if (event instanceof BlockPlaceEvent) {
+                // DO STUFF
+            }
+        }
         if (!rel.canBuild()) {
             event.setCancelled(true);
-            ParsingUtil.sendMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
+            ParsingUtil.sendActionBarMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.LazyChunk;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -50,6 +51,7 @@ public class FactionCache {
 
     private Set<LegalEntity> entities = new HashSet<>();
     private Set<Faction> factions = new HashSet<>();
+    private Set<Faction> inactiveFactions = new HashSet<>();
     private Set<Federation> federations = new HashSet<>();
     private Set<TradeLeague> leagues = new HashSet<>();
 
@@ -57,7 +59,11 @@ public class FactionCache {
         for (File file : factionsDir.listFiles()) {
             Faction faction = new Faction(file);
             entities.add(faction);
-            factions.add(faction);
+            if (faction.isActive()) {
+                factions.add(faction);
+            } else {
+                inactiveFactions.add(faction);
+            }
         }
 
         for (File file : federationsDir.listFiles()) {
@@ -96,7 +102,7 @@ public class FactionCache {
         faction.creationDate = System.currentTimeMillis();
         faction.active = true;
         faction.name = name;
-        faction.admin = player.getUniqueId();
+        faction.setAdmin(player);
         faction.type = GovernmentType.MONARCHY;
         faction.stability = 10;
         faction.setHome(home);
@@ -213,6 +219,39 @@ public class FactionCache {
         return union;
     }
 
+    /**
+     * Integrate one faction into the other.
+     *
+     * @param integrating
+     * the first faction
+     * @param integrated
+     * the faction that gets integrated
+     */
+    public void integrate(Faction integrating, Faction integrated) {
+        for (Region region : integrated.getRegions()) {
+            Date coreDate = null;
+            for (Entry<Faction, Date> entry : region.getCoreFactions().entrySet()) {
+                if (entry.getKey() == integrating || entry.getKey() == integrated) {
+                    coreDate = entry.getValue();
+                }
+            }
+            if (coreDate != null) {
+                region.getCoreFactions().put(integrating, coreDate);
+            }
+            region.setOwner(integrating);
+        }
+        for (UUID uuid : integrated.members.getUniqueIds()) {
+            integrating.members.add(uuid);
+        }
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            integrating.account.deposit(integrated.account.getBalance());
+            integrated.account.setBalance(0);
+        }
+        integrated.relations.clear();
+        integrated.disband();
+        ParsingUtil.broadcastMessage(FMessage.FACTION_INTEGRATED_VASSAL.getMessage(), integrating, integrated);
+    }
+
     /* Getters and setters */
     /**
      * @param id
@@ -226,6 +265,11 @@ public class FactionCache {
                 return faction;
             }
         }
+        for (Faction faction : inactiveFactions) {
+            if (faction.getId() == id) {
+                return faction;
+            }
+        }
         return null;
     }
 
@@ -233,10 +277,25 @@ public class FactionCache {
      * @param name
      * the name to check
      * @return
-     * the faction that has this name
+     * the active faction that has this name
      */
     public Faction getByName(String name) {
         for (Faction faction : factions) {
+            if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param name
+     * the name to check
+     * @return
+     * the inactive faction that has this name
+     */
+    public Faction getInactiveByName(String name) {
+        for (Faction faction : inactiveFactions) {
             if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
                 return faction;
             }
@@ -251,6 +310,21 @@ public class FactionCache {
      * the faction that has this member
      */
     public Faction getByMember(OfflinePlayer member) {
+        for (Faction faction : getActive()) {
+            if (faction.getMembers().contains(member)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param member
+     * the UUID of the member to check
+     * @return
+     * the faction that has this member
+     */
+    public Faction getByMember(UUID member) {
         for (Faction faction : getActive()) {
             if (faction.getMembers().contains(member)) {
                 return faction;
@@ -277,6 +351,23 @@ public class FactionCache {
     }
 
     /**
+     * @param leader
+     * the leader to check
+     * @return
+     * a Set of all factions led by this player
+     */
+    public Set<Faction> getByLeader(Player leader) {
+        UUID uuid = leader.getUniqueId();
+        Set<Faction> factions = new HashSet<>();
+        for (Faction faction : getActive()) {
+            if (uuid.equals(faction.admin)) {
+                factions.add(faction);
+            }
+        }
+        return factions;
+    }
+
+    /**
      * @param chunk
      * the chunk to check
      * @return
@@ -285,7 +376,7 @@ public class FactionCache {
     public Faction getByChunk(Chunk chunk) {
         for (Faction faction : factions) {
             for (LazyChunk fChunk : faction.getChunks()) {
-                if (chunk.getX() == fChunk.getX() && chunk.getZ() == fChunk.getX()) {
+                if (chunk.getX() == fChunk.getX() && chunk.getZ() == fChunk.getZ()) {
                     return faction;
                 }
             }
@@ -308,13 +399,15 @@ public class FactionCache {
      * all active factions
      */
     public Set<Faction> getActive() {
-        HashSet<Faction> toReturn = new HashSet<>();
-        for (Faction faction : factions) {
-            if (faction.isActive()) {
-                toReturn.add(faction);
-            }
-        }
-        return toReturn;
+        return factions;
+    }
+
+    /**
+     * @return
+     * all inactive factions
+     */
+    public Set<Faction> getInactive() {
+        return inactiveFactions;
     }
 
     /**
@@ -322,7 +415,10 @@ public class FactionCache {
      * all factions
      */
     public Set<Faction> getAll() {
-        return factions;
+        HashSet<Faction> toReturn = new HashSet<>();
+        toReturn.addAll(factions);
+        toReturn.addAll(inactiveFactions);
+        return toReturn;
     }
 
     /**
@@ -332,7 +428,11 @@ public class FactionCache {
     public void addEntity(LegalEntity entity) {
         entities.add(entity);
         if (entity instanceof Faction) {
-            factions.add((Faction) entity);
+            if (((Faction) entity).isActive()) {
+                factions.add((Faction) entity);
+            } else {
+                inactiveFactions.add((Faction) entity);
+            }
         } else if (entity instanceof Federation) {
             federations.add((Federation) entity);
         } else if (entity instanceof TradeLeague) {
@@ -348,6 +448,7 @@ public class FactionCache {
         entities.remove(entity);
         if (entity instanceof Faction) {
             factions.remove((Faction) entity);
+            inactiveFactions.remove((Faction) entity);
         } else if (entity instanceof Federation) {
             federations.remove((Federation) entity);
         } else if (entity instanceof TradeLeague) {
@@ -360,7 +461,13 @@ public class FactionCache {
      * a new, unused entity ID.
      */
     public int generateId() {
-        return entities.size();
+        int highest = 0;
+        for (LegalEntity entity : entities) {
+            if (entity.getId() > highest) {
+                highest = entity.getId();
+            }
+        }
+        return highest + 1;
     }
 
     /* Persistence */
@@ -377,9 +484,8 @@ public class FactionCache {
      * Loads the persistent data of all factions
      */
     public void loadAll() {
-        for (Faction faction : factions) {
-            faction.load();
-        }
+        factions.forEach(f -> f.load());
+        inactiveFactions.forEach(f -> f.load());
     }
 
 }

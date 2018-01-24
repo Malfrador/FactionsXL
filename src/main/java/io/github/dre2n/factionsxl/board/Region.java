@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,7 +206,13 @@ public class Region {
      * the new owner
      */
     public void setOwner(Faction faction) {
+        if (owner != null) {
+            owner.getRegions().remove(this);
+        }
         owner = faction;
+        if (owner != null) {
+            owner.getRegions().add(this);
+        }
     }
 
     /**
@@ -364,7 +370,7 @@ public class Region {
         if (this.config == null) {
             this.config = YamlConfiguration.loadConfiguration(file);
         }
-        MessageUtil.log(plugin, "Loaded region " + name + " with " + chunks.size() + " chunks.");
+        FactionsXL.debug("Loaded " + this + " with " + chunks.size() + " chunks.");
     }
 
     public void save() {
@@ -408,6 +414,11 @@ public class Region {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Region{ID=" + id + "; name=" + name + "}";
     }
 
 }

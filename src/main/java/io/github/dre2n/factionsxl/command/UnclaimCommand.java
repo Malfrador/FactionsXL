@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
@@ -30,12 +31,12 @@ import org.bukkit.entity.Player;
  */
 public class UnclaimCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    Board board = FactionsXL.getInstance().getBoard();
 
     public UnclaimCommand() {
         setCommand("unclaim");
         setMinArgs(0);
-        setMaxArgs(0);
+        setMaxArgs(1);
         setHelp(FMessage.HELP_UNCLAIM.getMessage());
         setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
@@ -45,7 +46,22 @@ public class UnclaimCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region;
+        if (args.length >= 2) {
+            region = board.getByName(args[1]);
+            if (region == null) {
+                int id = 0;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch (NumberFormatException exception) {
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_REGION.getMessage(), args[1]);
+                    return;
+                }
+                region = board.getById(id);
+            }
+        } else {
+            region = board.getByLocation(((Player) sender).getLocation());
+        }
         if (region == null || region.isNeutral()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;
@@ -65,7 +81,6 @@ public class UnclaimCommand extends FCommand {
         region.setOwner(null);
         region.getClaimFactions().remove(faction);
         region.getCoreFactions().remove(faction);
-        faction.getRegions().remove(region);
         ParsingUtil.sendMessage(sender, FMessage.CMD_UNCLAIM_SUCCESS.getMessage(), region);
     }
 

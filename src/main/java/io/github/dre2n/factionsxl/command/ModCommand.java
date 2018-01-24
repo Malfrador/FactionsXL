@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public class ModCommand extends FCommand {
         if (faction == null) {
             return;
         }
-        if (sender instanceof Player && !faction.isPrivileged((Player) sender)) {
+        if (sender instanceof Player && !faction.isAdmin((Player) sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }

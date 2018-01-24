@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.util;
 
 import static io.github.dre2n.commons.item.ItemUtil.setSkullOwner;
 import io.github.dre2n.factionsxl.config.FMessage;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -31,6 +32,11 @@ import org.bukkit.potion.PotionType;
  * @author Daniel Saukel
  */
 public class GUIButton {
+
+    /* Text Components */
+    public static final TextComponent CANCEL = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_CANCEL.getMessage());
+    public static final TextComponent CONFIRM = new TextComponent(ChatColor.GREEN + FMessage.MISC_ACCEPT.getMessage());
+    public static final TextComponent DENY = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
 
     /* Raw skulls */
     public static final ItemStack SKULL = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);

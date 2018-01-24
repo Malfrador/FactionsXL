@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,32 +40,34 @@ import org.bukkit.entity.Player;
  */
 public enum Relation {
 
-    REAL_UNION(DARK_GREEN, true, true, FMessage.RELATION_REAL_UNION),
-    ALLIANCE(LIGHT_PURPLE, true, true, FMessage.RELATION_ALLIANCE),
-    PERSONAL_UNION(YELLOW, true, true, FMessage.RELATION_PERSONAL_UNION, ALLIANCE),
+    REAL_UNION(DARK_GREEN, true, true, true, FMessage.RELATION_REAL_UNION),
+    ALLIANCE(LIGHT_PURPLE, true, true, false, FMessage.RELATION_ALLIANCE),
+    PERSONAL_UNION(YELLOW, true, true, true, FMessage.RELATION_PERSONAL_UNION, ALLIANCE),
     /**
      * vassal faction ===> Relation.LORD ===> lord faction
      */
-    LORD(DARK_AQUA, true, true, FMessage.RELATION_LORD, ALLIANCE),
-    OWN(GREEN, true, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
+    LORD(DARK_AQUA, true, true, true, FMessage.RELATION_LORD, ALLIANCE),
+    OWN(GREEN, true, true, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
     /**
      * lord faction ===> Relation.VASSAL ===> vassal faction
      */
-    VASSAL(AQUA, true, true, FMessage.RELATION_VASSAL, ALLIANCE),
-    COALITION(DARK_PURPLE, true, true, FMessage.RELATION_COALITION),
-    PEACE(WHITE, false, false, FMessage.RELATION_PEACE),
-    ENEMY(RED, false, false, FMessage.RELATION_ENEMY);
+    VASSAL(AQUA, true, true, true, FMessage.RELATION_VASSAL, ALLIANCE),
+    COALITION(DARK_PURPLE, true, true, false, FMessage.RELATION_COALITION),
+    PEACE(WHITE, false, false, false, FMessage.RELATION_PEACE),
+    ENEMY(RED, false, false, false, FMessage.RELATION_ENEMY);
 
     private ChatColor color;
     private boolean build;
     private boolean protection;
+    private boolean vassalsOverride;
     private FMessage name;
     private Set<Relation> included = new HashSet<>();
 
-    Relation(ChatColor color, boolean build, boolean protection, FMessage name, Relation... included) {
+    Relation(ChatColor color, boolean build, boolean protection, boolean vassalsOverride, FMessage name, Relation... included) {
         this.color = color;
         this.build = build;
         this.protection = protection;
+        this.vassalsOverride = vassalsOverride;
         this.name = name;
         this.included.addAll(Arrays.asList(included));
     }
@@ -92,6 +94,15 @@ public enum Relation {
      */
     public boolean isProtected() {
         return protection;
+    }
+
+    /**
+     * @return
+     * true if vassals override this relation to other factions
+     * for themselves instead of using the lord's relation
+     */
+    public boolean doVassalsOverride() {
+        return vassalsOverride;
     }
 
     /**
@@ -138,8 +149,10 @@ public enum Relation {
     public BaseComponent[] getFormatted(Faction faction) {
         BaseComponent[] components = TextComponent.fromLegacyText(color + faction.getName());
         HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(getDescription()));
+        ClickEvent click = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/factionsxl show " + faction.getId());
         for (BaseComponent component : components) {
             component.setHoverEvent(hover);
+            component.setClickEvent(click);
         }
         return components;
     }
@@ -304,10 +317,18 @@ public enum Relation {
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, relation.getName());
             } else if (relation == VASSAL) {
                 object.getRelations().put(subject, LORD);
+                object.setAllod(true);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), subject, object);
             } else if (relation == LORD) {
                 object.getRelations().put(subject, VASSAL);
+                subject.setAllod(true);
                 ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
+            }
+            if (!subject.isVassal()) {
+                subject.setAllod(true);
+            }
+            if (!object.isVassal()) {
+                object.setAllod(true);
             }
             FTeamWrapper.updatePrefixes(subject);
             FTeamWrapper.updatePrefixes(object);

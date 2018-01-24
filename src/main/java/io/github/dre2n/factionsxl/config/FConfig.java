@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 9;
+    public static final int CONFIG_VERSION = 12;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -63,6 +63,7 @@ public class FConfig extends DREConfig {
     private double autoSaveInterval = 10;
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
+    private int moveCapitalCooldown = 30;
 
     // Consume
     private double defaultManpowerModifier = 1;
@@ -73,6 +74,7 @@ public class FConfig extends DREConfig {
     private double priceCreate = 1000;
     private double priceCreateVassal = 1000;
     private double priceHomeWarp = 5;
+    private boolean playerHomesEnabled = true;
     private Map<Relation, Double> priceRelation = new HashMap<Relation, Double>() {
         {
             put(REAL_UNION, 500D);
@@ -110,13 +112,14 @@ public class FConfig extends DREConfig {
     private double territoryShield = 0.66;
     private boolean capitalProtectionEnabled = false;
 
-    // Power
+    // Power etc.
     private int maxPower = 100;
     private int minPower = -100;
     private long powerUpdateInterval = MINUTE;
     private double powerIncreaseRate = 1;
     private double powerDecreaseRate = 0.01;
     private double powerDeathLoss = 25;
+    private int autoKickDays = 30;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -205,6 +208,7 @@ public class FConfig extends DREConfig {
             put(MAGIC, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#F8AB00").setFillColor("#DF3418"));
             put(MOUNTAINOUS, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#EDEDED").setFillColor("#DADADA"));
             put(SEA, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#00C7C2").setFillColor("#0088C2"));
+            put(WARZONE, new DynmapStyle(DEFAULT_STYLE).setStrokeColor("#FF3333").setFillColor("#CC0000"));
         }
     };
 
@@ -248,6 +252,14 @@ public class FConfig extends DREConfig {
      */
     public int getMaxIdeaGroups() {
         return maxIdeaGroups;
+    }
+
+    /**
+     * @return
+     * the time millis until a faction may move its capital again.
+     */
+    public long getMoveCapitalCooldown() {
+        return moveCapitalCooldown * DAY;
     }
 
     /**
@@ -297,6 +309,14 @@ public class FConfig extends DREConfig {
      */
     public double getPriceHomeWarp() {
         return priceHomeWarp;
+    }
+
+    /**
+     * @return
+     * if per player homes (/f playerHome) are enabled
+     */
+    public boolean arePlayerHomesEnabled() {
+        return playerHomesEnabled;
     }
 
     /**
@@ -482,6 +502,14 @@ public class FConfig extends DREConfig {
      */
     public double getPowerDeathLoss() {
         return powerDeathLoss;
+    }
+
+    /**
+     * @return
+     * the time in milliseconds until a player gets kicked from his faction
+     */
+    public long getAutoKickTime() {
+        return (long) autoKickDays * 86400000;
     }
 
     /**
@@ -681,6 +709,10 @@ public class FConfig extends DREConfig {
             config.set("maxIdeaGroups", maxIdeaGroups);
         }
 
+        if (!config.contains("moveCapitalCooldown")) {
+            config.set("moveCapitalCooldown", moveCapitalCooldown);
+        }
+
         if (!config.contains("defaultManpowerModifier")) {
             config.set("defaultManpowerModifier", defaultManpowerModifier);
         }
@@ -691,6 +723,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("economyEnabled")) {
             config.set("economyEnabled", economyEnabled);
+        }
+
+        if (!config.contains("playerHomesEnabled")) {
+            config.set("playerHomesEnabled", playerHomesEnabled);
         }
 
         if (!config.contains("price.create")) {
@@ -802,6 +838,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("powerDeathLoss")) {
             config.set("powerDeathLoss", powerDeathLoss);
+        }
+
+        if (!config.contains("autoKickDays")) {
+            config.set("autoKickDays", autoKickDays);
         }
 
         if (!config.contains("hologramsEnabled")) {
@@ -918,6 +958,10 @@ public class FConfig extends DREConfig {
             maxIdeaGroups = config.getInt("maxIdeaGroups");
         }
 
+        if (config.contains("moveCapitalCooldown")) {
+            moveCapitalCooldown = config.getInt("moveCapitalCooldown");
+        }
+
         if (config.contains("defaultManpowerModifier")) {
             defaultManpowerModifier = config.getDouble("defaultManpowerModifier");
         }
@@ -928,6 +972,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("economyEnabled")) {
             economyEnabled = config.getBoolean("economyEnabled");
+        }
+
+        if (config.contains("playerHomesEnabled")) {
+            playerHomesEnabled = config.getBoolean("playerHomesEnabled");
         }
 
         if (config.contains("price.create")) {
@@ -1038,6 +1086,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("powerDeathLoss")) {
             powerDeathLoss = config.getDouble("powerDeathLoss");
+        }
+
+        if (config.contains("autoKickDays")) {
+            autoKickDays = config.getInt("autoKickDays");
         }
 
         if (config.contains("hologramsEnabled")) {

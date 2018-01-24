@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,11 +62,7 @@ public class FMob implements Listener {
      */
     public static Villager spawnVillager(Location location) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
-        if (Version.andHigher(Version.MC1_11).contains(CompatibilityHandler.getInstance().getVersion())) {
-            villager.setProfession(Profession.NITWIT);
-        } else {
-            villager.setProfession(Profession.FARMER);
-        }
+        villager.setProfession(Profession.NITWIT);
         villager.setCustomName(MOB_VILLAGER.getMessage());
         villager.setCustomNameVisible(true);
         return villager;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ public class ChatListener implements Listener {
                 MessageUtil.sendMessage(player, format + event.getMessage());
             } else {
                 for (Relation relation : channel.getRelations()) {
-                    for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
+                    for (Player receiver : fPlayer.getFaction().getOnlineByRelationAndVassals(relation)) {
                         String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }

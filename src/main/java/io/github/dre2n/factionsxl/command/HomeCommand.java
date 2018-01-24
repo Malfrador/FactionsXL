@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,15 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.misc.ProgressBar;
 import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.util.CooldownTeleportationTask;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,9 +51,11 @@ public class HomeCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByMember(player);
+        Faction faction;
         if (args.length == 2 && FPermission.hasPermission(sender, FPermission.HOME_OTHERS)) {
             faction = plugin.getFactionCache().getByName(args[1]);
+        } else {
+            faction = plugin.getFactionCache().getByMember(player);
         }
 
         if (faction == null) {
@@ -72,49 +72,7 @@ public class HomeCommand extends FCommand {
             return;
         }
 
-        new HomeTask(player, faction).runTaskTimer(plugin, 0L, 20L);
-    }
-
-    public class HomeTask extends ProgressBar {
-
-        private Player player;
-        private Location location;
-        private Faction target;
-        private boolean teleport;
-
-        public HomeTask(Player player, Faction target) {
-            super(player, 10);
-            this.player = player;
-            this.target = target;
-            location = player.getLocation();
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            if (player.getLocation().getBlockX() != location.getBlockX() || player.getLocation().getBlockY() != location.getBlockY() || player.getLocation().getBlockZ() != location.getBlockZ()) {
-                cancel();
-                MessageUtil.sendActionBarMessage(player, FMessage.ERROR_DO_NOT_MOVE.getMessage());
-                return;
-            }
-
-            if (teleport) {
-                if (config.isEconomyEnabled()) {
-                    if (!econ.has(player, config.getPriceHomeWarp())) {
-                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY.getMessage(), String.valueOf(config.getPriceHomeWarp()));
-                        return;
-                    } else {
-                        econ.withdrawPlayer(player, config.getPriceHomeWarp());
-                    }
-                }
-                PlayerUtil.secureTeleport(player, target.getHome());
-            }
-
-            if (secondsLeft == 0) {
-                teleport = true;
-            }
-        }
-
+        new CooldownTeleportationTask(player, faction.getHome(), true).runTaskTimer(plugin, 0L, 20L);
     }
 
 }

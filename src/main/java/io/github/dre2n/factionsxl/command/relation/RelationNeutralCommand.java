@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,14 @@ public class RelationNeutralCommand extends FCommand {
             ParsingUtil.sendMessage(sender, args.length < 3 ? FMessage.ERROR_SPECIFY_FACTION.getMessage() : FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
+        if (subject.isVassal()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subject);
+            return;
+        }
+        if (!subject.isAdmin(sender)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
 
         Faction object = args.length == 3 ? factions.getByName(args[2]) : factions.getByName(args[1]);
         if (object == null) {
@@ -68,9 +76,6 @@ public class RelationNeutralCommand extends FCommand {
         }
 
         switch (subject.getRelation(object)) {
-            case LORD:
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_VASSAL.getMessage(), subject);
-                return;
             case OWN:
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage(), subject, object);
                 return;

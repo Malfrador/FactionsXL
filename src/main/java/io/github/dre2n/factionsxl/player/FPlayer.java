@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.UUID;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,7 +44,6 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     private UUID uuid;
 
     private ChatChannel chatChannel = ChatChannel.PUBLIC;
-    private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
     private Region autoclaiming;
     private Region lastRegion;
 
@@ -147,7 +147,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      * true if the scoreboard is enabled
      */
     public boolean isScoreboardEnabled() {
-        return scoreboardEnabled;
+        return data.isScoreboardEnabled();
     }
 
     /**
@@ -155,7 +155,23 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      * if the scoreboard is enabled
      */
     public void setScoreboardEnabled(boolean enabled) {
-        scoreboardEnabled = enabled;
+        data.setScoreboardEnabled(enabled);
+    }
+
+    /**
+     * @return
+     * if the scoreboard is enabled
+     */
+    public boolean areAnthemsEnabled() {
+        return data.areAnthemsEnabled();
+    }
+
+    /**
+     * @param enabled
+     * if faction anthems shall be enabled
+     */
+    public void setAnthemsEnabled(boolean enabled) {
+        data.setAnthemsEnabled(enabled);
     }
 
     /**
@@ -221,7 +237,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      */
     public String getPrefix() {
         Faction faction = getFaction();
-        if (faction != null && faction.getAdmin().getUniqueId().equals(uuid)) {
+        if (faction != null && faction.isAdmin(uuid)) {
             return FMessage.CHAT_PREFIX_ADMIN.getMessage();
         } else if (faction != null && isMod(faction)) {
             return FMessage.CHAT_PREFIX_MOD.getMessage();
@@ -234,6 +250,35 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     public Relation getRelation(RelationParticipator object) {
         Faction own = getFaction();
         return own != null ? own.getRelation(object) : Relation.PEACE;
+    }
+
+    @Override
+    public boolean isInWar(RelationParticipator object) {
+        Faction own = getFaction();
+        return own != null ? own.isInWar(object) : false;
+    }
+
+    public Location getHome() {
+        return data.getHome();
+    }
+
+    public void setHome(Location location) {
+        data.setHome(location);
+    }
+
+    public boolean checkHome() {
+        if (getHome() == null) {
+            return true;
+        }
+        Region region = plugin.getBoard().getByLocation(getHome());
+        if (region == null || region.getOwner() == null) {
+            return true;
+        }
+        if (!region.getOwner().getRelation(this).canBuild()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -287,6 +332,11 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      */
     public void setLastRegion(Region region) {
         lastRegion = region;
+    }
+
+    @Override
+    public String toString() {
+        return "FPlayer{name=" + getName() + "}";
     }
 
 }

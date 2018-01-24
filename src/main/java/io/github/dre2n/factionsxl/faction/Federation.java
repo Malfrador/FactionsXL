@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package io.github.dre2n.factionsxl.faction;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.economy.FAccount;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -31,6 +33,15 @@ public class Federation extends LegalEntity {
         if (plugin.getFConfig().isEconomyEnabled()) {
             account = new FAccount(this);
         }
+    }
+
+    public Set<Faction> getFactions() {
+        return new HashSet<>();
+    }
+    
+    @Override
+    public String toString() {
+        return "Federation{ID=" + id + "name=" + name + "}";
     }
 
 }

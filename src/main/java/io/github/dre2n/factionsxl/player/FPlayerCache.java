@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Daniel Saukel
+ * Copyright (c) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package io.github.dre2n.factionsxl.player;
 
 import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.faction.Faction;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -152,6 +153,23 @@ public class FPlayerCache {
      */
     public Dynasty getDynastyByUUID(UUID uuid) {
         return getDynastyByPlayer(Bukkit.getOfflinePlayer(uuid));
+    }
+
+    /**
+     * Automatically kick players who haven't been online for the time specified in the config
+     */
+    public void autoKick() {
+        for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
+            for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
+                if (System.currentTimeMillis() > player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
+                    FactionsXL.debug("Kicking " + player + " / Last played: " + new java.util.Date(player.getLastPlayed()));
+                    faction.kick(player);
+                    if (faction.getAdmin().getUniqueId().equals(player.getUniqueId())) {
+                        faction.doSuccession();
+                    }
+                }
+            }
+        }
     }
 
     /**
