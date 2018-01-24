@@ -118,8 +118,8 @@ public class FactionsXL extends DREPlugin {
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
-        if (!compat.isSpigot() || !Version.andHigher(Version.MC1_9).contains(compat.getVersion())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.9 or higher to work. It is not compatible with CraftBukkit and older versions.");
+        if (!compat.isSpigot() || compat.getInternals() != Internals.v1_12_R1) {
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.12.2 to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }

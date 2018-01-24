@@ -12,7 +12,7 @@ The visual appearance of FXL and the command syntax are designed to be similar t
 
 ## Compatibility
 ### Server
-FactionsXL works best with Spigot 1.12.x and requires at least Spigot 1.9 or a newer version.
+FactionsXL requires Minecraft 1.12.2 to work.
 
 ### Building information and dependencies
 Building FactionsXL from source requires [Apache Maven](https://maven.apache.org/).

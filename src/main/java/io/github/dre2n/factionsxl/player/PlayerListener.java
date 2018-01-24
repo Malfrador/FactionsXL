@@ -150,11 +150,7 @@ public class PlayerListener implements Listener {
         if (player == null || faction == null || faction.getAnthem() == null) {
             return;
         }
-        if (Version.andHigher(Version.MC1_10).contains(CompatibilityHandler.getInstance().getVersion())) {
-            player.stopSound(faction.getAnthem());
-        } else {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stopsound " + player.getName() + " master " + faction.getAnthem());
-        }
+        player.stopSound(faction.getAnthem());
     }
 
     private String getRegionName(Player player, Region region) {

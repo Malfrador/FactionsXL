@@ -62,11 +62,7 @@ public class FMob implements Listener {
      */
     public static Villager spawnVillager(Location location) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
-        if (Version.andHigher(Version.MC1_11).contains(CompatibilityHandler.getInstance().getVersion())) {
-            villager.setProfession(Profession.NITWIT);
-        } else {
-            villager.setProfession(Profession.FARMER);
-        }
+        villager.setProfession(Profession.NITWIT);
         villager.setCustomName(MOB_VILLAGER.getMessage());
         villager.setCustomNameVisible(true);
         return villager;
