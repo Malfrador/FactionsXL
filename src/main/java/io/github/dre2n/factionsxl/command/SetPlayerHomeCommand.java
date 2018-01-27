@@ -59,7 +59,7 @@ public class SetPlayerHomeCommand extends FCommand {
             return;
         }
 
-        if (!fPlayer.checkHome()) {
+        if (!fPlayer.checkHome(player.getLocation())) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_HOME_NOT_IN_ALLIED_TERRITORY.getMessage());
             return;
         }

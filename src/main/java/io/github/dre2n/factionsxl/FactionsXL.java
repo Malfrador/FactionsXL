@@ -19,7 +19,6 @@ package io.github.dre2n.factionsxl;
 import com.griefcraft.lwc.LWC;
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.compatibility.Internals;
-import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.commons.config.MessageConfig;
 import io.github.dre2n.commons.javaplugin.DREPlugin;
 import io.github.dre2n.commons.javaplugin.DREPluginSettings;
@@ -98,7 +97,7 @@ public class FactionsXL extends DREPlugin {
     public FactionsXL() {
         /*
          * ##########################
-         * ####~BRPluginSettings~####
+         * ####~DREPluginSettings####
          * ##########################
          * #~Internals~##INDEPENDENT#
          * #~SpigotAPI~##~~~~true~~~#
@@ -517,6 +516,14 @@ public class FactionsXL extends DREPlugin {
         }
         landProtectionListener = new LandProtectionListener();
         manager.registerEvents(landProtectionListener, this);
+    }
+
+    /**
+     * @return
+     * the loaded instance of LWCIntegration
+     */
+    public LWCIntegration getLWCIntegration() {
+        return lwcIntegration;
     }
 
     /**

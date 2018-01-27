@@ -267,10 +267,14 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     }
 
     public boolean checkHome() {
-        if (getHome() == null) {
+        return checkHome(getHome());
+    }
+
+    public boolean checkHome(Location home) {
+        if (home == null) {
             return true;
         }
-        Region region = plugin.getBoard().getByLocation(getHome());
+        Region region = plugin.getBoard().getByLocation(home);
         if (region == null || region.getOwner() == null) {
             return true;
         }
