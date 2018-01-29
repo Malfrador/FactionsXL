@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.board;
 
-import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
@@ -383,9 +382,7 @@ public class Region {
             config.set("population", 0);
         }
         config.set("world", world.getName());
-        if (owner != null) {
-            config.set("owner", owner.getId());
-        }
+        config.set("owner", owner != null ? owner.getId() : null);
 
         List<String> serializedChunks = new ArrayList<>();
         for (LazyChunk chunk : chunks) {
