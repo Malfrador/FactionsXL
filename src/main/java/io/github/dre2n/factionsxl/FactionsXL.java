@@ -84,6 +84,7 @@ public class FactionsXL extends DREPlugin {
     private WarCache wars;
     private PageGUICache pageGUIs;
     private Board board;
+    private Atlas atlas;
     private ChatListener chatListener;
     private PlayerListener playerListener;
     private EntityProtectionListener entityProtectionListener;
@@ -242,8 +243,8 @@ public class FactionsXL extends DREPlugin {
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
         }
-        manager.registerEvents(new FBull(), this);
-        manager.registerEvents(new FMob(), this);
+        manager.registerEvents(new FBull(this), this);
+        manager.registerEvents(new FMob(this), this);
 
         new BukkitRunnable() {
             @Override
@@ -284,9 +285,9 @@ public class FactionsXL extends DREPlugin {
      * @return
      * the plugin instance
      */
-    public static FactionsXL getInstance() {
-        return instance;
-    }
+    //public static FactionsXL getInstance() {
+    //    return instance;
+    //}
 
     /**
      * @return
@@ -363,7 +364,7 @@ public class FactionsXL extends DREPlugin {
      * load / reload a new instance of FPlayerCache
      */
     public void loadFPlayers() {
-        fPlayers = new FPlayerCache();
+        fPlayers = new FPlayerCache(this);
     }
 
     /**
@@ -378,7 +379,7 @@ public class FactionsXL extends DREPlugin {
      * load / reload a new instance of FactionCache
      */
     public void loadFactions(File factionsDir, File federationsDir, File leaguesDir) {
-        factions = new FactionCache(factionsDir, federationsDir, leaguesDir);
+        factions = new FactionCache(this, factionsDir, federationsDir, leaguesDir);
     }
 
     /**
@@ -393,7 +394,15 @@ public class FactionsXL extends DREPlugin {
      * load / reload a new instance of Board
      */
     public void loadBoard(File dir) {
-        board = new Board(dir);
+        board = new Board(this, dir);
+    }
+
+    /**
+     * @return
+     * the loaded instance of Atlas
+     */
+    public Atlas getAtlas() {
+        return atlas;
     }
 
     /**
@@ -402,7 +411,8 @@ public class FactionsXL extends DREPlugin {
     public void loadAtlas() {
         Plugin plugin = manager.getPlugin("dynmap");
         if (plugin != null) {
-            Atlas.init();
+            atlas = new Atlas(this);
+            atlas.init();
         } else {
             MessageUtil.log(this, FMessage.LOG_DYNMAP_NOT_ENABLED.getMessage());
         }
@@ -438,7 +448,7 @@ public class FactionsXL extends DREPlugin {
         if (chatListener != null) {
             HandlerList.unregisterAll(chatListener);
         }
-        chatListener = new ChatListener();
+        chatListener = new ChatListener(this);
         manager.registerEvents(chatListener, this);
     }
 
@@ -495,7 +505,7 @@ public class FactionsXL extends DREPlugin {
         if (entityProtectionListener != null) {
             HandlerList.unregisterAll(entityProtectionListener);
         }
-        entityProtectionListener = new EntityProtectionListener();
+        entityProtectionListener = new EntityProtectionListener(this);
         manager.registerEvents(entityProtectionListener, this);
     }
 
@@ -514,7 +524,7 @@ public class FactionsXL extends DREPlugin {
         if (landProtectionListener != null) {
             HandlerList.unregisterAll(landProtectionListener);
         }
-        landProtectionListener = new LandProtectionListener();
+        landProtectionListener = new LandProtectionListener(this);
         manager.registerEvents(landProtectionListener, this);
     }
 
@@ -541,7 +551,7 @@ public class FactionsXL extends DREPlugin {
         if (manager.isPluginEnabled("LWC")) {
             lwc = LWC.getInstance();
             PluginDescriptionFile desc = lwc.getPlugin().getDescription();
-            lwcIntegration = new LWCIntegration();
+            lwcIntegration = new LWCIntegration(this);
             MessageUtil.log(this, "Successfully hooked into " + desc.getName() + " v" + desc.getVersion() + ".");
         } else {
             MessageUtil.log(this, "&4Could not find LWC.");
@@ -565,7 +575,7 @@ public class FactionsXL extends DREPlugin {
         double increase = fConfig.getPowerIncreaseRate();
         double decrease = fConfig.getPowerDecreaseRate();
         int maxPower = fConfig.getMaxPower();
-        powerTask = new AsyncPowerTask(increase, decrease, maxPower).runTaskTimerAsynchronously(this, interval - passed, interval);
+        powerTask = new AsyncPowerTask(this, increase, decrease, maxPower).runTaskTimerAsynchronously(this, interval - passed, interval);
     }
 
     /**
@@ -582,7 +592,7 @@ public class FactionsXL extends DREPlugin {
     public void startIncomeTask() {
         long dayLength = fConfig.getDayLength();
         long passed = System.currentTimeMillis() - fData.lastNewDay;
-        incomeTask = new IncomeTask().runTaskTimer(this, dayLength - passed, dayLength);
+        incomeTask = new IncomeTask(this).runTaskTimer(this, dayLength - passed, dayLength);
     }
 
     public void debugToFile(String message) {

@@ -20,7 +20,6 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -32,10 +31,8 @@ import org.bukkit.entity.Player;
  */
 public abstract class RelationAliasCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-
-    public RelationAliasCommand() {
+    public RelationAliasCommand(FactionsXL plugin) {
+        super(plugin);
         setMinArgs(1);
         setMaxArgs(2);
         setPermission(FPermission.RELATION.getNode());

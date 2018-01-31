@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class UninviteCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public UninviteCommand() {
+    public UninviteCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("uninvite");
         setMinArgs(1);
         setMaxArgs(2);

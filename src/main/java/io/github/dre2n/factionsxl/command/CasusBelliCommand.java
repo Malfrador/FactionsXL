@@ -30,9 +30,8 @@ import org.bukkit.command.CommandSender;
  */
 public class CasusBelliCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public CasusBelliCommand() {
+    public CasusBelliCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("casusBelli");
         setAliases("cb");
         setMinArgs(0);

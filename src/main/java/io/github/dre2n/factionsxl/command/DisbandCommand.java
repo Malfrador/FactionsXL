@@ -29,9 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class DisbandCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public DisbandCommand() {
+    public DisbandCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("disband");
         setMinArgs(1);
         setMaxArgs(1);
@@ -43,7 +42,7 @@ public class DisbandCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = factions.getByName(args[1]);
         if (faction == null || !faction.isActive()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;

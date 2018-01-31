@@ -18,7 +18,6 @@ package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -31,10 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class ClaimCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FConfig config = plugin.getFConfig();
-
-    public ClaimCommand() {
+    public ClaimCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("claim");
         setAliases("annex");
         setMinArgs(0);
@@ -58,7 +55,7 @@ public class ClaimCommand extends FCommand {
             return;
         }
 
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region = board.getByLocation(player.getLocation());
         if (region == null || !region.isAnnexable()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
             if (region != null && region.getCoreFactions().containsKey(faction)) {
@@ -69,7 +66,7 @@ public class ClaimCommand extends FCommand {
             return;
         }
 
-        if (plugin.getFConfig().isEconomyEnabled()) {
+        if (config.isEconomyEnabled()) {
             double price = region.getClaimPrice(faction);
             if (faction.getAccount().getBalance() < price) {
                 ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));

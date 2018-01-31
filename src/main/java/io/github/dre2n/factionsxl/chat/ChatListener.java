@@ -35,9 +35,15 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class ChatListener implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FPlayerCache fPlayers = plugin.getFPlayerCache();
-    FConfig fConfig = plugin.getFConfig();
+    FactionsXL plugin;
+    FPlayerCache fPlayers;
+    FConfig config;
+
+    public ChatListener(FactionsXL plugin) {
+        this.plugin = plugin;
+        fPlayers = plugin.getFPlayerCache();
+        config = plugin.getFConfig();
+    }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
@@ -47,7 +53,7 @@ public class ChatListener implements Listener {
             fPlayer.setChatChannel(ChatChannel.PUBLIC);
         }
         ChatChannel channel = fPlayer.getChatChannel();
-        if ((channel == ChatChannel.PUBLIC || channel == ChatChannel.LOCAL) && !fConfig.isPublicChatHandled()) {
+        if ((channel == ChatChannel.PUBLIC || channel == ChatChannel.LOCAL) && !config.isPublicChatHandled()) {
             return;
         }
 
@@ -55,23 +61,23 @@ public class ChatListener implements Listener {
             event.setCancelled(true);
             if (channel == ChatChannel.PUBLIC) {
                 for (Player receiver : Bukkit.getOnlinePlayers()) {
-                    String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
+                    String format = ParsingUtil.replaceChatPlaceholders(config.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                     MessageUtil.sendMessage(receiver, format + event.getMessage());
                 }
             } else if (channel == ChatChannel.LOCAL) {
-                for (Entity entity : player.getNearbyEntities(fConfig.getLocalChatRange(), fConfig.getLocalChatRange(), fConfig.getLocalChatRange())) {
+                for (Entity entity : player.getNearbyEntities(config.getLocalChatRange(), config.getLocalChatRange(), config.getLocalChatRange())) {
                     if (entity instanceof Player) {
                         Player receiver = (Player) entity;
-                        String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
+                        String format = ParsingUtil.replaceChatPlaceholders(config.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }
                 }
-                String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayer);
+                String format = ParsingUtil.replaceChatPlaceholders(config.getChatFormat(channel), fPlayer, fPlayer);
                 MessageUtil.sendMessage(player, format + event.getMessage());
             } else {
                 for (Relation relation : channel.getRelations()) {
                     for (Player receiver : fPlayer.getFaction().getOnlineByRelationAndVassals(relation)) {
-                        String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
+                        String format = ParsingUtil.replaceChatPlaceholders(config.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }
                 }

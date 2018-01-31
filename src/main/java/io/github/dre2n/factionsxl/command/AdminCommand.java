@@ -30,9 +30,8 @@ import org.bukkit.command.CommandSender;
  */
 public class AdminCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public AdminCommand() {
+    public AdminCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("admin");
         setAliases("leader");
         setMinArgs(1);

@@ -43,11 +43,15 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class FStorage {
 
+    FactionsXL plugin;
+
     private Faction faction;
     private Map<Resource, Integer> goods = new HashMap<>();
     private PageGUI gui;
 
     public FStorage(Faction faction) {
+        this.plugin = faction.plugin;
+
         this.faction = faction;
         for (Resource resource : Resource.values()) {
             if (!goods.containsKey(resource) && resource.isPhysical()) {
@@ -110,7 +114,7 @@ public class FStorage {
             int saturation = faction.getSaturatedResources().get(resource);
             int demand = faction.getDemand(resource);
             int max = demand != 0 ? SaturationLevel.getByPercentage(saturation / demand * 100).getMinPercentage() : 100;
-            int daily = FactionsXL.getInstance().getFConfig().getSaturationPerDay();
+            int daily = plugin.getFConfig().getSaturationPerDay();
             int consume = faction.getConsumableResources().get(resource);
             if (demand > consume) {
                 tooFew.add(ChatColor.GOLD + resource.getName());
@@ -143,8 +147,8 @@ public class FStorage {
         }
 
         // Trade
-        double importModifier = FactionsXL.getInstance().getFConfig().getImportModifier();
-        double exportModifier = FactionsXL.getInstance().getFConfig().getExportModifier();
+        double importModifier = plugin.getFConfig().getImportModifier();
+        double exportModifier = plugin.getFConfig().getExportModifier();
         HashMap<Resource, Integer> importActions = new HashMap<>();
         for (Entry<Resource, Integer> entry : faction.getGroceryList().entrySet()) {
             Resource resource = entry.getKey();

@@ -21,7 +21,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
-import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,10 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class TitleCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FPlayerCache fPlayers = plugin.getFPlayerCache();
-
-    public TitleCommand() {
+    public TitleCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("title");
         setMinArgs(2);
         setMaxArgs(2);

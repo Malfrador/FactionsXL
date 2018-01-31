@@ -48,11 +48,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class LandProtectionListener implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-    Board board = plugin.getBoard();
-    FConfig config = plugin.getFConfig();
-    boolean wildernessProtected = config.isWildernessProtected();
+    FactionsXL plugin;
+    FactionCache factions;
+    Board board;
+    FConfig config;
+    boolean wildernessProtected;
+
+    public LandProtectionListener(FactionsXL plugin) {
+        this.plugin = plugin;
+        factions = plugin.getFactionCache();
+        board = plugin.getBoard();
+        config = plugin.getFConfig();
+        wildernessProtected = config.isWildernessProtected();
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {

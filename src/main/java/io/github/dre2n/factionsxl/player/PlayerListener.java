@@ -17,8 +17,6 @@
 package io.github.dre2n.factionsxl.player;
 
 import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.compatibility.CompatibilityHandler;
-import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
@@ -31,7 +29,6 @@ import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -64,7 +61,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        FPlayer fPlayer = new FPlayer(player);
+        FPlayer fPlayer = fPlayers.create(player);
         fPlayers.addPlayer(fPlayer);
 
         Region region = fPlayer.getLastRegion();
@@ -80,7 +77,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         FPlayer fPlayer = fPlayers.getByPlayer(event.getPlayer());
-        FScoreboard.remove(fPlayer);
         fPlayers.removePlayer(fPlayer);
     }
 

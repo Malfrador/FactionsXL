@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -26,7 +27,8 @@ import org.bukkit.command.CommandSender;
  */
 public class ChatCommand extends FCommand {
 
-    public ChatCommand() {
+    public ChatCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("chat");
         setAliases("c");
         setMinArgs(1);

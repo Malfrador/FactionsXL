@@ -19,7 +19,6 @@ package io.github.dre2n.factionsxl.faction;
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.commons.player.PlayerCollection;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPlayer;
@@ -47,7 +46,7 @@ import org.bukkit.entity.Player;
  */
 public class FactionCache {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private Set<LegalEntity> entities = new HashSet<>();
     private Set<Faction> factions = new HashSet<>();
@@ -55,9 +54,10 @@ public class FactionCache {
     private Set<Federation> federations = new HashSet<>();
     private Set<TradeLeague> leagues = new HashSet<>();
 
-    public FactionCache(File factionsDir, File federationsDir, File leaguesDir) {
+    public FactionCache(FactionsXL plugin, File factionsDir, File federationsDir, File leaguesDir) {
+        this.plugin = plugin;
         for (File file : factionsDir.listFiles()) {
-            Faction faction = new Faction(file);
+            Faction faction = new Faction(plugin, file);
             entities.add(faction);
             if (faction.isActive()) {
                 factions.add(faction);
@@ -67,13 +67,13 @@ public class FactionCache {
         }
 
         for (File file : federationsDir.listFiles()) {
-            Federation federation = new Federation(file);
+            Federation federation = new Federation(plugin, file);
             entities.add(federation);
             federations.add(federation);
         }
 
         for (File file : leaguesDir.listFiles()) {
-            TradeLeague league = new TradeLeague(file);
+            TradeLeague league = new TradeLeague(plugin, file);
             entities.add(league);
             leagues.add(league);
         }
@@ -96,9 +96,7 @@ public class FactionCache {
         } catch (IOException exception) {
         }
 
-        Board board = plugin.getBoard();
-
-        Faction faction = new Faction(id);
+        Faction faction = new Faction(plugin, id);
         faction.creationDate = System.currentTimeMillis();
         faction.active = true;
         faction.name = name;
@@ -106,7 +104,7 @@ public class FactionCache {
         faction.type = GovernmentType.MONARCHY;
         faction.stability = 10;
         faction.setHome(home);
-        faction.capital = board.getByLocation(faction.home);
+        faction.capital = plugin.getBoard().getByLocation(faction.home);
         faction.capital.setOwner(faction);
         faction.capital.getCoreFactions().put(faction, Calendar.getInstance().getTime());
         faction.members.add(player);

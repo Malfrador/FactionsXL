@@ -31,9 +31,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CreateBullCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public CreateBullCommand() {
+    public CreateBullCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("createBull");
         setMinArgs(-1);
         setMaxArgs(-1);

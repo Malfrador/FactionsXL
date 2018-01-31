@@ -41,7 +41,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class ResourceMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private ItemStack exportButton;
     private ItemStack importButton;
@@ -51,6 +51,8 @@ public class ResourceMenu implements Listener {
     private Inventory gui;
 
     public ResourceMenu(Faction faction, Resource resource) {
+        plugin = faction.plugin;
+
         exportButton = GUIButton.DOWN.clone();
         ItemMeta exMeta = exportButton.getItemMeta();
         exMeta.setDisplayName(FMessage.TRADE_EXPORT.getMessage());

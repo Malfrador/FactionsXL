@@ -19,7 +19,6 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -31,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class IntegrateCommand extends FCommand {
 
-    FactionCache factions = FactionsXL.getInstance().getFactionCache();
-
-    public IntegrateCommand() {
+    public IntegrateCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("integrate");
         setMinArgs(1);
         setMaxArgs(2);

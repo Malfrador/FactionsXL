@@ -22,7 +22,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.TradeOffer;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.GUIButton;
 import static io.github.dre2n.factionsxl.util.GUIButton.*;
@@ -52,9 +51,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class TradeOfferCommand extends FCommand implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-
     private String tradeOfferChoosePriceAndAmount = ChatColor.GREEN.toString() + ChatColor.BOLD.toString()
             + FMessage.TRADE_OFFER_AMOUNT.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v1 " + ChatColor.GREEN.toString()
             + ChatColor.BOLD.toString() + FMessage.TRADE_PRICE.getMessage() + ": " + ChatColor.DARK_AQUA.toString() + "&v2";
@@ -71,7 +67,8 @@ public class TradeOfferCommand extends FCommand implements Listener {
     private Map<Integer, Faction> factionBySlot = new HashMap<>();
     private Map<HumanEntity, TradeOffer> creatingOffer = new HashMap<>();
 
-    public TradeOfferCommand() {
+    public TradeOfferCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("tradeOffer");
         setMinArgs(0);
         setMaxArgs(7);

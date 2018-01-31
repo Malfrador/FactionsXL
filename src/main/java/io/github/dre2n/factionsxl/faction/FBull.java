@@ -38,24 +38,30 @@ import org.bukkit.inventory.meta.BookMeta.Generation;
  */
 public class FBull implements Listener {
 
+    FactionsXL plugin;
+
+    public FBull(FactionsXL plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Location location = player.getLocation();
         ItemStack item = event.getItem();
         if (isBull(item) && event.getAction() == Action.RIGHT_CLICK_AIR | event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (!FactionsXL.getInstance().getBoard().isAnnexable(location)) {
+            if (!plugin.getBoard().isAnnexable(location)) {
                 ParsingUtil.sendMessage(player, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
                 return;
             }
-            FactionCache factions = FactionsXL.getInstance().getFactionCache();
+            FactionCache factions = plugin.getFactionCache();
             BookMeta meta = ((BookMeta) item.getItemMeta());
             String title = meta.getTitle().replace(" ", "-");
             if (factions.getByName(title) != null) {
                 title += NumberUtil.generateRandomInt(0, 100);
             }
             FireworkUtil.spawnRandom(location);
-            FactionsXL.getInstance().getFactionCache().create(player, title);
+            plugin.getFactionCache().create(player, title);
             player.getInventory().remove(item);
         }
     }

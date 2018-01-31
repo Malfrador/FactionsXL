@@ -15,6 +15,7 @@
  */
 package io.github.dre2n.factionsxl.board.dynmap;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
@@ -50,7 +51,8 @@ public class FactionMap extends EngineDynmap {
     private String factionsHome;
     protected String playersetString;
 
-    public FactionMap() {
+    public FactionMap(FactionsXL plugin) {
+        super(plugin);
         layerName = "Factions";
         layerVisible = true;
         prefix = "factions_";

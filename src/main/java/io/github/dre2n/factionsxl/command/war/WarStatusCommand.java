@@ -25,7 +25,6 @@ import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.War;
-import io.github.dre2n.factionsxl.war.WarCache;
 import java.util.Set;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -38,11 +37,10 @@ import org.bukkit.command.CommandSender;
  */
 public class WarStatusCommand extends FCommand {
 
-    WarCache wars = FactionsXL.getInstance().getWarCache();
-
     private String PLACEHOLDER = ChatColor.GOLD + " | " + ChatColor.DARK_BLUE;
 
-    public WarStatusCommand() {
+    public WarStatusCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("warStatus");
         setMinArgs(0);
         setMaxArgs(1);

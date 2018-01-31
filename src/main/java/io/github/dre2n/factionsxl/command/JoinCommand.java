@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class JoinCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public JoinCommand() {
+    public JoinCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("join");
         setMinArgs(1);
         setMaxArgs(2);
@@ -44,14 +43,14 @@ public class JoinCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction faction = plugin.getFactionCache().getByName(args[1]);
+        Faction faction = factions.getByName(args[1]);
         if (faction == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
 
         Player player = (Player) sender;
-        if (plugin.getFactionCache().getByMember(player) != null) {
+        if (factions.getByMember(player) != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LEAVE_FACTION.getMessage());
             return;
         }

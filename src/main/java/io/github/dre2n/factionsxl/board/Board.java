@@ -16,20 +16,14 @@
  */
 package io.github.dre2n.factionsxl.board;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -39,23 +33,20 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Board {
 
+    FactionsXL plugin;
+
     private List<Region> regions = new CopyOnWriteArrayList<>();
 
-    public Board(File dir) {
+    public Board(FactionsXL plugin, File dir) {
+        this.plugin = plugin;
         for (File file : dir.listFiles()) {
-            regions.add(new Region(file));
+            regions.add(new Region(plugin, file));
         }
-        File oldBoard = new File(FactionsXL.getInstance().getDataFolder(), "board.yml");
-        if (oldBoard.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(oldBoard);
-            if (config.contains("regions")) {
-                for (Entry<String, Object> region : ConfigUtil.getMap(config, "regions").entrySet()) {
-                    int id = Integer.parseInt(region.getKey());
-                    regions.add(new Region(id, (ConfigurationSection) region.getValue()));
-                }
-            }
-        }
-        new CleanerTask().runTaskTimer(FactionsXL.getInstance(), FConfig.HOUR, FConfig.HOUR);
+        new CleanerTask().runTaskTimer(plugin, FConfig.HOUR, FConfig.HOUR);
+    }
+
+    public Region create(String name, Chunk chunk) {
+        regions.add(new Region(plugin, chunk));
     }
 
     /* Getters and setters */

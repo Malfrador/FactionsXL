@@ -23,8 +23,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,9 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class SetCapitalCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetCapitalCommand() {
+    public SetCapitalCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setCapital");
         setMinArgs(0);
         setMaxArgs(0);
@@ -48,7 +45,7 @@ public class SetCapitalCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByMember(player);
+        Faction faction = factions.getByMember(player);
         if (faction == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
             return;
@@ -58,7 +55,7 @@ public class SetCapitalCommand extends FCommand {
             return;
         }
 
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region = board.getByLocation(player.getLocation());
         if (region == null || region.isNeutral()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;
@@ -72,6 +69,8 @@ public class SetCapitalCommand extends FCommand {
             return;
         }
         long moveAllowedTime = faction.getTimeLastCapitalMove() + plugin.getFConfig().getMoveCapitalCooldown();
+        long moveAllowedTime = faction.getTimeLastCapitalMove() + config.getMoveCapitalCooldown();
+                + "; moveAllowedTime=" + SimpleDateUtil.ddMMyyyyhhmm(moveAllowedTime) + "; system=" + SimpleDateUtil.ddMMyyyyhhmm(System.currentTimeMillis()));
         if (moveAllowedTime > System.currentTimeMillis()) {
             ParsingUtil.sendMessage(player, FMessage.ERROR_CAPITAL_MOVE_COOLDOWN.getMessage(), SimpleDateUtil.ddMMyyyyhhmm(moveAllowedTime));
             return;

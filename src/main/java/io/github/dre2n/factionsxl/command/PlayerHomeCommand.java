@@ -18,13 +18,11 @@ package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.CooldownTeleportationTask;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,11 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class PlayerHomeCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FConfig config = plugin.getFConfig();
-    Economy econ = plugin.getEconomyProvider();
-
-    public PlayerHomeCommand() {
+    public PlayerHomeCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("playerHome");
         setAliases("playerSpawn", "pHome", "pSpawn");
         setMinArgs(0);
@@ -53,9 +48,9 @@ public class PlayerHomeCommand extends FCommand {
         Player player = (Player) sender;
         FPlayer fPlayer;
         if (args.length == 2 && FPermission.hasPermission(sender, FPermission.HOME_OTHERS)) {
-            fPlayer = plugin.getFPlayerCache().getByName(args[1]);
+            fPlayer = fPlayers.getByName(args[1]);
         } else {
-            fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+            fPlayer = fPlayers.getByPlayer(player);
         }
 
         if (fPlayer == null) {

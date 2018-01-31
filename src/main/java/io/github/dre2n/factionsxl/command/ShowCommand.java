@@ -21,7 +21,6 @@ import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.faction.GovernmentType;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
@@ -43,10 +42,8 @@ import org.bukkit.entity.Player;
  */
 public class ShowCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-
-    public ShowCommand() {
+    public ShowCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("show");
         setAliases("who", "f");
         setMinArgs(0);
@@ -68,7 +65,7 @@ public class ShowCommand extends FCommand {
                 faction = factions.getById(NumberUtil.parseInt(args[1], -1));
             }
             if (faction == null) {
-                FPlayer fPlayer = plugin.getFPlayerCache().getByName(args[1]);
+                FPlayer fPlayer = fPlayers.getByName(args[1]);
                 faction = fPlayer != null ? fPlayer.getFaction() : null;
             }
         }
@@ -91,8 +88,8 @@ public class ShowCommand extends FCommand {
         }
         MessageUtil.sendMessage(player, tag);
         MessageUtil.sendMessage(player, FMessage.CMD_SHOW_DESCRIPTION.getMessage() + c + faction.getDescription());
-        if (plugin.getFConfig().isEconomyEnabled()) {
-            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_BALANCE.getMessage() + c + plugin.getEconomyProvider().format(faction.getAccount().getBalance()));
+        if (config.isEconomyEnabled()) {
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_BALANCE.getMessage() + c + econ.format(faction.getAccount().getBalance()));
         }
         String govType = faction.getGovernmentType().getName();
         if (faction.getGovernmentType() == GovernmentType.MONARCHY) {

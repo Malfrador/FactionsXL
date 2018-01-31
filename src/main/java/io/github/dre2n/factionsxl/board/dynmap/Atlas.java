@@ -16,17 +16,24 @@
  */
 package io.github.dre2n.factionsxl.board.dynmap;
 
+import io.github.dre2n.factionsxl.FactionsXL;
+
 /**
  * @author Daniel Saukel
  */
 public class Atlas {
 
-    public static final FactionMap FACTION_MAP = new FactionMap();
-    public static final RegionMap REGION_MAP = new RegionMap();
+    public FactionMap factionMap;
+    public RegionMap regionMap;
 
-    public static void init() {
-        FACTION_MAP.init();
-        REGION_MAP.init();
+    public Atlas(FactionsXL plugin) {
+        factionMap = new FactionMap(plugin);
+        regionMap = new RegionMap(plugin);
+    }
+
+    public void init() {
+        factionMap.init();
+        regionMap.init();
     }
 
 }

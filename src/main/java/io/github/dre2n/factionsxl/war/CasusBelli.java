@@ -70,11 +70,11 @@ public class CasusBelli {
         this.liberate = liberate;
     }
 
-    public CasusBelli(ConfigurationSection config) {
+    public CasusBelli(FactionsXL plugin, ConfigurationSection config) {
         type = Type.valueOf(config.getString("type"));
-        target = FactionsXL.getInstance().getFactionCache().getById(config.getInt("target"));
+        target = plugin.getFactionCache().getById(config.getInt("target"));
         if (type == Type.LIBERATION) {
-            liberate = FactionsXL.getInstance().getFactionCache().getById(config.getInt("liberate"));
+            liberate = plugin.getFactionCache().getById(config.getInt("liberate"));
         }
         expiration = new Date(config.getLong("expiration"));
     }

@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 
 /**
@@ -23,8 +24,7 @@ import java.io.File;
  */
 public class TradeLeague extends LegalEntity {
 
-    public TradeLeague(File file) {
-
+    public TradeLeague(FactionsXL plugin, File file) {
     }
 
     @Override

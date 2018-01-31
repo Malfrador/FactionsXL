@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class SetPlayerHomeCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetPlayerHomeCommand() {
+    public SetPlayerHomeCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setPlayerHome");
         setAliases("playerSetHome", "setPlayerSpawn", "setPHome", "setPSpawn");
         setMinArgs(0);
@@ -48,12 +47,12 @@ public class SetPlayerHomeCommand extends FCommand {
         Player player = (Player) sender;
         FPlayer fPlayer;
         if (args.length == 2 && FPermission.hasPermission(sender, FPermission.BYPASS)) {
-            fPlayer = plugin.getFPlayerCache().getByName(args[1]);
+            fPlayer = fPlayers.getByName(args[1]);
         } else {
-            fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+            fPlayer = fPlayers.getByPlayer(player);
         }
 
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region = board.getByLocation(player.getLocation());
         if (region != null && region.getOwner() != null && !region.getOwner().getRelation(fPlayer).canBuild()) {
             ParsingUtil.sendMessage(sender, FMessage.CMD_SET_HOME_CHAR_FAIL.getMessage());
             return;

@@ -15,6 +15,7 @@
  */
 package io.github.dre2n.factionsxl.board.dynmap;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -36,7 +37,8 @@ import org.dynmap.utils.TileFlags;
  */
 public class RegionMap extends EngineDynmap {
 
-    public RegionMap() {
+    public RegionMap(FactionsXL plugin) {
+        super(plugin);
         layerName = "Regions";
         layerVisible = false;
         prefix = "regions_";

@@ -31,9 +31,8 @@ import org.bukkit.command.CommandSender;
  */
 public class HelpCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public HelpCommand() {
+    public HelpCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("help");
         setAliases("h", "?");
         setMinArgs(0);
@@ -46,7 +45,7 @@ public class HelpCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Set<DRECommand> dCommandList = plugin.getCommandCache().getCommands();
+        Set<DRECommand> fCommandList = plugin.getCommandCache().getCommands();
         ArrayList<DRECommand> toSend = new ArrayList<>();
 
         int page = 1;
@@ -56,20 +55,20 @@ public class HelpCommand extends FCommand {
         int send = 0;
         int max = 0;
         int min = 0;
-        for (DRECommand dCommand : dCommandList) {
+        for (DRECommand fCommand : fCommandList) {
             send++;
             if (send >= page * 5 - 4 && send <= page * 5) {
                 min = page * 5 - 4;
                 max = page * 5;
-                toSend.add(dCommand);
+                toSend.add(fCommand);
             }
         }
 
         MessageUtil.sendPluginTag(sender, plugin);
         MessageUtil.sendCenteredMessage(sender, "&4&l[ &6" + min + "-" + max + " &4/&6 " + send + " &4|&6 " + page + " &4&l]");
 
-        for (DRECommand dCommand : toSend) {
-            MessageUtil.sendMessage(sender, "&b" + dCommand.getCommand() + "&7 - " + dCommand.getHelp());
+        for (DRECommand fCommand : toSend) {
+            MessageUtil.sendMessage(sender, "&b" + fCommand.getCommand() + "&7 - " + fCommand.getHelp());
         }
     }
 

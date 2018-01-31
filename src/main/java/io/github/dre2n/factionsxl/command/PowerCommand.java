@@ -20,7 +20,6 @@ import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
-import io.github.dre2n.factionsxl.player.FPlayerCache;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 
@@ -29,9 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class PowerCommand extends FCommand {
 
-    FPlayerCache fPlayers = FactionsXL.getInstance().getFPlayerCache();
-
-    public PowerCommand() {
+    public PowerCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("power");
         setAliases("pow");
         setMinArgs(0);

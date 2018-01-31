@@ -38,7 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class SaturationMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final ItemStack GRANT_BUTTON;
     public static final ItemStack DENY_BUTTON;
@@ -65,6 +65,8 @@ public class SaturationMenu implements Listener {
     private Inventory gui;
 
     public SaturationMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         setupGUI();
         update(Resource.WATER);

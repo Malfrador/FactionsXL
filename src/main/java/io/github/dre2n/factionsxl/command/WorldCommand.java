@@ -19,12 +19,10 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.commons.misc.EnumUtil;
 import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.RegionType;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.LazyChunk;
@@ -42,12 +40,10 @@ import org.bukkit.entity.Player;
  */
 public class WorldCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-    Board board = plugin.getBoard();
     private static final BlockFace[] AXIS = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
-    public WorldCommand() {
+    public WorldCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("world");
         setAliases("w");
         setMinArgs(0);
@@ -109,7 +105,7 @@ public class WorldCommand extends FCommand {
 
     private void create(Player player, Region region, String[] args, int i) {
         if (region == null && args.length >= i + 1) {
-            board.getRegions().add(new Region(args[i], player.getLocation().getChunk()));
+            board.create(args[i], player.getLocation().getChunk());
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CREATE.getMessage(), args[2]);
         } else if (region != null) {
             ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_WILDERNESS.getMessage());
@@ -188,7 +184,7 @@ public class WorldCommand extends FCommand {
                 }
 
             } else if (args[i].equalsIgnoreCase("auto") || args[i].equalsIgnoreCase("a")) {
-                FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+                FPlayer fPlayer = fPlayers.getByPlayer(player);
                 if (fPlayer.isAutoclaiming()) {
                     fPlayer.setAutoclaiming(null);
                     ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_AUTOCLAIM_END.getMessage());

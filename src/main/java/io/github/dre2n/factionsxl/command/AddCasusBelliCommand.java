@@ -32,9 +32,8 @@ import org.bukkit.command.CommandSender;
  */
 public class AddCasusBelliCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public AddCasusBelliCommand() {
+    public AddCasusBelliCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("addCasusBelli");
         setAliases("addCB", "acb");
         setMinArgs(3);
@@ -47,7 +46,7 @@ public class AddCasusBelliCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction subject = plugin.getFactionCache().getByName(args[1]);
+        Faction subject = factions.getByName(args[1]);
         if (subject == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
@@ -57,7 +56,7 @@ public class AddCasusBelliCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_CASUS_BELLI.getMessage(), args[2]);
             return;
         }
-        Faction target = plugin.getFactionCache().getByName(args[3]);
+        Faction target = factions.getByName(args[3]);
         if (target == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[3]);
             return;

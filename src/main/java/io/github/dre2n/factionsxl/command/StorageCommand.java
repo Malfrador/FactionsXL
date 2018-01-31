@@ -19,7 +19,6 @@ package io.github.dre2n.factionsxl.command;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
@@ -30,10 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class StorageCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-
-    public StorageCommand() {
+    public StorageCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("storage");
         setMinArgs(0);
         setMaxArgs(1);

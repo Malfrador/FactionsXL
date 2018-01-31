@@ -29,9 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class SetAnthemCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetAnthemCommand() {
+    public SetAnthemCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setAnthem");
         setMinArgs(1);
         setMaxArgs(2);

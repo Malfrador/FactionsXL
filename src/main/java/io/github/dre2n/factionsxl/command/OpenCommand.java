@@ -28,9 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class OpenCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public OpenCommand() {
+    public OpenCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("open");
         setAliases("setOpen");
         setMinArgs(0);

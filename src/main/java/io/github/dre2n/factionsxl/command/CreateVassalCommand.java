@@ -17,9 +17,7 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
@@ -38,11 +36,8 @@ import org.bukkit.entity.Player;
  */
 public class CreateVassalCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    Board board = plugin.getBoard();
-    FConfig config = plugin.getFConfig();
-
-    public CreateVassalCommand() {
+    public CreateVassalCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("createVassal");
         setAliases("newVassal");
         setMinArgs(2);
@@ -56,7 +51,7 @@ public class CreateVassalCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
         Faction mother = fPlayer.getFaction();
         if (mother == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
@@ -76,7 +71,7 @@ public class CreateVassalCommand extends FCommand {
             return;
         }
 
-        if (plugin.getFactionCache().getByName(args[1]) != null) {
+        if (factions.getByName(args[1]) != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NAME_IN_USE.getMessage(), args[1]);
             return;
         }
@@ -107,7 +102,7 @@ public class CreateVassalCommand extends FCommand {
             mother.getOnlineMembers().remove(leader.getPlayer());
         }
         FTeamWrapper.updatePrefixes(mother);
-        Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
+        Faction vassal = factions.create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);
         vassal.setAllod(false);

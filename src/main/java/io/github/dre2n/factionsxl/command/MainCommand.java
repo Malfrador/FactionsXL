@@ -28,9 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class MainCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public MainCommand() {
+    public MainCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("main");
         setHelp(FMessage.HELP_MAIN.getMessage());
         setPermission(FPermission.MAIN.getNode());

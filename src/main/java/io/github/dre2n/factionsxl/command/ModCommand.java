@@ -31,9 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class ModCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public ModCommand() {
+    public ModCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("mod");
         setAliases("officer");
         setMinArgs(1);

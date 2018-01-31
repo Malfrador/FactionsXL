@@ -30,7 +30,8 @@ import org.bukkit.command.CommandSender;
  */
 public class SetPowerCommand extends FCommand {
 
-    public SetPowerCommand() {
+    public SetPowerCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setPower");
         setMinArgs(2);
         setMaxArgs(2);
@@ -49,7 +50,7 @@ public class SetPowerCommand extends FCommand {
         }
 
         int power = NumberUtil.parseInt(args[2], 0);
-        FactionsXL.getInstance().getFData().power.put(player.getUniqueId(), (double) power);
+        plugin.getFData().power.put(player.getUniqueId(), (double) power);
         ParsingUtil.sendMessage(sender, FMessage.CMD_SET_POWER_SENDER.getMessage(), player.getName(), String.valueOf(power));
         if (player.isOnline()) {
             ParsingUtil.sendMessage(player.getPlayer(), FMessage.CMD_SET_POWER_TARGET.getMessage(), sender, String.valueOf(power));

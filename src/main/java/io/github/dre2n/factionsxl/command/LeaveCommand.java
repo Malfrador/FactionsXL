@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class LeaveCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public LeaveCommand() {
+    public LeaveCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("leave");
         setMinArgs(0);
         setMaxArgs(0);
@@ -45,7 +44,7 @@ public class LeaveCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction faction = plugin.getFactionCache().getByMember(player);
+        Faction faction = factions.getByMember(player);
         if (faction == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
             return;

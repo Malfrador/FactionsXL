@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.player;
 import io.github.dre2n.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.faction.Faction;
+import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,12 +35,22 @@ import org.bukkit.entity.Player;
  */
 public class FPlayerCache {
 
+    FactionsXL plugin;
+
     private Set<FPlayer> fPlayers = new HashSet<>();
 
-    public FPlayerCache() {
+    public FPlayerCache(FactionsXL plugin) {
+        this.plugin = plugin;
+
         for (Player player : Bukkit.getOnlinePlayers()) {
-            fPlayers.add(new FPlayer(player));
+            fPlayers.add(new FPlayer(plugin, player));
         }
+    }
+
+    public FPlayer create(Player player) {
+        FPlayer fPlayer = new FPlayer(plugin, player);
+        fPlayers.add(fPlayer);
+        return fPlayer;
     }
 
     /* Getters and setters */
@@ -63,7 +74,7 @@ public class FPlayerCache {
         }
 
         if (hasPlayedBefore(player)) {
-            return new FPlayer(player.getUniqueId());
+            return new FPlayer(plugin, player.getUniqueId());
         } else {
             return null;
         }
@@ -109,6 +120,7 @@ public class FPlayerCache {
         data.setLastName(player.getName());
         data.setTimeLastPlayed(System.currentTimeMillis());
         data.save();
+        FScoreboard.remove(player);
     }
 
     /* Persistence */
@@ -126,7 +138,7 @@ public class FPlayerCache {
      */
     public void loadAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            new FPlayer(player);
+            new FPlayer(plugin, player);
         }
     }
 
@@ -159,9 +171,9 @@ public class FPlayerCache {
      * Automatically kick players who haven't been online for the time specified in the config
      */
     public void autoKick() {
-        for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
+        for (Faction faction : plugin.getFactionCache().getActive()) {
             for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
-                if (System.currentTimeMillis() > player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
+                if (System.currentTimeMillis() > player.getLastPlayed() + plugin.getFConfig().getAutoKickTime()) {
                     FactionsXL.debug("Kicking " + player + " / Last played: " + new java.util.Date(player.getLastPlayed()));
                     faction.kick(player);
                     if (faction.getAdmin().getUniqueId().equals(player.getUniqueId())) {

@@ -29,9 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class ShortTagCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public ShortTagCommand() {
+    public ShortTagCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("shortTag");
         setAliases("setShortTag", "shortName", "setshortName");
         setMinArgs(1);

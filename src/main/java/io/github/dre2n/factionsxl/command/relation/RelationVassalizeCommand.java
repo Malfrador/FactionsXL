@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command.relation;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.relation.Relation;
 
@@ -24,7 +25,8 @@ import io.github.dre2n.factionsxl.relation.Relation;
  */
 public class RelationVassalizeCommand extends RelationAliasCommand {
 
-    public RelationVassalizeCommand() {
+    public RelationVassalizeCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("vassalize");
         setHelp(FMessage.HELP_VASSALIZE.getMessage());
     }

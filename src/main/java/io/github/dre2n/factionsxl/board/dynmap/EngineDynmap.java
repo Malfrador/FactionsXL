@@ -33,9 +33,9 @@ import org.dynmap.utils.TileFlags;
  */
 public abstract class EngineDynmap {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    Board board = plugin.getBoard();
-    FConfig config = plugin.getFConfig();
+    FactionsXL plugin;
+    Board board;
+    FConfig config;
 
     // -------------------------------------------- //
     // CONSTANTS
@@ -54,6 +54,12 @@ public abstract class EngineDynmap {
     public DynmapAPI dynmapApi;
     public MarkerAPI markerApi;
     public MarkerSet markerset;
+
+    public EngineDynmap(FactionsXL plugin) {
+        this.plugin = plugin;
+        board = plugin.getBoard();
+        config = plugin.getFConfig();
+    }
 
     public void init() {
         // Should we even use dynmap?

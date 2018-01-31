@@ -63,7 +63,11 @@ public class EntityProtectionListener implements Listener {
         UNLEASH
     }
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
+
+    public EntityProtectionListener(FactionsXL plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {

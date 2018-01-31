@@ -28,9 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class DescCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public DescCommand() {
+    public DescCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("description");
         setAliases("desc");
         setMinArgs(-1);

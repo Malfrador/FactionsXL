@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class EconomyMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final ItemStack INCOME_MANAGEMENT = GUIButton.setDisplayName(new ItemStack(Material.IRON_INGOT), FMessage.TRADE_INCOME_MANAGEMENT.getMessage());
     public static final ItemStack TRADE_OFFER = GUIButton.setDisplayName(GUIButton.SKULL, FMessage.TRADE_OFFER_TITLE.getMessage());
@@ -45,6 +45,8 @@ public class EconomyMenu implements Listener {
     private Inventory gui;
 
     public EconomyMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         setupGUI();
         Bukkit.getPluginManager().registerEvents(this, plugin);

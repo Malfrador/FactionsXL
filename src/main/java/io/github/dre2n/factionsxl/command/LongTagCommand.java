@@ -28,9 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class LongTagCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public LongTagCommand() {
+    public LongTagCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("longTag");
         setAliases("setLongTag", "longName", "setLongName");
         setMinArgs(-1);

@@ -31,9 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class MobCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public MobCommand() {
+    public MobCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("mob");
         setMinArgs(1);
         setMaxArgs(1);
@@ -46,7 +45,7 @@ public class MobCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region = board.getByLocation(player.getLocation());
         if (region == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;

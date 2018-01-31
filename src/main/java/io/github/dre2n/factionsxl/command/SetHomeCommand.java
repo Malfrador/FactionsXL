@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class SetHomeCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetHomeCommand() {
+    public SetHomeCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("sethome");
         setMinArgs(0);
         setMaxArgs(1);
@@ -50,7 +49,7 @@ public class SetHomeCommand extends FCommand {
             return;
         }
 
-        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        Region region = board.getByLocation(player.getLocation());
         if (region == null || region.getOwner() != faction) {
             ParsingUtil.sendMessage(sender, FMessage.CMD_SET_HOME_FACTION_FAIL.getMessage());
             return;

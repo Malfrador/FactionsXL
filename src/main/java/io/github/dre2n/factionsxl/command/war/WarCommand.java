@@ -35,9 +35,8 @@ import org.bukkit.entity.Player;
  */
 public class WarCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public WarCommand() {
+    public WarCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("war");
         setMinArgs(1);
         setMaxArgs(1);
@@ -50,13 +49,13 @@ public class WarCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        Faction object = plugin.getFactionCache().getByName(args[1]);
+        Faction object = factions.getByName(args[1]);
         if (object == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
         WarParty subject = null;
-        Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
+        Set<Faction> factions = this.factions.getByLeader(player);
         if (factions.isEmpty()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
@@ -89,7 +88,7 @@ public class WarCommand extends FCommand {
         for (Faction faction : factions) {
             subject.addParticipant(faction);
         }
-        new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
+        new CallToArmsMenu(plugin, subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
     }
 
 }

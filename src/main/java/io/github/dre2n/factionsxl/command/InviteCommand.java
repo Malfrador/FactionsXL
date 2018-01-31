@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class InviteCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public InviteCommand() {
+    public InviteCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("invite");
         setMinArgs(1);
         setMaxArgs(2);

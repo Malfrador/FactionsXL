@@ -18,10 +18,8 @@ package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.FCommand;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -33,11 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class RelationNeutralCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FConfig config = plugin.getFConfig();
-    FactionCache factions = plugin.getFactionCache();
-
-    public RelationNeutralCommand() {
+    public RelationNeutralCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("neutral");
         setMinArgs(1);
         setMaxArgs(2);

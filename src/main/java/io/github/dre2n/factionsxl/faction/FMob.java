@@ -16,8 +16,6 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
-import io.github.dre2n.commons.compatibility.CompatibilityHandler;
-import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.factionsxl.FactionsXL;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_TRADER;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_VILLAGER;
@@ -35,6 +33,12 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
  * @author Daniel Saukel
  */
 public class FMob implements Listener {
+
+    FactionsXL plugin;
+
+    public FMob(FactionsXL plugin) {
+        this.plugin = plugin;
+    }
 
     public static String fromString(String string) {
         string = string.toLowerCase();
@@ -106,7 +110,7 @@ public class FMob implements Listener {
     public void onInteract(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
-        Faction faction = FactionsXL.getInstance().getFactionCache().getByLocation(entity.getLocation());
+        Faction faction = plugin.getFactionCache().getByLocation(entity.getLocation());
         if (faction == null) {
             return;
         }

@@ -17,13 +17,10 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,11 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class CreateCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FConfig config = plugin.getFConfig();
-    Economy econ = plugin.getEconomyProvider();
-
-    public CreateCommand() {
+    public CreateCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("create");
         setAliases("new");
         setMinArgs(1);
@@ -51,20 +45,19 @@ public class CreateCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
-        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
         if (fPlayer.getFaction() != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LEAVE_FACTION.getMessage());
             return;
         }
 
         Location location = player.getLocation();
-        Board board = plugin.getBoard();
         if (!board.isAnnexable(location)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
             return;
         }
 
-        if (plugin.getFactionCache().getByName(args[1]) != null) {
+        if (factions.getByName(args[1]) != null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NAME_IN_USE.getMessage(), args[1]);
             return;
         }
@@ -78,7 +71,7 @@ public class CreateCommand extends FCommand {
             }
         }
 
-        plugin.getFactionCache().create(player, args[1]);
+        factions.create(player, args[1]);
         ParsingUtil.broadcastMessage(FMessage.CMD_CREATE_SUCCESS.getMessage(), sender.getName(), args[1]);
     }
 

@@ -46,13 +46,15 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class IdeaMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private Faction faction;
     private Inventory groups;
     private Map<IdeaGroup, Inventory> ideas = new HashMap<>();
 
     public IdeaMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         updateGroups();
         Bukkit.getPluginManager().registerEvents(this, plugin);

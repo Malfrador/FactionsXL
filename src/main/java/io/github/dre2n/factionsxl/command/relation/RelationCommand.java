@@ -33,11 +33,10 @@ import org.bukkit.command.CommandSender;
  */
 public class RelationCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
     private Set<Request> requests = new HashSet<>();
 
-    public RelationCommand() {
+    public RelationCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("relation");
         setMinArgs(3);
         setMaxArgs(4);
@@ -49,7 +48,7 @@ public class RelationCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        Faction subjectFaction = plugin.getFactionCache().getByName(args[1]);
+        Faction subjectFaction = factions.getByName(args[1]);
         if (subjectFaction == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
@@ -63,7 +62,7 @@ public class RelationCommand extends FCommand {
             return;
         }
 
-        Faction objectFaction = plugin.getFactionCache().getByName(args[2]);
+        Faction objectFaction = factions.getByName(args[2]);
         if (objectFaction == null) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[2]);
             return;

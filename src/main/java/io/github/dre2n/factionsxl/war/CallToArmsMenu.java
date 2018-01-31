@@ -44,6 +44,8 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class CallToArmsMenu implements Listener {
 
+    FactionsXL plugin;
+
     enum Status {
         ATTACKER,
         ATTACKER_CANDIDATE,
@@ -58,7 +60,7 @@ public class CallToArmsMenu implements Listener {
     private PageGUI gui;
     private HumanEntity cachedViewer;
 
-    public CallToArmsMenu(WarParty attacker, Faction defender, CasusBelli cb) {
+    public CallToArmsMenu(FactionsXL plugin, WarParty attacker, Faction defender, CasusBelli cb) {
         Bukkit.getPluginManager().registerEvents(this, FactionsXL.getInstance());
         this.attacker = attacker;
         attackerLeader = (Faction) attacker.getLeader(); // TODO: Might break after government update
@@ -159,7 +161,7 @@ public class CallToArmsMenu implements Listener {
             return;
         }
         War war = new War(attacker, defender, cb);
-        FactionsXL.getInstance().getWarCache().getUnconfirmedWars().add(war);
+        plugin.getWarCache().getUnconfirmedWars().add(war);
         war.sendConfirmRequest((Player) event.getPlayer());
         HandlerList.unregisterAll(this);
     }

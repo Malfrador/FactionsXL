@@ -29,9 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class TagCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public TagCommand() {
+    public TagCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("tag");
         setAliases("setTag", "name", "setName");
         setMinArgs(1);

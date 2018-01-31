@@ -42,13 +42,15 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class TradeMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private Faction faction;
     private PageGUI gui;
     private Map<Resource, ResourceMenu> resourceMenus = new HashMap<>();
 
     public TradeMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         gui = new PageGUI(FMessage.TRADE_TITLE.getMessage(faction.getName()));
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -74,7 +76,7 @@ public class TradeMenu implements Listener {
     }
 
     public static ItemStack formButton(Faction faction, Resource resource) {
-        FactionsXL plugin = FactionsXL.getInstance();
+        FactionsXL plugin = faction.plugin;
         FConfig config = plugin.getFConfig();
         Economy econ = plugin.getEconomyProvider();
         ItemStack icon = resource.getIcon();

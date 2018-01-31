@@ -31,9 +31,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SetBannerCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetBannerCommand() {
+    public SetBannerCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setBanner");
         setMinArgs(0);
         setMaxArgs(1);

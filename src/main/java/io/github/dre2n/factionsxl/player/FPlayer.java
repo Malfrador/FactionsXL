@@ -25,6 +25,7 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.relation.RelationParticipator;
+import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.util.UUID;
@@ -38,7 +39,7 @@ import org.bukkit.entity.Player;
  */
 public class FPlayer implements RelationParticipator, PlayerWrapper {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private Player player;
     private UUID uuid;
@@ -49,20 +50,24 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
 
     private FPlayerData data;
 
-    public FPlayer(Player player) {
+    FPlayer(FactionsXL plugin, Player player) {
+        this.plugin = plugin;
+
         this.player = player;
         uuid = player.getUniqueId();
         loadPlayerData(FPlayerCache.getFile(uuid));
         data.setLastName(player.getName());
     }
 
-    public FPlayer(UUID uuid) {
+    FPlayer(FactionsXL plugin, UUID uuid) {
+        this.plugin = plugin;
+
         this.uuid = uuid;
         loadPlayerData(FPlayerCache.getFile(uuid));
     }
 
-    public FPlayer(String name) {
-        this(PlayerUtil.getUniqueIdFromName(name));
+    FPlayer(FactionsXL plugin, String name) {
+        this(plugin, PlayerUtil.getUniqueIdFromName(name));
     }
 
     /* Getters and setters */
@@ -297,7 +302,7 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
      * Load / reload a new instance of PlayerData
      */
     public void loadPlayerData(File file) {
-        data = new FPlayerData(file);
+        data = new FPlayerData(plugin, file);
     }
 
     /**

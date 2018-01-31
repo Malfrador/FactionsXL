@@ -29,7 +29,7 @@ import org.bukkit.Location;
  */
 public class FPlayerData extends DREConfig {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final int CONFIG_VERSION = 3;
 
@@ -37,11 +37,11 @@ public class FPlayerData extends DREConfig {
     private String title;
     private long timeLastPlayed;
     private double powerBase;
-    private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
+    private boolean scoreboardEnabled;
     private boolean anthemsEnabled = true;
     private Location home;
 
-    public FPlayerData(File file) {
+    public FPlayerData(FactionsXL plugin, File file) {
         super(file, CONFIG_VERSION);
 
         if (initialize) {
@@ -171,7 +171,7 @@ public class FPlayerData extends DREConfig {
         if (config.contains("timeLastPlayed")) {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
-        scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
+        scoreboardEnabled = config.getBoolean("scoreboardEnabled", plugin.getFConfig().isScoreboardEnabledByDefault());
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
         FactionsXL.debug("Loaded " + this);

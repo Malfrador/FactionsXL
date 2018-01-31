@@ -37,10 +37,12 @@ import org.bukkit.entity.Player;
  */
 public class LWCIntegration extends JavaModule {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    LWC lwc = plugin.getLWC();
+    FactionsXL plugin;
+    LWC lwc;
 
-    public LWCIntegration() {
+    public LWCIntegration(FactionsXL plugin) {
+        this.plugin = plugin;
+        lwc = plugin.getLWC();
         lwc.getModuleLoader().registerModule(plugin, this);
     }
 

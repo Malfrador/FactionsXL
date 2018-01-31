@@ -41,13 +41,15 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class DemandMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     private Faction faction;
     private Inventory gui;
     private SaturationMenu saturationMenu;
 
     public DemandMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         saturationMenu = new SaturationMenu(faction);

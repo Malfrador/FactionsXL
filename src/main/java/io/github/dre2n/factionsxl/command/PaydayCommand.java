@@ -28,7 +28,8 @@ import org.bukkit.command.CommandSender;
  */
 public class PaydayCommand extends FCommand {
 
-    public PaydayCommand() {
+    public PaydayCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("payday");
         setMinArgs(0);
         setMaxArgs(1);
@@ -42,7 +43,7 @@ public class PaydayCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         int i = args.length > 1 ? NumberUtil.parseInt(args[1], 1) : 1;
         do {
-            for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
+            for (Faction faction : factions.getActive()) {
                 faction.getStorage().payday();
             }
             i--;

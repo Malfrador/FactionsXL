@@ -18,12 +18,10 @@ package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -45,11 +43,8 @@ import org.bukkit.entity.Player;
  */
 public class RegionCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-    Board board = plugin.getBoard();
-
-    public RegionCommand() {
+    public RegionCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("region");
         setAliases("province");
         setMinArgs(0);

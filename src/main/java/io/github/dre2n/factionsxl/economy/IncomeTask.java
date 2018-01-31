@@ -25,7 +25,11 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class IncomeTask extends BukkitRunnable {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
+
+    public IncomeTask(FactionsXL plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public void run() {

@@ -27,9 +27,11 @@ import java.util.Set;
  */
 public class Federation extends LegalEntity {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
-    public Federation(File file) {
+    public Federation(FactionsXL plugin, File file) {
+        this.plugin = plugin;
+
         if (plugin.getFConfig().isEconomyEnabled()) {
             account = new FAccount(this);
         }
@@ -38,7 +40,7 @@ public class Federation extends LegalEntity {
     public Set<Faction> getFactions() {
         return new HashSet<>();
     }
-    
+
     @Override
     public String toString() {
         return "Federation{ID=" + id + "name=" + name + "}";

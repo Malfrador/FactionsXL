@@ -23,7 +23,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.War;
-import io.github.dre2n.factionsxl.war.WarCache;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -31,9 +30,8 @@ import org.bukkit.command.CommandSender;
  */
 public class ConfirmWarCommand extends FCommand {
 
-    WarCache wars = FactionsXL.getInstance().getWarCache();
-
-    public ConfirmWarCommand() {
+    public ConfirmWarCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("confirmWar");
         setMinArgs(1);
         setMaxArgs(2);

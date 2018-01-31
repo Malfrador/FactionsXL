@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class ScoreboardCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public ScoreboardCommand() {
+    public ScoreboardCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("scoreboard");
         setAliases("sb");
         setMinArgs(0);
@@ -45,13 +44,13 @@ public class ScoreboardCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer((Player) sender);
+        FPlayer fPlayer = fPlayers.getByPlayer((Player) sender);
         FScoreboard board = FScoreboard.get(fPlayer);
 
         if (board == null) {
             FScoreboard.init(fPlayer);
             board = FScoreboard.get(fPlayer);
-            board.setDefaultSidebar(new FDefaultSidebar(), plugin.getFConfig().getScoreboardUpdateInterval());
+            board.setDefaultSidebar(new FDefaultSidebar(), config.getScoreboardUpdateInterval());
             board.setSidebarVisibility(fPlayer.isScoreboardEnabled());
         }
 

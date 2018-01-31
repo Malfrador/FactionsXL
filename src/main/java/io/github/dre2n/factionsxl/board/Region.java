@@ -49,7 +49,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class Region {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final String YAML = ".yml";
 
@@ -72,7 +72,8 @@ public class Region {
     private boolean unclaimable;
     private DynmapStyle dynmapStyle;
 
-    public Region(String name, Chunk chunk) {
+    Region(FactionsXL plugin, String name, Chunk chunk) {
+        this.plugin = plugin;
         id = plugin.getBoard().generateId();
         file = new File(FactionsXL.BOARD, id + YAML);
         try {
@@ -86,7 +87,8 @@ public class Region {
         chunks.add(new LazyChunk(chunk));
     }
 
-    public Region(File file) {
+    Region(FactionsXL plugin, File file) {
+        this.plugin = plugin;
         this.file = file;
         if (!file.exists()) {
             try {
@@ -96,19 +98,6 @@ public class Region {
         }
         config = YamlConfiguration.loadConfiguration(file);
         id = NumberUtil.parseInt(file.getName().replace(YAML, new String()));
-    }
-
-    @Deprecated
-    Region(int id, ConfigurationSection config) {
-        file = new File(FactionsXL.BOARD, id + YAML);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException exception) {
-            }
-        }
-        load = config;
-        this.id = id;
     }
 
     /* Getters and setters */
@@ -338,7 +327,6 @@ public class Region {
 
     /* Serialization */
     public void load() {
-        ConfigurationSection config = this.config != null ? this.config : load;
         name = config.getString("name");
         String typeString = config.getString("type");
         type = EnumUtil.isValidEnum(RegionType.class, typeString) ? RegionType.valueOf(typeString) : RegionType.BARREN;

@@ -44,7 +44,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class PopulationMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final ItemStack DEMANDS = GUIButton.setDisplayName(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS_BUTTON.getMessage());
     public static final ItemStack MILITARY = GUIButton.setDisplayName(GUIButton.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
@@ -56,6 +56,8 @@ public class PopulationMenu implements Listener {
     private MilitaryMenu military;
 
     public PopulationMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         demandResources = new DemandMenu(faction);
         military = new MilitaryMenu(faction);

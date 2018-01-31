@@ -17,10 +17,8 @@
 package io.github.dre2n.factionsxl.command;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import org.bukkit.command.CommandSender;
 
@@ -29,11 +27,8 @@ import org.bukkit.command.CommandSender;
  */
 public class RegionsCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FactionCache factions = plugin.getFactionCache();
-    Board board = plugin.getBoard();
-
-    public RegionsCommand() {
+    public RegionsCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("regions");
         setMinArgs(0);
         setMaxArgs(0);
@@ -45,7 +40,7 @@ public class RegionsCommand extends FCommand {
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        for (Region region : plugin.getBoard().getRegions()) {
+        for (Region region : board.getRegions()) {
             sender.sendMessage(region.getId() + " / " + region.getName());
         }
     }

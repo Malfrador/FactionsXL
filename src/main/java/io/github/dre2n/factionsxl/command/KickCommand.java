@@ -31,9 +31,8 @@ import org.bukkit.entity.Player;
  */
 public class KickCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public KickCommand() {
+    public KickCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("kick");
         setMinArgs(1);
         setMaxArgs(1);
@@ -49,11 +48,11 @@ public class KickCommand extends FCommand {
         if (!player.hasPlayedBefore()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_PLAYER.getMessage(), args[1]);
             return;
-        } else if (!plugin.getFPlayerCache().getByPlayer(player).hasFaction()) {
+        } else if (!fPlayers.getByPlayer(player).hasFaction()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_IN_ANY_FACTION.getMessage(), args[1]);
             return;
         }
-        Faction faction = plugin.getFactionCache().getByMember(player);
+        Faction faction = factions.getByMember(player);
         if (!faction.isPrivileged(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;

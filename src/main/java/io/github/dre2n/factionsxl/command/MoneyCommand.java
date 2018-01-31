@@ -22,7 +22,6 @@ import io.github.dre2n.factionsxl.economy.FAccount;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,10 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class MoneyCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    Economy econ = plugin.getEconomyProvider();
-
-    public MoneyCommand() {
+    public MoneyCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("money");
         setAliases("m", "econ", "economy");
         setMinArgs(1);

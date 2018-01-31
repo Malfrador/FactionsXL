@@ -43,9 +43,8 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class ListCommand extends FCommand implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public ListCommand() {
+    public ListCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("list");
         setAliases("l");
         setMinArgs(0);
@@ -62,9 +61,9 @@ public class ListCommand extends FCommand implements Listener {
         Player player = (Player) sender;
         Set<Faction> factions = null;
         if (args.length == 2 && args[1].equalsIgnoreCase("disbanded")) {
-            factions = plugin.getFactionCache().getInactive();
+            factions = this.factions.getInactive();
         } else {
-            factions = plugin.getFactionCache().getActive();
+            factions = this.factions.getActive();
         }
 
         int size = (int) (9 * Math.ceil(((double) factions.size() / 9)));
@@ -75,7 +74,7 @@ public class ListCommand extends FCommand implements Listener {
             ItemMeta meta = faction.getBanner() != null ? faction.getBanner().clone() : banner.getItemMeta();
             meta.setDisplayName(ParsingUtil.getFactionName(player, faction));
 
-            ChatColor c = faction.getRelation(plugin.getFactionCache().getByMember(player)).getColor();
+            ChatColor c = faction.getRelation(this.factions.getByMember(player)).getColor();
             String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : ChatColor.ITALIC + "Interregnum";
             String govType = faction.getGovernmentType().getName();
             if (faction.getGovernmentType() == GovernmentType.MONARCHY) {
@@ -103,9 +102,9 @@ public class ListCommand extends FCommand implements Listener {
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
         if (button != null && button.hasItemMeta() && button.getItemMeta().hasDisplayName()) {
-            Faction faction = plugin.getFactionCache().getByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+            Faction faction = factions.getByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
             if (faction == null) {
-                faction = plugin.getFactionCache().getInactiveByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+                faction = factions.getInactiveByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
             }
             Player player = (Player) event.getWhoClicked();
             player.closeInventory();

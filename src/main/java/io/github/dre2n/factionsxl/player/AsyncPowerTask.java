@@ -31,13 +31,14 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class AsyncPowerTask extends BukkitRunnable {
 
-    FData data = FactionsXL.getInstance().getFData();
+    FData data;
 
     private double increaseRate;
     private double decreaseRate;
     private int maxPower;
 
-    public AsyncPowerTask(double increaseRate, double decreaseRate, int maxPower) {
+    public AsyncPowerTask(FactionsXL plugin, double increaseRate, double decreaseRate, int maxPower) {
+        data = plugin.getFData();
         this.increaseRate = increaseRate;
         this.decreaseRate = decreaseRate;
         this.maxPower = maxPower;

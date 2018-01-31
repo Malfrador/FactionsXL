@@ -30,9 +30,8 @@ import org.bukkit.entity.Player;
  */
 public class SetGovernmentCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public SetGovernmentCommand() {
+    public SetGovernmentCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setGovernment");
         setMinArgs(1);
         setMaxArgs(2);

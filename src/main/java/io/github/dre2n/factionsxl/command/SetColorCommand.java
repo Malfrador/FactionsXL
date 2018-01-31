@@ -29,11 +29,10 @@ import org.bukkit.entity.Player;
  */
 public class SetColorCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
     public static final String RRGGBB = "#[0-9A-F]{6}";
 
-    public SetColorCommand() {
+    public SetColorCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("setColor");
         setMinArgs(2);
         setMaxArgs(4);

@@ -84,8 +84,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Faction extends LegalEntity implements RelationParticipator {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-    FConfig fConfig = plugin.getFConfig();
+    public FactionsXL plugin;
+    FConfig fConfig;
 
     File file;
     FileConfiguration config;
@@ -127,14 +127,20 @@ public class Faction extends LegalEntity implements RelationParticipator {
     Set<War> callsToArms = new HashSet<>();
     boolean allod = true;
 
-    public Faction(File file) {
+    Faction(FactionsXL plugin, File file) {
+        this.plugin = plugin;
+        fConfig = plugin.getFConfig();
+
         id = NumberUtil.parseInt(file.getName().replace(".yml", ""));
         this.file = file;
         config = YamlConfiguration.loadConfiguration(file);
         active = config.getBoolean("active");
     }
 
-    public Faction(int id) {
+    Faction(FactionsXL plugin, int id) {
+        this.plugin = plugin;
+        fConfig = plugin.getFConfig();
+
         this.id = id;
         file = new File(FactionsXL.FACTIONS, id + ".yml");
         config = YamlConfiguration.loadConfiguration(file);

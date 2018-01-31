@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MilitaryMenu implements Listener {
 
-    FactionsXL plugin = FactionsXL.getInstance();
+    FactionsXL plugin;
 
     public static final ItemStack SOLDIERS = GUIButton.setDisplayName(SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
 
@@ -43,6 +43,8 @@ public class MilitaryMenu implements Listener {
     private Inventory gui;
 
     public MilitaryMenu(Faction faction) {
+        plugin = faction.plugin;
+
         this.faction = faction;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         setupGUI();

@@ -30,9 +30,8 @@ import org.bukkit.plugin.PluginManager;
  */
 public class ReloadCommand extends FCommand {
 
-    FactionsXL plugin = FactionsXL.getInstance();
-
-    public ReloadCommand() {
+    public ReloadCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("reload");
         setMinArgs(0);
         setMaxArgs(0);

@@ -16,6 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command.relation;
 
+import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.relation.Relation;
 
@@ -24,7 +25,8 @@ import io.github.dre2n.factionsxl.relation.Relation;
  */
 public class RelationOathCommand extends RelationAliasCommand {
 
-    public RelationOathCommand() {
+    public RelationOathCommand(FactionsXL plugin) {
+        super(plugin);
         setCommand("oath");
         setHelp(FMessage.HELP_OATH.getMessage());
     }
