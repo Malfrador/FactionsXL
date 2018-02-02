@@ -42,16 +42,17 @@ public enum Relation {
 
     REAL_UNION(DARK_GREEN, true, true, true, FMessage.RELATION_REAL_UNION),
     ALLIANCE(LIGHT_PURPLE, true, true, false, FMessage.RELATION_ALLIANCE),
+    ALLIANCE_2(BLUE, true, true, false, FMessage.RELATION_ALLIANCE, ALLIANCE),
     PERSONAL_UNION(YELLOW, true, true, true, FMessage.RELATION_PERSONAL_UNION, ALLIANCE),
     /**
      * vassal faction ===> Relation.LORD ===> lord faction
      */
-    LORD(DARK_AQUA, true, true, true, FMessage.RELATION_LORD, ALLIANCE),
-    OWN(GREEN, true, true, true, FMessage.RELATION_OWN, ALLIANCE, PERSONAL_UNION),
+    LORD(DARK_AQUA, true, true, true, FMessage.RELATION_LORD, ALLIANCE_2),
+    OWN(GREEN, true, true, true, FMessage.RELATION_OWN, ALLIANCE_2, PERSONAL_UNION),
     /**
      * lord faction ===> Relation.VASSAL ===> vassal faction
      */
-    VASSAL(AQUA, true, true, true, FMessage.RELATION_VASSAL, ALLIANCE),
+    VASSAL(AQUA, true, true, true, FMessage.RELATION_VASSAL, ALLIANCE_2),
     COALITION(DARK_PURPLE, true, true, false, FMessage.RELATION_COALITION),
     PEACE(WHITE, false, false, false, FMessage.RELATION_PEACE),
     ENEMY(RED, false, false, false, FMessage.RELATION_ENEMY);

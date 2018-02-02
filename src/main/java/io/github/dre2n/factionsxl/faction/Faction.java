@@ -724,17 +724,45 @@ public class Faction extends LegalEntity implements RelationParticipator {
         if (relations.containsKey(faction)) {
             relation = relations.get(faction);
         } else if (faction == this) {
-            relation = Relation.OWN;
+            return Relation.OWN;
         } else if (isInWar(faction)) {
-            relation = Relation.ENEMY;
+            return Relation.ENEMY;
+        } else if (getLords().contains(faction)) {
+            return Relation.LORD;
         } else {
             relation = Relation.PEACE;
         }
 
         Faction lord = getLord();
-        if (lord != null && !relation.doVassalsOverride()) {
-            relation = lord.relations.get(faction);
+        Faction objectLord = faction.getLord();
+        if (objectLord != null) {
+            if (objectLord == lord) {
+                // If object & subject share the same lord => they get an ALLIANCE_2
+                return Relation.ALLIANCE_2;
+            } else if (objectLord.getRelation(this) == Relation.LORD) {
+                // Object's lord is also lord of subject, but NOT subject's direct lord => subject must be an indirect vassal of object's lord
+                return Relation.VASSAL;
+            }
         }
+        if (lord != null && !relation.doVassalsOverride()) {
+            // If the subject's relation to the object is not supposed to override the lord's relation to the object, use the lord's...
+            Relation lordRelation = lord.getRelation(faction);
+            if (!lordRelation.doVassalsOverride()) {
+                // ...but only if the lord's relation is supposed to override the vassal's
+                return lordRelation;
+            }
+        }
+        Faction objectOverlord = faction.getOverlord();
+        if (relation == Relation.PEACE && getLords().contains(objectOverlord)) {
+            return Relation.ALLIANCE_2;
+        }
+        if (relation == Relation.PEACE && relations.containsKey(objectOverlord)) {
+            Relation overlordRelation = relations.get(objectOverlord);
+            if (!overlordRelation.doVassalsOverride()) {
+                return overlordRelation;
+            }
+        }
+
         return relation != null ? relation : Relation.PEACE;
     }
 
@@ -773,6 +801,36 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         return null;
+    }
+
+    /**
+     * @return
+     * the independent faction that is, directly or indirectly, this faction's lord
+     */
+    public Faction getOverlord() {
+        Faction current = this;
+        Faction next = current.getLord();
+        while (next != null) {
+            current = next;
+            next = current.getLord();
+        }
+        return current;
+    }
+
+    /**
+     * @return
+     * a list of all direct and indirect lords. The lower the index, the closer
+     */
+    public List<Faction> getLords() {
+        Faction current = this;
+        Faction next = current.getLord();
+        List<Faction> lords = new ArrayList<>();
+        while (next != null) {
+            current = next;
+            lords.add(current);
+            next = current.getLord();
+        }
+        return lords;
     }
 
     /**
