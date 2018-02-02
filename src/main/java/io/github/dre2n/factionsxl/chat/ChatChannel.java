@@ -26,9 +26,9 @@ import org.bukkit.ChatColor;
  */
 public enum ChatChannel {
 
-    ALLY(ChatColor.LIGHT_PURPLE, Relation.ALLIANCE),
-    COALITION(ChatColor.RED, Relation.ALLIANCE, Relation.COALITION),
-    FACTION(ChatColor.GREEN, Relation.OWN, Relation.LORD, Relation.VASSAL),
+    ALLY(ChatColor.LIGHT_PURPLE, Relation.ALLIANCE_2, Relation.ALLIANCE),
+    COALITION(ChatColor.RED, Relation.ALLIANCE_2, Relation.ALLIANCE, Relation.COALITION),
+    FACTION(ChatColor.GREEN, Relation.ALLIANCE_2),
     LOCAL(ChatColor.GRAY, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY),
     PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
 

@@ -70,7 +70,7 @@ public class ChatListener implements Listener {
                 MessageUtil.sendMessage(player, format + event.getMessage());
             } else {
                 for (Relation relation : channel.getRelations()) {
-                    for (Player receiver : fPlayer.getFaction().getOnlineByRelationAndVassals(relation)) {
+                    for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
                         String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
                         MessageUtil.sendMessage(receiver, format + event.getMessage());
                     }
