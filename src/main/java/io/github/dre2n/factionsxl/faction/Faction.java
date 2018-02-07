@@ -705,6 +705,9 @@ public class Faction extends LegalEntity implements RelationParticipator {
         } else if (object instanceof Faction) {
             faction = (Faction) object;
         }
+        if (faction == null) {
+            return Relation.PEACE;
+        }
 
         Relation relation = null;
         if (relations.containsKey(faction)) {
