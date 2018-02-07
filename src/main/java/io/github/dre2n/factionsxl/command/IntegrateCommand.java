@@ -66,7 +66,7 @@ public class IntegrateCommand extends FCommand {
         }
 
         Faction vassal = factions.getByName(args[i]);
-        if (faction.getRelation(vassal) == Relation.VASSAL) {
+        if (faction.getRelations().get(vassal) == Relation.VASSAL) {
             if (!vassal.isAllod()) {
                 factions.integrate(faction, vassal);
             } else {
