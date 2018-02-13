@@ -250,7 +250,7 @@ public class FactionsXL extends DREPlugin {
             public void run() {
                 fPlayers.autoKick();
             }
-        }.runTaskTimer(this, 0L, FConfig.HOUR);
+        }.runTaskTimer(this, 200L, FConfig.HOUR);
     }
 
     public void saveData() {
@@ -599,6 +599,7 @@ public class FactionsXL extends DREPlugin {
 
     public static void debug(String message) {
         instance.debugToFile(message);
+        System.out.println(message);
     }
 
 }

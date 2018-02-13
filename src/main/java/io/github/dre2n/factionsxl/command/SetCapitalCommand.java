@@ -23,8 +23,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

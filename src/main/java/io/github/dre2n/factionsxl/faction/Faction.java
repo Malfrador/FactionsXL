@@ -1262,11 +1262,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
         capital = null;
         if (unclaim) {
-            for (Region region : regions) {
-                region.setOwner(null);
-            }
+            new HashSet<>(regions).forEach(r -> r.setOwner(null));
         }
-        regions.clear();
         formerAdmins.add(admin);
         setAdmin(null);
         mods.clear();
@@ -1284,6 +1281,8 @@ public class Faction extends LegalEntity implements RelationParticipator {
             war.getAttacker().getParticipants().remove(this);
             war.getDefender().getParticipants().remove(this);
         }
+        plugin.getFactionCache().removeEntity(this);
+        plugin.getFactionCache().addEntity(this);
     }
 
     /**

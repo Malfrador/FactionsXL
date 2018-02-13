@@ -16,8 +16,6 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
-import io.github.dre2n.commons.compatibility.CompatibilityHandler;
-import io.github.dre2n.commons.compatibility.Version;
 import io.github.dre2n.factionsxl.FactionsXL;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_TRADER;
 import static io.github.dre2n.factionsxl.config.FMessage.MOB_VILLAGER;

@@ -159,17 +159,21 @@ public class FPlayerCache {
      * Automatically kick players who haven't been online for the time specified in the config
      */
     public void autoKick() {
+        HashSet<Faction> successions = new HashSet<>();
         for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
             for (OfflinePlayer player : faction.getMembers().getOfflinePlayers()) {
                 if (System.currentTimeMillis() > player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
                     FactionsXL.debug("Kicking " + player + " / Last played: " + new java.util.Date(player.getLastPlayed()));
                     faction.kick(player);
-                    if (faction.getAdmin().getUniqueId().equals(player.getUniqueId())) {
-                        faction.doSuccession();
-                    }
                 }
             }
+            OfflinePlayer admin = faction.getAdmin();
+            if (System.currentTimeMillis() > admin.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime()) {
+                FactionsXL.debug("Starting succession for " + admin + " / Last played: " + new java.util.Date(admin.getLastPlayed()));
+                successions.add(faction);
+            }
         }
+        successions.forEach(f -> f.doSuccession());
     }
 
     /**
