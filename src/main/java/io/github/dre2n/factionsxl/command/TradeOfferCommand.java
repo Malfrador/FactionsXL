@@ -16,7 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.misc.NumberUtil;
+import de.erethon.commons.gui.PageGUI;
+import de.erethon.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
@@ -26,7 +27,6 @@ import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.util.GUIButton;
 import static io.github.dre2n.factionsxl.util.GUIButton.*;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;

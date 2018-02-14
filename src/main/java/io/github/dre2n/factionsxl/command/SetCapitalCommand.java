@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.misc.SimpleDateUtil;
+import de.erethon.commons.misc.SimpleDateUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;

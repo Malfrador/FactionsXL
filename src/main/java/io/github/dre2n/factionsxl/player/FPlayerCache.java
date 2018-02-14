@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.player.PlayerUtil;
+import de.erethon.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.faction.Faction;
 import java.io.File;

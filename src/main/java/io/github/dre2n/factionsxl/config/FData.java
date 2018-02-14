@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import io.github.dre2n.commons.config.ConfigUtil;
+import de.erethon.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import java.io.File;
 import java.io.IOException;

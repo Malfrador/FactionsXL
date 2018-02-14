@@ -16,12 +16,12 @@
  */
 package io.github.dre2n.factionsxl.command;
 
+import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.GovernmentType;
 import io.github.dre2n.factionsxl.player.FPermission;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
 import java.util.Set;

@@ -16,12 +16,12 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
-import io.github.dre2n.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.util.FireworkUtil;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
+import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class FBull implements Listener {
             BookMeta meta = ((BookMeta) item.getItemMeta());
             String title = meta.getTitle().replace(" ", "-");
             if (factions.getByName(title) != null) {
-                title += NumberUtil.generateRandomInt(0, 100);
+                title += new Random().nextInt(100);
             }
             FireworkUtil.spawnRandom(location);
             FactionsXL.getInstance().getFactionCache().create(player, title);

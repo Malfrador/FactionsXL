@@ -16,11 +16,12 @@
  */
 package io.github.dre2n.factionsxl.util;
 
-import static io.github.dre2n.commons.item.ItemUtil.setSkullOwner;
+import static de.erethon.commons.item.ItemUtil.setSkullOwner;
 import io.github.dre2n.factionsxl.config.FMessage;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,7 +32,7 @@ import org.bukkit.potion.PotionType;
 /**
  * @author Daniel Saukel
  */
-public class GUIButton {
+public class GUIButton extends de.erethon.commons.gui.GUIButton {
 
     /* Text Components */
     public static final TextComponent CANCEL = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_CANCEL.getMessage());
@@ -44,8 +45,6 @@ public class GUIButton {
     public static final ItemStack DOWN_ALT = setSkullOwner(SKULL, "ccd469f7-1df1-42f9-8915-15de387906e4", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI3Y2U2ODNkMDg2OGFhNDM3OGFlYjYwY2FhNWVhODA1OTZiY2ZmZGFiNmI1YWYyZDEyNTk1ODM3YTg0ODUzIn19fQ==");
     public static final ItemStack UP = setSkullOwner(SKULL, "ff1654b0-10f2-48b6-9c05-483b75f6549e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ4Yjc2OGM2MjM0MzJkZmIyNTlmYjNjMzk3OGU5OGRlYzExMWY3OWRiZDZjZDg4ZjIxMTU1Mzc0YjcwYjNjIn19fQ==");
     public static final ItemStack DOWN = setSkullOwner(SKULL, "9afa272b-ca4a-4502-8073-c4be1b741ebc", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRhZGQ3NTVkMDg1MzczNTJiZjdhOTNlM2JiN2RkNGQ3MzMxMjFkMzlmMmZiNjcwNzNjZDQ3MWY1NjExOTRkZCJ9fX0=");
-    public static final ItemStack LEFT = setSkullOwner(SKULL, "69b9a08d-4e89-4878-8be8-551caeacbf2a", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2ViZjkwNzQ5NGE5MzVlOTU1YmZjYWRhYjgxYmVhZmI5MGZiOWJlNDljNzAyNmJhOTdkNzk4ZDVmMWEyMyJ9fX0=");
-    public static final ItemStack RIGHT = setSkullOwner(SKULL, "15f49744-9b61-46af-b1c3-71c6261a0d0e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ==");
     public static final ItemStack EXCLAMATION = setSkullOwner(SKULL, "165c8c0f-d1ba-4c9e-9836-cbff5b40ba80", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmE1M2JkZDE1NDU1MzFjOWViYjljNmY4OTViYzU3NjAxMmY2MTgyMGU2ZjQ4OTg4NTk4OGE3ZTg3MDlhM2Y0OCJ9fX0=");
     public static final ItemStack QUESTION = setSkullOwner(SKULL, "210665a1-0f17-4353-b85a-426e2cb651e2", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTE2M2RhZmFjMWQ5MWE4YzkxZGI1NzZjYWFjNzg0MzM2NzkxYTZlMThkOGY3ZjYyNzc4ZmM0N2JmMTQ2YjYifX19");
     public static final ItemStack E = setSkullOwner(SKULL, "96eaca3a-0f22-484f-bad7-46153597e191", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGJiMjczN2VjYmY5MTBlZmUzYjI2N2RiN2Q0YjMyN2YzNjBhYmM3MzJjNzdiZDBlNGVmZjFkNTEwY2RlZiJ9fX0=");
@@ -81,6 +80,26 @@ public class GUIButton {
         meta.setDisplayName(name);
         itemStack.setItemMeta(meta);
         return itemStack;
+    }
+
+    public static void addHeader(Inventory gui) {
+        gui.setItem(0, BACK);
+        gui.setItem(1, PLACEHOLDER);
+        gui.setItem(2, PLACEHOLDER);
+        gui.setItem(3, PLACEHOLDER);
+        gui.setItem(4, PLACEHOLDER);
+        gui.setItem(5, PLACEHOLDER);
+        gui.setItem(6, PLACEHOLDER);
+        gui.setItem(7, PLACEHOLDER);
+        gui.setItem(8, PLACEHOLDER);
+    }
+
+    public static void clearHeaderGUI(Inventory gui) {
+        int i = 9;
+        do {
+            gui.clear(i);
+            i++;
+        } while (i < gui.getSize());
     }
 
 }

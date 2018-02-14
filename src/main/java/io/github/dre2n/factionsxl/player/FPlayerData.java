@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.config.DREConfig;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.config.DREConfig;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import java.io.File;

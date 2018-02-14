@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.player;
 
-import io.github.dre2n.commons.player.PlayerUtil;
-import io.github.dre2n.commons.player.PlayerWrapper;
+import de.erethon.commons.player.PlayerUtil;
+import de.erethon.commons.player.PlayerWrapper;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.chat.ChatChannel;

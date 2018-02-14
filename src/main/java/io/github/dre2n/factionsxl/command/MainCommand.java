@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import static io.github.dre2n.commons.chat.FatLetter.*;
-import io.github.dre2n.commons.chat.MessageUtil;
+import static de.erethon.commons.chat.FatLetter.*;
+import de.erethon.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;

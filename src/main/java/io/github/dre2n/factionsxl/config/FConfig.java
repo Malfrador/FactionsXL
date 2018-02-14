@@ -16,10 +16,10 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import io.github.dre2n.commons.config.ConfigUtil;
-import io.github.dre2n.commons.config.DREConfig;
-import io.github.dre2n.commons.misc.EnumUtil;
-import io.github.dre2n.commons.misc.ProgressBar;
+import de.erethon.commons.config.ConfigUtil;
+import de.erethon.commons.config.DREConfig;
+import de.erethon.commons.misc.EnumUtil;
+import de.erethon.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.RegionType;
 import static io.github.dre2n.factionsxl.board.RegionType.*;

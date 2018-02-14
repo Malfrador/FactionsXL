@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.config;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.config.Message;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.config.Message;
 import io.github.dre2n.factionsxl.FactionsXL;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,6 +46,7 @@ public enum FMessage implements Message {
     CMD_CREATE_BULL_SUCCESS("cmd.createBull.success", "&aSuccessfully created the new bull &6&v1&a."),
     CMD_DESC_SUCCESS("cmd.desc.success", "&aThe faction &v1&a changed their description to: &6&v2&a."),
     CMD_DISBAND_SUCCESS("cmd.disband.success", "&v1 &adisbanded the faction &v2&a."),
+    CMD_GIVE_REGION_SUCCESS("cmd.giveRegion.success", "&v1 &agave the region &v2 &ato &v3&a."),
     CMD_INVITE_FAIL("cmd.invite.fail", "&4Could change the invitation status of &v1&4."),
     CMD_INVITE_SUCCESS("cmd.invite.success", "&v1 &ainvited &v2 &ato join your faction."),
     CMD_KICK_FAIL("cmd.kick.fail", "&4You are not allowed to kick &v1&4."),
@@ -201,6 +202,7 @@ public enum FMessage implements Message {
     HELP_CREATE_VASSAL("help.createVassal", "/f createVassal [tag] [leader] - Creates a new faction as your vassal."),
     HELP_DESC("help.desc", "/f desc [faction] [description] - Changes the description of the faction."),
     HELP_DISBAND("help.disband", "/f disband [faction] - Disbands a faction."),
+    HELP_GIVE_REGION("help.giveRegion", "/f giveRegion [faction] - Gives the current region to a vassal. Removes cores."),
     HELP_HELP("help.help", "/f help [page] - Shows the help page."),
     HELP_HOME("help.home", "/f home ([faction]) - Teleports to the home point of a faction."),
     HELP_IDEA("help.idea", "/f idea ([faction]) - Opens the idea menu."),

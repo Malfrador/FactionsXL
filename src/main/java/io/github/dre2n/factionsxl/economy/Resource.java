@@ -16,7 +16,7 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
-import io.github.dre2n.commons.misc.EnumUtil;
+import de.erethon.commons.misc.EnumUtil;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.util.GUIButton;
 import java.util.Map;

@@ -16,14 +16,14 @@
  */
 package io.github.dre2n.factionsxl.population;
 
-import io.github.dre2n.commons.misc.ProgressBar;
+import de.erethon.commons.gui.PageGUI;
+import de.erethon.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.GUIButton;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +68,7 @@ public class PopulationMenu implements Listener {
         main.setItem(3, DEMANDS);
         main.setItem(5, MILITARY);
         demands = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(faction.getName()));
-        PageGUI.addHeader(demands);
+        GUIButton.addHeader(demands);
         update();
     }
 
@@ -82,7 +82,7 @@ public class PopulationMenu implements Listener {
     }
 
     public void update() {
-        PageGUI.clearHeaderGUI(demands);
+        GUIButton.clearHeaderGUI(demands);
         for (ResourceSubcategory subcategory : ResourceSubcategory.values()) {
             HashMap<SaturationLevel, Integer> saturation = new HashMap<>();
             int percentage = 0;

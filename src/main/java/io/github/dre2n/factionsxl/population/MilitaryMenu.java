@@ -16,12 +16,11 @@
  */
 package io.github.dre2n.factionsxl.population;
 
+import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.GUIButton;
-import static io.github.dre2n.factionsxl.util.GUIButton.*;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -37,7 +36,7 @@ public class MilitaryMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack SOLDIERS = GUIButton.setDisplayName(SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
+    public static final ItemStack SOLDIERS = GUIButton.setDisplayName(GUIButton.SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
 
     private Faction faction;
     private Inventory gui;
@@ -50,7 +49,7 @@ public class MilitaryMenu implements Listener {
 
     private void setupGUI() {
         gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_MILITARY_TITLE.getMessage(faction.getName()));
-        PageGUI.addHeader(gui);
+        GUIButton.addHeader(gui);
         gui.setItem(9, SOLDIERS);
         update();
     }
@@ -73,7 +72,7 @@ public class MilitaryMenu implements Listener {
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
-        if (BACK.equals(button)) {
+        if (GUIButton.BACK.equals(button)) {
             faction.getPopulationMenu().openMain(player);
             return;
         }

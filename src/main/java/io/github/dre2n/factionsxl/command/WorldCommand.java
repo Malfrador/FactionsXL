@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.misc.EnumUtil;
-import io.github.dre2n.commons.misc.NumberUtil;
+import de.erethon.commons.misc.EnumUtil;
+import de.erethon.commons.misc.NumberUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.Region;

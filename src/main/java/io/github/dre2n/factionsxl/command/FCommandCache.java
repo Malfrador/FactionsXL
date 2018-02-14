@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command;
 
-import io.github.dre2n.commons.command.DRECommandCache;
-import io.github.dre2n.commons.javaplugin.DREPlugin;
+import de.erethon.commons.command.DRECommandCache;
+import de.erethon.commons.javaplugin.DREPlugin;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.relation.*;
 import io.github.dre2n.factionsxl.command.war.*;
@@ -45,6 +45,7 @@ public class FCommandCache extends DRECommandCache {
     public CreateVassalCommand createVassal = new CreateVassalCommand();
     public DescCommand desc = new DescCommand();
     public DisbandCommand disband = new DisbandCommand();
+    public GiveRegionCommand giveRegion = new GiveRegionCommand();
     public HelpCommand help = new HelpCommand();
     public HomeCommand home = new HomeCommand();
     public IdeaCommand idea = new IdeaCommand();
@@ -107,6 +108,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(createVassal);
         addCommand(desc);
         addCommand(disband);
+        addCommand(giveRegion);
         addCommand(help);
         addCommand(home);
         addCommand(integrate);

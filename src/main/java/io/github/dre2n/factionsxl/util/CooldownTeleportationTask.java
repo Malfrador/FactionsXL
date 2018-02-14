@@ -16,9 +16,9 @@
  */
 package io.github.dre2n.factionsxl.util;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.misc.ProgressBar;
-import io.github.dre2n.commons.player.PlayerUtil;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.misc.ProgressBar;
+import de.erethon.commons.player.PlayerUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;

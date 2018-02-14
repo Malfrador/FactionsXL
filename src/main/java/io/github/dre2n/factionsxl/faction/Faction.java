@@ -18,11 +18,11 @@ package io.github.dre2n.factionsxl.faction;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.config.ConfigUtil;
-import io.github.dre2n.commons.misc.EnumUtil;
-import io.github.dre2n.commons.misc.NumberUtil;
-import io.github.dre2n.commons.player.PlayerCollection;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.config.ConfigUtil;
+import de.erethon.commons.misc.EnumUtil;
+import de.erethon.commons.misc.NumberUtil;
+import de.erethon.commons.player.PlayerCollection;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.board.dynmap.DynmapStyle;

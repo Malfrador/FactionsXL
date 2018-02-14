@@ -16,8 +16,8 @@
  */
 package io.github.dre2n.factionsxl.command.war;
 
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.misc.SimpleDateUtil;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.misc.SimpleDateUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;

@@ -16,12 +16,11 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.GUIButton;
-import static io.github.dre2n.factionsxl.util.GUIButton.BACK;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +80,7 @@ public class ResourceMenu implements Listener {
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         banner.setItemMeta(meta);
-        gui.setItem(0, BACK);
+        gui.setItem(0, GUIButton.BACK);
         gui.setItem(1, banner);
         gui.setItem(2, banner);
         gui.setItem(3, banner);
@@ -115,7 +114,7 @@ public class ResourceMenu implements Listener {
             return;
         }
         int current = faction.getImportValue(resource);
-        if (button.equals(BACK)) {
+        if (button.equals(GUIButton.BACK)) {
             faction.getTradeMenu().open(player);
             return;
         } else if (button.equals(exportButton)) {

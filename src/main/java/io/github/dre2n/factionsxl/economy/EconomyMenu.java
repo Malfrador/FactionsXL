@@ -16,11 +16,11 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.util.GUIButton;
-import io.github.dre2n.factionsxl.util.PageGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;

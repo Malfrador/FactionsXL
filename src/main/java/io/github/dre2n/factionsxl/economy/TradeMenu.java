@@ -16,13 +16,13 @@
  */
 package io.github.dre2n.factionsxl.economy;
 
+import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import static io.github.dre2n.factionsxl.util.GUIButton.DISABLED;
-import io.github.dre2n.factionsxl.util.PageGUI;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class TradeMenu implements Listener {
         if (!plugin.getFConfig().isEconomyEnabled()) {
             gui = new PageGUI(FMessage.ERROR_ECON_DISABLED.getMessage());
             for (int i = 0; i <= 44; i++) {
-                gui.getPages().get(0).setItem(i, DISABLED);
+                gui.getPages().get(0).setItem(i, GUIButton.DISABLED);
             }
         } else {
             gui.clear();
@@ -135,7 +135,7 @@ public class TradeMenu implements Listener {
             return;
         }
         ItemStack button = inventory.getItem(event.getSlot());
-        if (button == null || button.equals(DISABLED)) {
+        if (button == null || button.equals(GUIButton.DISABLED)) {
             return;
         }
         if (!faction.isPrivileged(event.getWhoClicked())) {

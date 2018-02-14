@@ -16,7 +16,6 @@
  */
 package io.github.dre2n.factionsxl.util;
 
-import io.github.dre2n.commons.misc.NumberUtil;
 import java.util.Random;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -60,7 +59,9 @@ public class FireworkUtil {
     }
 
     public static Color randomColor() {
-        switch (NumberUtil.generateRandomInt(1, 17)) {
+        switch (new Random().nextInt(16)) {
+            case 0:
+                return Color.YELLOW;
             case 1:
                 return Color.AQUA;
             case 2:
@@ -93,8 +94,6 @@ public class FireworkUtil {
                 return Color.TEAL;
             case 16:
                 return Color.WHITE;
-            case 17:
-                return Color.YELLOW;
         }
         return null;
     }

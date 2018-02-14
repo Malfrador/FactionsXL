@@ -16,14 +16,14 @@
  */
 package io.github.dre2n.factionsxl.population;
 
-import io.github.dre2n.commons.misc.ProgressBar;
+import de.erethon.commons.gui.PageGUI;
+import de.erethon.commons.misc.ProgressBar;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.faction.Faction;
-import static io.github.dre2n.factionsxl.util.GUIButton.BACK;
-import io.github.dre2n.factionsxl.util.PageGUI;
+import io.github.dre2n.factionsxl.util.GUIButton;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -55,7 +55,7 @@ public class DemandMenu implements Listener {
 
     public void update(ResourceSubcategory category) {
         gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(category.getName()));
-        PageGUI.addHeader(gui);
+        GUIButton.addHeader(gui);
 
         for (Resource resource : category.getResources()) {
             gui.addItem(formButton(faction, resource));
@@ -99,7 +99,7 @@ public class DemandMenu implements Listener {
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
-        if (BACK.equals(button)) {
+        if (GUIButton.BACK.equals(button)) {
             faction.getPopulationMenu().openDemands(player);
             return;
         }

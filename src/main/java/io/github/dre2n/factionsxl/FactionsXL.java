@@ -17,12 +17,12 @@
 package io.github.dre2n.factionsxl;
 
 import com.griefcraft.lwc.LWC;
-import io.github.dre2n.commons.chat.MessageUtil;
-import io.github.dre2n.commons.compatibility.Internals;
-import io.github.dre2n.commons.config.MessageConfig;
-import io.github.dre2n.commons.javaplugin.DREPlugin;
-import io.github.dre2n.commons.javaplugin.DREPluginSettings;
-import io.github.dre2n.commons.misc.FileUtil;
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.compatibility.Internals;
+import de.erethon.commons.config.MessageConfig;
+import de.erethon.commons.javaplugin.DREPlugin;
+import de.erethon.commons.javaplugin.DREPluginSettings;
+import de.erethon.commons.misc.FileUtil;
 import io.github.dre2n.factionsxl.board.Board;
 import io.github.dre2n.factionsxl.board.dynmap.Atlas;
 import io.github.dre2n.factionsxl.chat.ChatListener;
@@ -41,7 +41,6 @@ import io.github.dre2n.factionsxl.player.PlayerListener;
 import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
 import io.github.dre2n.factionsxl.protection.LWCIntegration;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
-import io.github.dre2n.factionsxl.util.PageGUICache;
 import io.github.dre2n.factionsxl.war.WarCache;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,12 +76,10 @@ public class FactionsXL extends DREPlugin {
 
     private FConfig fConfig;
     private FData fData;
-    private MessageConfig messageConfig;
     private FCommandCache fCommands;
     private FPlayerCache fPlayers;
     private FactionCache factions;
     private WarCache wars;
-    private PageGUICache pageGUIs;
     private Board board;
     private ChatListener chatListener;
     private PlayerListener playerListener;
@@ -221,7 +218,6 @@ public class FactionsXL extends DREPlugin {
         // Load Language 2
         loadMessageConfig(new File(LANGUAGES, fConfig.getLanguage() + ".yml"));
         loadFData();
-        loadPageGUIs();
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
         loadWars(WARS);
@@ -265,18 +261,15 @@ public class FactionsXL extends DREPlugin {
     public void backupData() {
         File backupDir = new File(BACKUPS, String.valueOf(System.currentTimeMillis()));
         backupDir.mkdir();
-        FileUtil.copyDirectory(BOARD, new File(backupDir, "board"), new String[]{});
-        FileUtil.copyDirectory(PLAYERS, new File(backupDir, "players"), new String[]{});
-        FileUtil.copyDirectory(DYNASTIES, new File(backupDir, "dynasties"), new String[]{});
-        FileUtil.copyDirectory(FACTIONS, new File(backupDir, "factions"), new String[]{});
-        FileUtil.copyDirectory(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
-        FileUtil.copyDirectory(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
-        FileUtil.copyDirectory(WARS, new File(backupDir, "wars"), new String[]{});
-        try {
-            FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
-            FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));
-        } catch (IOException exception) {
-        }
+        FileUtil.copyDir(BOARD, new File(backupDir, "board"), new String[]{});
+        FileUtil.copyDir(PLAYERS, new File(backupDir, "players"), new String[]{});
+        FileUtil.copyDir(DYNASTIES, new File(backupDir, "dynasties"), new String[]{});
+        FileUtil.copyDir(FACTIONS, new File(backupDir, "factions"), new String[]{});
+        FileUtil.copyDir(FEDERATIONS, new File(backupDir, "federations"), new String[]{});
+        FileUtil.copyDir(TRADE_LEAGUES, new File(backupDir, "tradeleagues"), new String[]{});
+        FileUtil.copyDir(WARS, new File(backupDir, "wars"), new String[]{});
+        FileUtil.copyFile(new File(getDataFolder(), "config.yml"), new File(backupDir, "config.yml"));
+        FileUtil.copyFile(FData.FILE, new File(backupDir, "data.yml"));
     }
 
     /* Getters and loaders */
@@ -316,14 +309,6 @@ public class FactionsXL extends DREPlugin {
      */
     public void loadFData() {
         fData = new FData();
-    }
-
-    /**
-     * @return
-     * the loaded instance of MessageConfig
-     */
-    public MessageConfig getMessageConfig() {
-        return messageConfig;
     }
 
     /**
@@ -440,25 +425,6 @@ public class FactionsXL extends DREPlugin {
         }
         chatListener = new ChatListener();
         manager.registerEvents(chatListener, this);
-    }
-
-    /**
-     * @return
-     * the loaded instance of PageGUICache
-     */
-    public PageGUICache getPageGUIs() {
-        return pageGUIs;
-    }
-
-    /**
-     * load / reload a new instance of PageGUICache
-     */
-    public void loadPageGUIs() {
-        if (pageGUIs != null) {
-            HandlerList.unregisterAll(pageGUIs);
-        }
-        pageGUIs = new PageGUICache();
-        manager.registerEvents(pageGUIs, this);
     }
 
     /**
