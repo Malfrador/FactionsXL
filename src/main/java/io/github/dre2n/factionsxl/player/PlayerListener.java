@@ -91,7 +91,8 @@ public class PlayerListener implements Listener {
         double newPower = killedF.getPower() - loss;
         killedF.setPower(newPower < fConfig.getMinPower() ? fConfig.getMinPower() : newPower);
         if (killerP != null) {
-            killerF.setPower(killerF.getPower() + loss);
+            double newKPower = killerF.getPower() + loss;
+            killerF.setPower(newKPower > fConfig.getMaxPower() ? fConfig.getMaxPower() : newKPower);
             ParsingUtil.sendMessage(killedP, FMessage.DEATH_PLAYER_KILL_KILLED.getMessage(), killerF, String.valueOf(loss), String.valueOf(killedF.getPower()));
             ParsingUtil.sendMessage(killerP, FMessage.DEATH_PLAYER_KILL_KILLER.getMessage(), killedF, String.valueOf(loss), String.valueOf(killerF.getPower()));
         } else {
