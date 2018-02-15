@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 12;
+    public static final int CONFIG_VERSION = 13;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -111,6 +111,7 @@ public class FConfig extends DREConfig {
     private boolean territoryProtectionEnabled = true;
     private double territoryShield = 0.66;
     private boolean capitalProtectionEnabled = false;
+    private double warExplosionRestorationTime = 7.5;
 
     // Power etc.
     private int maxPower = 100;
@@ -458,6 +459,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * the time until one block gets restored after being destroyed by TNT in war
+     */
+    public long getWarExplosionRestorationTime() {
+        return (long) (warExplosionRestorationTime * SECOND);
+    }
+
+    /**
+     * @return
      * the maximum power that a player may store
      */
     public int getMaxPower() {
@@ -542,7 +551,7 @@ public class FConfig extends DREConfig {
      * the time in ticks the scoreboard stays
      */
     public int getScoreboardExpiration() {
-        return (int) (scoreboardExpiration * 20);
+        return (int) (scoreboardExpiration * SECOND);
     }
 
     /**
@@ -550,7 +559,7 @@ public class FConfig extends DREConfig {
      * how often the scoreboard will be updated
      */
     public int getScoreboardUpdateInterval() {
-        return (int) (scoreboardUpdateInterval * 20);
+        return (int) (scoreboardUpdateInterval * SECOND);
     }
 
     /**
@@ -643,7 +652,7 @@ public class FConfig extends DREConfig {
      * the Dynmap update interval for factions
      */
     public long getDynmapUpdateIntervalFaction() {
-        return (long) (dynmapUpdateIntervalFaction * 20);
+        return (long) (dynmapUpdateIntervalFaction * SECOND);
     }
 
     /**
@@ -651,7 +660,7 @@ public class FConfig extends DREConfig {
      * the Dynmap update interval for regions
      */
     public long getDynmapUpdateIntervalRegion() {
-        return (long) (dynmapUpdateIntervalRegion * 20);
+        return (long) (dynmapUpdateIntervalRegion * SECOND);
     }
 
     /**
@@ -814,6 +823,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("capitalProtectionEnabled")) {
             config.set("capitalProtectionEnabled", capitalProtectionEnabled);
+        }
+
+        if (!config.contains("warExplosionRestorationTime")) {
+            config.set("warExplosionRestorationTime", warExplosionRestorationTime);
         }
 
         if (!config.contains("maxPower")) {
@@ -1062,6 +1075,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("capitalProtectionEnabled")) {
             capitalProtectionEnabled = config.getBoolean("capitalProtectionEnabled");
+        }
+
+        if (config.contains("warExplosionRestorationTime")) {
+            warExplosionRestorationTime = config.getDouble("warExplosionRestorationTime");
         }
 
         if (config.contains("maxPower")) {

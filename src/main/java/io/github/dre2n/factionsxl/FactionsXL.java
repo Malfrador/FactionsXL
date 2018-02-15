@@ -42,6 +42,7 @@ import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
 import io.github.dre2n.factionsxl.protection.LWCIntegration;
 import io.github.dre2n.factionsxl.protection.LandProtectionListener;
 import io.github.dre2n.factionsxl.war.WarCache;
+import io.github.dre2n.factionsxl.war.WarTNT;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -86,6 +87,7 @@ public class FactionsXL extends DREPlugin {
     private EntityProtectionListener entityProtectionListener;
     private LandProtectionListener landProtectionListener;
     private LWCIntegration lwcIntegration;
+    private WarTNT warTNT;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
     private boolean debugEnabled = true;
@@ -129,6 +131,7 @@ public class FactionsXL extends DREPlugin {
     @Override
     public void onDisable() {
         if (instance != null) {
+            warTNT.restoreAll();
             saveData();
             backupData();
         }
@@ -234,6 +237,7 @@ public class FactionsXL extends DREPlugin {
         if (fConfig.isLWCEnabled()) {
             loadLWC();
         }
+        loadWarTNT();
         startPowerTask();
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
@@ -512,6 +516,22 @@ public class FactionsXL extends DREPlugin {
         } else {
             MessageUtil.log(this, "&4Could not find LWC.");
         }
+    }
+
+    /**
+     * @return
+     * the loaded instance of WarTNT
+     */
+    public WarTNT getWarTNT() {
+        return warTNT;
+    }
+
+    /**
+     * load / reload the instance of WarTNT
+     */
+    public void loadWarTNT() {
+        warTNT = new WarTNT(fConfig.getWarExplosionRestorationTime());
+        manager.registerEvents(warTNT, this);
     }
 
     /**
