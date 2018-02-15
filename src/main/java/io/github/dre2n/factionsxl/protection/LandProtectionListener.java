@@ -79,6 +79,62 @@ public class LandProtectionListener implements Listener {
         forbidIfInProtectedTerritory(event.getPlayer(), event.getBlockClicked(), event, false);
     }
 
+    private static final Set<Material> WAR_BREAKABLE = new HashSet<>(Arrays.asList(
+            BEETROOT_BLOCK,
+            CAKE,
+            CARPET,
+            CARROT,
+            CHORUS_PLANT,
+            DEAD_BUSH,
+            DOUBLE_PLANT,
+            DIRT,
+            END_ROD,
+            FIRE,
+            FLOWER_POT,
+            FROSTED_ICE,
+            GLASS,
+            GRASS,
+            GRASS_PATH,
+            GRAVEL,
+            HAY_BLOCK,
+            ICE,
+            JACK_O_LANTERN,
+            LADDER,
+            LEAVES,
+            LEAVES_2,
+            LONG_GRASS,
+            MELON,
+            MELON_STEM,
+            NETHER_WART_BLOCK,
+            PACKED_ICE,
+            POTATO,
+            PUMPKIN,
+            PUMPKIN_STEM,
+            SAND,
+            SOUL_SAND,
+            STANDING_BANNER,
+            STAINED_GLASS_PANE,
+            SUGAR_CANE_BLOCK,
+            THIN_GLASS,
+            TNT,
+            TORCH,
+            VINE,
+            WALL_BANNER,
+            WATER_LILY,
+            WEB,
+            WHEAT
+    ));
+
+    private static final Set<Material> WAR_PLACABLE = new HashSet<>(Arrays.asList(
+            LADDER,
+            STANDING_BANNER,
+            TNT,
+            TORCH,
+            VINE,
+            WALL_BANNER,
+            WEB
+    ));
+
     private static final Set<Material> NO_INTERACT = new HashSet<>(Arrays.asList(
             ANVIL,
             BEACON,
@@ -141,7 +197,11 @@ public class LandProtectionListener implements Listener {
             Faction bFaction = factions.getByMember(breaker);
             Faction owner = region.getOwner();
             Relation rel = owner.getRelation(bFaction);
-            if (!rel.canBuild()) {
+            if (rel == Relation.ENEMY) {
+                if (!WAR_BREAKABLE.contains(event.getClickedBlock().getType())) {
+                    event.setCancelled(true);
+                }
+            } else if (!rel.canBuild()) {
                 event.setCancelled(true);
                 ParsingUtil.sendActionBarMessage(breaker, FMessage.PROTECTION_CANNOT_INTERACT_FACTION.getMessage(), event.getClickedBlock().getType().toString(), region.getOwner());
             }
@@ -170,12 +230,15 @@ public class LandProtectionListener implements Listener {
         Relation rel = owner.getRelation(bFaction);
         if (rel == Relation.ENEMY) {
             if (event instanceof BlockBreakEvent) {
-                // DO STUFF
+                if (!WAR_BREAKABLE.contains(destroyed.getType())) {
+                    event.setCancelled(true);
+                }
             } else if (event instanceof BlockPlaceEvent) {
-                // DO STUFF
+                if (!WAR_PLACABLE.contains(destroyed.getType())) {
+                    event.setCancelled(true);
+                }
             }
-        }
-        if (!rel.canBuild()) {
+        } else if (!rel.canBuild()) {
             event.setCancelled(true);
             ParsingUtil.sendActionBarMessage(breaker, (destroy ? FMessage.PROTECTION_CANNOT_DESTROY_FACTION : FMessage.PROTECTION_CANNOT_BUILD_FACTION).getMessage(), region.getOwner());
         }

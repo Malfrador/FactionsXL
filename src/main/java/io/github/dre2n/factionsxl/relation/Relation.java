@@ -55,7 +55,7 @@ public enum Relation {
     VASSAL(AQUA, true, true, true, FMessage.RELATION_VASSAL, ALLIANCE_2),
     COALITION(DARK_PURPLE, true, true, false, FMessage.RELATION_COALITION),
     PEACE(WHITE, false, false, false, FMessage.RELATION_PEACE),
-    ENEMY(RED, false, false, false, FMessage.RELATION_ENEMY);
+    ENEMY(RED, true, false, false, FMessage.RELATION_ENEMY);
 
     private ChatColor color;
     private boolean build;
