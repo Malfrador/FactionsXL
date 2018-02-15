@@ -40,7 +40,6 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
     public static final TextComponent DENY = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
 
     /* Raw skulls */
-    public static final ItemStack SKULL = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
     public static final ItemStack UP_ALT = setSkullOwner(SKULL, "e4d7b07b-59fc-4f77-b08b-b0446048dcd4", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThmZTI1MWE0MGU0MTY3ZDM1ZDA4MWMyNzg2OWFjMTUxYWY5NmI2YmQxNmRkMjgzNGQ1ZGM3MjM1ZjQ3NzkxZCJ9fX0=");
     public static final ItemStack DOWN_ALT = setSkullOwner(SKULL, "ccd469f7-1df1-42f9-8915-15de387906e4", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI3Y2U2ODNkMDg2OGFhNDM3OGFlYjYwY2FhNWVhODA1OTZiY2ZmZGFiNmI1YWYyZDEyNTk1ODM3YTg0ODUzIn19fQ==");
     public static final ItemStack UP = setSkullOwner(SKULL, "ff1654b0-10f2-48b6-9c05-483b75f6549e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ4Yjc2OGM2MjM0MzJkZmIyNTlmYjNjMzk3OGU5OGRlYzExMWY3OWRiZDZjZDg4ZjIxMTU1Mzc0YjcwYjNjIn19fQ==");
@@ -52,11 +51,7 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
     public static final ItemStack SOLDIER = setSkullOwner(SKULL, "f59b9e38-8c9d-4917-8d9e-6b5aad457ec5", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjQ1MzAyNzY3NDE0ODUyNzM4MDFlMWIxMWYzYTNmZGNmMGRkMjA2ZjE0NTI1NWRmNGY1YTIwMjAyOGEwNjMifX19");
 
     /* GUI buttons */
-    public static final ItemStack BACK = setDisplayName(LEFT, FMessage.MISC_BACK.getMessage());
     public static final ItemStack CONTINUE = setDisplayName(RIGHT, FMessage.MISC_CONTINUE.getMessage());
-    public static final ItemStack NEXT_PAGE = setDisplayName(RIGHT, FMessage.MISC_NEXT_PAGE.getMessage());
-    public static final ItemStack PREVIOUS_PAGE = setDisplayName(LEFT, FMessage.MISC_PREVIOUS_PAGE.getMessage());
-    public static final ItemStack PLACEHOLDER = setDisplayName(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), ChatColor.RESET.toString());
     public static final ItemStack DISABLED = setDisplayName(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
 
     /* Blank items that show meta stuff by default */
