@@ -89,7 +89,7 @@ public class EntityProtectionListener implements Listener {
         if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
-        } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected()) {
+        } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected() && (aFaction == null || !aFaction.isInWar(dFaction))) {
             if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
                     || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
                 ParsingUtil.sendActionBarMessage(attacker, (plugin.getFConfig().isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
