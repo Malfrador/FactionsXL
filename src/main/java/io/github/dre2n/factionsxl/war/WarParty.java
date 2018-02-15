@@ -24,10 +24,10 @@ import io.github.dre2n.factionsxl.faction.LegalEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Daniel Saukel
@@ -47,12 +47,12 @@ public class WarParty {
         participants.add(entity);
     }
 
-    public WarParty(ConfigurationSection config) {
-        leader = factions.getById(config.getInt("leader"));
-        config.getIntegerList("participants").forEach(p -> participants.add(factions.getById(p)));
-        kills = config.getInt("kills");
-        this.deaths = config.getInt("deaths");
-        fights = config.getInt("fights");
+    public WarParty(Map<String, Object> serialized) {
+        leader = factions.getById((int) serialized.get("leader"));
+        ((List<Integer>) serialized.get("participants")).forEach(p -> participants.add(factions.getById(p)));
+        kills = (int) serialized.get("kills");
+        deaths = (int) serialized.get("deaths");
+        fights = (int) serialized.get("fights");
     }
 
     /**
@@ -112,7 +112,7 @@ public class WarParty {
         serialized.put("leader", leader.getId());
         ArrayList<Integer> participants = new ArrayList<>();
         this.participants.forEach(p -> participants.add(p.getId()));
-        serialized.put("partcipants", participants);
+        serialized.put("participants", participants);
         serialized.put("kills", kills);
         serialized.put("deaths", this.deaths);
         serialized.put("fights", fights);

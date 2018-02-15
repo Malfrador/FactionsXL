@@ -17,6 +17,7 @@
 package io.github.dre2n.factionsxl.war;
 
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.util.GUIButton;
@@ -56,8 +57,8 @@ public class War {
     public War(File file) {
         this.file = file;
         config = YamlConfiguration.loadConfiguration(file);
-        attacker = new WarParty(config.getConfigurationSection("attacker"));
-        defender = new WarParty(config.getConfigurationSection("defender"));
+        attacker = new WarParty(ConfigUtil.getMap(config, "attacker"));
+        defender = new WarParty(ConfigUtil.getMap(config, "defender"));
         cb = new CasusBelli(config.getConfigurationSection("casusBelli"));
         startDate = new Date(config.getLong("startDate"));
     }
