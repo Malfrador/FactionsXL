@@ -89,7 +89,6 @@ public class LandProtectionListener implements Listener {
             DOUBLE_PLANT,
             DIRT,
             END_ROD,
-            FIRE,
             FLOWER_POT,
             FROSTED_ICE,
             GLASS,
@@ -126,6 +125,7 @@ public class LandProtectionListener implements Listener {
     ));
 
     private static final Set<Material> WAR_PLACABLE = new HashSet<>(Arrays.asList(
+            FIRE,
             LADDER,
             STANDING_BANNER,
             TNT,
