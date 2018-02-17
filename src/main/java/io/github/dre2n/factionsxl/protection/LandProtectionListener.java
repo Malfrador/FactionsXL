@@ -178,6 +178,18 @@ public class LandProtectionListener implements Listener {
             YELLOW_SHULKER_BOX
     ));
 
+    private static final Set<Material> INTERACTABLE = new HashSet<>(Arrays.asList(
+            LEVER,
+            ACACIA_DOOR,
+            BIRCH_DOOR,
+            DARK_OAK_DOOR,
+            JUNGLE_DOOR,
+            SPRUCE_DOOR,
+            STONE_BUTTON,
+            WOOD_BUTTON,
+            WOODEN_DOOR
+    ));
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.hasBlock() && NO_INTERACT.contains(event.getClickedBlock().getType())) {
@@ -198,7 +210,8 @@ public class LandProtectionListener implements Listener {
             Faction owner = region.getOwner();
             Relation rel = owner.getRelation(bFaction);
             if (rel == Relation.ENEMY) {
-                if (!WAR_BREAKABLE.contains(event.getClickedBlock().getType())) {
+                Material type = event.getClickedBlock().getType();
+                if (!WAR_BREAKABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
                 }
             } else if (!rel.canBuild()) {
@@ -229,12 +242,13 @@ public class LandProtectionListener implements Listener {
         Faction owner = region.getOwner();
         Relation rel = owner.getRelation(bFaction);
         if (rel == Relation.ENEMY) {
+            Material type = destroyed.getType();
             if (event instanceof BlockBreakEvent) {
-                if (!WAR_BREAKABLE.contains(destroyed.getType())) {
+                if (!WAR_BREAKABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
                 }
             } else if (event instanceof BlockPlaceEvent) {
-                if (!WAR_PLACABLE.contains(destroyed.getType())) {
+                if (!WAR_PLACABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
                 }
             }
