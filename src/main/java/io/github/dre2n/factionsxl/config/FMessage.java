@@ -375,7 +375,7 @@ public enum FMessage implements Message {
     RESOURCE_WHEAT("resource.wheat", "Wheat"),
     RESOURCE_ACACIA("resource.acacia", "Acacia Wood"),
     RESOURCE_BIRCH("resource.birch", "Birch Wood"),
-    RESOURCE_DARK_OAK("resource.sulphur", "Dark Oak Wood"),
+    RESOURCE_DARK_OAK("resource.darkOak", "Dark Oak Wood"),
     RESOURCE_JUNGLE("resource.jungle", "Jungle Wood"),
     RESOURCE_OAK("resource.oak", "Oak Wood"),
     RESOURCE_SPRUCE("resource.spruce", "Spruce Wood"),
