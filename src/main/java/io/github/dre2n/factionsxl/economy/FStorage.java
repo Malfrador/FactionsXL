@@ -184,7 +184,7 @@ public class FStorage {
             if (resource.isPhysical()) {
                 meta.setLore(Arrays.asList(FMessage.STORAGE_STOCK.getMessage(String.valueOf(goods.get(resource)))));
             } else {
-                List<String> lore = new ArrayList<>(Arrays.asList(FMessage.STORAGE_NON_PHYSICAL.getMessage(resource.getName())));
+                List<String> lore = new ArrayList<>(Arrays.asList(FMessage.STORAGE_NON_PHYSICAL_WARNING.getMessage(resource.getName())));
                 if (resource == Resource.MANPOWER) {
                     lore.add(FMessage.STORAGE_NON_PHYSICAL_MANPOWER.getMessage());
                 } else if (resource == Resource.TAXES) {
