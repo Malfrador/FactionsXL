@@ -228,7 +228,7 @@ public class FactionCache {
      * the faction that gets integrated
      */
     public void integrate(Faction integrating, Faction integrated) {
-        for (Region region : integrated.getRegions()) {
+        for (Region region : integrated.getRegions().toArray(new Region[]{})) {
             Date coreDate = null;
             for (Entry<Faction, Date> entry : region.getCoreFactions().entrySet()) {
                 if (entry.getKey() == integrating || entry.getKey() == integrated) {
