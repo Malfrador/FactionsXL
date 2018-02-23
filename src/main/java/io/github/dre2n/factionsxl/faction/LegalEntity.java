@@ -88,7 +88,7 @@ public abstract class LegalEntity {
      * the faction's long name
      */
     public String getShortName() {
-        return shortName != null ? shortName : name;
+        return shortName != null ? shortName : name.toUpperCase();
     }
 
     /**
