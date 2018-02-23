@@ -18,7 +18,7 @@ package io.github.dre2n.factionsxl.idea;
 
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.GUIButton;
+import de.erethon.commons.gui.GUIButton;
 import java.util.ArrayList;
 import org.bukkit.inventory.ItemStack;
 

@@ -51,8 +51,8 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
     public static final ItemStack SOLDIER = setSkullOwner(SKULL, "f59b9e38-8c9d-4917-8d9e-6b5aad457ec5", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjQ1MzAyNzY3NDE0ODUyNzM4MDFlMWIxMWYzYTNmZGNmMGRkMjA2ZjE0NTI1NWRmNGY1YTIwMjAyOGEwNjMifX19");
 
     /* GUI buttons */
-    public static final ItemStack CONTINUE = setDisplayName(RIGHT, FMessage.MISC_CONTINUE.getMessage());
-    public static final ItemStack DISABLED = setDisplayName(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
+    public static final ItemStack CONTINUE = setDisplay(RIGHT, FMessage.MISC_CONTINUE.getMessage());
+    public static final ItemStack DISABLED = setDisplay(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
 
     /* Blank items that show meta stuff by default */
     public static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
@@ -67,14 +67,6 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
         watMeta.setBasePotionData(new PotionData(PotionType.WATER));
         watMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         GUI_WATER_BOTTLE.setItemMeta(watMeta);
-    }
-
-    public static ItemStack setDisplayName(ItemStack itemStack, String name) {
-        itemStack = itemStack.clone();
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(name);
-        itemStack.setItemMeta(meta);
-        return itemStack;
     }
 
     public static void addHeader(Inventory gui) {

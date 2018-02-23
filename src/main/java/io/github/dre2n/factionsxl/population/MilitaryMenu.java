@@ -36,7 +36,7 @@ public class MilitaryMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack SOLDIERS = GUIButton.setDisplayName(GUIButton.SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
+    public static final ItemStack SOLDIERS = GUIButton.setDisplay(GUIButton.SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
 
     private Faction faction;
     private Inventory gui;

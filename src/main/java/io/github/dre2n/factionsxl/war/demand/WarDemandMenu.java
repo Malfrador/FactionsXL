@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Daniel Saukel
+ * Copyright (C) 2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,36 +16,30 @@
  */
 package io.github.dre2n.factionsxl.war.demand;
 
+import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.util.GUIButton;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public interface WarDemand {
+public class WarDemandMenu implements Listener {
 
-    /**
-     * @return
-     * a button for the war demand menu
-     */
-    public ItemStack getGUIButton();
+    private Inventory gui = Bukkit.createInventory(null, 9, FMessage.WAR_DEMAND_MENU_TITLE.getMessage());
 
-    /**
-     * Asks the demanded party to pay
-     */
-    public void demand();
+    private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_MENU_LIST.getMessage());
 
-    /**
-     * Asks the demanded party to pay
-     *
-     * @return
-     * if the target faction is able to pay
-     */
-    public boolean pay();
+    public WarDemandMenu() {
+        GUIButton.addHeader(gui);
+        gui.addItem(listDemands);
+    }
 
-    /**
-     * @return
-     * if the target faction is able to pay
-     */
-    public boolean canPay();
+    public void open(Player player) {
+    }
 
 }

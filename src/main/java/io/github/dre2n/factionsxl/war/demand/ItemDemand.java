@@ -16,9 +16,48 @@
  */
 package io.github.dre2n.factionsxl.war.demand;
 
+import de.erethon.commons.gui.GUIButton;
+import io.github.dre2n.factionsxl.config.FMessage;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 /**
  * @author Daniel Saukel
  */
-public class ItemDemand extends WarDemand {
-    
+public class ItemDemand implements WarDemand {
+
+    private ItemStack[] items;
+
+    public ItemDemand(ItemStack[] items) {
+        this.items = items;
+    }
+
+    public ItemStack[] getItems() {
+        return items;
+    }
+
+    public void setItems(ItemStack[] items) {
+        this.items = items;
+    }
+
+    @Override
+    public ItemStack getGUIButton() {
+        return GUIButton.setDisplay(new ItemStack(Material.APPLE), FMessage.WAR_DEMAND_MENU_ITEM.getMessage());
+    }
+
+    @Override
+    public void demand() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean pay() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean canPay() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

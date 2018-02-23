@@ -471,7 +471,10 @@ public enum FMessage implements Message {
     WAR_DECLARATION_CASUS_BELLI("war.declaration.casusBelli", "&eCasus Belli: "),
     WAR_DECLARATION_DEFENDERS("war.declaration.defenders", "&cDefenders: "),
     WAR_DECLARATION_START_DATE("war.declaration.startDate", "&4&oThe war will start in 24 hours."),
-    WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== D\u00c9CLARATION DE GUERRE ===#");
+    WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== D\u00c9CLARATION DE GUERRE ===#"),
+    WAR_DEMAND_MENU_ITEM("war.demand.menu.item", "&3Add item demand"),
+    WAR_DEMAND_MENU_LIST("war.demand.menu.list", "&aList demands"),
+    WAR_DEMAND_MENU_TITLE("war.demand.menu.title", "Create new war demand"),;
 
     private String identifier;
     private String message;

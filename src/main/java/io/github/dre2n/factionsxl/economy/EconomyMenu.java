@@ -20,7 +20,7 @@ import de.erethon.commons.gui.PageGUI;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.util.GUIButton;
+import de.erethon.commons.gui.GUIButton;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -37,9 +37,9 @@ public class EconomyMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack INCOME_MANAGEMENT = GUIButton.setDisplayName(new ItemStack(Material.IRON_INGOT), FMessage.TRADE_INCOME_MANAGEMENT.getMessage());
-    public static final ItemStack TRADE_OFFER = GUIButton.setDisplayName(GUIButton.SKULL, FMessage.TRADE_OFFER_TITLE.getMessage());
-    public static final ItemStack STORAGE = GUIButton.setDisplayName(new ItemStack(Material.CHEST), FMessage.FACTION_STORAGE.getMessage());
+    public static final ItemStack INCOME_MANAGEMENT = GUIButton.setDisplay(new ItemStack(Material.IRON_INGOT), FMessage.TRADE_INCOME_MANAGEMENT.getMessage());
+    public static final ItemStack TRADE_OFFER = GUIButton.setDisplay(GUIButton.SKULL, FMessage.TRADE_OFFER_TITLE.getMessage());
+    public static final ItemStack STORAGE = GUIButton.setDisplay(new ItemStack(Material.CHEST), FMessage.FACTION_STORAGE.getMessage());
 
     private Faction faction;
     private Inventory gui;

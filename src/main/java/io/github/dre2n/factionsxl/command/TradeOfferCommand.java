@@ -25,7 +25,6 @@ import io.github.dre2n.factionsxl.economy.TradeOffer;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPermission;
-import io.github.dre2n.factionsxl.util.GUIButton;
 import static io.github.dre2n.factionsxl.util.GUIButton.*;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.math.BigDecimal;
@@ -85,24 +84,24 @@ public class TradeOfferCommand extends FCommand implements Listener {
         chooseResource = chooseResource();
         chooseExport = chooseExport();
 
-        ItemStack amountInc100 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 100);
-        ItemStack amountInc10 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 10);
-        ItemStack amountInc1 = GUIButton.setDisplayName(GUIButton.UP_ALT, amount + plus + 1);
-        ItemStack amountDec100 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 100);
-        ItemStack amountDec10 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 10);
-        ItemStack amountDec1 = GUIButton.setDisplayName(GUIButton.DOWN_ALT, amount + minus + 1);
-        ItemStack priceInc1000 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 1000);
-        ItemStack priceInc100 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 100);
-        ItemStack priceInc10 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 10);
-        ItemStack priceInc1 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 1);
-        ItemStack priceInc01 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 0.10);
-        ItemStack priceInc001 = GUIButton.setDisplayName(GUIButton.UP, price + plus + 0.01);
-        ItemStack priceDec1000 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 1000);
-        ItemStack priceDec100 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 100);
-        ItemStack priceDec10 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 10);
-        ItemStack priceDec1 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 1);
-        ItemStack priceDec01 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 0.10);
-        ItemStack priceDec001 = GUIButton.setDisplayName(GUIButton.DOWN, price + minus + 0.01);
+        ItemStack amountInc100 = setDisplay(UP_ALT, amount + plus + 100);
+        ItemStack amountInc10 = setDisplay(UP_ALT, amount + plus + 10);
+        ItemStack amountInc1 = setDisplay(UP_ALT, amount + plus + 1);
+        ItemStack amountDec100 = setDisplay(DOWN_ALT, amount + minus + 100);
+        ItemStack amountDec10 = setDisplay(DOWN_ALT, amount + minus + 10);
+        ItemStack amountDec1 = setDisplay(DOWN_ALT, amount + minus + 1);
+        ItemStack priceInc1000 = setDisplay(UP, price + plus + 1000);
+        ItemStack priceInc100 = setDisplay(UP, price + plus + 100);
+        ItemStack priceInc10 = setDisplay(UP, price + plus + 10);
+        ItemStack priceInc1 = setDisplay(UP, price + plus + 1);
+        ItemStack priceInc01 = setDisplay(UP, price + plus + 0.10);
+        ItemStack priceInc001 = setDisplay(UP, price + plus + 0.01);
+        ItemStack priceDec1000 = setDisplay(DOWN, price + minus + 1000);
+        ItemStack priceDec100 = setDisplay(DOWN, price + minus + 100);
+        ItemStack priceDec10 = setDisplay(DOWN, price + minus + 10);
+        ItemStack priceDec1 = setDisplay(DOWN, price + minus + 1);
+        ItemStack priceDec01 = setDisplay(DOWN, price + minus + 0.10);
+        ItemStack priceDec001 = setDisplay(DOWN, price + minus + 0.01);
         choosePriceAndAmount = new ItemStack[]{
             amountInc100, amountInc10, amountInc1,
             priceInc1000, priceInc100, priceInc10, priceInc1, priceInc01, priceInc001,
@@ -232,11 +231,11 @@ public class TradeOfferCommand extends FCommand implements Listener {
 
     private Inventory chooseExport() {
         Inventory gui = Bukkit.createInventory(null, 9, FMessage.TRADE_OFFER_CHOOSE_EXPORT.getMessage());
-        ItemStack exportIcon = GUIButton.E.clone();
+        ItemStack exportIcon = E.clone();
         ItemMeta exMeta = exportIcon.getItemMeta();
         exMeta.setDisplayName(ChatColor.GREEN + FMessage.TRADE_EXPORT.getMessage());
         exportIcon.setItemMeta(exMeta);
-        ItemStack importIcon = GUIButton.I.clone();
+        ItemStack importIcon = I.clone();
         ItemMeta imMeta = importIcon.getItemMeta();
         imMeta.setDisplayName(ChatColor.GREEN + FMessage.TRADE_IMPORT.getMessage());
         importIcon.setItemMeta(imMeta);
