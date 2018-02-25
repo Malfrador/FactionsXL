@@ -25,6 +25,8 @@ import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.relation.RelationParticipator;
+import io.github.dre2n.factionsxl.war.War;
+import io.github.dre2n.factionsxl.war.WarParty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -77,6 +79,35 @@ public enum ParsingUtil {
     REGION_TYPE("%region_type%"),
     RELATION("%relation%"),
     RELATION_COLOR("%relation_color%"),
+    WAR_ATTACKER("%war_attacker%"),
+    WAR_ATTACKER_DEATHS("%war_attacker_deaths%"),
+    WAR_ATTACKER_FIGHTS("%war_attacker_fights%"),
+    WAR_ATTACKER_KD("%war_attacker_kd%"),
+    WAR_ATTACKER_KILLS("%war_attacker_kills%"),
+    WAR_ATTACKER_LIST("%war_attacker_list%"),
+    WAR_ATTACKER_POINTS("%war_attacker_points%"),
+    WAR_CASUS_BELLI("%war_cb%"),
+    WAR_DEFENDER("%war_defender%"),
+    WAR_DEFENDER_DEATHS("%war_defender_deaths%"),
+    WAR_DEFENDER_FIGHTS("%war_defender_fights%"),
+    WAR_DEFENDER_KD("%war_defender_kd%"),
+    WAR_DEFENDER_KILLS("%war_defender_kills%"),
+    WAR_DEFENDER_LIST("%war_defender_list%"),
+    WAR_DEFENDER_POINTS("%war_defender_points%"),
+    WAR_ENEMY("%war_enemy%"),
+    WAR_ENEMY_DEATHS("%war_enemy_deaths%"),
+    WAR_ENEMY_FIGHTS("%war_enemy_fights%"),
+    WAR_ENEMY_KD("%warenemy_kd%"),
+    WAR_ENEMY_KILLS("%war_enemy_kills%"),
+    WAR_ENEMY_LIST("%war_enemy_list%"),
+    WAR_ENEMY_POINTS("%war_enemy_points%"),
+    WAR_PLAYER_PARTY("%war_player_party%"),
+    WAR_PLAYER_PARTY_DEATHS("%war_player_party_deaths%"),
+    WAR_PLAYER_PARTY_FIGHTS("%war_player_party_fights%"),
+    WAR_PLAYER_PARTY_KD("%war_player_party_kd%"),
+    WAR_PLAYER_PARTY_KILLS("%war_player_party_kills%"),
+    WAR_PLAYER_PARTY_LIST("%war_player_party_list%"),
+    WAR_PLAYER_PARTY_POINTS("%war_player_party_points%"),
     // External
     PERM_PREFIX("%perm_prefix%"),
     PERM_SUFFIX("%perm_suffix%");
@@ -245,6 +276,69 @@ public enum ParsingUtil {
         string = string.replace(PLAYER_TITLE.getPlaceholder(), fPlayer.getTitle() != null ? fPlayer.getTitle() : "None");
 
         return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    public static String replaceWarPlaceholders(String string, War war) {
+        WarParty attacker = war.getAttacker();
+        WarParty defender = war.getDefender();
+
+        string = string.replace(WAR_CASUS_BELLI.getPlaceholder(), war.getCasusBelli().getType().toString());
+        string = string.replace(WAR_ATTACKER.getPlaceholder(), attacker.getLeader().getName());
+        string = string.replace(WAR_ATTACKER_DEATHS.getPlaceholder(), String.valueOf(attacker.deaths));
+        string = string.replace(WAR_ATTACKER_FIGHTS.getPlaceholder(), String.valueOf(attacker.fights));
+        string = string.replace(WAR_ATTACKER_KD.getPlaceholder(), String.valueOf(attacker.getKD()));
+        string = string.replace(WAR_ATTACKER_KILLS.getPlaceholder(), String.valueOf(attacker.kills));
+        string = string.replace(WAR_ATTACKER_LIST.getPlaceholder(), factionsToString(attacker.getFactions()));
+        string = string.replace(WAR_ATTACKER_POINTS.getPlaceholder(), String.valueOf(attacker.getPoints()));
+        string = string.replace(WAR_DEFENDER.getPlaceholder(), defender.getLeader().getName());
+        string = string.replace(WAR_DEFENDER_DEATHS.getPlaceholder(), String.valueOf(defender.deaths));
+        string = string.replace(WAR_DEFENDER_FIGHTS.getPlaceholder(), String.valueOf(defender.fights));
+        string = string.replace(WAR_DEFENDER_KD.getPlaceholder(), String.valueOf(defender.getKD()));
+        string = string.replace(WAR_DEFENDER_KILLS.getPlaceholder(), String.valueOf(defender.kills));
+        string = string.replace(WAR_DEFENDER_LIST.getPlaceholder(), factionsToString(defender.getFactions()));
+        string = string.replace(WAR_DEFENDER_POINTS.getPlaceholder(), String.valueOf(defender.getPoints()));
+
+        return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    public static String replaceWarPlaceholders(String string, War war, FPlayer fPlayer) {
+        WarParty playerParty = null;
+        for (Faction faction : war.getAttacker().getFactions()) {
+            if (faction.getMembers().contains(fPlayer)) {
+                playerParty = war.getAttacker();
+            }
+        }
+        if (playerParty == null) {
+            for (Faction faction : war.getDefender().getFactions()) {
+                if (faction.getMembers().contains(fPlayer)) {
+                    playerParty = war.getDefender();
+                }
+            }
+        }
+        WarParty enemyParty = playerParty == war.getAttacker() ? war.getDefender() : war.getAttacker();
+
+        if (playerParty != null) {
+            string = string.replace(WAR_PLAYER_PARTY.getPlaceholder(), playerParty.getLeader().getName());
+            string = string.replace(WAR_PLAYER_PARTY_DEATHS.getPlaceholder(), String.valueOf(playerParty.deaths));
+            string = string.replace(WAR_PLAYER_PARTY_FIGHTS.getPlaceholder(), String.valueOf(playerParty.fights));
+            string = string.replace(WAR_PLAYER_PARTY_KD.getPlaceholder(), String.valueOf(playerParty.getKD()));
+            string = string.replace(WAR_PLAYER_PARTY_KILLS.getPlaceholder(), String.valueOf(playerParty.kills));
+            string = string.replace(WAR_PLAYER_PARTY_LIST.getPlaceholder(), factionsToString(playerParty.getFactions()));
+            string = string.replace(WAR_PLAYER_PARTY_POINTS.getPlaceholder(), String.valueOf(playerParty.getPoints()));
+            string = string.replace(WAR_ENEMY.getPlaceholder(), enemyParty.getLeader().getName());
+            string = string.replace(WAR_ENEMY_DEATHS.getPlaceholder(), String.valueOf(enemyParty.deaths));
+            string = string.replace(WAR_ENEMY_FIGHTS.getPlaceholder(), String.valueOf(enemyParty.fights));
+            string = string.replace(WAR_ENEMY_KD.getPlaceholder(), String.valueOf(enemyParty.getKD()));
+            string = string.replace(WAR_ENEMY_KILLS.getPlaceholder(), String.valueOf(enemyParty.kills));
+            string = string.replace(WAR_ENEMY_LIST.getPlaceholder(), factionsToString(enemyParty.getFactions()));
+            string = string.replace(WAR_ENEMY_POINTS.getPlaceholder(), String.valueOf(enemyParty.getPoints()));
+        }
+
+        string = replaceWarPlaceholders(string, war);
+        string = replacePlayerPlaceholders(string, fPlayer);
+        string = replaceFactionPlaceholders(string, fPlayer.getFaction());
+
+        return string;
     }
 
     public static String factionsToString(Collection<Faction> factions) {

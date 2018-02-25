@@ -17,8 +17,13 @@
 package io.github.dre2n.factionsxl.scoreboard;
 
 import io.github.dre2n.factionsxl.FactionsXL;
+import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPlayer;
+import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
+import io.github.dre2n.factionsxl.scoreboard.sidebar.FWarSidebar;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -40,16 +45,10 @@ public class FScoreboard {
     private final Scoreboard scoreboard;
     private final FPlayer fplayer;
     private final BufferedObjective bufferedObjective;
-    private FSidebarProvider defaultProvider;
+    private List<FSidebarProvider> defaultProviders = new ArrayList<>();
+    private int currentProvider;
     private FSidebarProvider temporaryProvider;
     private boolean removed = false;
-
-    // Glowstone doesn't support scoreboards.
-    // All references to this and related workarounds can be safely
-    // removed when scoreboards are supported.
-    public static boolean isSupportedByServer() {
-        return Bukkit.getScoreboardManager() != null;
-    }
 
     public static void init(FPlayer fplayer) {
         FScoreboard fboard = new FScoreboard(fplayer);
@@ -84,16 +83,10 @@ public class FScoreboard {
     private FScoreboard(FPlayer fplayer) {
         this.fplayer = fplayer;
 
-        if (isSupportedByServer()) {
-            this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-            this.bufferedObjective = new BufferedObjective(scoreboard);
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.bufferedObjective = new BufferedObjective(scoreboard);
 
-            fplayer.getPlayer().setScoreboard(scoreboard);
-
-        } else {
-            this.scoreboard = null;
-            this.bufferedObjective = null;
-        }
+        fplayer.getPlayer().setScoreboard(scoreboard);
     }
 
     protected FPlayer getFPlayer() {
@@ -104,20 +97,30 @@ public class FScoreboard {
         return scoreboard;
     }
 
-    public void setSidebarVisibility(boolean visible) {
-        if (!isSupportedByServer()) {
-            return;
+    public void updateProviders() {
+        Faction faction = fplayer.getFaction();
+        if (defaultProviders.isEmpty()) {
+            defaultProviders.add(new FDefaultSidebar());
+        } else if (defaultProviders.size() != 1) {
+            FSidebarProvider standard = defaultProviders.get(0);
+            defaultProviders.clear();
+            defaultProviders.add(standard);
         }
+        if (faction != null) {
+            plugin.getWarCache().getByFaction(faction).forEach(f -> defaultProviders.add(new FWarSidebar(f)));
+        }
+    }
 
+    public static void updateAllProviders() {
+        fscoreboards.values().forEach(s -> s.updateProviders());
+    }
+
+    public void setSidebarVisibility(boolean visible) {
         bufferedObjective.setDisplaySlot(visible ? DisplaySlot.SIDEBAR : null);
     }
 
-    public void setDefaultSidebar(final FSidebarProvider provider, int updateInterval) {
-        if (!isSupportedByServer()) {
-            return;
-        }
-
-        defaultProvider = provider;
+    public void setDefaultSidebar(int updateInterval) {
+        updateProviders();
         if (temporaryProvider == null) {
             // We have no temporary provider; update the BufferedObjective!
             updateObjective();
@@ -126,12 +129,16 @@ public class FScoreboard {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (removed || provider != defaultProvider) {
+                if (removed || !defaultProviders.contains(defaultProviders.get(currentProvider))) {
                     cancel();
                     return;
                 }
 
                 if (temporaryProvider == null) {
+                    currentProvider++;
+                    if (currentProvider >= defaultProviders.size()) {
+                        currentProvider = 0;
+                    }
                     updateObjective();
                 }
             }
@@ -139,10 +146,6 @@ public class FScoreboard {
     }
 
     public void setTemporarySidebar(final FSidebarProvider provider) {
-        if (!isSupportedByServer()) {
-            return;
-        }
-
         temporaryProvider = provider;
         updateObjective();
 
@@ -162,7 +165,7 @@ public class FScoreboard {
     }
 
     private void updateObjective() {
-        FSidebarProvider provider = temporaryProvider != null ? temporaryProvider : defaultProvider;
+        FSidebarProvider provider = temporaryProvider != null ? temporaryProvider : defaultProviders.get(currentProvider);
 
         if (provider == null) {
             bufferedObjective.hide();

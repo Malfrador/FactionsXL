@@ -51,7 +51,7 @@ public class ScoreboardCommand extends FCommand {
         if (board == null) {
             FScoreboard.init(fPlayer);
             board = FScoreboard.get(fPlayer);
-            board.setDefaultSidebar(new FDefaultSidebar(), plugin.getFConfig().getScoreboardUpdateInterval());
+            board.setDefaultSidebar(plugin.getFConfig().getScoreboardUpdateInterval());
             board.setSidebarVisibility(fPlayer.isScoreboardEnabled());
         }
 

@@ -99,11 +99,23 @@ public class WarParty {
         participants.add(participant);
     }
 
+    /**
+     * @return
+     * kills / deaths ratio. 0 deaths are treated like 1.
+     */
     public double getKD() {
         if (deaths != 0) {
             return kills / deaths;
         }
         return kills;
+    }
+
+    /**
+     * @return
+     * the amount of collected war points
+     */
+    public int getPoints() {
+        return 0;
     }
 
     /* Serialization */

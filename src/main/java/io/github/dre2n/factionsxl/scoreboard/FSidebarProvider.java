@@ -19,6 +19,7 @@ package io.github.dre2n.factionsxl.scoreboard;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.war.War;
 import java.util.List;
 
 /**
@@ -44,6 +45,12 @@ public abstract class FSidebarProvider {
         string = ParsingUtil.replaceFactionPlaceholders(string, faction);
         string = ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
         string = ParsingUtil.replaceRelationPlaceholders(string, fPlayer, faction);
+        return string;
+    }
+
+    public String replaceTags(War war, FPlayer fPlayer, String string) {
+        string = ParsingUtil.replaceWarPlaceholders(string, war, fPlayer);
+        string = ParsingUtil.replacePlayerPlaceholders(string, fPlayer);
         return string;
     }
 

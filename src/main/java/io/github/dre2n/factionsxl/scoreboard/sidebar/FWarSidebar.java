@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2017 Trent Hensler
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,34 @@
 package io.github.dre2n.factionsxl.scoreboard.sidebar;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FSidebarProvider;
+import io.github.dre2n.factionsxl.util.ParsingUtil;
+import io.github.dre2n.factionsxl.war.War;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 
 /**
- * Adapted from FactionsUUID by drtshock.
- *
- * @author Trent Hensler, Daniel Saukel
+ * @author Daniel Saukel
  */
-public class FInfoSidebar extends FSidebarProvider {
+public class FWarSidebar extends FSidebarProvider {
 
-    private Faction faction;
+    private War war;
 
-    public FInfoSidebar(Faction faction) {
-        this.faction = faction;
+    public FWarSidebar(War war) {
+        this.war = war;
     }
 
     @Override
-    public String getTitle(FPlayer fplayer) {
-        return faction.getRelation(fplayer).getColor() + faction.getName();
+    public String getTitle(FPlayer fPlayer) {
+        return replaceTags(war, fPlayer, ChatColor.GREEN + ParsingUtil.WAR_PLAYER_PARTY.getPlaceholder() + ChatColor.WHITE + " vs. " + ChatColor.RED + ParsingUtil.WAR_ENEMY.getPlaceholder());
     }
 
     @Override
-    public List<String> getLines(FPlayer fplayer) {
+    public List<String> getLines(FPlayer fPlayer) {
         List<String> lines = new ArrayList<>();
-        FactionsXL.getInstance().getFConfig().getScoreboardFactionInfo().forEach(l -> lines.add(replaceTags(faction, fplayer, l)));
+        FactionsXL.getInstance().getFConfig().getScoreboardWarInfo().forEach(l -> lines.add(replaceTags(war, fPlayer, l)));
         return lines;
     }
 

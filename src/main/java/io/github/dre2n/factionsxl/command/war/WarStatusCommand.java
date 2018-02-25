@@ -23,6 +23,8 @@ import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
+import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
+import io.github.dre2n.factionsxl.scoreboard.sidebar.FWarSidebar;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import io.github.dre2n.factionsxl.war.War;
 import io.github.dre2n.factionsxl.war.WarCache;
@@ -32,6 +34,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Saukel
@@ -113,6 +116,7 @@ public class WarStatusCommand extends FCommand {
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_DEFENDERS.getMessage() + defenders);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLS_AND_DEATHS.getMessage(String.valueOf(defenderKills), String.valueOf(defenderDeaths), String.valueOf(defenderKD)));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_POINTS.getMessage() + String.valueOf(defenderPoints));
+        FScoreboard.get((Player) sender).setTemporarySidebar(new FWarSidebar(war));
     }
 
 }

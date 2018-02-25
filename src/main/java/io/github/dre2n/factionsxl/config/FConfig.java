@@ -48,7 +48,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 13;
+    public static final int CONFIG_VERSION = 14;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -58,6 +58,7 @@ public class FConfig extends DREConfig {
     public static final long MONTH = DAY * 30;
 
     public static final String SCOREBOARD_VALUE_PREFIX = "&7 ";
+    public static final String VS = "&f : &c";
 
     private String language = "english";
     private double autoSaveInterval = 10;
@@ -163,6 +164,20 @@ public class FConfig extends DREConfig {
             SCOREBOARD_VALUE_PREFIX + FACTION_CAPITAL,
             "&3Stability / Power / Provinces",
             SCOREBOARD_VALUE_PREFIX + FACTION_STABILITY + "/" + FACTION_POWER + "/" + FACTION_PROVINCE_COUNT
+    ));
+    private List<String> scoreboardWarInfo = new ArrayList<>(Arrays.asList(
+            "&6Casus Belli",
+            SCOREBOARD_VALUE_PREFIX + "&a" + WAR_CASUS_BELLI,
+            "&3Kills",
+            SCOREBOARD_VALUE_PREFIX + "&a" + WAR_PLAYER_PARTY_KILLS + VS + WAR_ENEMY_KILLS,
+            "&6Deaths",
+            SCOREBOARD_VALUE_PREFIX + "&a" + WAR_PLAYER_PARTY_DEATHS + VS + WAR_ENEMY_DEATHS,
+            "&3K/D",
+            SCOREBOARD_VALUE_PREFIX + "&a" + WAR_PLAYER_PARTY_KD + VS + WAR_ENEMY_KD,
+            "&6War Points",
+            SCOREBOARD_VALUE_PREFIX + "&a" + WAR_PLAYER_PARTY_POINTS + VS + WAR_ENEMY_POINTS,
+            "&3Stability",
+            SCOREBOARD_VALUE_PREFIX + "&a" + FACTION_STABILITY
     ));
     private List<String> scoreboardFactionless = new ArrayList<>(Arrays.asList("Join a faction!"));
 
@@ -614,6 +629,14 @@ public class FConfig extends DREConfig {
      * @return
      * the information the scoreboard shows
      */
+    public List<String> getScoreboardWarInfo() {
+        return scoreboardWarInfo;
+    }
+
+    /**
+     * @return
+     * the information the scoreboard shows
+     */
     public List<String> getScoreboardFactionless() {
         return scoreboardFactionless;
     }
@@ -901,6 +924,10 @@ public class FConfig extends DREConfig {
             config.set("scoreboard.factionInfo", scoreboardFactionInfo);
         }
 
+        if (!config.contains("scoreboard.warInfo")) {
+            config.set("scoreboard.warInfo", scoreboardWarInfo);
+        }
+
         if (!config.contains("scoreboard.factionless")) {
             config.set("scoreboard.factionless", scoreboardFactionless);
         }
@@ -1151,6 +1178,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("scoreboard.factionInfo")) {
             scoreboardFactionInfo = config.getStringList("scoreboard.factionInfo");
+        }
+
+        if (config.contains("scoreboard.warInfo")) {
+            scoreboardWarInfo = config.getStringList("scoreboard.warInfo");
         }
 
         if (config.contains("scoreboard.factionless")) {

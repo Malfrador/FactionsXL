@@ -69,7 +69,7 @@ public class PlayerListener implements Listener {
 
         if (fConfig.isScoreboardEnabledByDefault()) {
             FScoreboard.init(fPlayer);
-            FScoreboard.get(fPlayer).setDefaultSidebar(new FDefaultSidebar(), fConfig.getScoreboardUpdateInterval());
+            FScoreboard.get(fPlayer).setDefaultSidebar(fConfig.getScoreboardUpdateInterval());
             FScoreboard.get(fPlayer).setSidebarVisibility(fPlayer.isScoreboardEnabled());
         }
     }

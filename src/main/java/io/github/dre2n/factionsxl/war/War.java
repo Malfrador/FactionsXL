@@ -20,6 +20,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
 import io.github.dre2n.factionsxl.util.GUIButton;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
@@ -117,6 +118,7 @@ public class War {
         WarCache wars = FactionsXL.getInstance().getWarCache();
         wars.getUnconfirmedWars().remove(this);
         wars.getWars().add(this);
+        FScoreboard.updateAllProviders();
         System.out.println("War" + this + "confirmed!");
     }
 
