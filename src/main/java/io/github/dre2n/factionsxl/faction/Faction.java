@@ -1283,6 +1283,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
         }
         plugin.getFactionCache().removeEntity(this);
         plugin.getFactionCache().addEntity(this);
+        save();
     }
 
     /**
