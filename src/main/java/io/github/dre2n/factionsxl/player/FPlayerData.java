@@ -20,8 +20,11 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.DREConfig;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.entity.Request;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Location;
 
 /**
@@ -31,7 +34,7 @@ public class FPlayerData extends DREConfig {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final int CONFIG_VERSION = 3;
+    public static final int CONFIG_VERSION = 4;
 
     private String lastName;
     private String title;
@@ -40,6 +43,7 @@ public class FPlayerData extends DREConfig {
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
     private boolean anthemsEnabled = true;
     private Location home;
+    private List<Request> requests;
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -155,6 +159,14 @@ public class FPlayerData extends DREConfig {
         home = location;
     }
 
+    /**
+     * @return
+     * the requests this player has
+     */
+    public List<Request> getRequests() {
+        return requests;
+    }
+
     /* Serialization */
     @Override
     public void initialize() {
@@ -174,6 +186,7 @@ public class FPlayerData extends DREConfig {
         scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
+        requests = (List<Request>) config.getList("requests", new ArrayList<>());
         FactionsXL.debug("Loaded " + this);
     }
 
@@ -185,6 +198,7 @@ public class FPlayerData extends DREConfig {
         config.set("scoreboardEnabled", scoreboardEnabled);
         config.set("anthemsEnabled", anthemsEnabled);
         config.set("home", home);
+        config.set("requests", requests);
         try {
             config.save(file);
         } catch (IOException exception) {

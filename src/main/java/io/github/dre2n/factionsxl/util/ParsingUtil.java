@@ -20,11 +20,11 @@ import de.erethon.commons.chat.MessageUtil;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Relation;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.player.FPlayer;
-import io.github.dre2n.factionsxl.relation.Relation;
-import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.war.War;
 import io.github.dre2n.factionsxl.war.WarParty;
 import java.util.ArrayList;
@@ -247,7 +247,7 @@ public enum ParsingUtil {
      * @param object
      * the FPlayer to compare to the standpoint faction
      */
-    public static String replaceRelationPlaceholders(String string, RelationParticipator standpoint, RelationParticipator object) {
+    public static String replaceRelationPlaceholders(String string, FEntity standpoint, FEntity object) {
         Relation relation = standpoint.getRelation(object);
         string = string.replace(RELATION.getPlaceholder(), relation.getName());
         string = string.replace(RELATION_COLOR.getPlaceholder(), relation.getColor().toString());

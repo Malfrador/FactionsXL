@@ -25,7 +25,6 @@ import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
-import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import io.github.dre2n.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -71,6 +70,10 @@ public class PlayerListener implements Listener {
             FScoreboard.init(fPlayer);
             FScoreboard.get(fPlayer).setDefaultSidebar(fConfig.getScoreboardUpdateInterval());
             FScoreboard.get(fPlayer).setSidebarVisibility(fPlayer.isScoreboardEnabled());
+        }
+
+        if (!fPlayer.getAccessibleRequests().isEmpty()) {
+            MessageUtil.sendCenteredMessage(player, FMessage.MISC_OPEN_REQUESTS.getMessage());
         }
     }
 

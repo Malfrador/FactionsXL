@@ -16,6 +16,8 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Relation;
 import java.io.File;
 
 /**
@@ -24,7 +26,16 @@ import java.io.File;
 public class TradeLeague extends LegalEntity {
 
     public TradeLeague(File file) {
+    }
 
+    @Override
+    public Relation getRelation(FEntity object) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isInWar(FEntity object) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

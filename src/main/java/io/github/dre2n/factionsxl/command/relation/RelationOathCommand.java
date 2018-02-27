@@ -17,7 +17,7 @@
 package io.github.dre2n.factionsxl.command.relation;
 
 import io.github.dre2n.factionsxl.config.FMessage;
-import io.github.dre2n.factionsxl.relation.Relation;
+import io.github.dre2n.factionsxl.entity.Relation;
 
 /**
  * @author Daniel Saukel

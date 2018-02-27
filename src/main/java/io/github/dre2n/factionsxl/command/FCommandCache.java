@@ -73,6 +73,7 @@ public class FCommandCache extends DRECommandCache {
     public RelationUniteCommand relationUnite = new RelationUniteCommand();
     public RelationVassalizeCommand relationVassalize = new RelationVassalizeCommand();
     public ReloadCommand reload = new ReloadCommand();
+    public RequestsCommand requests = new RequestsCommand();
     public ScoreboardCommand scoreboard = new ScoreboardCommand();
     public SetAnthemCommand setAnthem = new SetAnthemCommand();
     public SetBannerCommand setBanner = new SetBannerCommand();
@@ -132,6 +133,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(relationUnite);
         addCommand(relationVassalize);
         addCommand(reload);
+        addCommand(requests);
         addCommand(scoreboard);
         addCommand(setAnthem);
         addCommand(setBanner);

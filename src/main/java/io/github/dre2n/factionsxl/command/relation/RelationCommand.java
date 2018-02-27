@@ -19,13 +19,13 @@ package io.github.dre2n.factionsxl.command.relation;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.command.FCommand;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.entity.Relation;
+import io.github.dre2n.factionsxl.entity.RelationRequest;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.player.FPermission;
-import io.github.dre2n.factionsxl.relation.Relation;
-import io.github.dre2n.factionsxl.relation.Relation.Request;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -34,8 +34,6 @@ import org.bukkit.command.CommandSender;
 public class RelationCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
-
-    private Set<Request> requests = new HashSet<>();
 
     public RelationCommand() {
         setCommand("relation");
@@ -73,16 +71,18 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
             return;
         }
+        Collection<RelationRequest> requests = subjectFaction.getRequests(RelationRequest.class);
 
         if (args.length == 5 && args[4].equals("-deny")) {
-            HashSet<Request> toRemove = new HashSet<>();
-            for (Request request : requests) {
+            HashSet<RelationRequest> toRemove = new HashSet<>();
+            for (RelationRequest request : requests) {
                 if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction)) {
                     toRemove.add(request);
-                    objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, request.getRelation().getName());
+                    objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, objectFaction, request.getRelation().getName());
+                    subjectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, objectFaction, request.getRelation().getName());
                 }
             }
-            requests.removeAll(toRemove);
+            subjectFaction.getRequests().removeAll(toRemove);
             return;
         }
 
@@ -95,8 +95,8 @@ public class RelationCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION_REQUIRED.getMessage(), subjectFaction, objectFaction);
             return;
         }
-        Request matching = null;
-        for (Request request : requests) {
+        RelationRequest matching = null;
+        for (RelationRequest request : requests) {
             if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction) && request.getRelation() == relation) {
                 matching = request;
                 break;
@@ -104,29 +104,14 @@ public class RelationCommand extends FCommand {
         }
         if (matching != null) {
             matching.confirm();
-            requests.remove(matching);
             return;
         }
-        if (relation != null && relation != Relation.OWN && relation != Relation.PERSONAL_UNION) {
-            Request request = new Request(subjectFaction, objectFaction, relation);
-            if (!requestExists(subjectFaction, objectFaction)) {
-                requests.add(request);
-            }
-            subjectFaction.sendMessage(FMessage.RELATION_WISH_OWN.getMessage(), sender, objectFaction, relation.getName());
-            request.send();
 
+        if (relation != null && relation != Relation.OWN && relation != Relation.PERSONAL_UNION) {
+            new RelationRequest(sender, subjectFaction, objectFaction, relation).send();
         } else {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_RELATION.getMessage(), args[3]);
         }
-    }
-
-    private boolean requestExists(Faction subjectFaction, Faction objectFaction) {
-        for (Request check : requests) {
-            if (check.getSubject().equals(objectFaction) && check.getObject().equals(subjectFaction)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

@@ -16,10 +16,10 @@
  */
 package io.github.dre2n.factionsxl.idea;
 
+import de.erethon.commons.gui.GUIButton;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.faction.Faction;
-import de.erethon.commons.gui.GUIButton;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.inventory.ItemStack;

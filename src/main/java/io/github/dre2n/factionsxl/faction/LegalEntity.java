@@ -16,8 +16,12 @@
  */
 package io.github.dre2n.factionsxl.faction;
 
+import de.erethon.commons.player.PlayerCollection;
 import io.github.dre2n.factionsxl.economy.FAccount;
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Request;
 import io.github.dre2n.factionsxl.player.FPermission;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,7 +33,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 /**
  * @author Daniel Saukel
  */
-public abstract class LegalEntity {
+public abstract class LegalEntity implements FEntity {
 
     int id;
     String name;
@@ -42,6 +46,7 @@ public abstract class LegalEntity {
     UUID admin;
     long creationDate;
     FAccount account;
+    List<Request> requests;
 
     /**
      * @return
@@ -51,10 +56,7 @@ public abstract class LegalEntity {
         return id;
     }
 
-    /**
-     * @return
-     * the entity's name
-     */
+    @Override
     public String getName() {
         return name;
     }
@@ -243,6 +245,18 @@ public abstract class LegalEntity {
      */
     public FAccount getAccount() {
         return account;
+    }
+
+    @Override
+    public PlayerCollection getRequestAuthorizedPlayers(Class<? extends Request> type) {
+        PlayerCollection players = new PlayerCollection();
+        players.add(admin);
+        return players;
+    }
+
+    @Override
+    public List<Request> getRequests() {
+        return requests;
     }
 
 }

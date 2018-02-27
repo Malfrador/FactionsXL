@@ -17,8 +17,7 @@
 package io.github.dre2n.factionsxl.faction;
 
 import io.github.dre2n.factionsxl.FactionsXL;
-import static io.github.dre2n.factionsxl.config.FMessage.MOB_TRADER;
-import static io.github.dre2n.factionsxl.config.FMessage.MOB_VILLAGER;
+import io.github.dre2n.factionsxl.config.FMessage;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -41,12 +40,12 @@ public class FMob implements Listener {
             case "nitwit":
             case "v":
             case "villager":
-                return MOB_VILLAGER.getMessage();
+                return FMessage.MOB_VILLAGER.getMessage();
             case "m":
             case "merchant":
             case "t":
             case "trader":
-                return MOB_TRADER.getMessage();
+                return FMessage.MOB_TRADER.getMessage();
             default:
                 return null;
         }
@@ -61,7 +60,7 @@ public class FMob implements Listener {
     public static Villager spawnVillager(Location location) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
         villager.setProfession(Profession.NITWIT);
-        villager.setCustomName(MOB_VILLAGER.getMessage());
+        villager.setCustomName(FMessage.MOB_VILLAGER.getMessage());
         villager.setCustomNameVisible(true);
         return villager;
     }
@@ -75,7 +74,7 @@ public class FMob implements Listener {
     public static Villager spawnTrader(Location location) {
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
         villager.setProfession(Profession.LIBRARIAN);
-        villager.setCustomName(MOB_TRADER.getMessage());
+        villager.setCustomName(FMessage.MOB_TRADER.getMessage());
         villager.setCustomNameVisible(true);
         return villager;
     }
@@ -87,7 +86,7 @@ public class FMob implements Listener {
      * true if the entity is a villager
      */
     public static boolean isVillager(Entity entity) {
-        return MOB_VILLAGER.getMessage().equals(entity.getCustomName());
+        return FMessage.MOB_VILLAGER.getMessage().equals(entity.getCustomName());
     }
 
     /**
@@ -97,7 +96,7 @@ public class FMob implements Listener {
      * true if the entity is a trader
      */
     public static boolean isTrader(Entity entity) {
-        return MOB_TRADER.getMessage().equals(entity.getCustomName());
+        return FMessage.MOB_TRADER.getMessage().equals(entity.getCustomName());
     }
 
     @EventHandler

@@ -21,7 +21,6 @@ import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.scoreboard.FScoreboard;
-import io.github.dre2n.factionsxl.scoreboard.sidebar.FDefaultSidebar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

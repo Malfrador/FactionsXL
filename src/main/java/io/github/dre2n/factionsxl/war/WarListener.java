@@ -18,10 +18,10 @@ package io.github.dre2n.factionsxl.war;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.config.FConfig;
+import io.github.dre2n.factionsxl.entity.Relation;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.FactionCache;
 import io.github.dre2n.factionsxl.protection.EntityProtectionListener;
-import io.github.dre2n.factionsxl.relation.Relation;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.entity.Player;

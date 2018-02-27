@@ -16,17 +16,21 @@
  */
 package io.github.dre2n.factionsxl.player;
 
+import de.erethon.commons.player.PlayerCollection;
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.commons.player.PlayerWrapper;
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.board.Region;
 import io.github.dre2n.factionsxl.chat.ChatChannel;
 import io.github.dre2n.factionsxl.config.FMessage;
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Relation;
+import io.github.dre2n.factionsxl.entity.Request;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.relation.Relation;
-import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -36,7 +40,7 @@ import org.bukkit.entity.Player;
  *
  * @author Daniel Saukel
  */
-public class FPlayer implements RelationParticipator, PlayerWrapper {
+public class FPlayer implements FEntity, PlayerWrapper {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -115,6 +119,43 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PlayerCollection getRequestAuthorizedPlayers(Class<? extends Request> type) {
+        PlayerCollection players = new PlayerCollection();
+        players.add(uuid);
+        return players;
+    }
+
+    @Override
+    public List<Request> getRequests() {
+        return data.getRequests();
+    }
+
+    /**
+     * @return
+     * a Collection of all accessible requests, including those of the factions the player owns
+     */
+    public List<Request> getAccessibleRequests() {
+        List<Request> requests = new ArrayList<>();
+        for (Request req : getRequests().toArray(new Request[]{})) {
+            if (req.isExpired()) {
+                getRequests().remove(req);
+            } else {
+                requests.add(req);
+            }
+        }
+        for (Faction faction : FactionsXL.getInstance().getFactionCache().getByLeader(player)) {
+            for (Request req : faction.getRequests().toArray(new Request[]{})) {
+                if (req.isExpired()) {
+                    faction.getRequests().remove(req);
+                } else {
+                    requests.add(req);
+                }
+            }
+        }
+        return requests;
     }
 
     /**
@@ -247,13 +288,13 @@ public class FPlayer implements RelationParticipator, PlayerWrapper {
     }
 
     @Override
-    public Relation getRelation(RelationParticipator object) {
+    public Relation getRelation(FEntity object) {
         Faction own = getFaction();
         return own != null ? own.getRelation(object) : Relation.PEACE;
     }
 
     @Override
-    public boolean isInWar(RelationParticipator object) {
+    public boolean isInWar(FEntity object) {
         Faction own = getFaction();
         return own != null ? own.isInWar(object) : false;
     }

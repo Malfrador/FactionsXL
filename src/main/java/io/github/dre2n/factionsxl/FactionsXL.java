@@ -31,6 +31,7 @@ import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FData;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.economy.IncomeTask;
+import io.github.dre2n.factionsxl.entity.RelationRequest;
 import io.github.dre2n.factionsxl.faction.FBull;
 import io.github.dre2n.factionsxl.faction.FMob;
 import io.github.dre2n.factionsxl.faction.FactionCache;
@@ -47,6 +48,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -113,6 +115,7 @@ public class FactionsXL extends DREPlugin {
 
     @Override
     public void onEnable() {
+        ConfigurationSerialization.registerClass(RelationRequest.class);
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");

@@ -14,14 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.dre2n.factionsxl.relation;
+package io.github.dre2n.factionsxl.entity;
 
-import io.github.dre2n.factionsxl.FactionsXL;
-import io.github.dre2n.factionsxl.config.FConfig;
 import io.github.dre2n.factionsxl.config.FMessage;
 import io.github.dre2n.factionsxl.faction.Faction;
-import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
-import io.github.dre2n.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +27,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.*;
-import org.bukkit.entity.Player;
 
 /**
  * An enumeration of relations between factions and players.
@@ -201,140 +196,6 @@ public enum Relation {
             default:
                 return null;
         }
-    }
-
-    public static class Request {
-
-        private Faction subject;
-        private Faction object;
-        private Relation relation;
-
-        public Request(Faction subject, Faction object, Relation relation) {
-            this.subject = subject;
-            this.object = object;
-            this.relation = relation;
-        }
-
-        public Faction getSubject() {
-            return subject;
-        }
-
-        public Faction getObject() {
-            return object;
-        }
-
-        public Relation getRelation() {
-            return relation;
-        }
-
-        public Relation getObjectRelation() {
-            switch (relation) {
-                case VASSAL:
-                    return Relation.LORD;
-                case LORD:
-                    return Relation.VASSAL;
-                default:
-                    return relation;
-            }
-        }
-
-        /**
-         * @return
-         * true if the subject faction can pay for the request
-         */
-        public boolean checkSubject() {
-            FConfig config = FactionsXL.getInstance().getFConfig();
-            if (!config.isEconomyEnabled()) {
-                return true;
-            }
-            return subject.getAccount().getBalance() >= config.getPriceRelation(relation);
-        }
-
-        /**
-         * @return
-         * true if the object faction can pay for the request
-         */
-        public boolean checkObject() {
-            FConfig config = FactionsXL.getInstance().getFConfig();
-            if (!config.isEconomyEnabled()) {
-                return true;
-            }
-            return object.getAccount().getBalance() >= config.getPriceRelation(getObjectRelation());
-        }
-
-        /**
-         * Requires Spigot API!
-         *
-         * Sends the relation request to the object faction
-         */
-        public void send() {
-            String command = "/factionsxl relation " + object.getName() + " " + subject.getName() + " " + relation.toString();
-            ClickEvent onClickConfirm = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
-            TextComponent confirm = new TextComponent(ChatColor.GREEN + FMessage.MISC_ACCEPT.getMessage());
-            confirm.setClickEvent(onClickConfirm);
-
-            ClickEvent onClickDeny = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + " -deny");
-            TextComponent deny = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_DENY.getMessage());
-            deny.setClickEvent(onClickDeny);
-
-            object.sendMessage(FMessage.RELATION_WISH.getMessage(), subject, relation.getName());// TODO getFormatted()
-            for (Player player : object.getOnlineMods()) {
-                player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
-            }
-            if (object.getAdmin().isOnline()) {
-                object.getAdmin().getPlayer().spigot().sendMessage(confirm, new TextComponent(" "), deny);
-            }
-        }
-
-        /**
-         * Applies the requested relation to the factions
-         */
-        public void confirm() {
-            if (relation == REAL_UNION) {
-                FactionsXL.getInstance().getFactionCache().formRealUnion(subject, object);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_UNITED.getMessage(), subject, object);
-                return;
-            }
-
-            FConfig config = FactionsXL.getInstance().getFConfig();
-            if (config.isEconomyEnabled()) {
-                if (!checkSubject()) {
-                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(config.getPriceRelation(relation)));
-                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(config.getPriceRelation(relation)));
-                    return;
-                }
-                if (!checkObject()) {
-                    subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object, String.valueOf(config.getPriceRelation(getObjectRelation())));
-                    object.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), object, String.valueOf(config.getPriceRelation(getObjectRelation())));
-                    return;
-                }
-                subject.getAccount().withdraw(config.getPriceRelation(relation));
-                object.getAccount().withdraw(config.getPriceRelation(getObjectRelation()));
-            }
-
-            subject.getRelations().put(object, relation);
-            if (relation != LORD && relation != VASSAL) {
-                object.getRelations().put(subject, relation);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, relation.getName());
-            } else if (relation == VASSAL) {
-                object.getRelations().put(subject, LORD);
-                object.setAllod(true);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), subject, object);
-            } else if (relation == LORD) {
-                object.getRelations().put(subject, VASSAL);
-                subject.setAllod(true);
-                ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), object, subject);
-            }
-            if (!subject.isVassal()) {
-                subject.setAllod(true);
-            }
-            if (!object.isVassal()) {
-                object.setAllod(true);
-            }
-            FTeamWrapper.updatePrefixes(subject);
-            FTeamWrapper.updatePrefixes(object);
-        }
-
     }
 
 }

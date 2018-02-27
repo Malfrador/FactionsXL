@@ -18,6 +18,8 @@ package io.github.dre2n.factionsxl.faction;
 
 import io.github.dre2n.factionsxl.FactionsXL;
 import io.github.dre2n.factionsxl.economy.FAccount;
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Relation;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +40,17 @@ public class Federation extends LegalEntity {
     public Set<Faction> getFactions() {
         return new HashSet<>();
     }
-    
+
+    @Override
+    public Relation getRelation(FEntity object) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isInWar(FEntity object) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public String toString() {
         return "Federation{ID=" + id + "name=" + name + "}";

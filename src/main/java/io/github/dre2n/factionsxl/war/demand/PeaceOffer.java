@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Daniel Saukel
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,17 @@
  */
 package io.github.dre2n.factionsxl.war.demand;
 
+import io.github.dre2n.factionsxl.entity.Relation;
+import io.github.dre2n.factionsxl.entity.RelationRequest;
 import io.github.dre2n.factionsxl.faction.Faction;
 import io.github.dre2n.factionsxl.faction.LegalEntity;
-import io.github.dre2n.factionsxl.relation.Relation;
 import io.github.dre2n.factionsxl.war.War;
 import io.github.dre2n.factionsxl.war.WarParty;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.bukkit.Bukkit;
 
 /**
  * @author Daniel Saukel
@@ -114,7 +116,7 @@ public class PeaceOffer {
         if (canPay) {
             demands.forEach(d -> d.pay());
         } else {
-            new Relation.Request((Faction) demanding.getLeader(), (Faction) target, Relation.VASSAL); // TODO: Might break after government update
+            new RelationRequest(Bukkit.getConsoleSender(), (Faction) demanding.getLeader(), (Faction) target, Relation.VASSAL).confirm(); // TODO: Might break after government update
             // TODO: Add time modifier
         }
     }

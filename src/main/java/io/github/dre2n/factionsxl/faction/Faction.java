@@ -34,6 +34,9 @@ import io.github.dre2n.factionsxl.economy.FStorage;
 import io.github.dre2n.factionsxl.economy.Resource;
 import io.github.dre2n.factionsxl.economy.ResourceSubcategory;
 import io.github.dre2n.factionsxl.economy.TradeMenu;
+import io.github.dre2n.factionsxl.entity.FEntity;
+import io.github.dre2n.factionsxl.entity.Relation;
+import io.github.dre2n.factionsxl.entity.Request;
 import io.github.dre2n.factionsxl.idea.Idea;
 import io.github.dre2n.factionsxl.idea.IdeaGroup;
 import io.github.dre2n.factionsxl.idea.IdeaMenu;
@@ -42,8 +45,6 @@ import io.github.dre2n.factionsxl.player.FPermission;
 import io.github.dre2n.factionsxl.player.FPlayer;
 import io.github.dre2n.factionsxl.population.PopulationMenu;
 import io.github.dre2n.factionsxl.population.SaturationLevel;
-import io.github.dre2n.factionsxl.relation.Relation;
-import io.github.dre2n.factionsxl.relation.RelationParticipator;
 import io.github.dre2n.factionsxl.scoreboard.FTeamWrapper;
 import io.github.dre2n.factionsxl.util.LazyChunk;
 import io.github.dre2n.factionsxl.util.ParsingUtil;
@@ -82,7 +83,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  *
  * @author Daniel Saukel
  */
-public class Faction extends LegalEntity implements RelationParticipator {
+public class Faction extends LegalEntity {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig fConfig = plugin.getFConfig();
@@ -605,6 +606,13 @@ public class Faction extends LegalEntity implements RelationParticipator {
         return mods.getOnlinePlayers();
     }
 
+    @Override
+    public PlayerCollection getRequestAuthorizedPlayers(Class<? extends Request> type) {
+        PlayerCollection players = super.getRequestAuthorizedPlayers(type);
+        players.addAll(mods);
+        return players;
+    }
+
     /**
      * @return
      * a Set of all members as OfflinePlayers
@@ -693,7 +701,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     @Override
-    public Relation getRelation(RelationParticipator object) {
+    public Relation getRelation(FEntity object) {
         if (object == null) {
             return Relation.PEACE;
         }
@@ -1001,7 +1009,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
     }
 
     @Override
-    public boolean isInWar(RelationParticipator object) {
+    public boolean isInWar(FEntity object) {
         Set<War> wars = plugin.getWarCache().getByFaction(this);
         if (object instanceof Faction) {
             for (War war : wars) {
@@ -1415,6 +1423,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
             }
         }
         allod = config.getBoolean("isAllod", true);
+        requests = (List<Request>) config.getList("requests", new ArrayList<>());
         FactionsXL.debug("Loaded " + this);
     }
 
@@ -1504,6 +1513,7 @@ public class Faction extends LegalEntity implements RelationParticipator {
                 i++;
             }
             config.set("isAllod", allod);
+            config.set("requests", requests);
 
             config.save(file);
         } catch (Exception exception) {
