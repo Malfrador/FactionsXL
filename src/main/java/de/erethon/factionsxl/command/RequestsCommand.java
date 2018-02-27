@@ -73,6 +73,9 @@ public class RequestsCommand extends FCommand implements Listener {
             return;
         }
         PageGUI gui = PageGUI.getByInventory(event.getInventory());
+        if (gui == null) {
+            return;
+        }
         int page = gui.getPages().indexOf(event.getClickedInventory());
         int i = slot + 45 * page;
         List<Request> reqs = requests.get(fPlayer);
