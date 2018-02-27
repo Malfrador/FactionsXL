@@ -1,5 +1,5 @@
 name: FactionsXL
-main: io.github.dre2n.factionsxl.FactionsXL
+main: de.erethon.factionsxl.FactionsXL
 version: ${project.version}${buildNo}
 author: Daniel Saukel
 description: ${project.description}
