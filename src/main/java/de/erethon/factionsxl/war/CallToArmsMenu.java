@@ -44,12 +44,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class CallToArmsMenu implements Listener {
 
-    enum Status {
-        ATTACKER,
-        ATTACKER_CANDIDATE,
-        DEFENDER
-    }
-
     private WarParty attacker;
     private Faction attackerLeader;
     private Set<Faction> attackerCandidates = new HashSet<>();
@@ -65,7 +59,7 @@ public class CallToArmsMenu implements Listener {
         attackerLeader.getRelatedFactions(Relation.ALLIANCE).forEach(f -> attackerCandidates.add(f));
         attackerLeader.getRelatedFactions(Relation.COALITION).forEach(f -> attackerCandidates.add(f));
         Faction mainTarget = defender.isVassal() ? defender.getLord() : defender;
-        this.defender = new WarParty(mainTarget);
+        this.defender = new WarParty(mainTarget, WarPartyRole.DEFENDER);
         for (Entry<Faction, Relation> entry : mainTarget.getRelations().entrySet()) {
             Relation relation = entry.getValue();
             if (relation == Relation.ALLIANCE || relation == Relation.PERSONAL_UNION || relation == Relation.VASSAL) {
@@ -73,13 +67,13 @@ public class CallToArmsMenu implements Listener {
             }
         }
         gui = new PageGUI(FMessage.WAR_CALL_TO_ARMS_TITLE.getMessage(), 2);
-        this.attacker.getFactions().forEach(f -> gui.addButton1(generateFactionButton(f, Status.ATTACKER))); // Call to arms
+        this.attacker.getFactions().forEach(f -> gui.addButton1(generateFactionButton(f, WarPartyRole.ATTACKER))); // Call to arms
         for (Faction faction : attackerCandidates) {// Allies and coalition partners
             if (!this.attacker.getFactions().contains(faction)) {
-                gui.addButton2(generateFactionButton(faction, Status.ATTACKER_CANDIDATE));
+                gui.addButton2(generateFactionButton(faction, WarPartyRole.ATTACKER_CANDIDATE));
             }
         }
-        this.defender.getFactions().forEach(f -> gui.addButton3(generateFactionButton(f, Status.DEFENDER))); // Enemies
+        this.defender.getFactions().forEach(f -> gui.addButton3(generateFactionButton(f, WarPartyRole.DEFENDER))); // Enemies
         this.cb = cb;
     }
 
@@ -88,13 +82,13 @@ public class CallToArmsMenu implements Listener {
         gui.open(player, 0, 0, 0);
     }
 
-    private ItemStack generateFactionButton(Faction faction, Status status) {
+    private ItemStack generateFactionButton(Faction faction, WarPartyRole status) {
         ItemStack button = faction.getBannerStack();
         ItemMeta meta = button.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         meta.setDisplayName(attackerLeader.getRelation(faction).getColor() + faction.getName());
         List<String> lore = new ArrayList<>();
-        if (status != Status.DEFENDER) {
+        if (status != WarPartyRole.DEFENDER) {
             switch (attackerLeader.getRelation(faction)) {
                 case ALLIANCE:
                     lore.add(FMessage.WAR_CALL_TO_ARMS_ALLY_1.getMessage(faction.getName()));
@@ -104,7 +98,7 @@ public class CallToArmsMenu implements Listener {
                     } else {
                         lore.add(FMessage.WAR_CALL_TO_ARMS_ALLY_2_NOT_ALLIED.getMessage());
                         lore.add(FMessage.WAR_CALL_TO_ARMS_ALLY_3_NOT_ALLIED.getMessage());
-                        lore.add((status == Status.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
+                        lore.add((status == WarPartyRole.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
                     }
                     break;
                 case PERSONAL_UNION:
@@ -115,12 +109,12 @@ public class CallToArmsMenu implements Listener {
                     lore.add(FMessage.WAR_CALL_TO_ARMS_VASSAL_1.getMessage(faction.getName()));
                     // TODO if (vassal is stronger than lord) lore.add(FMessage.WAR_CALL_TO_ARMS_VASSAL_2_WEAKER.getMessage()
                     lore.add(FMessage.WAR_CALL_TO_ARMS_VASSAL_2_STRONGER.getMessage());
-                    lore.add((status == Status.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
+                    lore.add((status == WarPartyRole.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
                     break;
                 case COALITION:
                     lore.add(FMessage.WAR_CALL_TO_ARMS_COALITION_1.getMessage(faction.getName()));
                     lore.add(FMessage.WAR_CALL_TO_ARMS_COALITION_2.getMessage());
-                    lore.add((status == Status.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
+                    lore.add((status == WarPartyRole.ATTACKER_CANDIDATE ? FMessage.WAR_CALL_TO_ARMS_ADD : FMessage.WAR_CALL_TO_ARMS_REMOVE).getMessage());
                     break;
             }
         } else {

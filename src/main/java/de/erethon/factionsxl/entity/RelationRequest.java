@@ -26,14 +26,13 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public class RelationRequest extends Request implements ConfigurationSerializable {
+public class RelationRequest extends Request {
 
     private int subjectId;
     private int objectId;

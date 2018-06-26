@@ -18,6 +18,8 @@ package de.erethon.factionsxl.war.demand;
 
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.config.FMessage;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,6 +32,10 @@ public class ItemDemand implements WarDemand {
 
     public ItemDemand(ItemStack[] items) {
         this.items = items;
+    }
+
+    public ItemDemand(Map<String, Object> args) {
+        items = (ItemStack[]) args.get("items");
     }
 
     public ItemStack[] getItems() {
@@ -58,6 +64,13 @@ public class ItemDemand implements WarDemand {
     @Override
     public boolean canPay() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> args = new HashMap<>();
+        args.put("items", items);
+        return args;
     }
 
 }

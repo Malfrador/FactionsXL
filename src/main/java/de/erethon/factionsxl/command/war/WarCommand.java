@@ -26,6 +26,7 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CallToArmsMenu;
 import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.WarPartyRole;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -78,7 +79,7 @@ public class WarCommand extends FCommand {
                     ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage(), object);
             }
             if (faction.getMembers().contains(player)) {
-                subject = new WarParty(faction);
+                subject = new WarParty(faction, WarPartyRole.ATTACKER);
                 break;
             }
         }

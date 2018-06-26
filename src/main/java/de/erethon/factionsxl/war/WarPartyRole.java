@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Daniel Saukel
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,39 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.erethon.factionsxl.war.demand;
-
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.inventory.ItemStack;
+package de.erethon.factionsxl.war;
 
 /**
  * @author Daniel Saukel
  */
-public interface WarDemand extends ConfigurationSerializable {
+public enum WarPartyRole {
 
+    ATTACKER,
     /**
-     * @return
-     * a button for the war demand menu
+     * The status of a faction that hasn't joined the attacker party yet
+     * but may still accept the call to arms
      */
-    public ItemStack getGUIButton();
-
-    /**
-     * Asks the demanded party to pay
-     */
-    public void demand();
-
-    /**
-     * Asks the demanded party to pay
-     *
-     * @return
-     * if the target faction is able to pay
-     */
-    public boolean pay();
-
-    /**
-     * @return
-     * if the target faction is able to pay
-     */
-    public boolean canPay();
+    ATTACKER_CANDIDATE,
+    DEFENDER;
 
 }

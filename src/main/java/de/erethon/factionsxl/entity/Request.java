@@ -20,13 +20,14 @@ import de.erethon.factionsxl.config.FMessage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public abstract class Request {
+public abstract class Request implements ConfigurationSerializable {
 
     protected FEntity subject;
     protected FEntity object;
