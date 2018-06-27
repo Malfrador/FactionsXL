@@ -38,7 +38,7 @@ public class EconomyMenu implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
 
     public static final ItemStack INCOME_MANAGEMENT = GUIButton.setDisplay(new ItemStack(Material.IRON_INGOT), FMessage.TRADE_INCOME_MANAGEMENT.getMessage());
-    public static final ItemStack TRADE_OFFER = GUIButton.setDisplay(GUIButton.SKULL, FMessage.TRADE_OFFER_TITLE.getMessage());
+    public static final ItemStack TRADE_OFFER = GUIButton.setDisplay(GUIButton.PLAYER_HEAD, FMessage.TRADE_OFFER_TITLE.getMessage());
     public static final ItemStack STORAGE = GUIButton.setDisplay(new ItemStack(Material.CHEST), FMessage.FACTION_STORAGE.getMessage());
 
     private Faction faction;

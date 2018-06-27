@@ -32,7 +32,7 @@ public enum IdeaGroup {
     ECONOMY(new ItemStack(Material.IRON_INGOT), FMessage.IDEA_GROUP_ECONOMY, EconomyIdea.class, true),
     MERCENARY(GUIButton.GUI_SWORD, FMessage.IDEA_GROUP_MERCENARY, MercenaryIdea.class, true),
     RELIGION(new ItemStack(Material.TOTEM), FMessage.IDEA_GROUP_RELIGION, ReligionIdea.class, true),*/
-    SETTLER(GUIButton.SKULL, FMessage.IDEA_GROUP_SETTLER, SettlerIdea.class, true),/*
+    SETTLER(GUIButton.PLAYER_HEAD, FMessage.IDEA_GROUP_SETTLER, SettlerIdea.class, true),/*
     TRADE(new ItemStack(Material.STORAGE_MINECART), FMessage.IDEA_GROUP_TRADE, TradeIdea.class, false)*/;
 
     private ItemStack icon;

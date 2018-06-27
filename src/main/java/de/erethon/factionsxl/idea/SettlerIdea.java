@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public enum SettlerIdea implements Idea {
 
-    COLONIZATION(GUIButton.SKULL, FMessage.IDEA_NAME_SETTLER_COLONIZATION, FMessage.IDEA_DESC_SETTLER_COLONIZATION, new HashMap<Resource, Integer>() {
+    COLONIZATION(GUIButton.PLAYER_HEAD, FMessage.IDEA_NAME_SETTLER_COLONIZATION, FMessage.IDEA_DESC_SETTLER_COLONIZATION, new HashMap<Resource, Integer>() {
         {
             //put(Resource.COAL, 400);
             put(Resource.GRAVEL, 250);

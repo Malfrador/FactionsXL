@@ -16,10 +16,7 @@
  */
 package de.erethon.factionsxl.config;
 
-import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.Message;
-import de.erethon.factionsxl.FactionsXL;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -496,13 +493,8 @@ public enum FMessage implements Message {
     }
 
     @Override
-    public String getMessage() {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
-    @Override
-    public String getMessage(String... args) {
-        return FactionsXL.getInstance().getMessageConfig().getMessage(this, args);
+    public String getRaw() {
+        return message;
     }
 
     @Override
@@ -510,18 +502,10 @@ public enum FMessage implements Message {
         this.message = message;
     }
 
-    /* Actions */
-    /**
-     * Sends the message to the console.
-     */
-    public void debug() {
-        MessageUtil.log(FactionsXL.getInstance(), getMessage());
-    }
-
     /* Statics */
     /**
-     * @param identifer
-     * the identifer to set
+     * @param identifier
+     * the identifier to set
      */
     public static Message getByIdentifier(String identifier) {
         for (Message message : values()) {
@@ -529,7 +513,6 @@ public enum FMessage implements Message {
                 return message;
             }
         }
-
         return null;
     }
 
