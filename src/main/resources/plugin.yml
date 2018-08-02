@@ -5,6 +5,7 @@ author: Daniel Saukel
 description: ${project.description}
 website: ${project.url}
 softdepend: [Vault, LWC, Dynmap, HolographicDisplays]
+api-version: 1.13
 commands:
   factionsxl:
     description: Reference command for FactionsXL.

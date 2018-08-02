@@ -100,7 +100,7 @@ public class FactionsXL extends DREPlugin {
          * ##########################
          * ####~DREPluginSettings####
          * ##########################
-         * #~Internals~##INDEPENDENT#
+         * #~Internals~##~~v1_13_R1~#
          * #~SpigotAPI~##~~~~true~~~#
          * #~~~~UUID~~~##~~~~true~~~#
          * #~~Economy~~##~~~~true~~~#
@@ -110,7 +110,7 @@ public class FactionsXL extends DREPlugin {
          * ##########################
          */
 
-        settings = new DREPluginSettings(true, true, true, false, true, Internals.INDEPENDENT);
+        settings = new DREPluginSettings(true, true, true, false, true, Internals.v1_13_R1);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class FactionsXL extends DREPlugin {
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
-        if (!compat.isSpigot() || compat.getInternals() != Internals.v1_12_R1) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.12.2 to work. It is not compatible with CraftBukkit and older versions.");
+        if (!compat.isSpigot() || compat.getInternals() != Internals.v1_13_R1) {
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.13 to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }

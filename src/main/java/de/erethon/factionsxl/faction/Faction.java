@@ -68,6 +68,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -1325,7 +1326,7 @@ public class Faction extends LegalEntity {
         desc = config.getString("desc");
         anthem = config.getString("anthem");
         banner = (BannerMeta) config.get("banner");
-        bannerColor = (short) config.getInt("bannerColor");
+        bannerType = Material.getMaterial(config.getString("bannerType"));
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
         mapIcon = config.getString("mapIcon");
@@ -1436,7 +1437,7 @@ public class Faction extends LegalEntity {
             config.set("desc", desc);
             config.set("anthem", anthem);
             config.set("banner", banner);
-            config.set("bannerColor", bannerColor);
+            config.set("bannerType", bannerType.name());
             config.set("mapFillColor", mapFillColor);
             config.set("mapLineColor", mapLineColor);
             config.set("mapIcon", mapIcon);

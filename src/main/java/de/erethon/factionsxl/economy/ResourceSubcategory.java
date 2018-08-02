@@ -18,6 +18,7 @@ package de.erethon.factionsxl.economy;
 
 import de.erethon.factionsxl.config.FMessage;
 import static de.erethon.factionsxl.economy.Resource.*;
+import de.erethon.factionsxl.util.GUIButton;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,37 +28,37 @@ import org.bukkit.inventory.ItemStack;
 public enum ResourceSubcategory {
 
     // BUILDING
-    WOOD(FMessage.RESOURCE_SUBCATEGORY_WOOD, OAK.getIcon(), true, ACACIA, BIRCH, DARK_OAK, JUNGLE, OAK, SPRUCE),
-    GLASS(FMessage.RESOURCE_SUBCATEGORY_GLASS, Resource.GLASS.getIcon(), false, Resource.GLASS, QUARTZ, OBSIDIAN),
-    ROADS(FMessage.RESOURCE_SUBCATEGORY_ROADS, GRAVEL.getIcon(), true, GRAVEL, Resource.STONE),
-    STONE(FMessage.RESOURCE_SUBCATEGORY_STONE, Resource.STONE.getIcon(), false, ANDESITE, DIORITE, GRANITE, Resource.STONE, PURPUR, RED_SANDSTONE, YELLOW_SANDSTONE),
+    WOOD(FMessage.RESOURCE_SUBCATEGORY_WOOD, OAK.getIconType(), true, ACACIA, BIRCH, DARK_OAK, JUNGLE, OAK, SPRUCE),
+    GLASS(FMessage.RESOURCE_SUBCATEGORY_GLASS, Resource.GLASS.getIconType(), false, Resource.GLASS, QUARTZ, OBSIDIAN),
+    ROADS(FMessage.RESOURCE_SUBCATEGORY_ROADS, GRAVEL.getIconType(), true, GRAVEL, Resource.STONE),
+    STONE(FMessage.RESOURCE_SUBCATEGORY_STONE, Resource.STONE.getIconType(), false, ANDESITE, DIORITE, GRANITE, Resource.STONE, PURPUR, RED_SANDSTONE, YELLOW_SANDSTONE),
     // CLOTHES
-    DYE(FMessage.RESOURCE_SUBCATEGORY_DYE, LAPIS_LAZULI.getIcon(), false, LAPIS_LAZULI, BEETROOT, INK, CACTUS),
-    FUR(FMessage.RESOURCE_SUBCATEGORY_FUR, SHEEP.getIcon(), false, RABBIT, SHEEP),
-    LEATHER(FMessage.RESOURCE_SUBCATEGORY_LEATHER, new ItemStack(Material.LEATHER), true, COW, HORSE, PIG, SHEEP),
+    DYE(FMessage.RESOURCE_SUBCATEGORY_DYE, LAPIS_LAZULI.getIconType(), false, LAPIS_LAZULI, BEETROOT, INK, CACTUS),
+    FUR(FMessage.RESOURCE_SUBCATEGORY_FUR, SHEEP.getIconType(), false, RABBIT, SHEEP),
+    LEATHER(FMessage.RESOURCE_SUBCATEGORY_LEATHER, Material.LEATHER, true, COW, HORSE, PIG, SHEEP),
     // FOOD
-    MEAT(FMessage.RESOURCE_SUBCATEGORY_MEAT, PUFFERFISH.getIcon(), false, CHICKEN, COW, HORSE, PIG, RABBIT, SHEEP, CLOWNFISH, PUFFERFISH),
-    STAPLES(FMessage.RESOURCE_SUBCATEGORY_STAPLES, WHEAT.getIcon(), true, APPLE, BEETROOT, CARROT, MELON, POTATO, PUMPKIN, WHEAT, MUSHROOMS, CODFISH, SALMON),
-    SPICES(FMessage.RESOURCE_SUBCATEGORY_SPICES, SALT.getIcon(), false, COCOA, SUGAR, SALT, NETHER_WART),
-    WATER(FMessage.RESOURCE_SUBCATEGORY_WATER, Resource.WATER.getIcon(), true, Resource.WATER),
+    MEAT(FMessage.RESOURCE_SUBCATEGORY_MEAT, PUFFERFISH.getIconType(), false, CHICKEN, COW, HORSE, PIG, RABBIT, SHEEP, CLOWNFISH, PUFFERFISH),
+    STAPLES(FMessage.RESOURCE_SUBCATEGORY_STAPLES, WHEAT.getIconType(), true, APPLE, BEETROOT, CARROT, MELON, POTATO, PUMPKIN, WHEAT, MUSHROOMS, CODFISH, SALMON),
+    SPICES(FMessage.RESOURCE_SUBCATEGORY_SPICES, SALT.getIconType(), false, COCOA, SUGAR, SALT, NETHER_WART),
+    WATER(FMessage.RESOURCE_SUBCATEGORY_WATER, Resource.WATER.getIconType(), true, Resource.WATER),
     // HEATING
-    HEATING(FMessage.RESOURCE_SUBCATEGORY_HEATING, COAL.getIcon(), true, COAL, ACACIA, BIRCH, DARK_OAK, JUNGLE, OAK, SPRUCE),
+    HEATING(FMessage.RESOURCE_SUBCATEGORY_HEATING, COAL.getIconType(), true, COAL, ACACIA, BIRCH, DARK_OAK, JUNGLE, OAK, SPRUCE),
     // JEWELRY
-    JEWELRY(FMessage.RESOURCE_SUBCATEGORY_JEWELRY, DIAMOND.getIcon(), false, GOLD, DIAMOND, EMERALD, LAPIS_LAZULI, QUARTZ, REDSTONE, OBSIDIAN, PRISMARINE),
+    JEWELRY(FMessage.RESOURCE_SUBCATEGORY_JEWELRY, DIAMOND.getIconType(), false, GOLD, DIAMOND, EMERALD, LAPIS_LAZULI, QUARTZ, REDSTONE, OBSIDIAN, PRISMARINE),
     // MILITARY
-    SMITHERY(FMessage.RESOURCE_SUBCATEGORY_SMITHERY, IRON.getIcon(), false, GOLD, IRON),
-    CANNONING(FMessage.RESOURCE_SUBCATEGORY_CANNONING, SULPHUR.getIcon(), false, IRON, SULPHUR),
-    RIDERS(FMessage.RESOURCE_SUBCATEGORY_RIDERS, HORSE.getIcon(), false, HORSE),
+    SMITHERY(FMessage.RESOURCE_SUBCATEGORY_SMITHERY, IRON.getIconType(), false, GOLD, IRON),
+    CANNONING(FMessage.RESOURCE_SUBCATEGORY_CANNONING, SULPHUR.getIconType(), false, IRON, SULPHUR),
+    RIDERS(FMessage.RESOURCE_SUBCATEGORY_RIDERS, HORSE.getIconType(), false, HORSE),
     // SCIENCE
-    ALCHEMY(FMessage.RESOURCE_SUBCATEGORY_ALCHEMY, REDSTONE.getIcon(), false, SULPHUR, GOLD, REDSTONE, Resource.WATER),
-    LITERATURE(FMessage.RESOURCE_SUBCATEGORY_LITERATURE, new ItemStack(Material.BOOK_AND_QUILL), false, INK, PAPER);
+    ALCHEMY(FMessage.RESOURCE_SUBCATEGORY_ALCHEMY, REDSTONE.getIconType(), false, SULPHUR, GOLD, REDSTONE, Resource.WATER),
+    LITERATURE(FMessage.RESOURCE_SUBCATEGORY_LITERATURE, Material.WRITABLE_BOOK, false, INK, PAPER);
 
     private FMessage name;
-    private ItemStack icon;
+    private Material icon;
     private boolean basic;
     private Resource[] resources;
 
-    ResourceSubcategory(FMessage name, ItemStack icon, boolean basic, Resource... resources) {
+    ResourceSubcategory(FMessage name, Material icon, boolean basic, Resource... resources) {
         this.name = name;
         this.icon = icon;
         this.basic = basic;
@@ -65,7 +66,7 @@ public enum ResourceSubcategory {
     }
 
     public ItemStack getIcon() {
-        return icon.clone();
+        return this == WATER ? GUIButton.GUI_WATER_BOTTLE.clone() : new ItemStack(icon);
     }
 
     public String getName() {
