@@ -19,7 +19,7 @@ package de.erethon.factionsxl.economy;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.util.ParsingUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -150,11 +150,11 @@ public class TradeOffer {
 
         String command = "/factionsxl tradeOffer " + (FactionsXL.getInstance().getCommandCache().tradeOffer.finishedOffers.size() - 1);
         ClickEvent onClickConfirm = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
-        BaseComponent confirm = GUIButton.CONFIRM.duplicate();
+        BaseComponent confirm = StandardizedGUI.CONFIRM.duplicate();
         confirm.setClickEvent(onClickConfirm);
 
         ClickEvent onClickDeny = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command + " -deny");
-        BaseComponent deny = GUIButton.DENY.duplicate();
+        BaseComponent deny = StandardizedGUI.DENY.duplicate();
         deny.setClickEvent(onClickDeny);
 
         for (Player player : receiver.getOnlineMods()) {

@@ -18,7 +18,7 @@ package de.erethon.factionsxl.economy;
 
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.Material;
@@ -83,7 +83,7 @@ public enum Resource {
     SALMON(FMessage.RESOURCE_SALMON, new ItemStack(Material.RAW_FISH, 1, (short) 1), 10),
     INK(FMessage.RESOURCE_INK, new ItemStack(Material.INK_SACK), 17.5),
     SALT(FMessage.RESOURCE_SALT, new ItemStack(Material.SUGAR), 40),
-    WATER(FMessage.RESOURCE_WATER, GUIButton.GUI_WATER_BOTTLE.clone(), 0.1),
+    WATER(FMessage.RESOURCE_WATER, StandardizedGUI.GUI_WATER_BOTTLE.clone(), 0.1),
     // Seabed
     CLAY(FMessage.RESOURCE_CLAY, new ItemStack(Material.CLAY_BRICK), 15),
     PRISMARINE(FMessage.RESOURCE_PRISMARINE, new ItemStack(Material.PRISMARINE_SHARD), 150),
@@ -131,7 +131,7 @@ public enum Resource {
 
     /**
      * @return
-     * the inventory GUI icon
+     * the inventory StandardizedGUI icon
      */
     public ItemStack getIcon() {
         return icon.clone();

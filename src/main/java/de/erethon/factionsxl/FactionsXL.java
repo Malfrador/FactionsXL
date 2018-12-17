@@ -412,7 +412,7 @@ public class FactionsXL extends DREPlugin {
      * load / reload a new instance of WarCache
      */
     public void loadWars(File dir) {
-        wars = new WarCache(dir);
+        wars = new WarCache(this, dir);
     }
 
     /**

@@ -38,7 +38,8 @@ import org.bukkit.OfflinePlayer;
  */
 public class WarParty implements FEntity {
 
-    FactionCache factions = FactionsXL.getInstance().getFactionCache();
+    FactionsXL plugin = FactionsXL.getInstance();
+    FactionCache factions = plugin.getFactionCache();
 
     private LegalEntity leader;
     private Set<LegalEntity> participants = new HashSet<>();
@@ -159,6 +160,19 @@ public class WarParty implements FEntity {
      */
     public WarPartyRole getRole() {
         return role;
+    }
+
+    public War getWar() {
+        return plugin.getWarCache().getByParty(this);
+    }
+
+    /**
+     * Returns the defender if this party is the attacker; the attacker if this party is the defender and null if this party is anything else.
+     *
+     * @return the other party
+     */
+    public WarParty getEnemy() {
+        return getWar().getEnemy(this);
     }
 
     /* Serialization */

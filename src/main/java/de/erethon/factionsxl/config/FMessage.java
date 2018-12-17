@@ -24,8 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * An enumeration of all messages.
- * The values are fetched from the language file.
+ * An enumeration of all messages. The values are fetched from the language file.
  *
  * @author Daniel Saukel
  */
@@ -63,6 +62,10 @@ public enum FMessage implements Message {
     CMD_MONEY_WITHDRAW_SUCCESS("cmd.money.withdraw.success", "&v1 &atook &6&v2 &afrom the bank of &v3&a."),
     CMD_OPEN_CLOSED("cmd.open.closed", "&v1 &aclosed the faction for uninvited players."),
     CMD_OPEN_OPENED("cmd.open.opened", "&v1 &aopened the faction for uninvited players."),
+    CMD_PEACE_CREATE("cmd.peace.create", "&aCreate new Peace Offer"),
+    CMD_PEACE_LIST_RECEIVED("cmd.peace.list.received", "&aReceived Peace Offers"),
+    CMD_PEACE_LIST_SENT("cmd.peace.list.sent", "&aSent Peace Offers"),
+    CMD_PEACE_TITLE("cmd.peace.title", "&2&lPeace Offers - Menu"),
     CMD_POWER("cmd.power", "&aThe player &v1 &ahas &6&v2 &apower points."),
     CMD_REGION_CLAIMS("cmd.region.claims", "&6Claims: "),
     CMD_REGION_CORES("cmd.region.cores", "&6Cores: "),
@@ -157,6 +160,7 @@ public enum FMessage implements Message {
     ERROR_NO_SUCH_RELATION("error.noSuch.relation", "&4The relation &6&v1 &4does not exist."),
     ERROR_NOT_ENOUGH_MONEY("error.notEnoughMoney", "&4You cannot afford &6&v1 &4to do this."),
     ERROR_NOT_ENOUGH_MONEY_FACTION("error.notEnoughMoneyFaction", "&4The faction &v1 &4cannot afford &6&v2 &4to do this."),
+    ERROR_NOT_IN_WAR("error.notInWar", "&4You do not participate in a war."),
     ERROR_NOT_NUMERIC("error.notNumeric", "&6&v1 &4is not a numeric value."),
     ERROR_NOT_VASSAL("error.notVassal", "&v1 &4is not a vassal of &v2&4."),
     ERROR_NOT_WILDERNESS("error.notWilderness", "&4You can only do this in the wilderness."),
@@ -187,6 +191,7 @@ public enum FMessage implements Message {
     FACTION_PLAYER_KICKED_AUTO("faction.playerKickedAuto", "&aThe player &v1 &ahas been kicked out of the faction automatically."),
     FACTION_PERSONAL_UNION_FORMED("faction.personalUnionFormed",
             "&aThe factions &v1 &aand &v2 &adecided to unite their dynasties under &v3 &aand formed a personal union."),
+    FACTION_SELECT("faction.select", "&2&lSelect a faction:"),
     FACTION_STORAGE("faction.storage", "&aStorage"),
     GOVERNMENT_TYPE_MONARCHY("governmentType.monarchy", "Monarchy"),
     GOVERNMENT_TYPE_REPUBLIC("governmentType.republic", "Republic"),
@@ -222,6 +227,7 @@ public enum FMessage implements Message {
     HELP_OATH("help.oath", "/f oath ([faction]) [target] - Offers an oath of fealty to the faction sothat you become its vassal."),
     HELP_OPEN("help.open", "/f open [faction] - Allows / Forbids all players to join the faction without an invitation."),
     HELP_PAYDAY("help.payday", "/f payday ([amount]) - Enforces paydays."),
+    HELP_PEACE("help.peace", "/f peace - Opens an interface to create, list and send peace requests."),
     HELP_PLAYER_HOME("help.playerHome", "/home ([player]) - Teleports the sender to the player's home."),
     HELP_POWER("help.power", "/f power ([player]) - Displays a player's power value."),
     HELP_REGION("help.region", "/f region ([region name/ID]) - Shows information about a region."),
@@ -272,6 +278,7 @@ public enum FMessage implements Message {
     MISC_CONTINUE("misc.continue", "&6&lCONTINUE"),
     MISC_DENY("misc.deny", "[ DENY ]"),
     MISC_LONER("misc.loner", "Loner"),
+    MISC_NONE("misc.none", "&7None."),
     MISC_OPEN_REQUESTS("misc.openRequests", "&bYou have unanswered requests left! Use &4/f req &bto list them."),
     MISC_PURCHASE_FAIL("misc.purchase.success", "&4You cannot afford &6&v1&4."),
     MISC_PURCHASE_SUCCESS("misc.purchase.success", "&aYou successfully purchased &6&v1&a."),
@@ -477,9 +484,12 @@ public enum FMessage implements Message {
     WAR_DECLARATION_DEFENDERS("war.declaration.defenders", "&cDefenders: "),
     WAR_DECLARATION_START_DATE("war.declaration.startDate", "&4&oThe war will start in 24 hours."),
     WAR_DECLARATION_TITLE("war.declaration.title", "&4&l#=== D\u00c9CLARATION DE GUERRE ===#"),
-    WAR_DEMAND_MENU_ITEM("war.demand.menu.item", "&3Add item demand"),
-    WAR_DEMAND_MENU_LIST("war.demand.menu.list", "&aList demands"),
-    WAR_DEMAND_MENU_TITLE("war.demand.menu.title", "Create new war demand"),;
+    WAR_DEMAND_CREATION_MENU_ITEM("war.demand.creationMenu.item", "&3Add item demand"),
+    WAR_DEMAND_CREATION_MENU_LIST("war.demand.creationMenu.list", "&aList demands"),
+    WAR_DEMAND_CREATION_MENU_MONEY("war.demand.creationMenu.money", "&3Add monetary demand"),
+    WAR_DEMAND_CREATION_MENU_SEND("war.demand.creationMenu.send", "&aSend peace offer"),
+    WAR_DEMAND_CREATION_MENU_TITLE("war.demand.creationMenu.title", "Create new war demand"),
+    WAR_DEMAND_LIST("war.demand.list", "&aWar demands:");
 
     private String identifier;
     private String message;
@@ -520,8 +530,7 @@ public enum FMessage implements Message {
 
     /* Statics */
     /**
-     * @param identifer
-     * the identifer to set
+     * @param identifier the identifier to set
      */
     public static Message getByIdentifier(String identifier) {
         for (Message message : values()) {

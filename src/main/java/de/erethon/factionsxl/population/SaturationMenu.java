@@ -16,12 +16,13 @@
  */
 package de.erethon.factionsxl.population;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -45,17 +46,17 @@ public class SaturationMenu implements Listener {
     public static final ItemStack DENY_BUTTON_ZERO;
 
     static {
-        GRANT_BUTTON = GUIButton.UP.clone();
+        GRANT_BUTTON = StandardizedGUI.UP.clone();
         ItemMeta gMeta = GRANT_BUTTON.getItemMeta();
         gMeta.setDisplayName(FMessage.POPULATION_GRANT_RESOURCE.getMessage());
         GRANT_BUTTON.setItemMeta(gMeta);
 
-        DENY_BUTTON = GUIButton.DOWN.clone();
+        DENY_BUTTON = StandardizedGUI.DOWN.clone();
         ItemMeta dMeta = DENY_BUTTON.getItemMeta();
         dMeta.setDisplayName(FMessage.POPULATION_DENY_RESOURCE.getMessage());
         DENY_BUTTON.setItemMeta(dMeta);
 
-        DENY_BUTTON_ZERO = GUIButton.DOWN_ALT.clone();
+        DENY_BUTTON_ZERO = StandardizedGUI.DOWN_ALT.clone();
         ItemMeta zMeta = DENY_BUTTON_ZERO.getItemMeta();
         zMeta.setDisplayName(ChatColor.DARK_GRAY + ChatColor.stripColor(FMessage.POPULATION_DENY_RESOURCE.getMessage()));
         DENY_BUTTON_ZERO.setItemMeta(zMeta);

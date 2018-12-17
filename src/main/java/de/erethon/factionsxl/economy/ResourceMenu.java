@@ -16,11 +16,12 @@
  */
 package de.erethon.factionsxl.economy;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ResourceMenu implements Listener {
     private Inventory gui;
 
     public ResourceMenu(Faction faction, Resource resource) {
-        exportButton = GUIButton.DOWN.clone();
+        exportButton = StandardizedGUI.DOWN.clone();
         ItemMeta exMeta = exportButton.getItemMeta();
         exMeta.setDisplayName(FMessage.TRADE_EXPORT.getMessage());
         double exValue = resource.getValue() * plugin.getFConfig().getExportModifier();
@@ -58,7 +59,7 @@ public class ResourceMenu implements Listener {
         exMeta.setLore(exLore);
         exportButton.setItemMeta(exMeta);
 
-        importButton = GUIButton.UP.clone();
+        importButton = StandardizedGUI.UP.clone();
         ItemMeta imMeta = importButton.getItemMeta();
         imMeta.setDisplayName(FMessage.TRADE_IMPORT.getMessage());
         double imValue = resource.getValue() * plugin.getFConfig().getImportModifier();

@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.population;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.commons.misc.ProgressBar;
 import de.erethon.factionsxl.FactionsXL;
@@ -23,7 +24,7 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.economy.ResourceSubcategory;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -55,7 +56,7 @@ public class DemandMenu implements Listener {
 
     public void update(ResourceSubcategory category) {
         gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(category.getName()));
-        GUIButton.addHeader(gui);
+        StandardizedGUI.addHeader(gui);
 
         for (Resource resource : category.getResources()) {
             gui.addItem(formButton(faction, resource));

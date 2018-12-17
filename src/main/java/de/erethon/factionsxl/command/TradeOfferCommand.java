@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.command;
 
+import static de.erethon.commons.gui.GUIButton.*;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
@@ -24,8 +25,8 @@ import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.economy.TradeOffer;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
+import static de.erethon.factionsxl.gui.StandardizedGUI.*;
 import de.erethon.factionsxl.player.FPermission;
-import static de.erethon.factionsxl.util.GUIButton.*;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;

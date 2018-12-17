@@ -26,6 +26,7 @@ import de.erethon.factionsxl.command.relation.RelationOathCommand;
 import de.erethon.factionsxl.command.relation.RelationUniteCommand;
 import de.erethon.factionsxl.command.relation.RelationVassalizeCommand;
 import de.erethon.factionsxl.command.war.ConfirmWarCommand;
+import de.erethon.factionsxl.command.war.PeaceCommand;
 import de.erethon.factionsxl.command.war.WarCommand;
 import de.erethon.factionsxl.command.war.WarStatusCommand;
 import de.erethon.factionsxl.config.FConfig;
@@ -69,6 +70,7 @@ public class FCommandCache extends DRECommandCache {
     public MoneyCommand money = new MoneyCommand();
     public OpenCommand open = new OpenCommand();
     public PaydayCommand payday = new PaydayCommand();
+    public PeaceCommand peaceCommand = new PeaceCommand();
     public PlayerHomeCommand playerHome = new PlayerHomeCommand();
     public PowerCommand power = new PowerCommand();
     public RegionCommand region = new RegionCommand();
@@ -130,6 +132,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(mob);
         addCommand(mod);
         addCommand(open);
+        addCommand(peaceCommand);
         addCommand(power);
         addCommand(region);
         addCommand(regions);

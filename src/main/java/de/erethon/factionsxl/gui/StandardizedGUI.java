@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Daniel Saukel
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.erethon.factionsxl.util;
+package de.erethon.factionsxl.gui;
 
+import de.erethon.commons.gui.GUIButton;
+import static de.erethon.commons.gui.GUIButton.*;
 import static de.erethon.commons.item.ItemUtil.setSkullOwner;
 import de.erethon.factionsxl.config.FMessage;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +35,7 @@ import org.bukkit.potion.PotionType;
 /**
  * @author Daniel Saukel
  */
-public class GUIButton extends de.erethon.commons.gui.GUIButton {
+public interface StandardizedGUI {
 
     /* Text Components */
     public static final TextComponent CANCEL = new TextComponent(ChatColor.DARK_RED + FMessage.MISC_CANCEL.getMessage());
@@ -51,23 +54,30 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
     public static final ItemStack SOLDIER = setSkullOwner(SKULL, "f59b9e38-8c9d-4917-8d9e-6b5aad457ec5", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjQ1MzAyNzY3NDE0ODUyNzM4MDFlMWIxMWYzYTNmZGNmMGRkMjA2ZjE0NTI1NWRmNGY1YTIwMjAyOGEwNjMifX19");
     public static final ItemStack MAILBOX = setSkullOwner(SKULL, "244678f1-df93-49b4-916f-47bddd112e80", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWIyODE1Yjk5YzEzYmZjNTViNGM1YzI5NTlkMTU3YTYyMzNhYjA2MTg2NDU5MjMzYmMxZTRkNGY3ODc5MmM2OSJ9fX0=");
 
-    /* GUI buttons */
-    public static final ItemStack CONTINUE = setDisplay(RIGHT, FMessage.MISC_CONTINUE.getMessage());
-    public static final ItemStack DISABLED = setDisplay(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
+    /* StandardizedGUI buttons */
+    public static final ItemStack CONTINUE = GUIButton.setDisplay(GUIButton.RIGHT, FMessage.MISC_CONTINUE.getMessage());
+    public static final ItemStack DISABLED = GUIButton.setDisplay(new ItemStack(Material.BARRIER), FMessage.ERROR_ECON_DISABLED.getMessage());
 
     /* Blank items that show meta stuff by default */
-    public static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
-    public static final ItemStack GUI_WATER_BOTTLE = new ItemStack(Material.POTION);
+    public static final ItemStack GUI_SWORD = Init.GUI_SWORD;
+    public static final ItemStack GUI_WATER_BOTTLE = Init.GUI_WATER_BOTTLE;
 
-    static {
-        ItemMeta swordMeta = GUI_SWORD.getItemMeta();
-        swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        GUI_SWORD.setItemMeta(swordMeta);
+    static class Init {
 
-        PotionMeta watMeta = (PotionMeta) GUI_WATER_BOTTLE.getItemMeta();
-        watMeta.setBasePotionData(new PotionData(PotionType.WATER));
-        watMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        GUI_WATER_BOTTLE.setItemMeta(watMeta);
+        static final ItemStack GUI_SWORD = new ItemStack(Material.IRON_SWORD);
+        static final ItemStack GUI_WATER_BOTTLE = new ItemStack(Material.POTION);
+
+        static {
+            ItemMeta swordMeta = GUI_SWORD.getItemMeta();
+            swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            GUI_SWORD.setItemMeta(swordMeta);
+
+            PotionMeta watMeta = (PotionMeta) GUI_WATER_BOTTLE.getItemMeta();
+            watMeta.setBasePotionData(new PotionData(PotionType.WATER));
+            watMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            GUI_WATER_BOTTLE.setItemMeta(watMeta);
+        }
+
     }
 
     public static void addHeader(Inventory gui) {
@@ -82,12 +92,19 @@ public class GUIButton extends de.erethon.commons.gui.GUIButton {
         gui.setItem(8, PLACEHOLDER);
     }
 
-    public static void clearHeaderGUI(Inventory gui) {
+    public static void clearHeader(Inventory gui) {
         int i = 9;
         do {
             gui.clear(i);
             i++;
         } while (i < gui.getSize());
     }
+
+    /**
+     * Opens the StandardizedGUI to a player
+     *
+     * @param player the player
+     */
+    public void open(Player player);
 
 }

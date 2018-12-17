@@ -50,6 +50,7 @@ import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.War;
+import de.erethon.factionsxl.war.WarParty;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1005,7 +1006,7 @@ public class Faction extends LegalEntity {
      * true if the faction is in war
      */
     public boolean isInWar() {
-        return plugin.getWarCache().getByFaction(this) != null;
+        return !plugin.getWarCache().getByFaction(this).isEmpty();
     }
 
     @Override
@@ -1053,6 +1054,22 @@ public class Faction extends LegalEntity {
      */
     public boolean isPrivileged(FPlayer fPlayer) {
         return fPlayer.isMod(this) || admin.equals(fPlayer.getUniqueId()) || FPermission.hasPermission(fPlayer.getPlayer(), FPermission.BYPASS);
+    }
+
+    /**
+     * @return
+     * the war parties that this faction is part of
+     */
+    public Set<WarParty> getWarParties() {
+        Set<WarParty> parties = new HashSet<>();
+        for (War war : plugin.getWarCache().getByFaction(this)) {
+            if (war.getAttacker().getFactions().contains(this)) {
+                parties.add(war.getAttacker());
+            } else if (war.getDefender().getFactions().contains(this)) {
+                parties.add(war.getDefender());
+            }
+        }
+        return parties;
     }
 
     /* Actions */
