@@ -19,6 +19,10 @@ package de.erethon.factionsxl.faction;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.chat.chat.BaseComponent;
+import de.erethon.commons.chat.chat.ClickEvent;
+import de.erethon.commons.chat.chat.HoverEvent;
+import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.NumberUtil;
@@ -61,10 +65,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -1091,7 +1091,7 @@ public class Faction extends LegalEntity {
         deny.setClickEvent(onClickDeny);
 
         ParsingUtil.sendMessage(player, FMessage.FACTION_INVITE.getMessage(name));
-        player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
+        MessageUtil.sendMessage(player, confirm, new TextComponent(" "), deny);
     }
 
     /**

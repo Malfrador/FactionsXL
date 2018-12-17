@@ -17,6 +17,10 @@
 package de.erethon.factionsxl.command;
 
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.chat.chat.BaseComponent;
+import de.erethon.commons.chat.chat.ComponentBuilder;
+import de.erethon.commons.chat.chat.HoverEvent;
+import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -29,10 +33,6 @@ import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -119,7 +119,7 @@ public class ShowCommand extends FCommand {
                     relList.addAll(Arrays.asList(relation.getFormatted(other)));
                 }
             }
-            player.spigot().sendMessage(relList.toArray(new BaseComponent[]{}));
+            MessageUtil.sendMessage(player, relList.toArray(new BaseComponent[]{}));
 
             String leader = faction.getAdmin() != null ? faction.getAdmin().getName() : "&oInterregnum";
             MessageUtil.sendMessage(player, FMessage.CMD_SHOW_LEADER.getMessage() + c + leader);
@@ -144,7 +144,7 @@ public class ShowCommand extends FCommand {
                 memFirst = false;
                 memList.addAll(Arrays.asList(components));
             }
-            player.spigot().sendMessage(memList.toArray(new BaseComponent[]{}));
+            MessageUtil.sendMessage(player, memList.toArray(new BaseComponent[]{}));
 
         } else {
             MessageUtil.sendMessage(player, FMessage.CMD_SHOW_FORMER_LEADERS.getMessage()
