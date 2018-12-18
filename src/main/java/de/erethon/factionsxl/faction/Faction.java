@@ -1326,7 +1326,7 @@ public class Faction extends LegalEntity {
         desc = config.getString("desc");
         anthem = config.getString("anthem");
         banner = (BannerMeta) config.get("banner");
-        bannerType = Material.getMaterial(config.getString("bannerType"));
+        bannerType = Material.getMaterial(config.getString("bannerType", Material.WHITE_BANNER.name()));
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
         mapIcon = config.getString("mapIcon");
