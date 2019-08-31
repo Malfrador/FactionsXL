@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,7 +70,7 @@ public class ListCommand extends FCommand implements Listener {
         Inventory gui = Bukkit.createInventory(null, size, FMessage.CMD_LIST_TITLE.getMessage());
         for (Faction faction : factions) {
             int members = faction.getMembers().contains(faction.getAdmin()) ? faction.getMembers().size() : faction.getMembers().size() + 1;
-            ItemStack banner = new ItemStack(Material.BANNER, members, faction.getBannerColor());
+            ItemStack banner = new ItemStack(faction.getBannerType(), members);
             ItemMeta meta = faction.getBanner() != null ? faction.getBanner().clone() : banner.getItemMeta();
             meta.setDisplayName(ParsingUtil.getFactionName(player, faction));
 

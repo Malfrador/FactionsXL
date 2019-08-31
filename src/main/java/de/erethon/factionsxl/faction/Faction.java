@@ -19,6 +19,10 @@ package de.erethon.factionsxl.faction;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.chat.chat.BaseComponent;
+import de.erethon.commons.chat.chat.ClickEvent;
+import de.erethon.commons.chat.chat.HoverEvent;
+import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.NumberUtil;
@@ -61,13 +65,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -1090,7 +1091,7 @@ public class Faction extends LegalEntity {
         deny.setClickEvent(onClickDeny);
 
         ParsingUtil.sendMessage(player, FMessage.FACTION_INVITE.getMessage(name));
-        player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
+        MessageUtil.sendMessage(player, confirm, new TextComponent(" "), deny);
     }
 
     /**
@@ -1325,7 +1326,7 @@ public class Faction extends LegalEntity {
         desc = config.getString("desc");
         anthem = config.getString("anthem");
         banner = (BannerMeta) config.get("banner");
-        bannerColor = (short) config.getInt("bannerColor");
+        bannerType = Material.getMaterial(config.getString("bannerType", Material.WHITE_BANNER.name()));
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
         mapIcon = config.getString("mapIcon");
@@ -1436,7 +1437,7 @@ public class Faction extends LegalEntity {
             config.set("desc", desc);
             config.set("anthem", anthem);
             config.set("banner", banner);
-            config.set("bannerColor", bannerColor);
+            config.set("bannerType", bannerType.name());
             config.set("mapFillColor", mapFillColor);
             config.set("mapLineColor", mapLineColor);
             config.set("mapIcon", mapIcon);

@@ -16,14 +16,15 @@
  */
 package de.erethon.factionsxl.economy;
 
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.chat.chat.BaseComponent;
+import de.erethon.commons.chat.chat.ClickEvent;
+import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.GUIButton;
 import de.erethon.factionsxl.util.ParsingUtil;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -158,10 +159,10 @@ public class TradeOffer {
         deny.setClickEvent(onClickDeny);
 
         for (Player player : receiver.getOnlineMods()) {
-            player.spigot().sendMessage(confirm, new TextComponent(" "), deny);
+            MessageUtil.sendMessage(player, confirm, new TextComponent(" "), deny);
         }
         if (receiver.getAdmin().isOnline()) {
-            receiver.getAdmin().getPlayer().spigot().sendMessage(confirm, new TextComponent(" "), deny);
+            MessageUtil.sendMessage(receiver.getAdmin().getPlayer(), confirm, new TextComponent(" "), deny);
         }
     }
 

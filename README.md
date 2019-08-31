@@ -12,14 +12,14 @@ The visual appearance of FXL and the command syntax are designed to be similar t
 
 ## Compatibility
 ### Server
-FactionsXL requires Minecraft 1.12.2 to work.
+FactionsXL requires Minecraft 1.13.2 to work.
 
 ### Building information and dependencies
 Building FactionsXL from source requires [Apache Maven](https://maven.apache.org/).
 Maven automatically fetches all dependencies and builds FactionsXL; just run _build.bat_ or enter the command _mvn clean install_.
 
 #### DRECommons
-[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 4.0.
+[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 5.1.4.
 
 ### Java
 Make sure that your server uses Java 8 or higher.

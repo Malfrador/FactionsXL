@@ -26,6 +26,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Tag;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
@@ -42,7 +43,7 @@ public abstract class LegalEntity implements FEntity {
     String desc = "Default description :(";
     String anthem;
     BannerMeta banner;
-    short bannerColor;
+    Material bannerType = Material.WHITE_BANNER;
     UUID admin;
     long creationDate;
     FAccount account;
@@ -146,7 +147,7 @@ public abstract class LegalEntity implements FEntity {
      * the faction's banner as an ItemStack
      */
     public ItemStack getBannerStack() {
-        ItemStack stack = new ItemStack(Material.BANNER, 1, bannerColor);
+        ItemStack stack = new ItemStack(bannerType, 1);
         stack.setItemMeta(banner);
         return stack;
     }
@@ -156,20 +157,20 @@ public abstract class LegalEntity implements FEntity {
      * the banner to set
      */
     public void setBanner(ItemStack banner) {
-        if (banner.getType() != Material.BANNER && banner.getType() != Material.SHIELD) {
+        if (Tag.BANNERS.isTagged(banner.getType())) {
             return;
         }
 
         this.banner = (BannerMeta) banner.getItemMeta();
-        bannerColor = banner.getDurability();
+        bannerType = banner.getType();
     }
 
     /**
      * @return
-     * the background color damage value of the banner
+     * the background color defining material of the banner
      */
-    public short getBannerColor() {
-        return bannerColor;
+    public Material getBannerType() {
+        return bannerType;
     }
 
     /**

@@ -16,9 +16,9 @@
  */
 package de.erethon.factionsxl.util;
 
-import static de.erethon.commons.item.ItemUtil.setSkullOwner;
+import de.erethon.commons.chat.chat.TextComponent;
+import static de.erethon.commons.headlib.HeadLib.setSkullOwner;
 import de.erethon.factionsxl.config.FMessage;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;

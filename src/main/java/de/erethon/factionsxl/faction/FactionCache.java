@@ -159,7 +159,7 @@ public class FactionCache {
         union.desc = faction1.desc;
         union.anthem = faction1.anthem;
         union.banner = faction1.banner;
-        union.bannerColor = faction2.bannerColor;
+        union.bannerType = faction2.bannerType;
         if (plugin.getFConfig().isEconomyEnabled()) {
             union.account.setBalance(faction1.account.getBalance() + faction2.account.getBalance());
             faction1.account.setBalance(0);

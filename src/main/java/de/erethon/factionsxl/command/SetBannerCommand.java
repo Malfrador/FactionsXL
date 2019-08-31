@@ -21,7 +21,7 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +57,7 @@ public class SetBannerCommand extends FCommand {
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType() != Material.BANNER) {
+        if (item == null || !Tag.BANNERS.isTagged(item.getType())) {
             displayHelp(player);
             return;
         }

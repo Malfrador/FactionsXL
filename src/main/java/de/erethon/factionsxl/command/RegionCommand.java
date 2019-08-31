@@ -17,6 +17,9 @@
 package de.erethon.factionsxl.command;
 
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.chat.chat.BaseComponent;
+import de.erethon.commons.chat.chat.HoverEvent;
+import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -32,9 +35,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -135,7 +135,7 @@ public class RegionCommand extends FCommand {
                 }
                 cores.addAll(Arrays.asList(relComps));
             }
-            ((Player) sender).spigot().sendMessage(cores.toArray(new BaseComponent[]{}));
+            MessageUtil.sendMessage(sender, cores.toArray(new BaseComponent[]{}));
 
             ArrayList<BaseComponent> claims = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_REGION_CLAIMS.getMessage())));
             boolean first2 = true;
@@ -154,7 +154,7 @@ public class RegionCommand extends FCommand {
                 }
                 claims.addAll(Arrays.asList(relComps));
             }
-            ((Player) sender).spigot().sendMessage(claims.toArray(new BaseComponent[]{}));
+            MessageUtil.sendMessage(sender, claims.toArray(new BaseComponent[]{}));
         }
     }
 
