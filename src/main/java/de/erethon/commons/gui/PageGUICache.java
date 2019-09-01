@@ -26,8 +26,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
+ * @deprecated taken from an older version of the DRECommons library; supposed to replaced by Vignette
  * @author Daniel Saukel
  */
+@Deprecated
 public class PageGUICache implements Listener {
 
     private static PageGUICache instance;

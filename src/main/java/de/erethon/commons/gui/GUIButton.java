@@ -21,8 +21,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
+ * @deprecated taken from an older version of the DRECommons library; supposed to replaced by Vignette
  * @author Daniel Saukel
  */
+@Deprecated
 public class GUIButton {
 
     private static boolean newMats = CompatibilityHandler.getInstance().getVersion().useNewMaterials();

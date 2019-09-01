@@ -28,8 +28,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
+ * @deprecated taken from an older version of the DRECommons library; supposed to replaced by Vignette
  * @author Daniel Saukel
  */
+@Deprecated
 public class PageGUI {
 
     private static final Sound BLOCK_ANVIL_PLACE = Sound.valueOf(Internals.isAtLeast(Internals.v1_9_R1) ? "BLOCK_ANVIL_PLACE" : "ANVIL_LAND");
