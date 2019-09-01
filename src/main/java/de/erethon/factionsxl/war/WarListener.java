@@ -43,6 +43,9 @@ public class WarListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (plugin.getFConfig().isExcludedWorld(event.getEntity().getWorld())) {
+            return;
+        }
         Player player1 = EntityProtectionListener.getDamageSource(event.getDamager());
         if (!(event.getEntity() instanceof Player) || player1 == null) {
             return;
@@ -71,6 +74,9 @@ public class WarListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        if (plugin.getFConfig().isExcludedWorld(event.getEntity().getWorld())) {
+            return;
+        }
         Player player1 = event.getEntity().getKiller();
         Player player2 = event.getEntity();
         for (Battle battle : battleCache) {

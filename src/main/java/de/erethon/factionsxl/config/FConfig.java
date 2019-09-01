@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -48,7 +49,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class FConfig extends DREConfig {
 
-    public static final int CONFIG_VERSION = 14;
+    public static final int CONFIG_VERSION = 15;
 
     public static final long SECOND = 20;
     public static final long MINUTE = SECOND * 60;
@@ -65,6 +66,7 @@ public class FConfig extends DREConfig {
     private double dayLength = 24;
     private int maxIdeaGroups = 2;
     private int moveCapitalCooldown = 30;
+    private List<String> excludedWorlds = new ArrayList<>();
 
     // Consume
     private double defaultManpowerModifier = 1;
@@ -450,6 +452,29 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * a List of regex world names where faction mechanics don't apply
+     */
+    public List<String> getExcludedWorlds() {
+        return excludedWorlds;
+    }
+
+    /**
+     * @param world
+     * the world to check
+     * @return
+     * if the world is excluded from faction mechanics
+     */
+    public boolean isExcludedWorld(World world) {
+        for (String regex : excludedWorlds) {
+            if (world.getName().matches(regex)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return
      * if players shall be protected in their territory
      */
     public boolean isTerritoryProtectionEnabled() {
@@ -745,6 +770,10 @@ public class FConfig extends DREConfig {
             config.set("moveCapitalCooldown", moveCapitalCooldown);
         }
 
+        if (!config.contains("excludedWorlds")) {
+            config.set("excludedWorlds", excludedWorlds);
+        }
+
         if (!config.contains("defaultManpowerModifier")) {
             config.set("defaultManpowerModifier", defaultManpowerModifier);
         }
@@ -1000,6 +1029,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("moveCapitalCooldown")) {
             moveCapitalCooldown = config.getInt("moveCapitalCooldown");
+        }
+
+        if (config.contains("excludedWorlds")) {
+            excludedWorlds = config.getStringList("excludedWorlds");
         }
 
         if (config.contains("defaultManpowerModifier")) {

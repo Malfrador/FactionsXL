@@ -86,6 +86,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
+        if (fConfig.isExcludedWorld(event.getEntity().getWorld())) {
+            return;
+        }
         Player killedP = event.getEntity();
         Player killerP = event.getEntity().getKiller();
         FPlayer killedF = fPlayers.getByPlayer(killedP);
@@ -105,6 +108,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
+        if (fConfig.isExcludedWorld(event.getPlayer().getWorld())) {
+            return;
+        }
         Chunk fromChunk = event.getFrom().getChunk();
         Chunk toChunk = event.getTo().getChunk();
         if (fromChunk == toChunk) {
