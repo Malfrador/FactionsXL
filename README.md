@@ -1,10 +1,10 @@
-![FactionsXL](http://feuerstern.bplaced.net/ressourcen/logos/FactionsXL.png)
+![FactionsXL](http://erethon.de/resources/logos/FactionsXL.png)
 
-[![Builds](http://feuerstern.bplaced.net/ressourcen/buttons/Builds.png)](http://feuerstern.bplaced.net/repo/io/github/dre2n/factionsxl)
-[![Wiki](http://feuerstern.bplaced.net/ressourcen/buttons/Wiki.png)](../../wiki/)
-[![Issues](http://feuerstern.bplaced.net/ressourcen/buttons/Issues.png)](../../issues/)
-[![JavaDocs](http://feuerstern.bplaced.net/ressourcen/buttons/JavaDocs.png)](http://feuerstern.bplaced.net/javadocs/fxl/)
-[![MCStats](http://feuerstern.bplaced.net/ressourcen/buttons/MCStats.png)](http://mcstats.org/plugin/FactionsXL/)
+[![Builds](http://erethon.de/resources/buttons/Builds.png)](http://feuerstern.bplaced.net/repo/io/github/dre2n/factionsxl)
+[![Wiki](http://erethon.de/resources/buttons/Wiki.png)](../../wiki/)
+[![Issues](http://erethon.de/resources/buttons/Issues.png)](../../issues/)
+[![JavaDocs](http://erethon.de/resources/buttons/JavaDocs.png)](http://feuerstern.bplaced.net/javadocs/fxl/)
+[![MCStats](http://erethon.de/resources/buttons/MCStats.png)](http://mcstats.org/plugin/FactionsXL/)
 
 FactionsXL is a Minecraft server mod that combines the features of a few popular standalone games and the classic, well-known factions game type.
 
@@ -12,14 +12,14 @@ The visual appearance of FXL and the command syntax are designed to be similar t
 
 ## Compatibility
 ### Server
-FactionsXL requires Minecraft 1.13.2 to work.
+FactionsXL requires Spigot 1.14.4 to work.
 
 ### Building information and dependencies
 Building FactionsXL from source requires [Apache Maven](https://maven.apache.org/).
 Maven automatically fetches all dependencies and builds FactionsXL; just run _build.bat_ or enter the command _mvn clean install_.
 
 #### DRECommons
-[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons 5.1.4.
+[DRECommons](https://github.com/DRE2N/DRECommons) is a util library for common tasks. FactionsXL contains DRECommons.
 
 ### Java
 Make sure that your server uses Java 8 or higher.
