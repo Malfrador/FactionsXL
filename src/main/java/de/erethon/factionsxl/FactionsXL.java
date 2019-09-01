@@ -19,7 +19,7 @@ package de.erethon.factionsxl;
 import com.griefcraft.lwc.LWC;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.compatibility.Internals;
-import de.erethon.commons.config.MessageConfig;
+import de.erethon.commons.config.MessageHandler;
 import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
@@ -253,7 +253,6 @@ public class FactionsXL extends DREPlugin {
         factions.saveAll();
         fPlayers.saveAll();
         wars.saveAll();
-        messageConfig.save();
     }
 
     public void backupData() {
@@ -313,7 +312,7 @@ public class FactionsXL extends DREPlugin {
      * load / reload a new instance of MessageConfig
      */
     public void loadMessageConfig(File file) {
-        messageConfig = new MessageConfig(FMessage.class, file);
+        messageHandler = new MessageHandler(file);
     }
 
     /**

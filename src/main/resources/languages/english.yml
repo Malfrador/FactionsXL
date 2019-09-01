@@ -1,0 +1,563 @@
+bull:
+  id: '&7Bull'
+  rightClick: '&2Right click to use'
+chat:
+  channelSwitched: '&aYour chat channel has been switched to &v1&a.'
+  prefix:
+    admin: '**'
+    member: ''
+    mod: '*'
+cmd:
+  addCasusBelli:
+    success: '&aSuccessfully added a &6&v1 &acasus belli against &v2 &afor &v3&a.'
+  admin:
+    success: '&v1 &agave &v2 &athe leadership of &v3&a.'
+  casusBelli:
+    head: '&aTarget &4| &aType &4| &aExpiration'
+    noExpiration: No expiration
+  claim:
+    success: '&aSuccessfully annexed the region &v1&a.'
+  create:
+    success: '&v1 &acreated the new faction &v2&a.'
+  createBull:
+    success: '&aSuccessfully created the new bull &6&v1&a.'
+  desc:
+    success: '&aThe faction &v1&a changed their description to: &6&v2&a.'
+  disband:
+    success: '&v1 &adisbanded the faction &v2&a.'
+  giveRegion:
+    success: '&v1 &agave the region &v2 &ato &v3&a.'
+  invite:
+    fail: '&4Could change the invitation status of &v1&4.'
+    success: '&v1 &ainvited &v2 &ato join your faction.'
+  kick:
+    fail: '&4You are not allowed to kick &v1&4.'
+    success: '&v1 &akicked &v2 &aout of the faction.'
+  list:
+    title: '&6&l= List of Factions ='
+  main:
+    welcome: '&aWelcome to &4Factions&fXL'
+    help: '&aType in &o/f help&r&a for further information.'
+  mod:
+    promote: '&v1 &apromoted &v2&a. He will now serve as a moderator.'
+    demote: '&v1 &ademoted &v2&a. He will not serve as a moderator any longer.'
+  money:
+    balance: '&aThe faction &v1 &ahas &6&v2&a.'
+    deposit:
+      fail: '&4You do not have enough money.'
+      success: '&v1 &agave &6&v2 &ato the bank of &v3&a.'
+    withdraw:
+      fail: '&v1 &4cannot afford &6&v2...'
+      success: '&v1 &atook &6&v2 &afrom the bank of &v3&a.'
+  open:
+    closed: '&v1 &aclosed the faction for uninvited players.'
+    opened: '&v1 &aopened the faction for uninvited players.'
+  power: '&aThe player &v1 &ahas &6&v2 &apower points.'
+  region:
+    claims: '&6Claims: '
+    cores: '&6Cores: '
+    owner: '&6Owner: '
+    population: '&6Population: '
+    price: '&6Price: '
+    type: '&6Type: '
+  reload:
+    done: '&aSuccessfully reloaded FactionsXL.'
+  requests:
+    title: '&2&lOpen requests'
+  setAnthem:
+    success: '&v1 &aset the national anthem of &v2 &ato &6&v3&a.'
+  setBanner:
+    success: '&v1 &adecided to let a new flag decorate the towers of &v2&a.'
+  setCapital:
+    success: '&v1 &aset their capital to &v2&a.'
+  setColor:
+    success: '&v1 &aset the livemap color of your faction to &6&v2 &a/ &6&v3&a. The
+      icon is &6&v3&a.'
+  setGovernment:
+    success: '&v1 &aset their government type to &6&v2&a.'
+  setHome:
+    char:
+      fail: '&6Your home location must be in allied or neutral territory.'
+      success: '&6You have successfully set your home location to this location.'
+    faction:
+      fail: '&4The home location must be in the territory of the respective faction.'
+      success: '&v1 &ahas set your faction home to a new position.'
+  setPower:
+    sender: '&aYou successfully set the power of &v1 &ato &6&v2&a.'
+    target: '&v1 &aset your power &ato &6&v2&a.'
+  show:
+    balance: '&6Balance: '
+    capital: '&6Capital: '
+    description: '&6Description: '
+    formerLeaders: '&6Former leaders: '
+    governmentType: '&6Type of government: '
+    info: '&6Power / Amount of provinces: &v1&v2 / &v3'
+    invitation: '&6Invitation required: '
+    leader: '&6Leader: '
+    members: '&6Members: '
+    relations: '&6Relations: '
+    stability: '&6Stability: '
+    stabilityMod:
+      base: 'Base: '
+      exhaustion: 'War exhaustion: '
+      provinces: 'Provinces: '
+      absentMonarch: 'Absent monarch: '
+      power: 'Power: '
+      wealth: 'Wealth: '
+    tag: '&6Tag: '
+  tag:
+    success: '&aThe faction &v1 &achanged their tag to &6&v2&a.'
+  title:
+    success: '&v1 &achanged the title of &v2 &ato &6&v3&a.'
+  unclaim:
+    fail: '&4You cannot unclaim your capital province.'
+    success: '&aSuccessfully unclaimed the region &v1&a.'
+  uninvite:
+    success: '&v1 &aremoved &v2&a''s invitation to join your faction.'
+  warStatus:
+    attackers: '&4Attackers: &a'
+    casusBelli: '&4Casus Belli: &a'
+    date: '&4Date: &a'
+    deaths: '&4Deaths: &a'
+    deFfenders: '&4Defenders: &a'
+    headline: '&aATTACKER &2| &aDEFENDER &2| &aCASUS BELLI &2| &aSTART DATE'
+    kd: '&4K/D: &a'
+    killsAndDeaths: ' &4Kills/Deaths: &a&v1&4/&a&v2&4 => &a&v3'
+    noWars: '&aThe faction &v1 &ais currently not at war.'
+    points: ' &4Points: &a'
+  world:
+    autoclaim:
+      end: '&aYou are not adding chunks to the region any longer.'
+      start: '&aYou are now autocmatically adding chunks to the region &v1&a while
+        moving.'
+    chunkAdded: '&aSuccessfully added this chunk to the region &v1&a.'
+    chunkRemoved: '&aSuccessfully removed this chunk from the region &v1&a.'
+    create: '&aSuccessfully created a new region named &v1&a.'
+    delete: '&aSuccessfully deleted the region &v1&a.'
+    level: '&aSuccessfully changed the level of the region &v1&a to &6&v2&a.'
+    renamed: '&aSuccessfully renamed the region &v1&a to &v2&a.'
+    type: '&aSuccessfully changed the type of the region &v1&a to &6&v2&a.'
+  cannotPass:
+    capital: '&4You cannot give your capital to a vassal.'
+    land: '&4You cannot give this land away.'
+death:
+  default:
+    killed: '&4You died and lost &6&v1 &4power points. Your power is now &6&v2&4.'
+  playerKill:
+    killed: '&4You have been killed by &v1 &4and lost &6&v2&4 power points. Your power
+      is now &6&v3&4.'
+    killer: '&aYou have killed &v1 &aand won &6&v2&a power points. Your power is now
+      &6&v3&a.'
+error:
+  allod: '&v1 &4is an allod.'
+  cannotAttackAlliedFaction: '&4You cannot attack an allied faction.'
+  cannotTradeWithItself: '&4A faction cannot trade with itself.'
+  capitalMoveCooldown: '&4You must wait until &6&v1 &4to move your capital.'
+  cmdNotExist:
+    '1': '&4Command &6&v1&4 does not exist.'
+    '2': '&4Please enter &6/f help&4 for help.'
+  doNotMove: '&4You must not move.'
+  econDisabled: '&4Economy features are disabled.'
+  homeNotInAlliedTerritory: '&4A player home must be in allied territory.'
+  inWar: '&4You are in war with &v1&4.'
+  joinFaction: '&4You have to join a faction in order to do this.'
+  langNoCore: '&4This land is not a core province of your faction.'
+  land:
+    notForSale: '&4This land is not for sale.'
+    wilderness: '&4You cannot do this in the wilderness.'
+  leaveFaction: '&4You have to leave your faction in order to do this.'
+  maxIdeaGroupsReached: '&7You reached the maximum amount of idea groups.'
+  nameInUse: '&4The name &6&v1 &4is already in use.'
+  noPermission: '&4You do not have permission to do this.'
+  noSuch:
+    casusBelli: '&4The casus belli &6&v1 &4does not exist.'
+    faction: '&4The faction &6&v1 &4does not exist.'
+    governmentType: '&4The government type &6&v1 &4does not exist.'
+    player: '&4The player &6&v1 &4does not exist.'
+    region: '&4This region does not exist.'
+    regionType: '&4This region type does not exist.'
+    relation: '&4The relation &6&v1 &4does not exist.'
+  notEnoughMoney: '&4You cannot afford &6&v1 &4to do this.'
+  notEnoughMoneyFaction: '&4The faction &v1 &4cannot afford &6&v2 &4to do this.'
+  notNumeric: '&6&v1 &4is not a numeric value.'
+  notVassal: '&v1 &4is not a vassal of &v2&4.'
+  notWilderness: '&4You can only do this in the wilderness.'
+  ownFaction: '&4This is your own faction.'
+  personalUnionWithFaction: '&4The faction &v1 &4does not have a personal union with
+    &v2&4.'
+  notInAnyFaction: '&4The player &6&v1 &4is not member of a faction.'
+  playerNotInFaction: '&4The player &6&v1 &4is not member of the faction &6&v2&4.'
+  playerNotOnline: '&4The player &6&v1 &4is not online.'
+  regionIsAlreadyClaimed: '&v1 &4is already claimed by &v2&4.'
+  regionIsCore: '&v1 &4is a core province of &v2&4.'
+  selectIdeaGroup: '&7You have to select the idea group first.'
+  specifyFaction: '&4You have to specify a faction.'
+  vassal: '&4The faction &v1 &4is a vassal.'
+  vassalIsMotherAdmin: '&4The player &v1 &4is already leader of the mother faction.'
+faction:
+  integratedVassal: '&aThe faction &v1 &aintegrated their vassal &v2&a.'
+  invite: '&aThe faction &v1&a would like to have you as a comrade. Join them?'
+  join:
+    accept: '&v1 &ajoined the faction.'
+    deny: '&v1 &adecided not to join the faction.'
+  left: '&v1 &aleft the faction.'
+  lostClaim: '&aThe faction &v1&a lost their claim for &v2&a.'
+  lostCore: '&aThe faction &v1&a lost their core at &v2&a.'
+  newClaim: '&aThe faction &v1&a got a new claim for &v2&a.'
+  newCore: '&aThe faction &v1&a got a new core at &v2&a.'
+  paid: '&aThe faction &v1 &apaid &6&v2&a.'
+  playerKicked: '&aThe player &v1 &ahas been kicked out of the faction by &v2&a.'
+  playerKickedAuto: '&aThe player &v1 &ahas been kicked out of the faction automatically.'
+  personalUnionFormed: '&aThe factions &v1 &aand &v2 &adecided to unite their dynasties
+    under &v3 &aand formed a personal union.'
+  storage: '&aStorage'
+governmentType:
+  monarchy: Monarchy
+  republic: Republic
+  theocracy: Theocracy
+help:
+  addCasusBelli: /f addCasusBelli [subject faction] [CB type] [target faction] - Adds
+    a CB to the faction.
+  admin: /f admin ([faction]) [player] - Passes the ownership of a faction to another
+    player.
+  ally: /f ally ([faction]) [target] - Sends an alliance request to the target faction.
+  casusBelli: /f casusBelli ([faction] - Shows all of your casus belli (except raid).
+  chat: /f chat [f(action)|p(ublic)] [faction] - Changes the chat mode.
+  claim: /f claim ([faction]) - Claims a territory.
+  confirmWar: /f confirmWar [date] - Technical command used to confirm wars.
+  create:
+    bull: /f createBull [name] - Creates a new bull with [name] as the author.
+  createVassal: /f createVassal [tag] [leader] - Creates a new faction as your vassal.
+  desc: /f desc [faction] [description] - Changes the description of the faction.
+  disband: /f disband [faction] - Disbands a faction.
+  giveRegion: /f giveRegion [faction] - Gives the current region to a vassal. Removes
+    cores.
+  help: /f help [page] - Shows the help page.
+  home: /f home ([faction]) - Teleports to the home point of a faction.
+  idea: /f idea ([faction]) - Opens the idea menu.
+  integrate: /f integrate ([faction]) [vassal] - Integrates a vassal.
+  invite: /f invite [faction] [player] - Invites a player to join the faction.
+  join: /f join [faction] - Accepts an invitation.
+  kick: /f kick [player] - Kicks the specified player out of the faction.
+  leave: /f leave - Makes the player leave the faction.
+  list: /f list ([disbanded]) - Shows a list of all factions.
+  longTag: /f longtag [faction] [tag] - Changes the full name of a faction.
+  main: /f - General status information.
+  mob: /f mob [type] - Spawns a faction mob of this type.
+  mod: /f mod [faction] [player] - Grants another player faction moderator permissions.
+  money: /f money [faction] [b(alance)|d(eposit)|w(ithdraw)] ([amount])
+  neutral: /f neutral ([faction]) [target] - Changes the relation with a faction to
+    neutral.
+  oath: /f oath ([faction]) [target] - Offers an oath of fealty to the faction sothat
+    you become its vassal.
+  open: /f open [faction] - Allows / Forbids all players to join the faction without
+    an invitation.
+  payday: /f payday ([amount]) - Enforces paydays.
+  playerHome: /home ([player]) - Teleports the sender to the player's home.
+  power: /f power ([player]) - Displays a player's power value.
+  region: /f region ([region name/ID]) - Shows information about a region.
+  regions: /f regions - Shows a list of all regions.
+  relation: /f relation [faction] [target] [relation] - Sends a relation request to
+    the target faction.
+  reload: /f reload - Reloads the plugin.
+  requests: /f requests - Shows your current requests
+  scoreboard: /f scoreboard - Toggles the scoreboard.
+  setAnthem: /f setAnthem [faction] [anthem name] - Sets the faction anthem to a custom
+    sound.
+  setBanner: /f setBanner [faction] - Sets the faction banner to the one in the player's
+    main hand.
+  setCapital: /f setCapital - Sets the faction's capital to the player's current region.
+  setColor: /f setColor [faction] [fill color] [line color] [icon] - Sets the livemap
+    color to a specific RRGGBB color.
+  setGovernment: /f setGovernment [faction] [type] - Sets the government type of the
+    faction.
+  setHome: /f setHome [faction] - Sets the home point of the faction to the current
+    position.
+  setPlayerHome: /sethome ([player]) - Sets a player's home location.
+  setPower: /f setPower [player] [value] - Sets a player's power to a specific value.
+  shortTag: /f shortTag ([faction]) [tag] - Changes the short tag of the faction.
+  show: /f show [faction] - Shows a faction's status information.
+  storage: /f storage [faction] - Shows a faction's storage.
+  tag: /f tag ([faction]) [tag] - Changes the name of the faction.
+  title: /f title [player] [title] - Changes the player's title.
+  tradeOffer: /f tradeOffer ([faction]) - Creates a trade offer.
+  unclaim: /f unclaim - Unclaims a territory.
+  uninvite: /f uninvite ([faction]) [player] - Removes a player's invitation.
+  unite: /f unite ([faction]) [target] - Forms a real union with another faction.
+  vassalize: /f vassalize ([faction]) [target] - Vassalizes the target faction.
+  war: /f war [faction] - Declares war on a faction.
+  warStatus: /f warStatus ([faction]) - Shows the war status of a faction.
+  world: /f world - World management commands for server admins.
+idea:
+  group:
+    centralization: Centralization
+    diplomacy: Diplomacy
+    economy: Economy
+    mercenary: Mercenary
+    religion: Religion
+    settler: Settler
+    trade: Trade
+  desc:
+    settler:
+      colonization: '&3+10% Manpower'
+  menu:
+    groups:
+      title: '&6&lIdea Groups'
+      deselected: '&aYou deselected the idea group &6&v1&a.'
+      selected: '&aYou selected the idea group &6&v1&a.'
+    ideas:
+      title: '&6&l&v1 Ideas'
+  name:
+    settler:
+      colonization: Colonization
+log:
+  dynmapNotEnabled: '&4Could not find Dynmap.'
+  newFactionData: '&6A new faction data file has been created and saved as &v1.'
+  newPlayerData: '&6A new player data file has been created and saved as &v1.'
+misc:
+  accept: '[ ACCEPT ]'
+  cancel: '[ CANCEL ]'
+  continue: '&6&lCONTINUE'
+  deny: '[ DENY ]'
+  loner: Loner
+  openRequests: '&bYou have unanswered requests left! Use &4/f req &bto list them.'
+  purchase:
+    success: '&aYou successfully purchased &6&v1&a.'
+  shiftClick:
+    purchase: '&7Hold [SHIFT] and click to purchase.'
+    select: '&7Hold [SHIFT] and click to select.'
+  wilderness: Wilderness
+mob:
+  trader: '&6Trader'
+  villager: '&6Villager'
+population:
+  adjustConsume: '&6&lAdjust consume - &v1'
+  demands:
+    button: '&aDemands'
+    title: '&6&lDemands - &v1'
+  denyResource: '&4Deny one'
+  grantResource: '&aGrant one'
+  granting1: '&aThe people are currently granted'
+  granting2: '&6&v1 &aunits of &6&v2&a.'
+  military:
+    button: '&aMilitary Status'
+    soldiers: '&aSoldiers'
+    title: '&6&lMilitary Status - &v1'
+  required: '&6&v1 &apeople need &6&v2 &aunits of &6&v3&a.'
+  title: '&6&lPopluation - &v1'
+  warning:
+    notEnoughResourcesGranted: '&4Your faction does not grant as many resources of
+      the following types as your people wish:'
+    tooManyResourcesGranted: '&4Your faction grants more resources of the following
+      types than your people need:'
+protection:
+  cannotAttack:
+    capital: '&4You may not attack in the capital of &v1&4.'
+    faction: '&4You may not attack in the territory of &v1&4.'
+    player: '&4You may not attack a member of &v1&4.'
+  cannotBuildFaction: '&4You may not build in the territory of &v1&4.'
+  cannotBuildWilderness: '&4You may not build in the wilderness.'
+  cannotDestroyFaction: '&4You may not destroy the territory of &v1&4.'
+  cannotDestroyWilderness: '&4You may not destroy the wilderness.'
+  cannotEquipFaction: '&4You may not equip armor stands in the territory of &v1&4.'
+  cannotInteractFaction: '&4You may not interact with &6&v1 &4in the territory of
+    &v2&4.'
+  cannotLeashFaction: '&4You may not unleash animals in the territory of &v1&4.'
+  cannotShearFaction: '&4You may not sheer animals in the territory of &v1&4.'
+  cannotSplashPotionFaction: '&4You may not splash potions in the territory of &v1&4.'
+  cannotTameFaction: '&4You may not tame animals in the territory of &v1&4.'
+  cannotRegisterFaction: '&4You may not register LWC protections in the territory
+    of &v1&4.'
+  damageReduced: '&4Your damage is reduced by &v1% in the territory of &v2&4!'
+region:
+  barren: Barren
+  city: City
+  desert: Desert
+  farmland: Farmland
+  forest: Forest
+  magic: Magic
+  mountainous: Mountainous
+  sea: Sea
+  warZone: War Zone
+relation:
+  alliance: Alliance
+  allianceDesc: Two friendly factions form an alliance to defend each other.
+  coalition: Coalition
+  coalitionDesc: Two neutral factions form a transient alliance to defeat a common
+    enemy.
+  confirmed: '&aThe factions &v1 &aand &v2 &aset their relation to &v3&a.'
+  denied: '&aThe faction &v1 &adenied the request to set the relation with &v2&a to
+    &v3&a.'
+  enemy: Enemy
+  enemyDesc: It seems these factions don't like each other very much...
+  lord: Lord
+  lordDesc: This faction rules over its vassal.
+  own: Own
+  ownDesc: Your faction.
+  peace: Peace
+  peaceDesc: There are no special contacts to this faction.
+  personalUnion: Personal Union
+  personalUnionDesc: Two factions are ruled by the same monarch.
+  realUnion: Real Union
+  realUnionDesc: An advanced personal union. The factions can be regarded as one.
+  requestButton: '&v1 &a=> &v2: Change relation to &v3'
+  united: '&aThe factions &v1 &aand &v2 &aformed a &2Real Union&a.'
+  vassal: Vassal
+  vassalDesc: This faction vowed to serve its foreign lord.
+  vassalized: '&aThe faction &v1 &avassalized &v2&a.'
+  wish: '&aThe faction &v1 &aasked your faction to change your relation to &v2&a.'
+  wishOwn: '&v1 &aasked the faction &v2 &ato change your relation to &v3&a.'
+relatiob,requestVassal: '&4Accepting will make &v1 &4a vassal.'
+resource:
+  coal: Coal
+  sulphur: Sulphur
+  gold: Gold
+  iron: Iron
+  diamond: Diamond
+  emerald: Emerald
+  lapisLazuli: Lapis Lazuli
+  quartz: Quartz
+  redstone: Redstone
+  andesite: Andesite
+  diorite: Diorite
+  granite: Granite
+  gravel: Gravel
+  obsidian: Obsidian
+  stone: Stone
+  chicken: Chicken
+  cow: Cow
+  horse: Horse
+  pig: Pig
+  rabbit: Rabbit
+  sheep: Sheep
+  apple: Apple
+  beetroot: Beetroot
+  carrot: Carrot
+  chorus: Chorus
+  cocoa: Cocoa
+  melon: Melon
+  potato: Potato
+  pumpkin: Pumpkin
+  sugar: Sugar
+  wheat: Wheat
+  acacia: Acacia Wood
+  birch: Birch Wood
+  darkOak: Dark Oak Wood
+  jungle: Jungle Wood
+  oak: Oak Wood
+  spruce: Spruce Wood
+  paper: Paper
+  mushrooms: Mushrooms
+  codfish: Codfish
+  clownfish: Clownfish
+  pufferfish: Pufferfish
+  salmon: Salmon
+  ink: Ink
+  salt: Salt
+  water: Water
+  clay: Clay
+  prismarine: Prismarine
+  dragonBreath: Dragon Breath
+  experience: Experience
+  netherWart: Nether Wart
+  purpur: Purpur
+  cactus: Cactus
+  glass: Glass
+  redSandstone: Red Sandstone
+  yellowSandstone: Yellow Sandstone
+  craft: Craft
+  manpower: Manpower
+  taxes: Taxes
+  subcategory:
+    alchemy: Alchemy
+    cannoning: Cannoning
+    dye: Dye
+    fur: Fur
+    glass: Glass
+    heating: Heating
+    jewelry: Jewelry
+    leather: Leather
+    literature: Literature
+    meat: Luxury food
+    riders: Riders
+    roads: Roads
+    smithery: Smithery
+    spices: Spices
+    staples: Staples
+    stone: Stone
+    water: Water
+    wood: Wood
+saturationLevel:
+  fullySaturated: Fully saturated
+  mostlySaturated: Mostly saturated
+  notSaturated: Not saturated
+  partiallySaturated: Partially saturated
+  poor: Poor
+  saturated: Saturated
+  surplus: Surplus
+storage:
+  nonPhysical:
+    manpower: '&cCheck your villagers to see information.'
+    taxes: '&cTaxes flow into your bank account (/f money).'
+    warning: '&c&v1 is a non-physical resource.'
+  payday: '&aA day has passed. Taxes and trade have been collected.'
+  stock: '&3Stock: &v1'
+  title: '&6&lStorage - &v1'
+trade:
+  consume: '&4Consume: &v1'
+  economy: '&6&lEconomy - &v1'
+  export: '&4Export'
+  import: '&aImport'
+  incomeManagement: '&aIncome Management'
+  price: Price
+  offer:
+    chooseExport: '&2&lChoose your action:'
+    choosePartner: '&2&lChoose your trade partner:'
+    amount: Amount
+    chooseResource: '&2&lChoose a resource:'
+    send:
+      trade: '&aThe faction &v1 &aoffers us a trade.'
+      export: '&aThey would like to export &6&v1 &afor &6&v2&a.'
+      import: '&aThey would like to import &6&v1 &afor &6&v2&a.'
+    title: '&aTrade Offer'
+  resourceTitle: '&6&l&v1 - &v2'
+  success:
+    export: '&aYou successfully exported &6&v1 &afor &6&v2 &ato &v3&a.'
+    import: '&aYou successfully imported &6&v1 &afor &6&v2 &afrom &v3&a.'
+  title: '&6&lTrade - &v1'
+war:
+  callToArms:
+    ally:
+      '1': '&dYou are allied to &v1.'
+      '2':
+        allied: '&4They are allied to your enemy. Your alliance'
+        notAllied: '&eYou may ask, but not force them'
+      '3':
+        allied: '&4will break if you declare war.'
+        notAllied: '&eto join an offensive war.'
+    coalition:
+      '1': '&5You''ve prepared a coalition with &v1.'
+      '2': '&2They already agreed to side with you.'
+    own: '&a&v1 is your faction.'
+    vassal:
+      '1': '&bv1 is your vassal.'
+      '2':
+        stronger: '&2You are strong enough to enforce their help.'
+        weaker: '&eYou are not strong enough to enforce their help.'
+    defender: '&4&v1 will side with your enemy.'
+    add: '&6&lClick to call them to arms.'
+    remove: '&6&lClick to retract the call to arms.'
+    title: '&4&lCall to arms'
+  declaration:
+    allies: '&9Allies: '
+    broadcast: '&v1 &4of &v2 &4declared war on &v3&4!'
+    cancelled: '&6War cancelled.'
+    casusBelli: '&eCasus Belli: '
+    defenders: '&cDefenders: '
+    startDate: '&4&oThe war will start in 24 hours.'
+    title: '&4&l#=== DÉCLARATION DE GUERRE ===#'
+  demand:
+    menu:
+      item: '&3Add item demand'
+      list: '&aList demands'
+      title: Create new war demand
