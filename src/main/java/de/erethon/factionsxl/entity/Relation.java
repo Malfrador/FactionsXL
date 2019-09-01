@@ -16,15 +16,15 @@
  */
 package de.erethon.factionsxl.entity;
 
-import de.erethon.commons.chat.chat.BaseComponent;
-import de.erethon.commons.chat.chat.ClickEvent;
-import de.erethon.commons.chat.chat.HoverEvent;
-import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.*;
 

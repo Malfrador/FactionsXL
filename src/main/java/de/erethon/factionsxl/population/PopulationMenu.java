@@ -119,7 +119,7 @@ public class PopulationMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
         HumanEntity player = event.getWhoClicked();
-        if (inventory == null || !main.getTitle().equals(inventory.getTitle()) & !demands.getTitle().equals(inventory.getTitle())) {
+        if (inventory == null || !main.equals(inventory) & !demands.equals(inventory)) {
             return;
         }
         event.setCancelled(true);

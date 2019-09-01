@@ -17,9 +17,6 @@
 package de.erethon.factionsxl.war;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.chat.chat.BaseComponent;
-import de.erethon.commons.chat.chat.ClickEvent;
-import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -30,6 +27,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

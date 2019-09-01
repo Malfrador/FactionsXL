@@ -95,7 +95,7 @@ public class ListCommand extends FCommand implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!event.getInventory().getTitle().equals(FMessage.CMD_LIST_TITLE.getMessage())) {
+        if (!event.getView().getTitle().equals(FMessage.CMD_LIST_TITLE.getMessage())) {
             return;
         }
         event.setCancelled(true);

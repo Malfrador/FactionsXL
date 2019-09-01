@@ -252,7 +252,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        String title = event.getInventory().getTitle();
+        String title = event.getView().getTitle();
         if (title.equals(FMessage.TRADE_OFFER_CHOOSE_PARTNER.getMessage())) {
             onClickChoosePartner(event);
         } else if (title.equals(FMessage.TRADE_OFFER_CHOOSE_RESOURCE.getMessage())) {
@@ -344,8 +344,8 @@ public class TradeOfferCommand extends FCommand implements Listener {
         Faction creator = offer.hasExporterAccepted() ? offer.getExporter() : offer.getImporter();
         Faction partner = offer.hasExporterAccepted() ? offer.getImporter() : offer.getExporter();
         String exImport = offer.hasExporterAccepted() ? "export" : "import";
-        int rAmount = readAmountFromTitle(event.getInventory().getTitle());
-        BigDecimal rPrice = readPriceFromTitle(event.getInventory().getTitle());
+        int rAmount = readAmountFromTitle(event.getView().getTitle());
+        BigDecimal rPrice = readPriceFromTitle(event.getView().getTitle());
 
         ItemStack button = event.getCurrentItem();
         if (button == null) {

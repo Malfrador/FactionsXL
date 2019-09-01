@@ -104,7 +104,7 @@ public class ResourceMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !gui.getTitle().equals(inventory.getTitle())) {
+        if (inventory == null || !gui.equals(inventory)) {
             return;
         }
         event.setCancelled(true);

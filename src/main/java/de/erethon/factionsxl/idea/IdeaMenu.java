@@ -135,11 +135,11 @@ public class IdeaMenu implements Listener {
             return;
         }
         Inventory inventory = event.getInventory();
-        if (inventory.getTitle().equals(groups.getTitle())) {
+        if (inventory.equals(groups)) {
             onGroupsClick(event);
         }
         for (Entry<IdeaGroup, Inventory> gui : ideas.entrySet()) {
-            if (gui.getValue().getTitle().equals(inventory.getTitle())) {
+            if (gui.getValue().equals(inventory)) {
                 onIdeasClick(event);
                 break;
             }

@@ -17,9 +17,9 @@
 package de.erethon.factionsxl.entity;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.chat.chat.ClickEvent;
-import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.factionsxl.config.FMessage;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

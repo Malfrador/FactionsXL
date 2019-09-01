@@ -17,9 +17,6 @@
 package de.erethon.factionsxl.command.war;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.chat.chat.BaseComponent;
-import de.erethon.commons.chat.chat.ClickEvent;
-import de.erethon.commons.chat.chat.TextComponent;
 import de.erethon.commons.misc.SimpleDateUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
@@ -32,6 +29,9 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
 import java.util.Set;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
