@@ -14,6 +14,7 @@ package de.erethon.commons.gui;
 
 import de.erethon.commons.compatibility.Internals;
 import static de.erethon.commons.gui.GUIButton.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +34,6 @@ import org.bukkit.inventory.ItemStack;
  */
 @Deprecated
 public class PageGUI {
-
-    private static final Sound BLOCK_ANVIL_PLACE = Sound.valueOf(Internals.isAtLeast(Internals.v1_9_R1) ? "BLOCK_ANVIL_PLACE" : "ANVIL_LAND");
-    private static final Sound UI_BUTTON_CLICK = Sound.valueOf(Internals.isAtLeast(Internals.v1_9_R1) ? "UI_BUTTON_CLICK" : "CLICK");
 
     private String title;
     private boolean allowStealing;
@@ -328,9 +326,9 @@ public class PageGUI {
         }
 
         if (clicked.getType() == Material.BARRIER) {
-            ((Player) human).playSound(human.getLocation(), BLOCK_ANVIL_PLACE, 1, 1);
+            ((Player) human).playSound(human.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
         } else if (clicked != null && !clicked.equals(PLACEHOLDER)) {
-            ((Player) human).playSound(human.getLocation(), UI_BUTTON_CLICK, 1, 1);
+            ((Player) human).playSound(human.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         }
     }
 
@@ -340,11 +338,22 @@ public class PageGUI {
 
     public static PageGUI getByInventory(Inventory inventory) {
         for (PageGUI gui : PageGUICache.getInstance().guis) {
-            if (gui.equals(inventory)) {
+            if (gui.title.equals(getGUITitle(inventory))) {
                 return gui;
             }
         }
         return null;
+    }
+
+    public static String getGUITitle(Inventory inventory) {
+        if (Internals.isAtMost(Internals.v1_13_R2)) {
+            try {
+                java.lang.reflect.Method getTitle = Inventory.class.getDeclaredMethod("getTitle");
+                return (String) getTitle.invoke(inventory);
+            } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException exception) {
+            }
+        }
+        throw new UnsupportedOperationException("The legacy GUI system does not support Minecraft 1.14+");
     }
 
 }

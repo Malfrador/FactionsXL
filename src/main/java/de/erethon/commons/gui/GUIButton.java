@@ -12,7 +12,6 @@
  */
 package de.erethon.commons.gui;
 
-import de.erethon.commons.compatibility.CompatibilityHandler;
 import de.erethon.headlib.HeadLib;
 import java.util.Arrays;
 import org.bukkit.ChatColor;
@@ -27,11 +26,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 @Deprecated
 public class GUIButton {
 
-    private static boolean newMats = CompatibilityHandler.getInstance().getVersion().useNewMaterials();
-
     /* Raw ItemStacks*/
-    public static ItemStack BLACK_STAINED_GLASS_PANE = newMats ? new ItemStack(Material.valueOf("BLACK_STAINED_GLASS_PANE")) : new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 15);
-    public static ItemStack PLAYER_HEAD = newMats ? new ItemStack(Material.valueOf("PLAYER_HEAD")) : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+    public static ItemStack BLACK_STAINED_GLASS_PANE = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+    public static ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD);
 
     /* Raw skulls */
     public static final ItemStack LEFT = HeadLib.setSkullOwner(PLAYER_HEAD, "69b9a08d-4e89-4878-8be8-551caeacbf2a",
@@ -40,9 +37,9 @@ public class GUIButton {
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2ZjFhMjViNmJjMTk5OTQ2NDcyYWVkYjM3MDUyMjU4NGZmNmY0ZTgzMjIxZTU5NDZiZDJlNDFiNWNhMTNiIn19fQ==");
 
     /* GUI buttons */
-    public static final ItemStack BACK = setDisplay(LEFT, "&6&lBACK");
-    public static final ItemStack NEXT_PAGE = setDisplay(RIGHT, "&6&lNEXT PAGE");
-    public static final ItemStack PREVIOUS_PAGE = setDisplay(LEFT, "&6&lPREVIOUS PAGE");
+    public static final ItemStack BACK = setDisplay(LEFT, ChatColor.GOLD.toString() + ChatColor.BOLD + "&6&lBACK");
+    public static final ItemStack NEXT_PAGE = setDisplay(RIGHT, ChatColor.GOLD.toString() + ChatColor.BOLD + "NEXT PAGE");
+    public static final ItemStack PREVIOUS_PAGE = setDisplay(LEFT, ChatColor.GOLD.toString() + ChatColor.BOLD + "PREVIOUS PAGE");
     public static final ItemStack PLACEHOLDER = setDisplay(BLACK_STAINED_GLASS_PANE, ChatColor.RESET.toString());
 
     public static ItemStack setDisplay(ItemStack itemStack, String name, String... lore) {

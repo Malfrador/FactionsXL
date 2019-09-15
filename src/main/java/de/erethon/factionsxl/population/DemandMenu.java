@@ -93,7 +93,7 @@ public class DemandMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
-        if (inventory == null || gui == null || !gui.equals(inventory)) {
+        if (inventory == null || gui == null || !PageGUI.getGUITitle(gui).equals(event.getView().getTitle())) {
             return;
         }
         event.setCancelled(true);

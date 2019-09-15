@@ -43,6 +43,7 @@ public class MilitaryMenu implements Listener {
 
     public MilitaryMenu(Faction faction) {
         this.faction = faction;
+        if (true) return; // Unused
         Bukkit.getPluginManager().registerEvents(this, plugin);
         setupGUI();
     }

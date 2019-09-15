@@ -144,6 +144,7 @@ public enum FMessage implements Message {
     ERROR_LEAVE_FACTION("error.leaveFaction"),
     ERROR_MAX_IDEA_GROUPS_REACHED("error.maxIdeaGroupsReached"),
     ERROR_NAME_IN_USE("error.nameInUse"),
+    ERROR_NO_FACTIONS("error.noFactions"),
     ERROR_NO_PERMISSION("error.noPermission"),
     ERROR_NO_SUCH_CASUS_BELLI("error.noSuch.casusBelli"),
     ERROR_NO_SUCH_FACTION("error.noSuch.faction"),

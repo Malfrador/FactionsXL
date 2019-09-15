@@ -168,6 +168,7 @@ error:
   leaveFaction: '&4You have to leave your faction in order to do this.'
   maxIdeaGroupsReached: '&7You reached the maximum amount of idea groups.'
   nameInUse: '&4The name &6&v1 &4is already in use.'
+  noFactions: '&4There are currently no factions.'
   noPermission: '&4You do not have permission to do this.'
   noSuch:
     casusBelli: '&4The casus belli &6&v1 &4does not exist.'

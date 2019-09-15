@@ -65,6 +65,10 @@ public class ListCommand extends FCommand implements Listener {
         } else {
             factions = plugin.getFactionCache().getActive();
         }
+        if (factions.isEmpty()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_FACTIONS.getMessage());
+            return;
+        }
 
         int size = (int) (9 * Math.ceil(((double) factions.size() / 9)));
         Inventory gui = Bukkit.createInventory(null, size, FMessage.CMD_LIST_TITLE.getMessage());

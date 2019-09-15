@@ -131,7 +131,7 @@ public class TradeMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !gui.equals(inventory) || event.getSlot() >= 45) {
+        if (inventory == null || !gui.getTitle().equals(event.getView().getTitle()) || event.getSlot() >= 45) {
             return;
         }
         ItemStack button = inventory.getItem(event.getSlot());

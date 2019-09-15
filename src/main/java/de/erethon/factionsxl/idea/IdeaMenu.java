@@ -134,12 +134,11 @@ public class IdeaMenu implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
-        Inventory inventory = event.getInventory();
-        if (inventory.equals(groups)) {
+        if (event.getView().getTitle().equals(PageGUI.getGUITitle(groups))) {
             onGroupsClick(event);
         }
         for (Entry<IdeaGroup, Inventory> gui : ideas.entrySet()) {
-            if (gui.getValue().equals(inventory)) {
+            if (PageGUI.getGUITitle(gui.getValue()).equals(event.getView().getTitle())) {
                 onIdeasClick(event);
                 break;
             }
