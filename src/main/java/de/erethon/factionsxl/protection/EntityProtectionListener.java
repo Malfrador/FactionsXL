@@ -19,6 +19,7 @@ package de.erethon.factionsxl.protection;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.board.RegionType;
+import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
@@ -64,9 +65,13 @@ public class EntityProtectionListener implements Listener {
     }
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (config.isExcludedWorld(event.getEntity().getWorld())) {
+            return;
+        }
         Player attacker = getDamageSource(event.getDamager());
         Entity eAttacker = attacker != null ? attacker : event.getDamager();
         Entity eDefender = event.getEntity();
@@ -85,14 +90,14 @@ public class EntityProtectionListener implements Listener {
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
         Faction rFaction = region != null ? region.getOwner() : null;
-        double shield = plugin.getFConfig().getTerritoryShield();
+        double shield = config.getTerritoryShield();
         if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected() && (aFaction == null || !aFaction.isInWar(dFaction))) {
-            if (plugin.getFConfig().isTerritoryProtectionEnabled() && (!plugin.getFConfig().isCapitalProtectionEnabled()
+            if (config.isTerritoryProtectionEnabled() && (!config.isCapitalProtectionEnabled()
                     || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
-                ParsingUtil.sendActionBarMessage(attacker, (plugin.getFConfig().isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
+                ParsingUtil.sendActionBarMessage(attacker, (config.isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
                         : FMessage.PROTECTION_CANNOT_ATTACK_FACTION).getMessage(), rFaction);
                 event.setCancelled(true);
             } else if (shield != 0) {
@@ -168,6 +173,9 @@ public class EntityProtectionListener implements Listener {
     }
 
     private void forbidIfInProtectedTerritory(Player attacker, Entity damaged, Cancellable event, Action action) {
+        if (config.isExcludedWorld(damaged.getWorld())) {
+            return;
+        }
         if (attacker == null) {
             return;
         }

@@ -303,6 +303,9 @@ public class LandProtectionListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (config.isExcludedWorld(event.getPlayer().getWorld())) {
+            return;
+        }
         if (event.hasBlock() && NO_INTERACT.contains(event.getClickedBlock().getType())) {
             Player breaker = event.getPlayer();
             if (breaker == null) {
@@ -333,6 +336,9 @@ public class LandProtectionListener implements Listener {
     }
 
     private void forbidIfInProtectedTerritory(Player breaker, Block destroyed, Cancellable event, boolean destroy) {
+        if (config.isExcludedWorld(destroyed.getWorld())) {
+            return;
+        }
         if (breaker == null) {
             return;
         }
