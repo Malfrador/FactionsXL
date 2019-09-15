@@ -100,7 +100,7 @@ public class FactionsXL extends DREPlugin {
                 .spigot(true)
                 .economy(true)
                 .metrics(true)
-                .internals(Internals.v1_14_R1)
+                .internals(Internals.v1_13_R2, Internals.v1_14_R1)
                 .build();
     }
 
@@ -110,8 +110,8 @@ public class FactionsXL extends DREPlugin {
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
-         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.13 to work. It is not compatible with CraftBukkit and older versions.");
+        if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.14.4 to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }
@@ -200,8 +200,6 @@ public class FactionsXL extends DREPlugin {
     }
 
     public void loadCore() {
-        // Load Language
-        loadMessageConfig(new File(LANGUAGES, "english.yml"));
         // Load Config
         loadFConfig(new File(getDataFolder(), "config.yml"));
         if (fConfig.getAutoSaveInterval() != -1) {
@@ -212,8 +210,6 @@ public class FactionsXL extends DREPlugin {
                 }
             }.runTaskTimerAsynchronously(this, fConfig.getAutoSaveInterval(), fConfig.getAutoSaveInterval());
         }
-        // Load Language 2
-        loadMessageConfig(new File(LANGUAGES, fConfig.getLanguage() + ".yml"));
         loadFData();
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
@@ -306,13 +302,6 @@ public class FactionsXL extends DREPlugin {
      */
     public void loadFData() {
         fData = new FData();
-    }
-
-    /**
-     * load / reload a new instance of MessageConfig
-     */
-    public void loadMessageConfig(File file) {
-        messageHandler = new MessageHandler(file);
     }
 
     /**
