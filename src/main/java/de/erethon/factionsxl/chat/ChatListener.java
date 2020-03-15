@@ -19,11 +19,17 @@ package de.erethon.factionsxl.chat;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.player.FPlayerCache;
 import de.erethon.factionsxl.util.ParsingUtil;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,15 +56,22 @@ public class ChatListener implements Listener {
         if ((channel == ChatChannel.PUBLIC || channel == ChatChannel.LOCAL) && !fConfig.isPublicChatHandled()) {
             return;
         }
+        if (!fPlayer.getData().getPublicChat() && fPlayer.getChatChannel() == ChatChannel.PUBLIC) {
+            player.sendMessage(ChatColor.GREEN + "Du hast den Public-Chat deaktiviert! Nutze /f togglepublic");
+            event.setCancelled(true);
+        }
 
         if (!event.isCancelled()) {
             event.setCancelled(true);
             if (channel == ChatChannel.PUBLIC) {
                 for (Player receiver : Bukkit.getOnlinePlayers()) {
                     String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
-                    MessageUtil.sendMessage(receiver, format + event.getMessage());
+                    if (fPlayers.getByPlayer(receiver).getData().getPublicChat()) {
+                        MessageUtil.sendMessage(receiver, format + event.getMessage());
+                    }
                 }
-            } else if (channel == ChatChannel.LOCAL) {
+            }
+            else if (channel == ChatChannel.LOCAL) {
                 for (Entity entity : player.getNearbyEntities(fConfig.getLocalChatRange(), fConfig.getLocalChatRange(), fConfig.getLocalChatRange())) {
                     if (entity instanceof Player) {
                         Player receiver = (Player) entity;
@@ -68,7 +81,8 @@ public class ChatListener implements Listener {
                 }
                 String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayer);
                 MessageUtil.sendMessage(player, format + event.getMessage());
-            } else {
+            }
+            else {
                 for (Relation relation : channel.getRelations()) {
                     for (Player receiver : fPlayer.getFaction().getOnlineByRelation(relation)) {
                         String format = ParsingUtil.replaceChatPlaceholders(fConfig.getChatFormat(channel), fPlayer, fPlayers.getByPlayer(receiver));
@@ -79,5 +93,4 @@ public class ChatListener implements Listener {
             MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
         }
     }
-
 }

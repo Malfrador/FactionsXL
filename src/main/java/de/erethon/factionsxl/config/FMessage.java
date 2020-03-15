@@ -226,6 +226,7 @@ public enum FMessage implements Message {
     HELP_RELATION("help.relation"),
     HELP_RELOAD("help.reload"),
     HELP_REQUESTS("help.requests"),
+    HELP_ROLEPLAY("help.roleplay"),
     HELP_SCOREBOARD("help.scoreboard"),
     HELP_SET_ANTHEM("help.setAnthem"),
     HELP_SET_BANNER("help.setBanner"),

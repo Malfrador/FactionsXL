@@ -103,7 +103,7 @@ public class WorldCommand extends FCommand {
             handleFaction(player, region, factions.getByName(args[i]), args, i);
 
         } else {
-            sender.sendMessage("TODO: /f world help");
+            sender.sendMessage("Usage: /f w create / delete / add(Chunk) / r(emoveChunk) / rename / setType / setLevel / addCore");
         }
     }
 

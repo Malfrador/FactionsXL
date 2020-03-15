@@ -30,6 +30,8 @@ import de.erethon.factionsxl.command.war.WarCommand;
 import de.erethon.factionsxl.command.war.WarStatusCommand;
 import de.erethon.factionsxl.config.FConfig;
 
+import javax.management.relation.Role;
+
 /**
  * An enumeration of all command instances.
  *
@@ -95,6 +97,7 @@ public class FCommandCache extends DRECommandCache {
     public StorageCommand storage = new StorageCommand();
     public TagCommand tag = new TagCommand();
     public TitleCommand title = new TitleCommand();
+    public TogglePublicCommand togglePublic = new TogglePublicCommand();
     public TradeOfferCommand tradeOffer = new TradeOfferCommand();
     public UnclaimCommand unclaim = new UnclaimCommand();
     public UninviteCommand uninvite = new UninviteCommand();
@@ -152,12 +155,19 @@ public class FCommandCache extends DRECommandCache {
         addCommand(shortTag);
         addCommand(show);
         addCommand(tag);
+        addCommand(togglePublic);
         addCommand(title);
         addCommand(unclaim);
         addCommand(uninvite);
         addCommand(war);
         addCommand(warStatus);
         addCommand(world);
+        // experimental commands
+        addCommand(storage);
+        addCommand(tradeOffer);
+        addCommand(addCasusBelli);
+        addCommand(idea);
+
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {
             addCommand(idea);

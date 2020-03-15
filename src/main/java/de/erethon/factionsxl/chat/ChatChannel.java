@@ -30,7 +30,8 @@ public enum ChatChannel {
     COALITION(ChatColor.RED, Relation.ALLIANCE_2, Relation.ALLIANCE, Relation.COALITION),
     FACTION(ChatColor.GREEN, Relation.ALLIANCE_2),
     LOCAL(ChatColor.GRAY, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY),
-    PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
+    PUBLIC(ChatColor.WHITE, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY),
+    ROLEPLAY(ChatColor.GRAY, Relation.ALLIANCE, Relation.COALITION, Relation.PEACE, Relation.ENEMY);
 
     private ChatColor color;
     private List<Relation> relations;

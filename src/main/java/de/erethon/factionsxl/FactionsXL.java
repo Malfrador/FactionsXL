@@ -100,7 +100,7 @@ public class FactionsXL extends DREPlugin {
                 .spigot(true)
                 .economy(true)
                 .metrics(true)
-                .internals(Internals.v1_13_R2, Internals.v1_14_R1)
+                .internals(Internals.v1_13_R2, Internals.v1_14_R1, Internals.v1_15_R1)
                 .build();
     }
 

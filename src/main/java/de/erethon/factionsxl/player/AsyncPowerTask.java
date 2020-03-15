@@ -17,6 +17,7 @@
 package de.erethon.factionsxl.player;
 
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FData;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class AsyncPowerTask extends BukkitRunnable {
 
     FData data = FactionsXL.getInstance().getFData();
+    FactionsXL plugin = FactionsXL.getInstance();
+    FConfig fConfig = plugin.getFConfig();
 
     private double increaseRate;
     private double decreaseRate;
@@ -73,7 +76,11 @@ public class AsyncPowerTask extends BukkitRunnable {
 
         data.power = updatedPower;
         data.lastPowerUpdate = System.currentTimeMillis();
-        FactionsXL.debug("Updated power values");
+        if (fConfig.getSendPowerUpdate())
+        {
+            FactionsXL.debug("Updated power values");
+        }
+
     }
 
 }

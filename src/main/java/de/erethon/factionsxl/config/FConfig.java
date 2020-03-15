@@ -61,6 +61,8 @@ public class FConfig extends DREConfig {
     public static final String SCOREBOARD_VALUE_PREFIX = "&7 ";
     public static final String VS = "&f : &c";
 
+    // General
+    private boolean sendPowerUpdate = true;
     private String language = "english";
     private double autoSaveInterval = 10;
     private double dayLength = 24;
@@ -105,6 +107,7 @@ public class FConfig extends DREConfig {
     private String chatFormatAlly = "&d[" + RELATION_COLOR + FACTION_TAG + "&d] " + RELATION_COLOR + PLAYER_PREFIX + "&d" + PLAYER_NAME + ": ";
     private String chatFormatCoalition = "&c[" + RELATION_COLOR + FACTION_TAG + "&c] " + RELATION_COLOR + PLAYER_PREFIX + "&c" + PLAYER_NAME + ": ";
     private String chatFormatFaction = RELATION_COLOR.getPlaceholder() + PLAYER_PREFIX + "&a" + PLAYER_TITLE + " " + PLAYER_NAME + ": ";
+    private String chatFormatRoleplay = "&8[&6RP&8]" + PLAYER_DYNASTY + "&8: &7";
 
     // Protection
     private boolean lwcEnabled = true;
@@ -240,6 +243,13 @@ public class FConfig extends DREConfig {
     }
 
     /* Getters and setters */
+    /**
+     * @return
+     * should we send "Updated power values" to console when updating power?
+     */
+    public boolean getSendPowerUpdate() {
+        return sendPowerUpdate;
+    }
     /**
      * @return
      * the language
@@ -429,6 +439,8 @@ public class FConfig extends DREConfig {
                 return chatFormatLocal;
             case PUBLIC:
                 return chatFormatPublic;
+            case ROLEPLAY:
+                return chatFormatRoleplay;
             default:
                 return null;
         }

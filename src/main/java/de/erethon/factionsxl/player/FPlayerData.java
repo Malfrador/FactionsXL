@@ -44,6 +44,7 @@ public class FPlayerData extends DREConfig {
     private boolean anthemsEnabled = true;
     private Location home;
     private List<Request> requests;
+    private boolean isPublic = true;
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -159,6 +160,14 @@ public class FPlayerData extends DREConfig {
         home = location;
     }
 
+    public boolean getPublicChat() {
+        return isPublic;
+    }
+
+    public void setPublicChat(boolean enabled) {
+        isPublic = enabled;
+    }
+
     /**
      * @return
      * the requests this player has
@@ -166,6 +175,8 @@ public class FPlayerData extends DREConfig {
     public List<Request> getRequests() {
         return requests;
     }
+
+
 
     /* Serialization */
     @Override
@@ -187,6 +198,7 @@ public class FPlayerData extends DREConfig {
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
         requests = (List<Request>) config.getList("requests", new ArrayList<>());
+        isPublic = config.getBoolean("publicChat");
         FactionsXL.debug("Loaded " + this);
     }
 
@@ -199,6 +211,8 @@ public class FPlayerData extends DREConfig {
         config.set("anthemsEnabled", anthemsEnabled);
         config.set("home", home);
         config.set("requests", requests);
+
+        config.set("publicChat", isPublic);
         try {
             config.save(file);
         } catch (IOException exception) {

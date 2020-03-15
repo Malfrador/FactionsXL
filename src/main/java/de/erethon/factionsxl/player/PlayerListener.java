@@ -165,7 +165,7 @@ public class PlayerListener implements Listener {
         if (region == null || region.getType() != RegionType.WARZONE) {
             return main;
         } else {
-            String warZone = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "[ " + FMessage.REGION_WAR_ZONE.getMessage().toUpperCase() + "]";
+            String warZone = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "[" + FMessage.REGION_WAR_ZONE.getMessage().toUpperCase() + "]";
             return warZone + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + main + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + warZone;
         }
     }
