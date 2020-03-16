@@ -100,6 +100,11 @@ public class FStorage {
                     goods.put(entry.getKey(), goods.get(entry.getKey()) + entry.getValue());
                 }
             }
+            // Reduce influence per day, down to min 50
+            if (region.getInfluence() >= 50) {
+                double reduction =  FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                region.setInfluence(region.getInfluence() - (int) reduction);
+            }
         }
 
         // Consume

@@ -146,6 +146,14 @@ public class WarParty implements FEntity {
         return kills;
     }
 
+    public void addKill() {
+
+    }
+
+    public void addDeath() {
+
+    }
+
     /**
      * @return
      * the amount of collected war points

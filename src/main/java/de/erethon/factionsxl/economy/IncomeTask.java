@@ -31,7 +31,6 @@ public class IncomeTask extends BukkitRunnable {
     public void run() {
         for (Faction faction : plugin.getFactionCache().getActive()) {
             faction.payday();
-            faction.setStability(100);
         }
         plugin.getFData().lastNewDay = System.currentTimeMillis();
         plugin.getFData().save();

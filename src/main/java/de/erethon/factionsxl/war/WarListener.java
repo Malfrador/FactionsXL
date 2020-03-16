@@ -24,6 +24,8 @@ import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.protection.EntityProtectionListener;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -85,6 +87,7 @@ public class WarListener implements Listener {
                 System.out.println("Removed battle " + battle.toString());
                 if (battle.takesPart(player1)) {
                     battle.win(player1);
+                    Bukkit.broadcastMessage("WIn");
                 }
             }
         }

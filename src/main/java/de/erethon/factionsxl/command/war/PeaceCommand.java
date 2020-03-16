@@ -26,6 +26,7 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.demand.WarDemandWarPartyGUI;
@@ -83,6 +84,11 @@ public class PeaceCommand extends FCommand implements Listener {
         for (Faction faction : factions.getByLeader(player)) {
             if (faction.isInWar()) {
                 inWar = true;
+                Set<War> war = wars.getByFaction(faction);      // Instantly ends all wars, for testing only
+                for (War w : war) {
+                    w.end();
+                }
+
                 break;
             }
         }

@@ -93,6 +93,7 @@ public class RegionCommand extends FCommand {
 
         MessageUtil.sendCenteredMessage(sender, c + "&l=== " + region.getName() + " ===");
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
+        sender.sendMessage("Influence: " + region.getInfluence());
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OWNER.getMessage() + c + (faction != null ? faction.getLongName() : "None"));
         if (region.isNeutral()) {
             Faction senderFaction = sender instanceof Player ? factions.getByMember((Player) sender) : null;

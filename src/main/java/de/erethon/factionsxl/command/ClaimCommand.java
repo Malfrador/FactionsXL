@@ -36,7 +36,7 @@ public class ClaimCommand extends FCommand {
 
     public ClaimCommand() {
         setCommand("claim");
-        setAliases("annex");
+        setAliases("cl");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.HELP_CLAIM.getMessage());

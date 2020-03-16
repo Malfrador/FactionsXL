@@ -80,6 +80,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import static java.lang.Math.round;
+
 /**
  * Represents a faction.
  *
@@ -315,7 +317,7 @@ public class Faction extends LegalEntity {
      * the stability value
      */
     public int getStability() {
-        int i = (int) Math.round(stability - exhaustion * exhaustion) - (regions.size() - 1 * regions.size() - 1) / 2;
+        int i = (int) round(stability - exhaustion * exhaustion) - (regions.size() - 1 * regions.size() - 1) / 2;
         if (!members.contains(admin)) {
             i = i - 25;
         }
@@ -519,6 +521,20 @@ public class Faction extends LegalEntity {
     public Set<Region> getRegions() {
         return regions;
     }
+
+    /**
+     * @return
+     * the territory worth of this faction
+     */
+    public int getTerritoryWorth() {
+        Set<Region> rg = regions;
+        int value = 0;
+        for (Region r : rg) {
+            value = round(value + (r.getSize() / 10));
+        }
+        return value;
+    }
+
 
     @Override
     public void setAdmin(OfflinePlayer admin) {

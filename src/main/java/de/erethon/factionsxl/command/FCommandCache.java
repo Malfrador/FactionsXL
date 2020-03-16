@@ -61,6 +61,7 @@ public class FCommandCache extends DRECommandCache {
     public IdeaCommand idea = new IdeaCommand();
     public IntegrateCommand integrate = new IntegrateCommand();
     public InviteCommand invite = new InviteCommand();
+    public InfluenceCommand influxCommand = new InfluenceCommand();
     public JoinCommand join = new JoinCommand();
     public KickCommand kick = new KickCommand();
     public LeaveCommand leave = new LeaveCommand();
@@ -105,6 +106,7 @@ public class FCommandCache extends DRECommandCache {
     public UninviteCommand uninvite = new UninviteCommand();
     public WarCommand war = new WarCommand();
     public WarStatusCommand warStatus = new WarStatusCommand();
+    public AnnexCommand warAnnex = new AnnexCommand();
     public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
@@ -171,6 +173,8 @@ public class FCommandCache extends DRECommandCache {
         addCommand(addCasusBelli);
         addCommand(idea);
         addCommand(peaceCommand);
+        addCommand(influxCommand);
+        addCommand(warAnnex);
 
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

@@ -62,6 +62,7 @@ public class Region {
     private RegionType type;
     private int level;
     private int population;
+    private int influence = 100;
     private Faction owner;
     private World world;
     private Set<LazyChunk> chunks = new HashSet<>();
@@ -178,7 +179,7 @@ public class Region {
 
     /**
      * @return
-     * the population for FationMobs
+     * the population for FactionMobs
      */
     public int getPopulation() {
         return population;
@@ -324,6 +325,24 @@ public class Region {
     }
 
     /**
+     * @return
+     * the world where the region is
+     */
+    public int getInfluence() {
+        return influence;
+    }
+
+    /**
+     * @param inf
+     * new influence value
+     */
+    public void setInfluence(int inf) {
+        if (inf <= 100) {
+            influence = inf;
+        }
+    }
+
+    /**
      * @param faction
      * the faction to calculate the per claim price increase
      * @return
@@ -365,6 +384,7 @@ public class Region {
         mapFillColor = config.getString("mapFillColor");
         mapLineColor = config.getString("mapLineColor");
         unclaimable = config.getBoolean("unclaimable", false);
+        influence = config.getInt("influence");
 
         if (this.config == null) {
             this.config = YamlConfiguration.loadConfiguration(file);
@@ -405,6 +425,7 @@ public class Region {
         config.set("mapFillColor", mapFillColor);
         config.set("mapLineColor", mapLineColor);
         config.set("unclaimable", unclaimable);
+        config.set("influence", influence);
 
         try {
             config.save(file);

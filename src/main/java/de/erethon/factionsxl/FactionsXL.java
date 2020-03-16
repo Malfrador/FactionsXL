@@ -43,6 +43,7 @@ import de.erethon.factionsxl.protection.EntityProtectionListener;
 import de.erethon.factionsxl.protection.LWCIntegration;
 import de.erethon.factionsxl.protection.LandProtectionListener;
 import de.erethon.factionsxl.war.WarCache;
+import de.erethon.factionsxl.war.WarListener;
 import de.erethon.factionsxl.war.WarTNT;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -234,6 +235,7 @@ public class FactionsXL extends DREPlugin {
         }
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
+        manager.registerEvents(new WarListener(), this);
 
         new BukkitRunnable() {
             @Override

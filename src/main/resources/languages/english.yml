@@ -96,7 +96,7 @@ cmd:
     description: '&6Description: '
     formerLeaders: '&6Former leaders: '
     governmentType: '&6Type of government: '
-    info: '&6Power / Amount of provinces: &v1&v2 / &v3'
+    info: '&6Power / Amount of provinces / Worth: &v1&v2 / &v3 / &v4'
     invitation: '&6Invitation required: '
     leader: '&6Leader: '
     members: '&6Members: '

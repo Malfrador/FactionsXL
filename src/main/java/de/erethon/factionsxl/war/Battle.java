@@ -16,8 +16,14 @@
  */
 package de.erethon.factionsxl.war;
 
+import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.FactionCache;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -28,6 +34,8 @@ public class Battle {
     private Player player2;
     private long start;
     private long expiration;
+    FactionsXL plugin = FactionsXL.getInstance();
+    FactionCache factions = plugin.getFactionCache();
 
     public Battle(Player player1, Player player2) {
         this.player1 = player1;
@@ -61,7 +69,26 @@ public class Battle {
     }
 
     public void win(Player player) {
-        // TODO
+        Faction f = factions.getByMember(player);
+        Region r = plugin.getBoard().getByLocation(player.getLocation());
+        Set<WarParty> WP = f.getWarParties();
+        for (WarParty w : WP) {
+            if (w.getRole() == WarPartyRole.ATTACKER) {
+                if (r.getInfluence() >= 0) {
+                    r.setInfluence(r.getInfluence() - 1);
+                    break;
+                }
+            }
+            else if (w.getRole() == WarPartyRole.DEFENDER) {
+                if (r.getInfluence() <= 100) {
+                    r.setInfluence(r.getInfluence() + 1);
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
     }
 
     @Override

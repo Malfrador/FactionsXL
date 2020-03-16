@@ -142,8 +142,10 @@ public class War {
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
         wars.getWars().remove(this);
-        FScoreboard.updateAllProviders();
         System.out.println("War" + this + "ended!");
+        file.delete();
+        this.save();
+        wars.saveAll();
     }
 
     /* Serialization */

@@ -104,7 +104,8 @@ public class ShowCommand extends FCommand {
             MessageUtil.sendMessage(player, FMessage.CMD_SHOW_CAPITAL.getMessage() + c + faction.getCapital().getName());
             String power = String.valueOf(faction.getPower());
             String provinces = String.valueOf(faction.getRegions().size());
-            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces));
+            String value = String.valueOf(faction.getTerritoryWorth());
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces, value));
             MessageUtil.sendMessage(player, faction.getStabilityModifiers(c));
 
             ArrayList<BaseComponent> relList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));
