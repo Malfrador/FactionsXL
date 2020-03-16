@@ -93,13 +93,12 @@ public class RegionCommand extends FCommand {
 
         MessageUtil.sendCenteredMessage(sender, c + "&l=== " + region.getName() + " ===");
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
-        sender.sendMessage("Influence: " + region.getInfluence());
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OWNER.getMessage() + c + (faction != null ? faction.getLongName() : "None"));
         if (region.isNeutral()) {
             Faction senderFaction = sender instanceof Player ? factions.getByMember((Player) sender) : null;
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_PRICE.getMessage() + c + region.getClaimPrice(senderFaction));
         }
-
+        MessageUtil.sendMessage(sender,"&6Influence: " + c + region.getInfluence());
         BaseComponent[] income1 = TextComponent.fromLegacyText(FMessage.CMD_REGION_TYPE.getMessage());
         BaseComponent[] income2 = TextComponent.fromLegacyText(c + region.getType().getName() + " (" + region.getLevel() + ")");
         BaseComponent[] incomeHover = new BaseComponent[]{};

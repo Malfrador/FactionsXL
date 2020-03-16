@@ -102,8 +102,13 @@ public class FStorage {
             }
             // Reduce influence per day, down to min 50
             if (region.getInfluence() >= 50) {
-                double reduction =  FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                double reduction = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
                 region.setInfluence(region.getInfluence() - (int) reduction);
+            }
+            // Regen influence if less than 20 (War)
+            else if (region.getInfluence() <= 10) {
+                double reduction =  FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                region.setInfluence(region.getInfluence() + (int) reduction);
             }
         }
 

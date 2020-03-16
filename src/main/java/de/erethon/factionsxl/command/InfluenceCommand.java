@@ -77,9 +77,15 @@ public class InfluenceCommand extends FCommand {
             }
         }
         if (region.getInfluence() + (amount / 10) <= 100) {
-            withdraw(player, faction, amount);
-            region.setInfluence((int) (region.getInfluence() + (amount / 10)));
-            ParsingUtil.sendMessage(sender, "&aInfluence added");
+            if (faction.getAccount().getBalance() < amount) {
+                ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(amount));
+                return;
+            }
+            else {
+                withdraw(player, faction, amount);
+                region.setInfluence((int) (region.getInfluence() + (amount / 10)));
+                ParsingUtil.sendMessage(sender, "&aInfluence added");
+            }
         }
         else {
             ParsingUtil.sendMessage(sender, "&cYou are adding too much influence!");

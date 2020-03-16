@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.war;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
@@ -76,12 +77,14 @@ public class Battle {
             if (w.getRole() == WarPartyRole.ATTACKER) {
                 if (r.getInfluence() >= 0) {
                     r.setInfluence(r.getInfluence() - 1);
+                    MessageUtil.sendActionBarMessage(player, "&7Einfluss&8: &c-&6" + r.getInfluence());
                     break;
                 }
             }
             else if (w.getRole() == WarPartyRole.DEFENDER) {
                 if (r.getInfluence() <= 100) {
                     r.setInfluence(r.getInfluence() + 1);
+                    MessageUtil.sendActionBarMessage(player, "&7Einfluss&8: &a+&6" + r.getInfluence());
                     break;
                 }
             }

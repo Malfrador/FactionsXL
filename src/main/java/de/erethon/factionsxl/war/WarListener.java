@@ -87,7 +87,6 @@ public class WarListener implements Listener {
                 System.out.println("Removed battle " + battle.toString());
                 if (battle.takesPart(player1)) {
                     battle.win(player1);
-                    Bukkit.broadcastMessage("WIn");
                 }
             }
         }

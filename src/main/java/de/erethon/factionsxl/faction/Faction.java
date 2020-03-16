@@ -524,13 +524,13 @@ public class Faction extends LegalEntity {
 
     /**
      * @return
-     * the territory worth of this faction
+     * the territory worth of this faction (currently just amount of chunks, might get expanded)
      */
     public int getTerritoryWorth() {
         Set<Region> rg = regions;
         int value = 0;
         for (Region r : rg) {
-            value = round(value + (r.getSize() / 10));
+            value = round(value + (r.getSize()));
         }
         return value;
     }
