@@ -26,6 +26,7 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CallToArmsMenu;
 import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.WarPartyRole;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class WarCommand extends FCommand {
     public WarCommand() {
         setCommand("war");
         setMinArgs(1);
-        setMaxArgs(1);
+        setMaxArgs(2);
         setHelp(FMessage.HELP_WAR.getMessage());
         setPermission(FPermission.WAR.getNode());
         setPlayerCommand(true);
@@ -55,6 +56,12 @@ public class WarCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
+        // TO DO!
+        if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
+            sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
+            return;
+        }
+        // TO DO!
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         if (factions.isEmpty()) {
@@ -78,7 +85,7 @@ public class WarCommand extends FCommand {
                     ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage(), object);
             }
             if (faction.getMembers().contains(player)) {
-                subject = new WarParty(faction);
+                subject = new WarParty(faction, WarPartyRole.ATTACKER);
                 break;
             }
         }

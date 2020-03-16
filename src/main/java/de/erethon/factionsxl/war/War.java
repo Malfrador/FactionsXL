@@ -20,8 +20,8 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
-import de.erethon.factionsxl.util.GUIButton;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +73,23 @@ public class War {
         return defender;
     }
 
+    /**
+     * Returns the defender if the party is the attacker;
+     * the attacker if the party is the defender
+     * and null if the party is anything else.
+     *
+     * @param party the party to check
+     * @return the other party
+     */
+    public WarParty getEnemy(WarParty party) {
+        if (party == attacker) {
+            return defender;
+        } else if (party == defender) {
+            return attacker;
+        }
+        return null;
+    }
+
     public CasusBelli getCasusBelli() {
         return cb;
     }
@@ -98,10 +115,10 @@ public class War {
         MessageUtil.sendCenteredMessage(player, FMessage.WAR_DECLARATION_DEFENDERS.getMessage() + defenders);
 
         ClickEvent onConfirmClick = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/factionsxl confirmWar " + startDate.getTime());
-        BaseComponent confirm = GUIButton.CONFIRM.duplicate();
+        BaseComponent confirm = StandardizedGUI.CONFIRM.duplicate();
         confirm.setClickEvent(onConfirmClick);
         ClickEvent onCancelClick = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/factionsxl confirmWar " + startDate.getTime() + " -cancel");
-        BaseComponent cancel = GUIButton.CANCEL.duplicate();
+        BaseComponent cancel = StandardizedGUI.CANCEL.duplicate();
         cancel.setClickEvent(onCancelClick);
         MessageUtil.sendCenteredMessage(player, confirm, new TextComponent(" "), cancel);
     }

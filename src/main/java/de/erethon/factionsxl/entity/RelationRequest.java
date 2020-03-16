@@ -16,24 +16,24 @@
  */
 package de.erethon.factionsxl.entity;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FTeamWrapper;
-import de.erethon.factionsxl.util.GUIButton;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public class RelationRequest extends Request implements ConfigurationSerializable {
+public class RelationRequest extends Request {
 
     private int subjectId;
     private int objectId;
@@ -220,7 +220,7 @@ public class RelationRequest extends Request implements ConfigurationSerializabl
         } else if (relation == Relation.VASSAL) {
             explanation = ParsingUtil.parseMessage(player, FMessage.RELATION_REQUEST_VASSAL.getMessage(), getObject());
         }
-        return explanation == null ? GUIButton.setDisplay(GUIButton.MAILBOX, title) : GUIButton.setDisplay(GUIButton.MAILBOX, title, explanation);
+        return explanation == null ? GUIButton.setDisplay(StandardizedGUI.MAILBOX, title) : GUIButton.setDisplay(StandardizedGUI.MAILBOX, title, explanation);
     }
 
     @Override

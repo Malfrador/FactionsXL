@@ -22,7 +22,7 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class TradeMenu implements Listener {
         if (!plugin.getFConfig().isEconomyEnabled()) {
             gui = new PageGUI(FMessage.ERROR_ECON_DISABLED.getMessage());
             for (int i = 0; i <= 44; i++) {
-                gui.getPages().get(0).setItem(i, GUIButton.DISABLED);
+                gui.getPages().get(0).setItem(i, StandardizedGUI.DISABLED);
             }
         } else {
             gui.clear();
@@ -135,7 +135,7 @@ public class TradeMenu implements Listener {
             return;
         }
         ItemStack button = inventory.getItem(event.getSlot());
-        if (button == null || button.equals(GUIButton.DISABLED)) {
+        if (button == null || button.equals(StandardizedGUI.DISABLED)) {
             return;
         }
         if (!faction.isPrivileged(event.getWhoClicked())) {

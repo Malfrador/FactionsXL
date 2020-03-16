@@ -16,18 +16,16 @@
  */
 package de.erethon.factionsxl.war.demand;
 
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
+ * Expects static methods:<br>
+ * ItemStack getGUIButton() - returns a button for the war demand menu<br>
+ * void openSetupGUI(Player) - opens a GUI to setup the demand to the player
+ *
  * @author Daniel Saukel
  */
-public interface WarDemand {
-
-    /**
-     * @return
-     * a button for the war demand menu
-     */
-    public ItemStack getGUIButton();
+public interface WarDemand extends ConfigurationSerializable {
 
     /**
      * Asks the demanded party to pay

@@ -34,11 +34,13 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Facton instance manager.
@@ -392,6 +394,18 @@ public class FactionCache {
      */
     public Faction getByLocation(Location location) {
         return getByChunk(location.getChunk());
+    }
+
+    /**
+     * @param banner
+     * the banner to check
+     * @return
+     * the faction that uses this banner
+     */
+    public Faction getByBanner(ItemStack banner) {
+        if (banner == null || !banner.hasItemMeta() || !banner.getItemMeta().hasDisplayName())
+            return null;
+        return getByName(ChatColor.stripColor(banner.getItemMeta().getDisplayName()));
     }
 
     /**

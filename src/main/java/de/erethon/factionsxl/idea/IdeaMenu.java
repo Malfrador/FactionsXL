@@ -17,12 +17,13 @@
 package de.erethon.factionsxl.idea;
 
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class IdeaMenu implements Listener {
         for (IdeaGroup group : IdeaGroup.values()) {
             boolean has = faction.getIdeaGroups().contains(group);
             boolean freeSlots = plugin.getFConfig().getMaxIdeaGroups() > faction.getIdeaGroups().size();
-            ItemStack button = has || freeSlots ? group.getIcon() : GUIButton.DISABLED.clone();
+            ItemStack button = has || freeSlots ? group.getIcon() : StandardizedGUI.DISABLED.clone();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName((has ? ChatColor.GREEN : ChatColor.DARK_RED) + group.getName());
             List<String> lore = new ArrayList<>();

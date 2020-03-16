@@ -16,11 +16,12 @@
  */
 package de.erethon.factionsxl.population;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -36,7 +37,7 @@ public class MilitaryMenu implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
-    public static final ItemStack SOLDIERS = GUIButton.setDisplay(GUIButton.SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
+    public static final ItemStack SOLDIERS = GUIButton.setDisplay(StandardizedGUI.SOLDIER, FMessage.POPULATION_MILITARY_SOLDIERS.getMessage());
 
     private Faction faction;
     private Inventory gui;
@@ -50,7 +51,7 @@ public class MilitaryMenu implements Listener {
 
     private void setupGUI() {
         gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_MILITARY_TITLE.getMessage(faction.getName()));
-        GUIButton.addHeader(gui);
+        StandardizedGUI.addHeader(gui);
         gui.setItem(9, SOLDIERS);
         update();
     }

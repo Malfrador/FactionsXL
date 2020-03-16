@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.population;
 
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.commons.misc.ProgressBar;
 import de.erethon.factionsxl.FactionsXL;
@@ -23,7 +24,7 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.economy.ResourceSubcategory;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.util.GUIButton;
+import de.erethon.factionsxl.gui.StandardizedGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,7 @@ public class PopulationMenu implements Listener {
     FactionsXL plugin = FactionsXL.getInstance();
 
     public static final ItemStack DEMANDS = GUIButton.setDisplay(new ItemStack(Material.BREAD), FMessage.POPULATION_DEMANDS_BUTTON.getMessage());
-    public static final ItemStack MILITARY = GUIButton.setDisplay(GUIButton.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
+    public static final ItemStack MILITARY = GUIButton.setDisplay(StandardizedGUI.GUI_SWORD, FMessage.POPULATION_MILITARY_BUTTON.getMessage());
 
     private Faction faction;
     private Inventory main;
@@ -68,7 +69,7 @@ public class PopulationMenu implements Listener {
         main.setItem(3, DEMANDS);
         main.setItem(5, MILITARY);
         demands = Bukkit.createInventory(null, 27, FMessage.POPULATION_DEMANDS_TITLE.getMessage(faction.getName()));
-        GUIButton.addHeader(demands);
+        StandardizedGUI.addHeader(demands);
         update();
     }
 
@@ -82,7 +83,7 @@ public class PopulationMenu implements Listener {
     }
 
     public void update() {
-        GUIButton.clearHeaderGUI(demands);
+        StandardizedGUI.clearHeader(demands);
         for (ResourceSubcategory subcategory : ResourceSubcategory.values()) {
             HashMap<SaturationLevel, Integer> saturation = new HashMap<>();
             int percentage = 0;
