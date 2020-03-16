@@ -53,6 +53,11 @@ cmd:
     closed: '&v1 &aclosed the faction for uninvited players.'
     opened: '&v1 &aopened the faction for uninvited players.'
   power: '&aThe player &v1 &ahas &6&v2 &apower points.'
+  peace:
+    listSent: 'Peace list sent.'
+    listReceived: 'Peace list received!'
+    create: 'Peace created.'
+    title: 'Peace offer'
   region:
     claims: '&6Claims: '
     cores: '&6Cores: '
@@ -183,6 +188,7 @@ error:
   notNumeric: '&6&v1 &4is not a numeric value.'
   notVassal: '&v1 &4is not a vassal of &v2&4.'
   notWilderness: '&4You can only do this in the wilderness.'
+  notInWar: '&cYou are currently not at war!'
   ownFaction: '&4This is your own faction.'
   personalUnionWithFaction: '&4The faction &v1 &4does not have a personal union with
     &v2&4.'
@@ -212,6 +218,7 @@ faction:
   personalUnionFormed: '&aThe factions &v1 &aand &v2 &adecided to unite their dynasties
     under &v3 &aand formed a personal union.'
   storage: '&aStorage'
+  select: 'Select Faction.'
 governmentType:
   monarchy: Monarchy
   republic: Republic
@@ -256,6 +263,7 @@ help:
   payday: /f payday ([amount]) - Enforces paydays.
   playerHome: /home ([player]) - Teleports the sender to the player's home.
   power: /f power ([player]) - Displays a player's power value.
+  peace: /f peace
   region: /f region ([region name/ID]) - Shows information about a region.
   regions: /f regions - Shows a list of all regions.
   relation: /f relation [faction] [target] [relation] - Sends a relation request to
@@ -320,6 +328,7 @@ misc:
   cancel: '[ CANCEL ]'
   continue: '&6&lCONTINUE'
   deny: '[ DENY ]'
+  none: 'Nothing'
   loner: Loner
   openRequests: '&bYou have unanswered requests left! Use &4/f req &bto list them.'
   purchase:
@@ -558,6 +567,12 @@ war:
     startDate: '&4&oThe war will start in 24 hours.'
     title: '&4&l#=== DÉCLARATION DE GUERRE ===#'
   demand:
+    creation:
+      title: '&aCreate new demand'
+      list: '&aList war demands'
+      send: '&aSend demand!'
+      item: '&aCreate demand'
+      money: '&4Money'
     menu:
       item: '&3Add item demand'
       list: '&aList demands'

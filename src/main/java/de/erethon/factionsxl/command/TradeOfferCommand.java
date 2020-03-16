@@ -387,7 +387,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
     }
 
     private BigDecimal readPriceFromTitle(String title) {
-        String price = title.split(ChatColor.DARK_AQUA.toString())[2];
+        String price = title.split(ChatColor.DARK_AQUA.toString())[3];
         return new BigDecimal(price);
     }
 

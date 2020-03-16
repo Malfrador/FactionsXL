@@ -170,6 +170,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(tradeOffer);
         addCommand(addCasusBelli);
         addCommand(idea);
+        addCommand(peaceCommand);
 
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

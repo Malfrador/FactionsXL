@@ -138,6 +138,13 @@ public class War {
         FScoreboard.updateAllProviders();
         System.out.println("War" + this + "confirmed!");
     }
+    public void end() {
+        config = YamlConfiguration.loadConfiguration(file);
+        WarCache wars = FactionsXL.getInstance().getWarCache();
+        wars.getWars().remove(this);
+        FScoreboard.updateAllProviders();
+        System.out.println("War" + this + "ended!");
+    }
 
     /* Serialization */
     public void save() {

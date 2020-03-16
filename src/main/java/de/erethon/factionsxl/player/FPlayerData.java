@@ -198,7 +198,9 @@ public class FPlayerData extends DREConfig {
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
         requests = (List<Request>) config.getList("requests", new ArrayList<>());
-        isPublic = config.getBoolean("publicChat");
+        if (config.contains("isPublic")) {
+            isPublic = config.getBoolean("publicChat");
+        }
         FactionsXL.debug("Loaded " + this);
     }
 
