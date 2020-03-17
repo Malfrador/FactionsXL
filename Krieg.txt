@@ -1,0 +1,41 @@
+Unklar:
+-	Land erobern?
+-	Kriegspunkte
+-	Stability
+- 	Offline/Online-Raiding / Outnumbered
+
+War Parties
+- 	Es gibt eine Angreifer- und eine Verteidiger-Party.
+- 	Mitglieder der Parties sind Fraktionen.
+- 	Für jede Party werden eine leitende Fraktion, die Teilnehmer, die Kills, Deaths und Kämpfe gespeichert. Aus verschiedenen Faktoren wird ein Kriegsstand (eine Punktzahl) 		errechnet. Wichtig sollen dabei die K/D (Kills geteilt durch Deaths), aber auch die Zeit seit Beginn des Krieges, die Online-Zeit während des Krieges und anderes sein.
+
+Krieg erklären
+- 	Krieg wird mit /f war ([Angreifer]) [Verteidiger] erklärt. Nachdem man einen Kriegsgrund gewählt hat (damit es nicht ewig und hundert Jahre dauert, bis es losgehen kann, 		werden einige Kriegsgründe wohl erst im zweiten Kriegsupdate folgen) öffnet sich das folgende GUI:
+	Anschauungsbeispiel: In der obersten Zeile sind die Angreifer, in der in der Mitte potenzielle Verbündete der Angreifer und ganz unten die Verteidiger. Die Zeilen dazwischen 		mit den schwarzen Platzhalter-Scheiben und den Rechts- / Links-Pfeilen sind zum Durchschalten da, falls es mehr als 9 Fraktionen in der Reihe gibt. Preußen erklärt Österreich 	den Krieg. Österreich hat eine Personalunion mit Böhmen, weswegen sie als Verbündete Österreichs im Krieg feststehen. Mecklenburg und Lippe sind mit Preußen verbündet, aber 		nicht mit Österreich. Deswegen sind Mecklenburg und Lippe potenzielle Verbündete Preußens als Angreifer. Mit einem Klick werden sie nach oben geschoben. Preußen ist auch mit 		Hannover verbündet. Hannover ist auch mit Österreich verbündet, weswegen es als Verteidiger feststeht. Das Bündnis Preußens und Hannovers miteinander bricht, sobald Preußen 		den Krieg erklärt. Hätte Preußen Vasallen, würden diese übrigens automatisch oben in der Angreifer-Party gelistet werden.
+
+-	Wenn man bestätigt, d.h. das GUI schließt und die anschließend erscheinende Zusammenfassung der Kriegserklärung bestätigt, gibt es eine Pufferzeit von 24 Stunden, bis der 		Krieg beginnt. In dieser Zeit sollen die hinzugerufenen Verbündeten den Ruf zu den Waffen an- oder ablehnen.
+
+-	Die PvP-Regeln für den Krieg sind zum Teil fertig.
+	Man kann jeden Feind überall verletzen. Schildfunktionen wegen Besitz des Territoriums haben keine Auswirkungen.
+
+-	Es gibt Grundzüge eines "Gefechts-Trackers", der gegeneinander kämpfende Spieler erkennt und für den Sieg und die Teilnahme in einem Gefecht Kriegspunkte verteilt.
+
+-	Man kann leichte Blöcke im Krieg beim Gegner von Hand bzw. von Tool abbauen.
+	Mit "leichten Blöcken" sind natürlich vorkommende Blöcke wie Erde, Sand, Kies, kleinen Pflanzen etc. gemeint.
+	Gesteine, Holz und andere typische Baublöcke sind nicht zerstörbar.
+	Man kann keine Blöcke beim Gegner platzieren.
+	Ausnahme sind aller Voraussicht nach Leitern und Ranken, Fackeln und Spinnweben.
+	Jeder Spieler der Gegner kann auf jede LWC-Sicherung (Truhen, Öfen etc.) des Feindes zugreifen. Dadurch werden z.B. Schutzwälle aus Öfen vermieden.
+
+-	TNT kann platziert werden.
+	Gesetztes TNT ist sofort aktiviert, wie wenn man es mit einem Feuerzeug rechtsklickt. So kann man mit TNT keine Treppen bauen.
+	Der Schaden von TNT wird nach und nach zurückgesetzt.
+
+Solange ein Reich Kriegsgründe fingiert hat, kann es andere überfallen und ihr Land annektieren
+oder sie unterwerfen. Das Forderungssystem aus FactionsDRE wird übernommen. Es
+ist aber eine Herausforderung, große Mengen an Land zu halten. Je größer das
+Reich geworden ist und je mehr fremde Reiche das eigene Land als Kernteil ihres
+eigenen Territoriums sehen, desto instabiler wird es. Da ein Reich
+zusammenbricht und laufende Kriege verliert, wenn die Stabilität zu niedrig
+ist, muss man entweder bescheiden bleiben oder durch das Gründen von
+Vasallenstaaten die Mali lindern.
