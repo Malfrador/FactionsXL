@@ -82,7 +82,7 @@ public class WarStatusCommand extends FCommand {
             String defender = fWar.getDefender().getLeader().getName();
             String cb = fWar.getCasusBelli().getType().toString();
             String date = SimpleDateUtil.ddMMyyyyhhmm(fWar.getStartDate());
-            String line = ChatColor.GOLD + "> " + ChatColor.DARK_BLUE + attacker + PLACEHOLDER + defender + PLACEHOLDER + cb + PLACEHOLDER + date;
+            String line = ChatColor.GOLD + "> " + ChatColor.BLUE + attacker + PLACEHOLDER + defender + PLACEHOLDER + cb + PLACEHOLDER + date;
             BaseComponent[] comps = TextComponent.fromLegacyText(line);
             ClickEvent onClick = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/factionsxl warStatus " + fWar.getStartDate().getTime());
             for (BaseComponent comp : comps) {

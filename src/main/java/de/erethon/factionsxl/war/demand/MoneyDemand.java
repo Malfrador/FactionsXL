@@ -25,6 +25,8 @@ import de.erethon.factionsxl.gui.AmountSelectionGUI.Min;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +43,7 @@ public class MoneyDemand implements WarDemand {
     }
 
     public MoneyDemand(Map<String, Object> args) {
-        amount = new BigDecimal((Double) args.get("amount"));
+        amount = BigDecimal.valueOf((Double) args.get("amount"));
     }
 
     public BigDecimal getAmount() {
@@ -57,7 +59,7 @@ public class MoneyDemand implements WarDemand {
     }
 
     public static void openSetupGUI(Player player) {
-        new AmountSelectionGUI<BigDecimal>(Min.MIN_0_01, Max.MAX_1000000, new BigDecimal(0)) {
+        new AmountSelectionGUI<BigDecimal>(Min.MIN_0_01, Max.MAX_1000000, new BigDecimal(1)) {
             @Override
             public void onClickBack(Player player) {
                 FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
@@ -65,7 +67,8 @@ public class MoneyDemand implements WarDemand {
 
             @Override
             public void onClickContinue(Player player, BigDecimal amount) {
-                FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(new MoneyDemand(amount));
+                WarDemand war = (WarDemand) new MoneyDemand(amount);
+                FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
                 FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
             }
         }.open(player);
@@ -73,7 +76,7 @@ public class MoneyDemand implements WarDemand {
 
     @Override
     public void demand() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

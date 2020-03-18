@@ -17,17 +17,18 @@
 package de.erethon.factionsxl.war.peaceoffer;
 
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.Federation;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.WarPartyRole;
 import de.erethon.factionsxl.war.demand.WarDemand;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +42,7 @@ public class FinalPeaceOffer extends PeaceOffer {
         this.war = war;
         subject = demanding;
         object = target;
-        this.demands = Arrays.asList(demands);
+        this.demands = new ArrayList(Arrays.asList(demands));
     }
 
     public FinalPeaceOffer(Map<String, Object> args) {
@@ -64,6 +65,7 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public void confirm() {
+        Bukkit.broadcastMessage("Confirm triggered");
         boolean canPay = true;
         for (WarDemand demand : demands) {
             if (!demand.canPay()) {
@@ -80,22 +82,23 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public String getAcceptCommand() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        confirm();
+        return "/factionsxl relation " + getObject().getName() + " " + getSubject().getName() + " " + " ";
     }
 
     @Override
     public String getDenyCommand() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getAcceptCommand() + "-deny";
     }
 
     @Override
     public void sendSubjectMessage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        new RelationRequest(Bukkit.getConsoleSender(), (Faction) getSubject().getLeader(), (Faction) getObject().getLeader(), Relation.PEACE);
     }
 
     @Override
     public void sendObjectMessage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        new RelationRequest(Bukkit.getConsoleSender(), (Faction) getObject().getLeader(), (Faction) getSubject().getLeader(), Relation.PEACE);
     }
 
     @Override

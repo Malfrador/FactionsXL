@@ -351,8 +351,8 @@ public class Faction extends LegalEntity {
             power += ChatColor.YELLOW + "0";
         }
         power += "\n";
-        int i = 0;
-        /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
+        /*int i = 0;
+        for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
         }
         String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);*/

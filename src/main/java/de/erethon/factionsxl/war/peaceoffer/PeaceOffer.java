@@ -25,11 +25,9 @@ import de.erethon.factionsxl.war.demand.MoneyDemand;
 import de.erethon.factionsxl.war.demand.WarDemand;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -112,7 +110,7 @@ public abstract class PeaceOffer extends Request {
     }
 
     protected War war;
-    protected List<WarDemand> demands = new ArrayList<>();
+    protected List<WarDemand> demands = new ArrayList<>(); // UnsupportedOperationException: null
 
     /**
      * The war that the two parties fight

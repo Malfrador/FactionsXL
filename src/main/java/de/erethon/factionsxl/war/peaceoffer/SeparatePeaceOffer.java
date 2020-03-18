@@ -20,10 +20,9 @@ import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.demand.WarDemand;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,7 +35,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
         this.war = war;
         subject = demanding;
         object = target;
-        this.demands = Arrays.asList(demands);
+        this.demands = new ArrayList(Arrays.asList(demands));
     }
 
     public SeparatePeaceOffer(Map<String, Object> args) {

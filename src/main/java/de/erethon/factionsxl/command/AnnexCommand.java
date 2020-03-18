@@ -60,6 +60,8 @@ public class AnnexCommand extends FCommand {
         Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         Region region = plugin.getBoard().getByLocation(player.getLocation());
         Faction annexFrom = plugin.getBoard().getByLocation(player.getLocation()).getOwner();
+        Bukkit.broadcastMessage("" + faction.getCapital().toString());
+        Bukkit.broadcastMessage("" + region.toString());
         if (faction == null) {
             return;
         }
