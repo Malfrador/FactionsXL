@@ -51,7 +51,7 @@ public class PeaceCommand extends FCommand implements Listener {
     FactionCache factions = plugin.getFactionCache();
     WarCache wars = plugin.getWarCache();
 
-    private Inventory gui = Bukkit.createInventory(null, 9, FMessage.CMD_PEACE_TITLE.getMessage());
+    private Inventory gui = Bukkit.createInventory(new PageGUI("Peace"), 9, FMessage.CMD_PEACE_TITLE.getMessage());
     private ItemStack create = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_CREATE.getMessage());
     private ItemStack listReceived = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
     private ItemStack listSent = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_SENT.getMessage());
@@ -101,8 +101,7 @@ public class PeaceCommand extends FCommand implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        Inventory i = event.getClickedInventory();
-        if (!(i == gui)) {
+        if (!(gui.getHolder() instanceof PageGUI)) {
             return;
         }
         event.setCancelled(true);

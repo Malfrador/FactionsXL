@@ -51,7 +51,7 @@ public class EconomyMenu implements Listener {
     }
 
     public void setupGUI() {
-        gui = Bukkit.createInventory(null, 9, FMessage.TRADE_ECONOMY.getMessage(faction.getName()));
+        gui = Bukkit.createInventory(new PageGUI("Economy"), 9, FMessage.TRADE_ECONOMY.getMessage(faction.getName()));
         gui.setItem(2, INCOME_MANAGEMENT);
         gui.setItem(4, TRADE_OFFER);
         gui.setItem(6, STORAGE);
@@ -65,7 +65,7 @@ public class EconomyMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory i = event.getClickedInventory();
-        if (!(i == gui)) {
+        if (!(gui.getHolder() instanceof PageGUI)) {
             return;
         }
         event.setCancelled(true);

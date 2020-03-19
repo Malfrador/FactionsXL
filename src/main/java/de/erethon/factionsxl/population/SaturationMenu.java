@@ -34,6 +34,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.awt.print.Pageable;
+
 /**
  * @author Daniel Saukel
  */
@@ -73,7 +75,7 @@ public class SaturationMenu implements Listener {
     }
 
     private void setupGUI() {
-        gui = Bukkit.createInventory(null, 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
+        gui = Bukkit.createInventory(new PageGUI("Saturation"), 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
         ItemStack banner = faction.getBannerStack();
         ItemMeta meta = banner.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
