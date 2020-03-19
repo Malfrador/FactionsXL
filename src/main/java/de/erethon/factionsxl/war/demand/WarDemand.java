@@ -16,6 +16,9 @@
  */
 package de.erethon.factionsxl.war.demand;
 
+import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.LegalEntity;
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
@@ -35,15 +38,14 @@ public interface WarDemand extends ConfigurationSerializable {
     /**
      * Asks the demanded party to pay
      *
-     * @return
-     * if the target faction is able to pay
+     * @param f, f2
      */
-    public boolean pay();
+    public void pay(WarParty f, WarParty f2);
 
     /**
      * @return
      * if the target faction is able to pay
      */
-    public boolean canPay();
+    public boolean canPay(WarParty wp);
 
 }

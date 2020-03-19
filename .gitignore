@@ -3,3 +3,4 @@ licenseheader.txt
 *nb-configuration.xml
 *target
 *.jar
+*docs

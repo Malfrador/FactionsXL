@@ -49,6 +49,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import de.erethon.vignette.api.VignetteAPI;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -119,6 +121,7 @@ public class FactionsXL extends DREPlugin {
         instance = this;
 
         FPermission.register();
+        VignetteAPI.init(this);
         loadCore();
         debugToFile("Enabled!");
     }

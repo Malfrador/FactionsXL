@@ -5,7 +5,7 @@
     <version>0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>FactionsXL</name>
-    <url>https://dre2n.github.io</url>
+    <url>https://erethon.de</url>
     <description>A medieval Factions plugin.</description>
     <properties>
         <buildNo></buildNo>
@@ -129,8 +129,7 @@
             <groupId>de.erethon.vignette</groupId>
             <artifactId>vignette-dist</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/vignette-dist-1.0-SNAPSHOT.jar</systemPath>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.erethon</groupId>

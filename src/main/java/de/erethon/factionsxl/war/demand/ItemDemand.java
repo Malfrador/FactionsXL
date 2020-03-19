@@ -19,9 +19,12 @@ package de.erethon.factionsxl.war.demand;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.AddItemsGUI;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -69,12 +72,12 @@ public class ItemDemand implements WarDemand {
     }
 
     @Override
-    public boolean pay() {
+    public void pay(WarParty wp, WarParty wp2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean canPay() {
+    public boolean canPay(WarParty f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

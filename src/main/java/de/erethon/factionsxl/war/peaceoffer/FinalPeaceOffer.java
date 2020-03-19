@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.war.peaceoffer;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
@@ -30,6 +31,7 @@ import de.erethon.factionsxl.war.demand.WarDemand;
 import java.util.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -68,22 +70,23 @@ public class FinalPeaceOffer extends PeaceOffer {
         Bukkit.broadcastMessage("Confirm triggered");
         boolean canPay = true;
         for (WarDemand demand : demands) {
-            if (!demand.canPay()) {
+            if (!demand.canPay(getObject())) {
                 canPay = false;
             }
         }
         if (canPay) {
-            demands.forEach(d -> d.pay());
+            demands.forEach(d -> d.pay(getSubject(), getObject()));
         } else {
-            new RelationRequest(Bukkit.getConsoleSender(), (Faction) getSubject().getLeader(), (Faction) getObject().getLeader(), Relation.VASSAL).confirm(); // TODO: Might break after government update
+            new RelationRequest(Bukkit.getConsoleSender(), (Faction) getSubject().getLeader(), (Faction) getObject().getLeader(), Relation.VASSAL).confirm();
+            // TODO: Might break after government update
             // TODO: Add time modifier
         }
     }
 
     @Override
     public String getAcceptCommand() {
-        confirm();
-        return "/factionsxl relation " + getObject().getName() + " " + getSubject().getName() + " " + " ";
+        war.end();
+        return "/factionsxl relation " + getObject().getName() + " " + getSubject().getName() + " " + "peace";
     }
 
     @Override

@@ -19,6 +19,8 @@ package de.erethon.factionsxl.war.demand;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.AmountSelectionGUI;
 import de.erethon.factionsxl.gui.AmountSelectionGUI.Max;
 import de.erethon.factionsxl.gui.AmountSelectionGUI.Min;
@@ -26,7 +28,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,13 +82,21 @@ public class MoneyDemand implements WarDemand {
     }
 
     @Override
-    public boolean pay() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void pay(WarParty wp, WarParty wp2) {
+        wp2.getLeader().getAccount().withdraw(amount.intValueExact());
+        float size = wp.getFactions().size();
+        for (Faction f : wp.getFactions()) {
+            f.getAccount().deposit(amount.intValueExact() / size);
+        }
     }
 
     @Override
-    public boolean canPay() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean canPay(WarParty wp) {
+        return wp.getLeader().getAccount().getBalance() >= amount.intValueExact();
+    }
+    @Override
+    public String toString() {
+        return "&6Money&8: " + amount;
     }
 
     @Override
