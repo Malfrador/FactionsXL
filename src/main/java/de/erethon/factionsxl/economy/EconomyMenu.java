@@ -64,7 +64,8 @@ public class EconomyMenu implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
-        if (event.getClickedInventory() == null || !PageGUI.getGUITitle(gui).equals(event.getView().getTitle())) {
+        Inventory i = event.getClickedInventory();
+        if (!(i == gui)) {
             return;
         }
         event.setCancelled(true);

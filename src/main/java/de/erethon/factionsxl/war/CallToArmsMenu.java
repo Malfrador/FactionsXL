@@ -53,6 +53,7 @@ public class CallToArmsMenu implements Listener {
     private HumanEntity cachedViewer;
 
     public CallToArmsMenu(WarParty attacker, Faction defender, CasusBelli cb) {
+
         Bukkit.getPluginManager().registerEvents(this, FactionsXL.getInstance());
         this.attacker = attacker;
         attackerLeader = (Faction) attacker.getLeader(); // TODO: Might break after government update

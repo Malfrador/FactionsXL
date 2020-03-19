@@ -29,6 +29,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -349,6 +350,7 @@ public class PageGUI {
     }
 
     public static String getGUITitle(Inventory inventory) {
+        String invtitle = null;
         if (Internals.isAtMost(Internals.v1_13_R2)) {
             try {
                 java.lang.reflect.Method getTitle = Inventory.class.getDeclaredMethod("getTitle");
@@ -356,7 +358,10 @@ public class PageGUI {
             } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException exception) {
             }
         }
-        throw new UnsupportedOperationException("The legacy GUI system does not support Minecraft 1.14+");
+        for (HumanEntity v : inventory.getViewers()) {
+            invtitle = v.getOpenInventory().getTitle();
+        }
+        return invtitle;
     }
 
 }

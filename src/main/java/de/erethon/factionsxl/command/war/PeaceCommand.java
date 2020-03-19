@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -100,8 +101,8 @@ public class PeaceCommand extends FCommand implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !gui.getTitle().equals(inventory.getTitle())) {
+        Inventory i = event.getClickedInventory();
+        if (!(i == gui)) {
             return;
         }
         event.setCancelled(true);

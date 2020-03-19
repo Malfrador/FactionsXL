@@ -108,13 +108,13 @@ public class SaturationMenu implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
-        Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !PageGUI.getGUITitle(gui).equals(event.getView().getTitle())) {
+        Inventory i = event.getClickedInventory();
+        if (!(i == gui)) {
             return;
         }
         event.setCancelled(true);
         PageGUI.playSound(event);
-        ItemStack button = inventory.getItem(event.getSlot());
+        ItemStack button = i.getItem(event.getSlot());
         if (button == null) {
             return;
         }
