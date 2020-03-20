@@ -4,3 +4,4 @@ licenseheader.txt
 *target
 *.jar
 *docs
+*iml
