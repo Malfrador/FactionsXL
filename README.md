@@ -6,7 +6,7 @@
 
 FactionsXL is a Minecraft server mod that combines the features of a few popular standalone games and the classic, well-known factions game type.
 
-The visual appearance of FXL and the command syntax are designed to be similar to [FactionsOne](https://github.com/DRE2N/FactionsOne) sothat players feel familiar with it at least if they have already made experiences with Factions.
+The visual appearance of FXL and the command syntax are designed to be similar to [FactionsOne](https://github.com/DRE2N/FactionsOne) so that players feel familiar with it at least if they have already made experiences with Factions.
 
 ## Compatibility
 ### Server
