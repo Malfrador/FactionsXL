@@ -48,6 +48,7 @@ public class WarParty implements FEntity {
     public int kills;
     public int deaths;
     public int fights;
+    public int points = 0;
 
     public WarParty(LegalEntity entity, WarPartyRole role) {
         leader = entity;
@@ -141,16 +142,18 @@ public class WarParty implements FEntity {
      */
     public double getKD() {
         if (deaths != 0) {
-            return kills / deaths;
+            Double kd = (double) kills / (double) deaths;
+            return Math.round(kd * 100.00) / 100.0;
         }
         return kills;
     }
 
     public void addKill() {
-
+        kills++;
     }
 
     public void addDeath() {
+        deaths++;
 
     }
 
@@ -159,7 +162,7 @@ public class WarParty implements FEntity {
      * the amount of collected war points
      */
     public int getPoints() {
-        return 0;
+        return points;
     }
 
     /**

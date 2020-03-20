@@ -69,11 +69,18 @@ public class Battle {
         return player.equals(player1) || player.equals(player2);
     }
 
-    public void win(Player player) {
+    /**
+     * @param player The winning player
+     * @param looser the loosing (death) player
+     */
+    public void win(Player player, Player looser) {
         Faction f = factions.getByMember(player);
+        Faction fl = factions.getByMember(looser);
+        Set<WarParty> lWP = fl.getWarParties();
         Region r = plugin.getBoard().getByLocation(player.getLocation());
         Set<WarParty> WP = f.getWarParties();
         for (WarParty w : WP) {
+            w.addKill();
             if (w.getRole() == WarPartyRole.ATTACKER) {
                 if (r.getInfluence() >= 0) {
                     r.setInfluence(r.getInfluence() - 1);
@@ -91,6 +98,9 @@ public class Battle {
             else {
                 break;
             }
+        }
+        for (WarParty w : lWP) {
+            w.addDeath();
         }
     }
 

@@ -1,9 +1,7 @@
 ![FactionsXL](http://erethon.de/resources/logos/FactionsXL.png)
 
-[![Builds](http://erethon.de/resources/buttons/Builds.png)](http://feuerstern.bplaced.net/repo/io/github/dre2n/factionsxl)
 [![Wiki](http://erethon.de/resources/buttons/Wiki.png)](../../wiki/)
 [![Issues](http://erethon.de/resources/buttons/Issues.png)](../../issues/)
-[![JavaDocs](http://erethon.de/resources/buttons/JavaDocs.png)](http://feuerstern.bplaced.net/javadocs/fxl/)
 [![MCStats](http://erethon.de/resources/buttons/MCStats.png)](http://mcstats.org/plugin/FactionsXL/)
 
 FactionsXL is a Minecraft server mod that combines the features of a few popular standalone games and the classic, well-known factions game type.

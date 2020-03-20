@@ -66,6 +66,7 @@ public class WarListener implements Listener {
             }
         }
         if (takesPart == null) {
+            Bukkit.broadcastMessage("New battle");
             takesPart = new Battle(player1, player2);
             battleCache.add(takesPart);
             new Expiration(takesPart).runTaskTimer(plugin, 0L, FConfig.SECOND);
@@ -86,7 +87,7 @@ public class WarListener implements Listener {
                 battleCache.remove(battle);
                 System.out.println("Removed battle " + battle.toString());
                 if (battle.takesPart(player1)) {
-                    battle.win(player1);
+                    battle.win(player1, player2);
                 }
             }
         }
