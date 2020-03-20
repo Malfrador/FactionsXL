@@ -19,6 +19,7 @@ package de.erethon.factionsxl.gui;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.war.WarParty;
 import java.util.Arrays;
@@ -33,17 +34,19 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public abstract class WarPartyGUI implements Listener, StandardizedGUI {
+public abstract class WarPartyGUI implements Listener, StandardizedGUI, InventoryHolder {
 
     protected FactionsXL plugin;
 
     private String title;
     private List<WarParty> parties;
+    private Inventory gui;
 
     public WarPartyGUI(FactionsXL plugin, WarParty... parties) {
         this(plugin, ChatColor.GOLD + parties[0].getName(), parties);
@@ -58,11 +61,11 @@ public abstract class WarPartyGUI implements Listener, StandardizedGUI {
 
     @Override
     public void open(Player player) {
-        PageGUI gui = new PageGUI(title);
+        gui = Bukkit.createInventory(this, 54, FMessage.CMD_LIST_TITLE.getMessage());
         Set<Faction> factions = new HashSet<>();
         parties.forEach(p -> factions.addAll(p.getFactions()));
-        factions.forEach(f -> gui.addButton(GUIButton.setDisplay(f.getBannerStack(), ChatColor.DARK_RED + f.getName())));
-        gui.open(player);
+        factions.forEach(f -> gui.addItem(GUIButton.setDisplay(f.getBannerStack(), ChatColor.DARK_RED + f.getName())));
+        player.openInventory(gui);
     }
 
     @EventHandler
@@ -73,6 +76,9 @@ public abstract class WarPartyGUI implements Listener, StandardizedGUI {
         }
         ItemStack button = event.getCurrentItem();
         if (button == null) {
+            return;
+        }
+        if (event.getInventory().getHolder() != this) {
             return;
         }
         Faction faction = plugin.getFactionCache().getByBanner(button);

@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.config;
 
+import com.google.common.util.concurrent.CycleDetectingLockFactory;
 import de.erethon.commons.config.Message;
 import de.erethon.commons.config.MessageHandler;
 import de.erethon.factionsxl.FactionsXL;

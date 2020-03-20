@@ -43,6 +43,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,7 +51,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * @author Daniel Saukel
  */
-public class TradeOfferCommand extends FCommand implements Listener {
+public class TradeOfferCommand extends FCommand implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
@@ -198,7 +199,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
 
     private Inventory choosePartner(Faction creator) {
         int size = (int) (9 * Math.ceil(((double) factions.getActive().size() / 9)));
-        Inventory gui = Bukkit.createInventory(null, size, FMessage.TRADE_OFFER_CHOOSE_PARTNER.getMessage());
+        Inventory gui = Bukkit.createInventory(this, size, FMessage.TRADE_OFFER_CHOOSE_PARTNER.getMessage());
         int i = 0;
         for (Faction faction : factions.getActive()) {
             ItemStack icon = faction.getBannerStack();
@@ -231,7 +232,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
     }
 
     private Inventory chooseExport() {
-        Inventory gui = Bukkit.createInventory(null, 9, FMessage.TRADE_OFFER_CHOOSE_EXPORT.getMessage());
+        Inventory gui = Bukkit.createInventory(this, 9, FMessage.TRADE_OFFER_CHOOSE_EXPORT.getMessage());
         ItemStack exportIcon = E.clone();
         ItemMeta exMeta = exportIcon.getItemMeta();
         exMeta.setDisplayName(ChatColor.GREEN + FMessage.TRADE_EXPORT.getMessage());
@@ -246,7 +247,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
     }
 
     private Inventory choosePriceAndAmount(int amount, double price) {
-        Inventory gui = Bukkit.createInventory(null, 27, tradeOfferChoosePriceAndAmount.replace("&v1", String.valueOf(amount)).replace("&v2", String.valueOf(price)));
+        Inventory gui = Bukkit.createInventory(this, 27, tradeOfferChoosePriceAndAmount.replace("&v1", String.valueOf(amount)).replace("&v2", String.valueOf(price)));
         gui.setContents(choosePriceAndAmount);
         return gui;
     }
@@ -385,7 +386,7 @@ public class TradeOfferCommand extends FCommand implements Listener {
         amount = amount.split(" ")[0];
         return NumberUtil.parseInt(amount);
     }
-
+    // TODO: Broken
     private BigDecimal readPriceFromTitle(String title) {
         String price = title.split(ChatColor.DARK_AQUA.toString())[3];
         return new BigDecimal(price);
@@ -401,4 +402,8 @@ public class TradeOfferCommand extends FCommand implements Listener {
         player.performCommand(COMMAND + args);
     }
 
+    @Override
+    public Inventory getInventory() {
+        return chooseExport;
+    }
 }

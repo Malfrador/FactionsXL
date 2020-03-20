@@ -28,12 +28,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public class EconomyMenu implements Listener {
+public class EconomyMenu implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -51,7 +52,7 @@ public class EconomyMenu implements Listener {
     }
 
     public void setupGUI() {
-        gui = Bukkit.createInventory(new PageGUI("Economy"), 9, FMessage.TRADE_ECONOMY.getMessage(faction.getName()));
+        gui = Bukkit.createInventory(this, 9, FMessage.TRADE_ECONOMY.getMessage(faction.getName()));
         gui.setItem(2, INCOME_MANAGEMENT);
         gui.setItem(4, TRADE_OFFER);
         gui.setItem(6, STORAGE);
@@ -65,7 +66,7 @@ public class EconomyMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory i = event.getClickedInventory();
-        if (!(gui.getHolder() instanceof PageGUI)) {
+        if (event.getInventory().getHolder() != this) {
             return;
         }
         event.setCancelled(true);
@@ -80,4 +81,8 @@ public class EconomyMenu implements Listener {
         }
     }
 
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
 }

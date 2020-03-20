@@ -28,6 +28,7 @@ import de.erethon.factionsxl.war.peaceoffer.FinalPeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
 import java.util.Collection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 /**
  * @author Daniel Saukel
@@ -66,4 +67,8 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
         wars.getWarDemandCreationMenu().open(whoClicked);
     }
 
+    @Override
+    public Inventory getInventory() {
+        return null;
+    }
 }

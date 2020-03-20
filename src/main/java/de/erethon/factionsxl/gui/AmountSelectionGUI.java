@@ -173,7 +173,6 @@ public abstract class AmountSelectionGUI<N extends Number> implements Listener, 
             if (button == null) {
                 return;
             }
-
             if (BACK.equals(button)) {
                 gui.onClickBack(player);
             } else if (CONTINUE.equals(button)) {

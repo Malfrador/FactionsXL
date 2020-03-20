@@ -367,9 +367,8 @@ public class PageGUI implements InventoryHolder {
         return invtitle;
     }
     /**
-     * @deprecated returns inventory for use with InventoryHolder. Workaround for 1.14+
+     * @deprecated returns inventory for workaround for 1.14+
      */
-    @Override
     public Inventory getInventory() {
         return gui;
     }

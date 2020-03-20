@@ -28,6 +28,11 @@ import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.erethon.vignette.api.InventoryGUI;
+import de.erethon.vignette.api.SingleInventoryGUI;
+import de.erethon.vignette.api.layout.CenteredInventoryLayout;
+import de.erethon.vignette.api.layout.FlowInventoryLayout;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -35,16 +40,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
+ * TODO: Should get updated to Vignette
  */
-public class WarDemandCreationGUI implements Listener, StandardizedGUI {
+public class WarDemandCreationGUI implements Listener, StandardizedGUI, InventoryHolder {
 
     private FactionsXL plugin;
 
-    private Inventory gui = Bukkit.createInventory(null, 18, FMessage.WAR_DEMAND_CREATION_MENU_TITLE.getMessage());
+    private Inventory gui = Bukkit.createInventory(this, 18, FMessage.WAR_DEMAND_CREATION_MENU_TITLE.getMessage());
 
     private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_CREATION_MENU_LIST.getMessage());
     private ItemStack send = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_DEMAND_CREATION_MENU_SEND.getMessage());
@@ -70,13 +77,14 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI {
         player.openInventory(gui);
     }
 
+
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
         Inventory inventory = event.getClickedInventory();
-        if (inventory == null || !gui.equals(inventory)) {
+        if (event.getInventory().getHolder() != this) {
             return;
         }
         event.setCancelled(true);
@@ -98,6 +106,11 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI {
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }
+
     }
 
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
 }

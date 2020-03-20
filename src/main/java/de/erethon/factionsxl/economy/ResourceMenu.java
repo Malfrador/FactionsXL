@@ -32,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,7 +40,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * @author Daniel Saukel
  */
-public class ResourceMenu implements Listener {
+public class ResourceMenu implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -75,7 +76,7 @@ public class ResourceMenu implements Listener {
     }
 
     private void setupGUI() {
-        gui = Bukkit.createInventory(null, 27, FMessage.TRADE_RESOURCE_TITLE.getMessage(resource.getName(), faction.getName()));
+        gui = Bukkit.createInventory(this, 27, FMessage.TRADE_RESOURCE_TITLE.getMessage(resource.getName(), faction.getName()));
         ItemStack banner = faction.getBannerStack();
         ItemMeta meta = banner.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
@@ -126,4 +127,8 @@ public class ResourceMenu implements Listener {
         update();
     }
 
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
 }

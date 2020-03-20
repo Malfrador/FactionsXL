@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.erethon.factionsxl.war.WarParty;
+import de.erethon.vignette.api.component.InventoryButton;
+import de.erethon.vignette.api.component.InventoryButtonBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

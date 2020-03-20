@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.command;
-import de.erethon.vignette.api.*;
+
+import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
@@ -24,10 +25,6 @@ import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.Arrays;
 import java.util.Set;
-
-import de.erethon.vignette.api.component.InventoryButton;
-import de.erethon.vignette.api.component.InventoryButtonBuilder;
-import de.erethon.vignette.api.layout.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -35,18 +32,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static de.erethon.vignette.api.layout.PaginatedInventoryLayout.PaginationButtonPosition.BOTTOM;
-
 /**
  * @author Daniel Saukel
  */
-public class ListCommand extends FCommand implements Listener {
+public class ListCommand extends FCommand implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    Inventory gui;
 
     public ListCommand() {
         setCommand("list");
@@ -73,12 +71,9 @@ public class ListCommand extends FCommand implements Listener {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_FACTIONS.getMessage());
             return;
         }
-        for (GUI g : List) {
-            g.register();
-            g.clear();
-        }
-        GUI list = List[0];
 
+        int size = (int) (9 * Math.ceil(((double) factions.size() / 9)));
+        gui = Bukkit.createInventory(this, size, FMessage.CMD_LIST_TITLE.getMessage());
         for (Faction faction : factions) {
             int members = faction.getMembers().contains(faction.getAdmin()) ? faction.getMembers().size() : faction.getMembers().size() + 1;
             ItemStack banner = new ItemStack(faction.getBannerType(), members);
@@ -99,36 +94,32 @@ public class ListCommand extends FCommand implements Listener {
             ));
             meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
             banner.setItemMeta(meta);
-            list.add(new InventoryButtonBuilder()
-                    .icon(faction.getBannerType())
-                    .number(members)
-                    .lines(FMessage.CMD_SHOW_GOVERNMENT_TYPE.getMessage() + c + govType,
-                            FMessage.CMD_SHOW_LEADER.getMessage() + c + leader,
-                            FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces))
-                    .title(ParsingUtil.getFactionName(player, faction))
-                    .onInteract(e -> showFaction(faction, player) )
-                    .build()
-                    );
+            gui.addItem(banner);
         }
-        list.open((Player) sender);
+        player.openInventory(gui);
     }
 
-    public static final InventoryGUI[] List = new InventoryGUI[] {
-            new PaginatedInventoryGUI(FMessage.CMD_LIST_TITLE.getMessage()),
-
-    };
-    static {
-        List[0].setLayout(new PaginatedFlowInventoryLayout((PaginatedInventoryGUI) List[0], 54, BOTTOM));
-    }
-
-    public void showFaction(Faction f, Player p) {
-        if (f == null) {
-            String fName = f.getName();
-            f = plugin.getFactionCache().getInactiveByName(fName);
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (event.getInventory().getHolder() != this) {
+            return;
         }
-        p.closeInventory();
-        plugin.getCommandCache().show.showFaction(p, f);
+        event.setCancelled(true);
+        PageGUI.playSound(event);
+        ItemStack button = event.getCurrentItem();
+        if (button != null && button.hasItemMeta() && button.getItemMeta().hasDisplayName()) {
+            Faction faction = plugin.getFactionCache().getByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+            if (faction == null) {
+                faction = plugin.getFactionCache().getInactiveByName(ChatColor.stripColor(button.getItemMeta().getDisplayName()));
+            }
+            Player player = (Player) event.getWhoClicked();
+            player.closeInventory();
+            plugin.getCommandCache().show.showFaction(player, faction);
         }
     }
 
-
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
+}

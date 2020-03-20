@@ -41,6 +41,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * @author Daniel Saukel
+ * TODO: Should get updated to Vignette. Not sure how to do the 3 different scrolling-menus
  */
 public class CallToArmsMenu implements Listener {
 
@@ -135,6 +136,9 @@ public class CallToArmsMenu implements Listener {
         }
         ItemStack button = event.getCurrentItem();
         if (button == null || !button.hasItemMeta()) {
+            return;
+        }
+        if (!(event.getView().getTitle().contains(FMessage.WAR_CALL_TO_ARMS_TITLE.getMessage()))) {
             return;
         }
         if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {

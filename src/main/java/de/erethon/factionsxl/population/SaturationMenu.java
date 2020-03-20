@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,7 +40,7 @@ import java.awt.print.Pageable;
 /**
  * @author Daniel Saukel
  */
-public class SaturationMenu implements Listener {
+public class SaturationMenu implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -75,7 +76,7 @@ public class SaturationMenu implements Listener {
     }
 
     private void setupGUI() {
-        gui = Bukkit.createInventory(new PageGUI("Saturation"), 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
+        gui = Bukkit.createInventory(this, 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
         ItemStack banner = faction.getBannerStack();
         ItemMeta meta = banner.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + faction.getName());
@@ -111,7 +112,7 @@ public class SaturationMenu implements Listener {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory i = event.getClickedInventory();
-        if (!(i == gui)) {
+        if (event.getInventory().getHolder() != this) {
             return;
         }
         event.setCancelled(true);
@@ -143,4 +144,8 @@ public class SaturationMenu implements Listener {
         }
     }
 
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
 }

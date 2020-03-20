@@ -26,7 +26,6 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPermission;
-import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.demand.WarDemandWarPartyGUI;
@@ -34,24 +33,24 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Daniel Saukel
  */
-public class PeaceCommand extends FCommand implements Listener {
+public class PeaceCommand extends FCommand implements Listener, InventoryHolder {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
     WarCache wars = plugin.getWarCache();
 
-    private Inventory gui = Bukkit.createInventory(new PageGUI("Peace"), 9, FMessage.CMD_PEACE_TITLE.getMessage());
+    private Inventory gui = Bukkit.createInventory(this, 9, FMessage.CMD_PEACE_TITLE.getMessage());
     private ItemStack create = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_CREATE.getMessage());
     private ItemStack listReceived = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
     private ItemStack listSent = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_SENT.getMessage());
@@ -66,15 +65,15 @@ public class PeaceCommand extends FCommand implements Listener {
         setConsoleCommand(false);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         gui.setContents(new ItemStack[]{
-            GUIButton.PLACEHOLDER,
-            GUIButton.PLACEHOLDER,
-            GUIButton.PLACEHOLDER,
-            create,
-            listReceived,
-            listSent,
-            GUIButton.PLACEHOLDER,
-            GUIButton.PLACEHOLDER,
-            GUIButton.PLACEHOLDER
+                GUIButton.PLACEHOLDER,
+                GUIButton.PLACEHOLDER,
+                GUIButton.PLACEHOLDER,
+                create,
+                listReceived,
+                listSent,
+                GUIButton.PLACEHOLDER,
+                GUIButton.PLACEHOLDER,
+                GUIButton.PLACEHOLDER
         });
     }
 
@@ -101,9 +100,10 @@ public class PeaceCommand extends FCommand implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        if (!(gui.getHolder() instanceof PageGUI)) {
+        if (event.getInventory().getHolder() != this) {
             return;
         }
+        Bukkit.broadcastMessage("Peace Command click");
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
@@ -121,4 +121,8 @@ public class PeaceCommand extends FCommand implements Listener {
         }
     }
 
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
 }
