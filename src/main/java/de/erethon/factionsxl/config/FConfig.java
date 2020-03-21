@@ -129,6 +129,7 @@ public class FConfig extends DREConfig {
     private int autoKickDays = 30;
     private double influencePerDay = 5;
     private double coringPerDay = 5;
+    public double claimTimeout = 7;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -322,6 +323,14 @@ public class FConfig extends DREConfig {
      */
     public double getCoringPerDay() {
         return coringPerDay;
+    }
+
+    /**
+     * @return
+     * the time in days until a claim runs out
+     */
+    public long getClaimTimeout() {
+        return (long) (claimTimeout * 86400000);
     }
 
     /**
@@ -820,6 +829,10 @@ public class FConfig extends DREConfig {
             config.set("coringPerDay", coringPerDay);
         }
 
+        if (!config.contains("claimTimeout")) {
+            config.set("claimTimeout", claimTimeout);
+        }
+
         if (!config.contains("economyEnabled")) {
             config.set("economyEnabled", economyEnabled);
         }
@@ -1205,6 +1218,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("influencePerDay")) {
             influencePerDay = config.getDouble("influencePerDay");
+        }
+
+        if (config.contains("claimTimeout")) {
+            claimTimeout = config.getDouble("claimTimeout");
         }
 
         if (config.contains("coringPerDay")) {
