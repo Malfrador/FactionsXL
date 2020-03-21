@@ -44,6 +44,7 @@ public class War {
     private FileConfiguration config;
     private WarParty attacker;
     private WarParty defender;
+    private boolean truce;
     private CasusBelli cb;
     private Date startDate;
 
@@ -51,6 +52,7 @@ public class War {
         this.attacker = attacker;
         this.defender = defender;
         this.cb = cb;
+        this.truce = false;
         startDate = Calendar.getInstance().getTime();
         this.file = new File(FactionsXL.WARS, System.currentTimeMillis() + ".yml");
     }
@@ -60,6 +62,7 @@ public class War {
         config = YamlConfiguration.loadConfiguration(file);
         attacker = new WarParty(ConfigUtil.getMap(config, "attacker"));
         defender = new WarParty(ConfigUtil.getMap(config, "defender"));
+        truce = config.getBoolean("truce");
         cb = new CasusBelli(config.getConfigurationSection("casusBelli"));
         startDate = new Date(config.getLong("startDate"));
     }
@@ -72,6 +75,10 @@ public class War {
     public WarParty getDefender() {
         return defender;
     }
+
+    public boolean getTruce() {return truce;}
+
+    public void setTruce(boolean t) {truce = t;}
 
     /**
      * Returns the defender if the party is the attacker;
@@ -135,6 +142,7 @@ public class War {
         WarCache wars = FactionsXL.getInstance().getWarCache();
         wars.getUnconfirmedWars().remove(this);
         wars.getWars().add(this);
+        this.truce = true;
         FScoreboard.updateAllProviders();
         System.out.println("War" + this + "confirmed!");
     }
@@ -142,15 +150,15 @@ public class War {
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
         wars.getWars().remove(this);
+        file.delete();
         System.out.println("War" + this + "ended!");
-        this.save();
-        wars.saveAll();
     }
 
     /* Serialization */
     public void save() {
         config.set("attacker", attacker.serialize());
         config.set("defender", defender.serialize());
+        config.set("truce", truce);
         config.set("casusBelli", cb.serialize());
         config.set("startDate", startDate.getTime());
         try {

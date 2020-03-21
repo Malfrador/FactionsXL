@@ -121,6 +121,7 @@ public class FConfig extends DREConfig {
     private double warExplosionRestorationTime = 7.5;
     private double influenceNeeded = 10;
     private long cbLiberationExp = 60;
+    private long truceTime = 24;
 
     // Power etc.
     private int maxPower = 100;
@@ -565,6 +566,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * the time in days until truce stops
+     */
+    public long getTruceTime() {
+        return truceTime * HOUR;
+    }
+
+    /**
+     * @return
      * the maximum power that a player may store
      */
     public int getMaxPower() {
@@ -850,6 +859,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("coringPerDay")) {
             config.set("coringPerDay", coringPerDay);
+        }
+
+        if (!config.contains("truceTime")) {
+            config.set("truceTime", truceTime);
         }
 
         if (!config.contains("claimTimeout")) {
@@ -1231,6 +1244,7 @@ public class FConfig extends DREConfig {
             cbLiberationExp = config.getLong("casusBelli.liberation");
         }
 
+
         if (config.contains("maxPower")) {
             maxPower = config.getInt("maxPower");
         }
@@ -1261,6 +1275,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("influenceNeededForOccupy")) {
             influenceNeeded = config.getDouble("influenceNeededForOccupy");
+        }
+
+        if (config.contains("truceTime")) {
+            truceTime = config.getLong("truceTime");
         }
 
         if (config.contains("claimTimeout")) {

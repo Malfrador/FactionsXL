@@ -43,9 +43,8 @@ import de.erethon.factionsxl.protection.EntityProtectionListener;
 import de.erethon.factionsxl.protection.LWCIntegration;
 import de.erethon.factionsxl.protection.LandProtectionListener;
 import de.erethon.factionsxl.util.CoringHandler;
-import de.erethon.factionsxl.war.WarCache;
-import de.erethon.factionsxl.war.WarListener;
-import de.erethon.factionsxl.war.WarTNT;
+import de.erethon.factionsxl.war.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -94,6 +93,7 @@ public class FactionsXL extends DREPlugin {
     private LandProtectionListener landProtectionListener;
     private LWCIntegration lwcIntegration;
     private WarTNT warTNT;
+    private WarHandler warHandler;
     private CoringHandler core;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
@@ -220,6 +220,7 @@ public class FactionsXL extends DREPlugin {
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
         loadWars(WARS);
+        loadWarHandler();
         loadFPlayers();
         fPlayers.loadAll();
         board.loadAll();
@@ -242,6 +243,14 @@ public class FactionsXL extends DREPlugin {
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
         manager.registerEvents(new WarListener(), this);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                warHandler.calculateWar();
+                warHandler.calculateWarStatus();
+            }
+        }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
 
         new BukkitRunnable() {
             @Override
@@ -415,6 +424,13 @@ public class FactionsXL extends DREPlugin {
      */
     public void loadWars(File dir) {
         wars = new WarCache(this, dir);
+    }
+
+    /**
+     * load / reload a new instance of WarCache
+     */
+    public void loadWarHandler() {
+        warHandler = new WarHandler();
     }
 
     /**
