@@ -44,6 +44,7 @@ public class PaydayCommand extends FCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         core.calculateCoringProgress();
+        core.calculateClaimTime();
         int i = args.length > 1 ? NumberUtil.parseInt(args[1], 1) : 1;
         do {
             for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {

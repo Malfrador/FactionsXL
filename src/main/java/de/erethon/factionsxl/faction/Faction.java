@@ -526,11 +526,16 @@ public class Faction extends LegalEntity {
      * @return
      * the territory worth of this faction (currently just amount of chunks, might get expanded)
      */
-    public int getTerritoryWorth() {
+    public int getExpansion() {
         Set<Region> rg = regions;
         int value = 0;
         for (Region r : rg) {
-            value = round(value + (r.getSize()));
+            if (r.getCoreFactions().containsKey(this)) {
+                value = round(value + (r.getSize() / (float) 2));       // Core Regions only count / 2
+            }
+            else {
+                value = round(value + (r.getSize()));
+            }
         }
         return value;
     }
@@ -807,7 +812,7 @@ public class Faction extends LegalEntity {
 
     /**
      * @return
-     * the lord faciton
+     * the lord faction
      */
     public Faction getLord() {
         for (Entry<Faction, Relation> entry : relations.entrySet()) {

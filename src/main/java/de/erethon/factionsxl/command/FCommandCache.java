@@ -59,6 +59,7 @@ public class FCommandCache extends DRECommandCache {
     public HomeCommand home = new HomeCommand();
     public IdeaCommand idea = new IdeaCommand();
     public IntegrateCommand integrate = new IntegrateCommand();
+    public InfluenceCommand influence = new InfluenceCommand();
     public InviteCommand invite = new InviteCommand();
     public JoinCommand join = new JoinCommand();
     public KickCommand kick = new KickCommand();
@@ -173,6 +174,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(idea);
         addCommand(peaceCommand);
         addCommand(warAnnex);
+        addCommand(influence);
 
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

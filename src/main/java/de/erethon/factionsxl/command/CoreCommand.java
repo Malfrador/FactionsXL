@@ -16,12 +16,14 @@
  */
 package de.erethon.factionsxl.command;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -51,10 +53,26 @@ public class CoreCommand extends FCommand {
         Player player = (Player) sender;
         Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         Region region = plugin.getBoard().getByLocation(player.getLocation());
-        region.setCoringProgress(faction, 1);
-        for (Map.Entry<Faction, Integer> entry : region.getCoringProgress().entrySet() ) {
-            player.sendMessage("Faction: " + entry.getKey() + "Progress: " + entry.getValue());
+        if (!(region.getOwner() == faction)) {
+            MessageUtil.sendMessage(player, FMessage.ERROR_LAND_NOT_OWNED.getMessage());
+            return;
         }
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(player, FMessage.ERROR_AT_WAR.getMessage());
+            return;
+        }
+        double amount = region.getClaimPrice(faction) * config.getPriceCoreMultiplier();
+        if (plugin.getFConfig().isEconomyEnabled()) {
+            if (faction.getAccount().getBalance() < amount) {
+                ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(amount));
+                return;
+            } else {
+                ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(amount));
+                faction.getAccount().withdraw(amount);
+            }
+        }
+        ParsingUtil.sendMessage(sender, FMessage.FACTION_NEW_CORE.getMessage(), faction, region);
+        region.setCoringProgress(faction, 0);
     }
 }
 
