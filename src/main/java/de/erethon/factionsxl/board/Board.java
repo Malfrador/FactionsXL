@@ -23,10 +23,8 @@ import de.erethon.factionsxl.util.LazyChunk;
 import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -163,7 +161,7 @@ public class Board {
      */
     public boolean isAnnexable(Location location) {
         Region region = getByLocation(location);
-        return region == null ? false : region.isAnnexable();
+        return region == null ? false : region.isWildernessClaim();
     }
 
     /**
@@ -175,7 +173,7 @@ public class Board {
      */
     public boolean isAnnexable(Chunk chunk) {
         Region region = getByChunk(chunk);
-        return region == null ? false : region.isAnnexable();
+        return region == null ? false : region.isWildernessClaim();
     }
 
     /**

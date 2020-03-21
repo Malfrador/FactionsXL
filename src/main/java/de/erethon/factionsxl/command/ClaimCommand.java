@@ -26,6 +26,9 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Calendar;
+import java.util.Set;
+
 /**
  * @author Daniel Saukel
  */
@@ -59,13 +62,35 @@ public class ClaimCommand extends FCommand {
         }
 
         Region region = plugin.getBoard().getByLocation(player.getLocation());
-        if (region == null || !region.isAnnexable()) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
-            if (region != null && region.getCoreFactions().containsKey(faction)) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_CORE.getMessage(), region, faction);
-            } else if (region != null && region.getClaimFactions().containsKey(faction)) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_ALREADY_CLAIMED.getMessage(), region, faction);
+        Set<Region> regions = faction.getRegions();
+        if (region != null && !region.isWildernessClaim()) {
+            boolean nextTo = false;
+            for (Region r : regions) {
+                if (r.isNextTo(player.getWorld(), region)) {
+                    nextTo = true;
+                    break;
+                }
             }
+            if (!nextTo) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_CONNECTED.getMessage());
+                return;
+            }
+        }
+        if (region == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage());
+            return;
+        }
+        if (region.getCoreFactions().containsKey(faction)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_CORE.getMessage(), region, faction);
+            return;
+        }
+        if (region.getClaimFactions().containsKey(faction)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_REGION_IS_ALREADY_CLAIMED.getMessage(), region, faction);
+            return;
+        }
+
+        if (region.getOwner() == faction) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage(), region, faction);
             return;
         }
 
@@ -80,7 +105,13 @@ public class ClaimCommand extends FCommand {
             }
         }
 
-        region.setOwner(faction);
+        region.setInfluence(50);
+        if (region.isNeutral()) {
+            region.setOwner(faction);
+        }
+        else {
+            region.getClaimFactions().put(faction, Calendar.getInstance().getTime());
+        }
         ParsingUtil.sendMessage(sender, FMessage.CMD_CLAIM_SUCCESS.getMessage(), region);
     }
 

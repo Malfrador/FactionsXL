@@ -36,7 +36,9 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,8 +68,9 @@ public class RegionCommand extends FCommand {
             displayHelp(sender);
             return;
         }
-
+        Player player = (Player) sender;
         Region region = null;
+        World world = player.getWorld();
         if (args.length >= 2) {
             region = board.getByName(args[1]);
             if (region == null) {
@@ -87,7 +90,6 @@ public class RegionCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;
         }
-
         Faction faction = region.getOwner();
         ChatColor c = faction != null && sender instanceof Player ? faction.getRelation(factions.getByMember((Player) sender)).getColor() : Relation.PEACE.getColor();
 

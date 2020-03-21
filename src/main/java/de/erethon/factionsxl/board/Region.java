@@ -17,6 +17,7 @@
 package de.erethon.factionsxl.board;
 
 import com.avaje.ebean.validation.NotNull;
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.NumberUtil;
@@ -30,6 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -334,8 +338,42 @@ public class Region {
      * @return
      * true if the region is neutral and not marked as unclaimable
      */
-    public boolean isAnnexable() {
+    public boolean isWildernessClaim() {
         return isNeutral() && !unclaimable;
+    }
+
+    /**
+     * @param region the region to check against
+     * @param world the world to check in
+     * @return
+     * if this region is next to another region.
+     */
+    public boolean isNextTo(World world, Region region) {
+        Boolean sameChunks = false;
+        Collection<LazyChunk> chunks1 = this.getChunks();
+        Collection<LazyChunk> chunks2 = region.getChunks();
+        Collection<LazyChunk> allChunks = new CopyOnWriteArrayList<>();
+        for (LazyChunk c : chunks1) {
+            Collection<Chunk> chunksAround = c.getChunksAround(world);
+            for (Chunk ca : chunksAround) {
+                LazyChunk cl = new LazyChunk(ca.getX(), ca.getZ());
+                allChunks.add(cl);
+            }
+        }
+        for (LazyChunk c : allChunks) {
+            for (LazyChunk c2 : chunks2) {
+                if ((c.getX() == c2.getX()) && (c.getZ() == c2.getZ())) {
+                    sameChunks = true;
+                    break;
+                }
+            }
+        }
+        if (sameChunks) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**

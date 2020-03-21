@@ -17,6 +17,11 @@
 package de.erethon.factionsxl.util;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.HashSet;
+
+import de.erethon.commons.chat.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -59,6 +64,34 @@ public class LazyChunk {
 
     public int getZ() {
         return z;
+    }
+
+    @Override
+    public boolean equals(Object chunk) {
+        if(chunk == null) { return false; }
+        if(!(chunk instanceof LazyChunk)) { return false; }
+        LazyChunk other = (LazyChunk) chunk;
+        if  ((this.getX() == other.getX()) && (this.getZ() == other.getZ())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public Collection<Chunk> getChunksAround(World world) {
+
+        int[] offset = {-1,0,1};
+        Chunk chunk = this.asBukkitChunk(world);
+        int baseX = chunk.getX();
+        int baseZ = chunk.getZ();
+        Collection<Chunk> chunksAroundPlayer = new HashSet<>();
+        for(int x : offset) {
+            for(int z : offset) {
+                Chunk c = world.getChunkAt(baseX + x, baseZ + z);
+                chunksAroundPlayer.add(c);
+            }
+        } return chunksAroundPlayer;
     }
 
     public Chunk asBukkitChunk(World world) {

@@ -169,6 +169,7 @@ error:
   langNoCore: '&4This land is not a core province of your faction.'
   land:
     notForSale: '&4This land is not for sale.'
+    notConnected: '&4This land is owned and you share no border with the owner.'
     wilderness: '&4You cannot do this in the wilderness.'
   leaveFaction: '&4You have to leave your faction in order to do this.'
   maxIdeaGroupsReached: '&7You reached the maximum amount of idea groups.'

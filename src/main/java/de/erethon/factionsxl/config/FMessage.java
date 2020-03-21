@@ -146,6 +146,7 @@ public enum FMessage implements Message {
     ERROR_LAND_NO_CORE("error.langNoCore"),
     ERROR_LAND_NOT_FOR_SALE("error.land.notForSale"),
     ERROR_LAND_WILDERNESS("error.land.wilderness"),
+    ERROR_LAND_NOT_CONNECTED("error.land.notConnected"),
     ERROR_LEAVE_FACTION("error.leaveFaction"),
     ERROR_MAX_IDEA_GROUPS_REACHED("error.maxIdeaGroupsReached"),
     ERROR_NAME_IN_USE("error.nameInUse"),

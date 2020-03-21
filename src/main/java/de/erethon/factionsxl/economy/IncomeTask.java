@@ -32,6 +32,7 @@ public class IncomeTask extends BukkitRunnable {
     @Override
     public void run() {
         core.calculateCoringProgress();
+        core.calculateClaimTime();
         for (Faction faction : plugin.getFactionCache().getActive()) {
             faction.payday();
         }
