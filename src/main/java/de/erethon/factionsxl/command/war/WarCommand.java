@@ -80,7 +80,7 @@ public class WarCommand extends FCommand {
                     ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
                     return;
                 case ENEMY:
-                    player.performCommand("/factionsxl warStatus ");
+                    player.performCommand("/fxl warstatus ");
             }
             if (faction.getMembers().contains(player)) {
                 subject = new WarParty(faction, WarPartyRole.ATTACKER);
@@ -95,7 +95,7 @@ public class WarCommand extends FCommand {
             subject.addParticipant(faction);
         }
         //new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
-        new CasusBelliMenu().open(player);
+        new CasusBelliMenu().open(player, object);
     }
 
 }

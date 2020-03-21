@@ -157,6 +157,9 @@ public class CallToArmsMenu implements Listener {
         if (event.getPlayer() != cachedViewer || !(event.getPlayer() instanceof Player)) {
             return;
         }
+        if (!(event.getView().getTitle().equals(FMessage.WAR_CALL_TO_ARMS_TITLE.getMessage()))) {
+            return;
+        }
         War war = new War(attacker, defender, cb);
         FactionsXL.getInstance().getWarCache().getUnconfirmedWars().add(war);
         war.sendConfirmRequest((Player) event.getPlayer());
