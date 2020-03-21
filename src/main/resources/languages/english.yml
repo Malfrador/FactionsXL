@@ -562,6 +562,16 @@ war:
     add: '&6&lClick to call them to arms.'
     remove: '&6&lClick to retract the call to arms.'
     title: '&4&lCall to arms'
+  cb:
+    menu: '&6Casus Belli'
+    raid: '&cRaid'
+    raidDesc: '&7&oFree for all. No demands.'
+    border: '&eBorder Conflict'
+    borderDesc: '&7&oTwo countries share a border.'
+    conquest: '&4Conquest'
+    conquestDesc: '&7&oYour faction has claims on enemy land.'
+    liberation: '&aLiberation'
+    liberationDesc: '&7&oFight for your liberty against your lord.'
   declaration:
     allies: '&9Allies: '
     broadcast: '&v1 &4of &v2 &4declared war on &v3&4!'

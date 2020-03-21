@@ -120,6 +120,7 @@ public class FConfig extends DREConfig {
     private boolean capitalProtectionEnabled = false;
     private double warExplosionRestorationTime = 7.5;
     private double influenceNeeded = 10;
+    private long cbLiberationExp = 60;
 
     // Power etc.
     private int maxPower = 100;
@@ -556,6 +557,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * the time in days until the CB liberation runs out
+     */
+    public long getCBLiberationExp() {
+        return cbLiberationExp;
+    }
+
+    /**
+     * @return
      * the maximum power that a player may store
      */
     public int getMaxPower() {
@@ -839,7 +848,6 @@ public class FConfig extends DREConfig {
             config.set("influenceNeededForOccupy", influenceNeeded);
         }
 
-
         if (!config.contains("coringPerDay")) {
             config.set("coringPerDay", coringPerDay);
         }
@@ -949,6 +957,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("warExplosionRestorationTime")) {
             config.set("warExplosionRestorationTime", warExplosionRestorationTime);
+        }
+
+        if (!config.contains("casusBelli.liberation")) {
+            config.set("casusBelli.liberation", cbLiberationExp);
         }
 
         if (!config.contains("maxPower")) {
@@ -1213,6 +1225,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("warExplosionRestorationTime")) {
             warExplosionRestorationTime = config.getDouble("warExplosionRestorationTime");
+        }
+
+        if (config.contains("casusBelli.liberation")) {
+            cbLiberationExp = config.getLong("casusBelli.liberation");
         }
 
         if (config.contains("maxPower")) {

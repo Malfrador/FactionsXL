@@ -23,10 +23,8 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.CallToArmsMenu;
-import de.erethon.factionsxl.war.CasusBelli;
-import de.erethon.factionsxl.war.WarParty;
-import de.erethon.factionsxl.war.WarPartyRole;
+import de.erethon.factionsxl.war.*;
+
 import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -82,7 +80,7 @@ public class WarCommand extends FCommand {
                     ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
                     return;
                 case ENEMY:
-                    ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage(), object);
+                    player.performCommand("/factionsxl warStatus ");
             }
             if (faction.getMembers().contains(player)) {
                 subject = new WarParty(faction, WarPartyRole.ATTACKER);
@@ -96,7 +94,8 @@ public class WarCommand extends FCommand {
         for (Faction faction : factions) {
             subject.addParticipant(faction);
         }
-        new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
+        //new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
+        new CasusBelliMenu().open(player);
     }
 
 }
