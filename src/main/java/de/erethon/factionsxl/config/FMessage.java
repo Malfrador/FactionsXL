@@ -131,6 +131,7 @@ public enum FMessage implements Message {
     DEATH_PLAYER_KILL_KILLED("death.playerKill.killed"),
     DEATH_PLAYER_KILL_KILLER("death.playerKill.killer"),
     ERROR_ALLOD("error.allod"),
+    ERROR_AT_WAR("error.atWart"),
     ERROR_CANNOT_ATTACK_ALLIED_FACTION("error.cannotAttackAlliedFaction"),
     ERROR_CANNOT_PASS_CAPITAL("cmd.cannotPass.capital"),
     ERROR_CANNOT_PASS_LAND("cmd.cannotPass.land"),
@@ -147,6 +148,7 @@ public enum FMessage implements Message {
     ERROR_LAND_NOT_FOR_SALE("error.land.notForSale"),
     ERROR_LAND_WILDERNESS("error.land.wilderness"),
     ERROR_LAND_NOT_CONNECTED("error.land.notConnected"),
+    ERROR_LAND_NOT_OWNED("error.land.notOwned"),
     ERROR_LEAVE_FACTION("error.leaveFaction"),
     ERROR_MAX_IDEA_GROUPS_REACHED("error.maxIdeaGroupsReached"),
     ERROR_NAME_IN_USE("error.nameInUse"),
@@ -492,7 +494,10 @@ public enum FMessage implements Message {
     WAR_DEMAND_CREATION_MENU_MONEY("war.demand.creation.money"),
     WAR_DEMAND_LIST("war.demand.list"),
     WAR_DEMAND_MENU_LIST("war.demand.menu.list"),
-    WAR_DEMAND_MENU_TITLE("war.demand.menu.title"),;
+    WAR_DEMAND_MENU_TITLE("war.demand.menu.title"),
+    WAR_OCCUPY_SUCCESS("war.occupy.success"),
+    WAR_OCCUPY_INFLUENCE_TOO_HIGH("war.occupy.influenceTooHigh"),
+    WAR_OCCUPY_NOT_ENEMY("war.occupy.notEnemy");
 
     private String path;
 

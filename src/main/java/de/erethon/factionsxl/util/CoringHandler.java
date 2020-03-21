@@ -5,11 +5,9 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.war.WarParty;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CoringHandler {
@@ -43,9 +41,19 @@ public class CoringHandler {
         for (Region r : regions) {
             for (Map.Entry<Faction, Date> entry : r.getClaimFactions().entrySet() ) {
                 Faction f = entry.getKey();
+                boolean atWar = false;
                 if(System.currentTimeMillis() > entry.getValue().getTime() + config.getClaimTimeout()) {
-                    r.getClaimFactions().remove(f);
-                    f.sendMessage(FMessage.FACTION_LOST_CLAIM.getMessage(), f, r);
+                    Set<WarParty> WP = f.getWarParties();
+                    for (WarParty wp : WP) {
+                        if (wp.getFactions().contains(f)) {
+                            atWar = true;
+                            break;
+                        }
+                    }
+                    if (!atWar) {
+                        r.getClaimFactions().remove(f);
+                        f.sendMessage(FMessage.FACTION_LOST_CLAIM.getMessage(), f, r);
+                    }
                 }
             }
         }

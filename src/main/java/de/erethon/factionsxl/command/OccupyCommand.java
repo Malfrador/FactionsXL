@@ -25,15 +25,10 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.War;
-import de.erethon.factionsxl.war.WarParty;
-import de.erethon.factionsxl.war.WarPartyRole;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -62,7 +57,8 @@ public class OccupyCommand extends FCommand {
         Faction annexFrom = plugin.getBoard().getByLocation(player.getLocation()).getOwner();
         Bukkit.broadcastMessage("" + faction.getCapital().toString());
         Bukkit.broadcastMessage("" + region.toString());
-        if (faction == null) {
+        if (region.getOwner() == null) {
+            MessageUtil.sendMessage(player, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;
         }
         if (!faction.isPrivileged(player)) {
@@ -72,38 +68,29 @@ public class OccupyCommand extends FCommand {
         if (faction.isInWar() && annexFrom.isInWar()) {
             double price;
             if (faction.getRelation(annexFrom) == Relation.ENEMY) {
-                if (annexFrom.getPower() < annexFrom.getTerritoryWorth()) {
-                    if (region.getInfluence() <= 10) {
-                        price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
-                        sender.sendMessage("Preis:" + region.getClaimPrice(faction));
-                        if (faction.getAccount().getBalance() < price) {
-                            ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
-                            return;
-                        } else {
-                            ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
-                            faction.getAccount().withdraw(price);
-                            region.setOwner(faction);
-                            faction.sendMessage("&aIhr habt erfolgeich eine Region besetzt: &7" + region.getName());
-                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
-                        }
+                if (region.getInfluence() <= config.getInfluenceNeeded()) {
+                    price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
+                    if (region.getCoreFactions().containsKey(region.getOwner())) {
+                        price = price * 2;
+                    }
+                    if (faction.getAccount().getBalance() < price) {
+                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
                     } else {
-                        MessageUtil.sendMessage(player, "&cEnemy influence to high! Needs to be less then 10.");
-                        return;
+                        ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
+                        faction.getAccount().withdraw(price);
+                        region.setOwner(faction);
+                        faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                     }
+                } else {
+                    MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
                 }
-                else {
-                    MessageUtil.sendMessage(player, "&cEnemy Power to high. Needs to be less than &e" + annexFrom.getTerritoryWorth() + "&c.");
-                    return;
-                    }
-
             } else {
-                MessageUtil.sendMessage(player, "&cYou can only annex enemy regions.");
-                return;
+                MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_ENEMY.getMessage());
             }
         }
         else {
                 MessageUtil.sendMessage(player, "&cYou and the owner of this region are not at war!");
-                return;
             }
 
 

@@ -95,6 +95,7 @@ public class FConfig extends DREConfig {
     private double priceClaimBase = 100;
     private double priceClaimPerChunk = 10;
     private double priceClaimIncrease = 100;
+    private double priceCoreMultiplier = 10;
     private double importModifier = 2;
     private double exportModifier = 0.5;
     private int requiredResourceUnitsPer1000Persons = 10;
@@ -113,11 +114,12 @@ public class FConfig extends DREConfig {
     private boolean lwcEnabled = true;
     private boolean wildernessProtected = true;
 
-    // PvP
+    // PvP / War
     private boolean territoryProtectionEnabled = true;
     private double territoryShield = 0.66;
     private boolean capitalProtectionEnabled = false;
     private double warExplosionRestorationTime = 7.5;
+    private double influenceNeeded = 10;
 
     // Power etc.
     private int maxPower = 100;
@@ -317,6 +319,10 @@ public class FConfig extends DREConfig {
         return influencePerDay;
     }
 
+    public double getInfluenceNeeded() {
+        return influenceNeeded;
+    }
+
     /**
      * @return
      * the coring progress (to 100) that is made per day
@@ -406,6 +412,10 @@ public class FConfig extends DREConfig {
      */
     public double getPriceClaimIncrease() {
         return priceClaimIncrease;
+    }
+
+    public double getPriceCoreMultiplier() {
+        return priceCoreMultiplier;
     }
 
     /**
@@ -825,6 +835,11 @@ public class FConfig extends DREConfig {
             config.set("influencePerDay", influencePerDay);
         }
 
+        if (!config.contains("influenceNeededForOccupy")) {
+            config.set("influenceNeededForOccupy", influenceNeeded);
+        }
+
+
         if (!config.contains("coringPerDay")) {
             config.set("coringPerDay", coringPerDay);
         }
@@ -870,6 +885,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("price.claim.increase")) {
             config.set("price.claim.increase", priceClaimIncrease);
+        }
+
+        if (!config.contains("price.coreMultiplier")) {
+            config.set("price.coreMultiplier", priceCoreMultiplier);
         }
 
         if (!config.contains("importModifier")) {
@@ -1132,6 +1151,10 @@ public class FConfig extends DREConfig {
             priceClaimIncrease = config.getDouble("price.claim.increase");
         }
 
+        if (config.contains("price.coreMultiplier")) {
+            priceCoreMultiplier = config.getDouble("price.coreMultiplier");
+        }
+
         if (config.contains("importModifier")) {
             importModifier = config.getDouble("importModifier");
         }
@@ -1218,6 +1241,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("influencePerDay")) {
             influencePerDay = config.getDouble("influencePerDay");
+        }
+
+        if (config.contains("influenceNeededForOccupy")) {
+            influenceNeeded = config.getDouble("influenceNeededForOccupy");
         }
 
         if (config.contains("claimTimeout")) {

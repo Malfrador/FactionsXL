@@ -155,6 +155,7 @@ death:
       &6&v3&a.'
 error:
   allod: '&v1 &4is an allod.'
+  atWar: '&4You can not do this while at war!'
   cannotAttackAlliedFaction: '&4You cannot attack an allied faction.'
   cannotTradeWithItself: '&4A faction cannot trade with itself.'
   capitalMoveCooldown: '&4You must wait until &6&v1 &4to move your capital.'
@@ -170,6 +171,7 @@ error:
   land:
     notForSale: '&4This land is not for sale.'
     notConnected: '&4This land is owned and you share no border with the owner.'
+    notOwned: '&4You do not own this land!'
     wilderness: '&4You cannot do this in the wilderness.'
   leaveFaction: '&4You have to leave your faction in order to do this.'
   maxIdeaGroupsReached: '&7You reached the maximum amount of idea groups.'
@@ -579,3 +581,7 @@ war:
       item: '&3Add item demand'
       list: '&aList demands'
       title: Create new war demand
+  occupy:
+    success: '&aYou occupied a new Region: &v1&a!'
+    influenceTooHigh: '&cEnemy influence is not low enough.'
+    notEnemy: '&cThis region is not owned by an enemy.'
