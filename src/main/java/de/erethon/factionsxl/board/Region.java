@@ -63,6 +63,9 @@ public class Region {
     private World world;
     private Set<LazyChunk> chunks = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
+
+
+    private Map<Faction, Integer> coringProgress = new HashMap<>();
     private Map<Faction, Date> claims = new HashMap<>();
     private String mapFillColor;
     private String mapLineColor;
@@ -237,6 +240,29 @@ public class Region {
 
     /**
      * @return
+     * all factions that are currently trying to make this land a core
+     */
+    public Map<Faction, Integer> getCoringProgress() {
+        return coringProgress;
+    }
+
+    /**
+     * set the coring progress for a specific faction // TODO: specific faction!
+     */
+    public void setCoringProgress(Faction f, Integer progress) {
+        coringProgress.putIfAbsent(f, progress);
+    }
+
+    /**
+     * remove coring progress for faction
+     */
+    public void removeCoringProgress(Faction f) {
+        coringProgress.remove(f);
+    }
+
+
+    /**
+     * @return
      * all factions that claim this land
      */
     public Map<Faction, Date> getClaimFactions() {
@@ -322,7 +348,7 @@ public class Region {
 
     /**
      * @return
-     * the world where the region is
+     * the influence of the owner on the region
      */
     public int getInfluence() {
         return influence;
@@ -372,6 +398,11 @@ public class Region {
             Date date = new Date((long) entry.getValue());
             cores.put(faction, date);
         }
+        for (Entry<String, Object> entry : ConfigUtil.getMap(config, "coringProgress").entrySet()) {
+            Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
+            int progress = (int) entry.getValue();
+            coringProgress.put(faction, progress);
+        }
         for (Entry<String, Object> entry : ConfigUtil.getMap(config, "claims").entrySet()) {
             Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
             Date date = new Date((long) entry.getValue());
@@ -411,6 +442,12 @@ public class Region {
             serializedCores.put(entry.getKey().getId(), entry.getValue().getTime());
         }
         config.set("cores", serializedCores);
+
+        Map<Integer, Integer> serializedProgress = new HashMap<>();
+        for (Entry<Faction, Integer> entry : coringProgress.entrySet()) {
+            serializedProgress.put(entry.getKey().getId(), entry.getValue());
+        }
+        config.set("coringProgress", serializedProgress);
 
         Map<Integer, Long> serializedClaims = new HashMap<>();
         for (Entry<Faction, Date> entry : claims.entrySet()) {

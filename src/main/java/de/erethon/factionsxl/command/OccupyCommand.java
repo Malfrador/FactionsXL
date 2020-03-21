@@ -38,14 +38,14 @@ import java.util.Set;
 /**
  * @author Daniel Saukel
  */
-public class AnnexCommand extends FCommand {
+public class OccupyCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
 
-    public AnnexCommand() {
-        setCommand("annex");
-        setAliases("a");
+    public OccupyCommand() {
+        setCommand("occupy");
+        setAliases("a", "annex", "o");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp("Annex land for your faction. Can only be used with influence below 20.");
@@ -83,7 +83,7 @@ public class AnnexCommand extends FCommand {
                             ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
                             faction.getAccount().withdraw(price);
                             region.setOwner(faction);
-                            faction.sendMessage("&aIhr habt erfolgeich eine Region eingenommen: &7" + region.getName());
+                            faction.sendMessage("&aIhr habt erfolgeich eine Region besetzt: &7" + region.getName());
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                         }
                     } else {

@@ -201,6 +201,7 @@ public enum FMessage implements Message {
     HELP_CASUS_BELLI("help.casusBelli"),
     HELP_CHAT("help.chat"),
     HELP_CLAIM("help.claim"),
+    HELP_CORE("help.core"),
     HELP_CONFIRM_WAR("help.confirmWar"),
     HELP_CREATE("help.create"),
     HELP_CREATE_BULL("help.createBull"),

@@ -128,6 +128,7 @@ public class FConfig extends DREConfig {
     private double powerDeathLoss = 25;
     private int autoKickDays = 30;
     private double influencePerDay = 5;
+    private double coringPerDay = 5;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -306,12 +307,21 @@ public class FConfig extends DREConfig {
     public int getSaturationPerDay() {
         return saturationPerDay;
     }
+
     /**
      * @return
      * the influence a faction looses per region per day
      */
     public double getInfluencePerDay() {
         return influencePerDay;
+    }
+
+    /**
+     * @return
+     * the coring progress (to 100) that is made per day
+     */
+    public double getCoringPerDay() {
+        return coringPerDay;
     }
 
     /**
@@ -801,8 +811,13 @@ public class FConfig extends DREConfig {
         if (!config.contains("saturationPerDay")) {
             config.set("saturationPerDay", saturationPerDay);
         }
+
         if (!config.contains("influencePerDay")) {
             config.set("influencePerDay", influencePerDay);
+        }
+
+        if (!config.contains("coringPerDay")) {
+            config.set("coringPerDay", coringPerDay);
         }
 
         if (!config.contains("economyEnabled")) {
@@ -1187,8 +1202,13 @@ public class FConfig extends DREConfig {
         if (config.contains("powerDeathLoss")) {
             powerDeathLoss = config.getDouble("powerDeathLoss");
         }
+
         if (config.contains("influencePerDay")) {
             influencePerDay = config.getDouble("influencePerDay");
+        }
+
+        if (config.contains("coringPerDay")) {
+            coringPerDay = config.getDouble("coringPerDay");
         }
 
         if (config.contains("autoKickDays")) {

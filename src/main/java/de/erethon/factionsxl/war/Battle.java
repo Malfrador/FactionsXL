@@ -70,37 +70,32 @@ public class Battle {
     }
 
     /**
-     * @param player The winning player
-     * @param looser the loosing (death) player
+     * @param winner The winning player
+     * @param looser the loosing (dead) player
      */
-    public void win(Player player, Player looser) {
-        Faction f = factions.getByMember(player);
+    public void win(Player winner, Player looser) {
+        Faction f = factions.getByMember(winner);
         Faction fl = factions.getByMember(looser);
-        Set<WarParty> lWP = fl.getWarParties();
-        Region r = plugin.getBoard().getByLocation(player.getLocation());
+        Region r = plugin.getBoard().getByLocation(winner.getLocation());
         Set<WarParty> WP = f.getWarParties();
+        Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
             w.addKill();
-            if (w.getRole() == WarPartyRole.ATTACKER) {
-                if (r.getInfluence() >= 0) {
-                    r.setInfluence(r.getInfluence() - 1);
-                    MessageUtil.sendActionBarMessage(player, "&7Einfluss&8: &c-&6" + r.getInfluence());
-                    break;
-                }
-            }
-            else if (w.getRole() == WarPartyRole.DEFENDER) {
+            if (w.getFactions().contains(r.getOwner())) {
                 if (r.getInfluence() <= 100) {
                     r.setInfluence(r.getInfluence() + 1);
-                    MessageUtil.sendActionBarMessage(player, "&7Einfluss&8: &a+&6" + r.getInfluence());
-                    break;
+                    MessageUtil.sendActionBarMessage(winner, "&aRegion verteidigt! &8- &7Einfluss&8: &a+1 &7(" + r.getInfluence() + "&7)");
                 }
             }
             else {
-                break;
-            }
+                    if (r.getInfluence() >= 0) {
+                        r.setInfluence(r.getInfluence() - 1);
+                        MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-1 &7(" + r.getInfluence() + "&7)");
+                    }
+                }
         }
-        for (WarParty w : lWP) {
-            w.addDeath();
+        for (WarParty wL : lWP) {
+            wL.addDeath();
         }
     }
 

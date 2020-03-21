@@ -42,6 +42,7 @@ import de.erethon.factionsxl.player.PlayerListener;
 import de.erethon.factionsxl.protection.EntityProtectionListener;
 import de.erethon.factionsxl.protection.LWCIntegration;
 import de.erethon.factionsxl.protection.LandProtectionListener;
+import de.erethon.factionsxl.util.CoringHandler;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarListener;
 import de.erethon.factionsxl.war.WarTNT;
@@ -93,6 +94,7 @@ public class FactionsXL extends DREPlugin {
     private LandProtectionListener landProtectionListener;
     private LWCIntegration lwcIntegration;
     private WarTNT warTNT;
+    private CoringHandler core;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
     private boolean debugEnabled = true;
@@ -223,6 +225,7 @@ public class FactionsXL extends DREPlugin {
         board.loadAll();
         factions.loadAll();
         loadAtlas();
+        loadCoring();
         loadFCommands();
         loadChatListener();
         loadPlayerListener();
@@ -300,6 +303,21 @@ public class FactionsXL extends DREPlugin {
      */
     public FData getFData() {
         return fData;
+    }
+
+    /**
+     * @return
+     * the CoringHandler
+     */
+    public CoringHandler getCoring() {
+        return core;
+    }
+
+    /**
+     * new CoringHandler
+     */
+    public void loadCoring() {
+        core = new CoringHandler();
     }
 
     /**

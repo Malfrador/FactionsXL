@@ -22,6 +22,7 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.population.SaturationLevel;
+import de.erethon.factionsxl.util.CoringHandler;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;

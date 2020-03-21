@@ -16,41 +16,45 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
+import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
-import de.erethon.factionsxl.util.CoringHandler;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 /**
- * @author Daniel Saukel
+ * @author Malfrador
  */
-public class PaydayCommand extends FCommand {
+public class CoreCommand extends FCommand {
 
-    CoringHandler core =  FactionsXL.getInstance().getCoring();
+    FactionsXL plugin = FactionsXL.getInstance();
+    FConfig config = plugin.getFConfig();
 
-    public PaydayCommand() {
-        setCommand("payday");
+    public CoreCommand() {
+        setCommand("core");
+        setAliases("co");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_PAYDAY.getMessage());
-        setPermission(FPermission.PAYDAY.getNode());
+        setHelp(FMessage.HELP_CORE.getMessage());
+        setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
-        setConsoleCommand(true);
+        setConsoleCommand(false);
     }
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        core.calculateCoringProgress();
-        int i = args.length > 1 ? NumberUtil.parseInt(args[1], 1) : 1;
-        do {
-            for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {
-                faction.getStorage().payday();
-            }
-            i--;
-        } while (i > 0);
+        Player player = (Player) sender;
+        Faction faction = getSenderFactionOrFromArg(sender, args, 1);
+        Region region = plugin.getBoard().getByLocation(player.getLocation());
+        region.setCoringProgress(faction, 1);
+        for (Map.Entry<Faction, Integer> entry : region.getCoringProgress().entrySet() ) {
+            player.sendMessage("Faction: " + entry.getKey() + "Progress: " + entry.getValue());
+        }
     }
-
 }
+

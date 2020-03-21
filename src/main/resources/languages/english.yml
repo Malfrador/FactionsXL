@@ -232,6 +232,7 @@ help:
   casusBelli: /f casusBelli ([faction] - Shows all of your casus belli (except raid).
   chat: /f chat [f(action)|p(ublic)] [faction] - Changes the chat mode.
   claim: /f claim ([faction]) - Claims a territory.
+  core: /f core - Starts the coring process for this region.
   confirmWar: /f confirmWar [date] - Technical command used to confirm wars.
   create: /f create [tag] - Creates a new faction.
   createBull: /f createBull [name] - Creates a new bull with [name] as the author.

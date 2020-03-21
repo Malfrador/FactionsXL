@@ -31,8 +31,6 @@ import de.erethon.factionsxl.command.war.WarCommand;
 import de.erethon.factionsxl.command.war.WarStatusCommand;
 import de.erethon.factionsxl.config.FConfig;
 
-import javax.management.relation.Role;
-
 /**
  * An enumeration of all command instances.
  *
@@ -49,6 +47,7 @@ public class FCommandCache extends DRECommandCache {
     public CasusBelliCommand casusBelli = new CasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
+    public CoreCommand core = new CoreCommand();
     public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
@@ -106,7 +105,7 @@ public class FCommandCache extends DRECommandCache {
     public UninviteCommand uninvite = new UninviteCommand();
     public WarCommand war = new WarCommand();
     public WarStatusCommand warStatus = new WarStatusCommand();
-    public AnnexCommand warAnnex = new AnnexCommand();
+    public OccupyCommand warAnnex = new OccupyCommand();
     public WorldCommand world = new WorldCommand();
 
     public FCommandCache(DREPlugin plugin) {
@@ -168,6 +167,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(warStatus);
         addCommand(world);
         // experimental commands
+        addCommand(core);
         addCommand(storage);
         addCommand(tradeOffer);
         addCommand(addCasusBelli);

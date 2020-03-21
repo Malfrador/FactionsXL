@@ -28,6 +28,8 @@ import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.scoreboard.sidebar.FInfoSidebar;
 import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.WarParty;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -93,10 +95,25 @@ public class PlayerListener implements Listener {
         Player killerP = event.getEntity().getKiller();
         FPlayer killedF = fPlayers.getByPlayer(killedP);
         FPlayer killerF = killerP != null ? fPlayers.getByPlayer(killerP) : null;
+        Faction killedFc = killedF.getFaction();
+        Faction killerFc = killerF != null ? killerF.getFaction() : null;
         double loss = fConfig.getPowerDeathLoss();
         double newPower = killedF.getPower() - loss;
         killedF.setPower(newPower < fConfig.getMinPower() ? fConfig.getMinPower() : newPower);
+        // Gamerule: doImmediateRespawn needs to be true here!
         if (killerP != null) {
+            if (killerFc != null) {
+                for (WarParty w : killerFc.getWarParties()) {
+                    if (w.getEnemy().getFactions().contains(killedFc)) {
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                            public void run() {
+                                killedP.teleport(killedFc.getHome());
+                            }
+                        }, 2);
+                        break;
+                    }
+                }
+            }
             double newKPower = killerF.getPower() + loss;
             killerF.setPower(newKPower > fConfig.getMaxPower() ? fConfig.getMaxPower() : newKPower);
             ParsingUtil.sendMessage(killedP, FMessage.DEATH_PLAYER_KILL_KILLED.getMessage(), killerF, String.valueOf(loss), String.valueOf(killedF.getPower()));

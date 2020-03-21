@@ -18,6 +18,7 @@ package de.erethon.factionsxl.economy;
 
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.util.CoringHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -26,9 +27,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class IncomeTask extends BukkitRunnable {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    CoringHandler core =  plugin.getCoring();
 
     @Override
     public void run() {
+        core.calculateCoringProgress();
         for (Faction faction : plugin.getFactionCache().getActive()) {
             faction.payday();
         }
