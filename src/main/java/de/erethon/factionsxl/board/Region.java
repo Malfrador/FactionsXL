@@ -64,6 +64,7 @@ public class Region {
     private int population;
     private int influence = 100;
     private Faction owner;
+    private Faction occupant;
     private World world;
     private Set<LazyChunk> chunks = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
@@ -116,6 +117,14 @@ public class Region {
     }
 
     /* Getters and setters */
+    @Override
+    public boolean equals(Object region) {
+        if(region == null) { return false; }
+        if(!(region instanceof Region)) { return false; }
+        Region other = (Region) region;
+        return this.getId() == other.getId();
+    }
+
     /**
      * @return
      * the ID
@@ -216,6 +225,21 @@ public class Region {
         if (owner != null) {
             owner.getRegions().add(this);
         }
+    }
+
+    /**
+     * @return
+     * the faction that currently occupies this region
+     */
+    public Faction getOccupant() {
+        return occupant;
+    }
+
+    /**
+     * set the occupying faction of this reason
+     */
+    public void setOccupant(Faction f) {
+        occupant = f;
     }
 
     /**

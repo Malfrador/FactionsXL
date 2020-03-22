@@ -583,6 +583,7 @@ war:
     startDate: '&4&oThe war will start in 24 hours.'
     title: '&4&l#=== DÉCLARATION DE GUERRE ===#'
   demand:
+    list: '&6List of war demands:'
     creation:
       title: '&aCreate new demand'
       list: '&aList war demands'

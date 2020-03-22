@@ -281,7 +281,7 @@ public enum FMessage implements Message {
     MISC_CANCEL("misc.cancel"),
     MISC_CONTINUE("misc.continue"),
     MISC_DENY("misc.deny"),
-    MISC_NONE("mist.none"),
+    MISC_NONE("misc.none"),
     MISC_LONER("misc.loner"),
     MISC_OPEN_REQUESTS("misc.openRequests"),
     MISC_PURCHASE_FAIL("misc.purchase.success"),

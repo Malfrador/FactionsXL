@@ -1,0 +1,153 @@
+package de.erethon.factionsxl.war.demand;
+
+import de.erethon.commons.chat.MessageUtil;
+import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
+import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.player.FPlayer;
+import de.erethon.factionsxl.war.WarParty;
+import net.milkbowl.vault.chat.Chat;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.*;
+
+public class RegionDemand implements WarDemand, Listener, InventoryHolder {
+    Inventory gui;
+    FactionsXL plugin = FactionsXL.getInstance();
+    Faction e;
+    Player player;
+    FPlayer fplayer;
+    private List<Region> demandRegions = new ArrayList<>();
+
+
+    public RegionDemand(List<Region> regions) {
+        this.demandRegions = regions;
+    }
+
+    public RegionDemand() { }
+
+    public List<Region> getDemandRegions() {
+        return demandRegions;
+    }
+
+    @Override
+    public void demand() {
+
+    }
+
+    public void openSetupGUI(Player p, Faction enemy) {
+        gui = Bukkit.createInventory(this, 54, "§5Select Enemy Regions...");
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+        FPlayer fp =  plugin.getFPlayerCache().getByPlayer(p);
+        Faction faction = fp.getFaction();
+        player = p;
+        e = enemy;
+        ItemStack doneItem = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+        ItemMeta doneMeta = doneItem.getItemMeta();
+        doneMeta.setDisplayName("§aDone.");
+        doneItem.setItemMeta(doneMeta);
+        int i = 0;
+        while (i <= 7) {
+            gui.setItem(i, new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+            i++;
+        }
+        gui.addItem(doneItem);
+        for (Region r : enemy.getRegions()) {
+            ItemStack guiItem = new ItemStack(Material.GRASS_BLOCK);
+            ItemMeta guiMeta = guiItem.getItemMeta();
+            List<String> lore = new ArrayList<>();
+            guiMeta.setDisplayName(String.valueOf(r.getId()));
+            lore.add(r.getName());
+            if (r.getOccupant() == faction) {
+                lore.add("§c§oRegion occupied by your faction!");
+                lore.add("§7Warscore§8: &5" + 6);
+            }
+            else {
+                lore.add("§7Warscore§8: &5" + 10);
+            }
+            guiMeta.setLore(lore);
+            guiItem.setItemMeta(guiMeta);
+            gui.addItem(guiItem);
+            p.openInventory(gui);
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (event.getInventory().getHolder() != this) {
+            return;
+        }
+        event.setCancelled(true);
+        Player player = (Player) event.getWhoClicked();
+        Faction faction = plugin.getFPlayerCache().getByPlayer(player).getFaction();
+        ItemStack item = event.getCurrentItem();
+        if (item == null) {
+            return;
+        }
+        if (item.getItemMeta().getDisplayName().contains("Done.")) {
+            WarDemand war = (WarDemand) new RegionDemand(demandRegions);
+            FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
+            FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
+            MessageUtil.sendMessage(player, "&aDemand added");
+            return;
+        }
+        int ID = Integer.parseInt(item.getItemMeta().getDisplayName());
+        for (Region r : e.getRegions()) {
+            if (r.getId() == ID) {
+                if (demandRegions.contains(r)) {
+                    demandRegions.remove(r);
+                    MessageUtil.sendMessage(player, "&aRegion &e" + r.getName() + " &aremoved.");
+                }
+                else {
+                    demandRegions.add(r);
+                    MessageUtil.sendMessage(player, "&aRegion &e" + r.getName() + " &aadded.");
+                }
+            }
+        }
+        for (Region r : demandRegions) {
+            MessageUtil.sendMessage(player, "&8 - &7" + r.getName());
+        }
+
+    }
+
+
+    @Override
+    public void pay(WarParty f, WarParty f2) {
+
+    }
+
+    @Override
+    public boolean canPay(WarParty wp) {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder list = new StringBuilder("&aRegions: ");
+        for (Region r : getDemandRegions()) {
+            list.append(ChatColor.YELLOW).append(r.getName()).append(ChatColor.DARK_GRAY).append(", ");
+
+        }
+        return list.toString();
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        return null;
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return gui;
+    }
+}

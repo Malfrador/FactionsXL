@@ -16,9 +16,11 @@
  */
 package de.erethon.factionsxl.war.demand;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
@@ -26,7 +28,9 @@ import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.erethon.vignette.api.InventoryGUI;
@@ -42,6 +46,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * @author Daniel Saukel
@@ -69,6 +74,16 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             }
         });
         gui.addItem(send);
+        ItemStack raidItem = new ItemStack(Material.GRASS_BLOCK);
+        ItemMeta raidMeta = raidItem.getItemMeta();
+        raidMeta.setDisplayName("§aRegion");
+        raidItem.setItemMeta(raidMeta);
+        gui.addItem(raidItem);
+        ItemStack delItem = new ItemStack(Material.BARRIER);
+        ItemMeta delMeta = delItem.getItemMeta();
+        delMeta.setDisplayName("§cClear demands.");
+        delItem.setItemMeta(delMeta);
+        gui.setItem(17, delItem);
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -93,6 +108,7 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
         if (button == null) {
             return;
         }
+        event.getWhoClicked().closeInventory();
         FPlayer player = plugin.getFPlayerCache().getByPlayer((Player) event.getWhoClicked());
         if (GUIButton.BACK.equals(button)) {
             Set<Faction> ownFactions = plugin.getFactionCache().getByLeader(player.getPlayer());
@@ -103,6 +119,11 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.listWarDemands();
         } else if (send.equals(button)) {
             player.getPeaceOffer().send();
+        } else if (button.getItemMeta().getDisplayName().contains("Clear demands")) {
+            player.getPeaceOffer().getDemands().clear();
+            MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
+        } else if (button.getItemMeta().getDisplayName().contains("Region")) {
+            new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), player.getFaction());
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }

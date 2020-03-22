@@ -98,7 +98,7 @@ public class MoneyDemand implements WarDemand {
     }
     @Override
     public String toString() {
-        return "&6Money&8: " + amount;
+        return "&6Money&8: &e" + amount;
     }
 
     @Override

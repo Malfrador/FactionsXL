@@ -117,7 +117,7 @@ public class FPlayer implements FEntity, PlayerWrapper {
     }
 
     /**
-     * @param the faction to check
+     * @param faction to check
      * @return
      * if the player is faction mod
      */
@@ -425,13 +425,7 @@ public class FPlayer implements FEntity, PlayerWrapper {
             MessageUtil.sendMessage(player, FMessage.MISC_NONE.getMessage());
         }
         for (WarDemand demand : demands) {
-            BaseComponent[] comps = TextComponent.fromLegacyText(demand.toString());
-            BaseComponent[] cancel = TextComponent.fromLegacyText(FMessage.MISC_CANCEL.getMessage());
-            ClickEvent event = new ClickEvent(Action.RUN_COMMAND, "");
-            for (BaseComponent comp : cancel) {
-                comp.setClickEvent(event);
-            }
-            MessageUtil.sendMessage(player, ObjectArrays.concat(comps, cancel, BaseComponent.class));
+            MessageUtil.sendMessage(player, "&8 - " + demand.toString());
         }
     }
 
