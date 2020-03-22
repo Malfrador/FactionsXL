@@ -93,6 +93,10 @@ public class ClaimCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage(), region, faction);
             return;
         }
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
+            return;
+        }
 
         if (plugin.getFConfig().isEconomyEnabled()) {
             double price = region.getClaimPrice(faction);

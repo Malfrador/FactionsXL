@@ -22,22 +22,16 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.population.SaturationLevel;
-import de.erethon.factionsxl.util.CoringHandler;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author Daniel Saukel
@@ -101,15 +95,17 @@ public class FStorage {
                     goods.put(entry.getKey(), goods.get(entry.getKey()) + entry.getValue());
                 }
             }
-            // Reduce influence per day, down to min 50
-            if (region.getInfluence() >= 50) {
-                double reduction = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
-                region.setInfluence(region.getInfluence() - (int) reduction);
-            }
-            // Regen influence if less than 20 (War)
-            else if (region.getInfluence() <= 10) {
-                double reduction =  FactionsXL.getInstance().getFConfig().getInfluencePerDay();
-                region.setInfluence(region.getInfluence() + (int) reduction);
+            if (faction.getStability() >= 80) {
+                // Increase influence up to 100 if core
+                if (region.getCoreFactions().containsKey(faction) && region.getInfluence() <= 100) {
+                    double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                    region.setInfluence(region.getInfluence() + (int) inf);
+                }
+                // Increase influence up to 50 if not core
+                else if (!(region.getCoreFactions().containsKey(faction)) && region.getInfluence() <= 50) {
+                    double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                    region.setInfluence(region.getInfluence() + (int) inf);
+                }
             }
         }
 

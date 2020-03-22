@@ -101,6 +101,9 @@ public class RegionCommand extends FCommand {
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_PRICE.getMessage() + c + region.getClaimPrice(senderFaction));
         }
         MessageUtil.sendMessage(sender,"&6Influence: " + c + region.getInfluence());
+        if (region.getOccupant() != null) {
+            MessageUtil.sendMessage(sender, "&6Occupant: " + c + region.getOccupant().getName());
+        }
         BaseComponent[] income1 = TextComponent.fromLegacyText(FMessage.CMD_REGION_TYPE.getMessage());
         BaseComponent[] income2 = TextComponent.fromLegacyText(c + region.getType().getName() + " (" + region.getLevel() + ")");
         BaseComponent[] incomeHover = new BaseComponent[]{};

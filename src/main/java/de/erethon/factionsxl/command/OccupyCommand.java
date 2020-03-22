@@ -30,6 +30,8 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Calendar;
+
 /**
  * @author Daniel Saukel
  */
@@ -68,17 +70,21 @@ public class OccupyCommand extends FCommand {
         if (faction.isInWar() && annexFrom.isInWar()) {
             double price;
             if (faction.getRelation(annexFrom) == Relation.ENEMY) {
-                if (region.getInfluence() <= config.getInfluenceNeeded()) {
+                if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
                     price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
                     if (region.getCoreFactions().containsKey(region.getOwner())) {
                         price = price * 2;
+                    }
+                    if (region.getClaimFactions().containsKey(faction)) {
+                        price = price / 4;
                     }
                     if (faction.getAccount().getBalance() < price) {
                         ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
                     } else {
                         ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
                         faction.getAccount().withdraw(price);
-                        region.setOwner(faction);
+                        region.setOccupant(faction);
+                        region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
                         faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                     }
