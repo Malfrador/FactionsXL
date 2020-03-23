@@ -85,6 +85,7 @@ public class Battle {
         for (WarParty w : WP) {
             if (w.getPointsFromKills() <= config.getMaximumKillPoints()) {
                 w.addPoints(1);
+                w.setPointsFromKills(w.getPointsFromKills() + 1);
             }
             w.addKill();
             if (w.getFactions().contains(r.getOwner())) {
@@ -101,6 +102,10 @@ public class Battle {
                 }
         }
         for (WarParty wL : lWP) {
+            if (wL.getPointsFromKills() <= config.getMaximumKillPoints()) {
+                wL.removePoints(1);
+                wL.setPointsFromKills(wL.getPointsFromKills() + 1);
+            }
             wL.addDeath();
         }
     }
