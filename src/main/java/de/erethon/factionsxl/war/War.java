@@ -21,7 +21,9 @@ package de.erethon.factionsxl.war;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.ParsingUtil;
@@ -29,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
+
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -151,6 +155,24 @@ public class War {
     public void end() {
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
+        Set<Faction> factionSet =  this.getAttacker().getFactions();
+        Set<Faction> factionSetD = this.getDefender().getFactions();
+        // Remove Occupants from the Attacker
+        for (Faction f : factionSet) {
+            for (Region rg : f.getRegions()) {
+                if (factionSetD.contains(rg.getOccupant())) {
+                    rg.clearOccupant();
+                }
+            }
+        }
+        // Remove Occupants from the Defender
+        for (Faction f : factionSetD) {
+            for (Region rg : f.getRegions()) {
+                if (factionSet.contains(rg.getOccupant())) {
+                    rg.clearOccupant();
+                }
+            }
+        }
         wars.getWars().remove(this);
         file.delete();
         System.out.println("War" + this + "ended!");
