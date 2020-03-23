@@ -1,18 +1,20 @@
 /*
- * Copyright (c) 2017-2019 Daniel Saukel
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
+ *  *
+ *  * This program is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * This program is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war;
 
@@ -48,7 +50,7 @@ public class WarParty implements FEntity {
     public int kills;
     public int deaths;
     public int fights;
-    public int points = 0;
+    public int points;
 
     public WarParty(LegalEntity entity, WarPartyRole role) {
         leader = entity;
@@ -63,6 +65,7 @@ public class WarParty implements FEntity {
         requests = (List<Request>) serialized.get("requests");
         kills = (int) serialized.get("kills");
         deaths = (int) serialized.get("deaths");
+        points = (int) serialized.get("score");
         fights = (int) serialized.get("fights");
         role = WarPartyRole.valueOf((String) serialized.get("role"));
     }
@@ -167,6 +170,23 @@ public class WarParty implements FEntity {
 
     /**
      * @return
+     * the amount of collected war points
+     */
+    public void addPoints(int a) {
+        points = points + a;
+    }
+
+    /**
+     * @return
+     * the amount of collected war points
+     */
+    public void removePoints(int a) {
+        points = points - a;
+    }
+
+
+    /**
+     * @return
      * the WarParty's role in the war
      */
     public WarPartyRole getRole() {
@@ -195,6 +215,7 @@ public class WarParty implements FEntity {
         serialized.put("participants", participants);
         serialized.put("kills", kills);
         serialized.put("deaths", this.deaths);
+        serialized.put("score", points);
         serialized.put("fights", fights);
         serialized.put("role", role.name());
         return serialized;

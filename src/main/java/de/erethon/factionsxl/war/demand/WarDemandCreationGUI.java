@@ -1,18 +1,20 @@
 /*
- * Copyright (C) 2017-2018 Daniel Saukel
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
+ *  *
+ *  * This program is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * This program is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.demand;
 
@@ -60,6 +62,8 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_CREATION_MENU_LIST.getMessage());
     private ItemStack send = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_DEMAND_CREATION_MENU_SEND.getMessage());
+    private Faction enemy;
+
 
     public WarDemandCreationGUI(FactionsXL plugin) {
         this.plugin = plugin;
@@ -89,6 +93,11 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     @Override
     public void open(Player player) {
+        player.openInventory(gui);
+    }
+
+    public void open(Player player, Faction e) {
+        this.enemy = e;
         player.openInventory(gui);
     }
 
@@ -123,7 +132,7 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.getPeaceOffer().getDemands().clear();
             MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
         } else if (button.getItemMeta().getDisplayName().contains("Region")) {
-            new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), player.getFaction());
+            new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }

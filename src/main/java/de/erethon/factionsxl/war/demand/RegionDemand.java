@@ -1,3 +1,22 @@
+/*
+ *
+ *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
+ *  *
+ *  * This program is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * This program is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package de.erethon.factionsxl.war.demand;
 
 import de.erethon.commons.chat.MessageUtil;
@@ -27,11 +46,13 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     Faction e;
     Player player;
     FPlayer fplayer;
+    double cost;
     private List<Region> demandRegions = new ArrayList<>();
 
 
-    public RegionDemand(List<Region> regions) {
+    public RegionDemand(List<Region> regions, double warscore) {
         this.demandRegions = regions;
+        this.cost = warscore;
     }
 
     public RegionDemand() { }
@@ -40,9 +61,31 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         return demandRegions;
     }
 
+    public double getWarscoreCost() {
+        return cost;
+    }
+
+    public double getDemandCost(Faction f) {
+        double cost = 0;
+        for (Region r : demandRegions) {
+            if (r.getOccupant() == f) {
+                cost = cost + 6;
+            }
+            else {
+                cost = cost + 10;
+            }
+        }
+        return cost;
+    }
+
     @Override
     public void demand() {
 
+    }
+
+    @Override
+    public boolean canAffordWP(WarParty wp) {
+        return wp.getPoints() >= getWarscoreCost();
     }
 
     public void openSetupGUI(Player p, Faction enemy) {
@@ -70,10 +113,10 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             lore.add(r.getName());
             if (r.getOccupant() == faction) {
                 lore.add("§c§oRegion occupied by your faction!");
-                lore.add("§7Warscore§8: &5" + 6);
+                lore.add("§7Warscore§8: §5-" + 6);
             }
             else {
-                lore.add("§7Warscore§8: &5" + 10);
+                lore.add("§7Warscore§8: §5-" + 10);
             }
             guiMeta.setLore(lore);
             guiItem.setItemMeta(guiMeta);
@@ -95,10 +138,13 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             return;
         }
         if (item.getItemMeta().getDisplayName().contains("Done.")) {
-            WarDemand war = (WarDemand) new RegionDemand(demandRegions);
+            double cost = getDemandCost(faction);
+            WarDemand war = (WarDemand) new RegionDemand(demandRegions, cost);
             FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
+            Bukkit.broadcastMessage(faction.getName());
             FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
             MessageUtil.sendMessage(player, "&aDemand added");
+            FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).listWarDemands();
             return;
         }
         int ID = Integer.parseInt(item.getItemMeta().getDisplayName());
@@ -138,6 +184,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             list.append(ChatColor.YELLOW).append(r.getName()).append(ChatColor.DARK_GRAY).append(", ");
 
         }
+        list.append("&7Total&8: &6" + getWarscoreCost());
         return list.toString();
     }
 

@@ -1,18 +1,20 @@
 /*
- * Copyright (C) 2017-2018 Daniel Saukel
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
+ *  *
+ *  * This program is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * This program is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.peaceoffer;
 
@@ -69,10 +71,18 @@ public class FinalPeaceOffer extends PeaceOffer {
     public void confirm() {
         Bukkit.broadcastMessage("Confirm triggered");
         boolean canPay = true;
+        double warscoreCost = 0;
+        war.end();
         for (WarDemand demand : demands) {
+            warscoreCost = warscoreCost + demand.getWarscoreCost();
             if (!demand.canPay(getObject())) {
                 canPay = false;
             }
+        }
+        if (warscoreCost > getSubject().getPoints()) {
+            Player p = getSubject().getLeaderAdmin().getPlayer();
+            MessageUtil.sendMessage(p, "&cYou do not have enough War score for this.");
+            return;
         }
         if (canPay) {
             demands.forEach(d -> d.pay(getSubject(), getObject()));
@@ -81,11 +91,11 @@ public class FinalPeaceOffer extends PeaceOffer {
             // TODO: Might break after government update
             // TODO: Add time modifier
         }
+        purge();
     }
 
     @Override
     public String getAcceptCommand() {
-        war.end();
         return "/factionsxl relation " + getObject().getName() + " " + getSubject().getName() + " " + "peace";
     }
 
@@ -107,6 +117,10 @@ public class FinalPeaceOffer extends PeaceOffer {
     @Override
     public ItemStack getButton(Player player) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void purge() {
+        // should remove the request.
     }
 
     @Override
