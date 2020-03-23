@@ -51,6 +51,7 @@ public class WarParty implements FEntity {
     private WarPartyRole role;
     public int kills;
     public int deaths;
+    public int pointsFromKills;
     public int fights;
     public int points;
 
@@ -67,6 +68,7 @@ public class WarParty implements FEntity {
         kills = (int) serialized.get("kills");
         deaths = (int) serialized.get("deaths");
         points = (int) serialized.get("score");
+        pointsFromKills = (int) serialized.get("killPoints");
         fights = (int) serialized.get("fights");
         role = WarPartyRole.valueOf((String) serialized.get("role"));
     }
@@ -160,9 +162,26 @@ public class WarParty implements FEntity {
         kills++;
     }
 
-    public void addDeath() {
-        deaths++;
+    public int getKills() {
+        return kills;
+    }
 
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void addDeath() { deaths++; }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getPointsFromKills() {
+        return pointsFromKills;
+    }
+
+    public void setPointsFromKills(int points) {
+        this.pointsFromKills = points;
     }
 
     /**
@@ -221,6 +240,7 @@ public class WarParty implements FEntity {
         serialized.put("kills", kills);
         serialized.put("deaths", this.deaths);
         serialized.put("score", points);
+        serialized.put("killPoints", pointsFromKills);
         serialized.put("fights", fights);
         serialized.put("role", role.name());
         return serialized;

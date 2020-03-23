@@ -45,6 +45,6 @@ public class WarHandler {
         }
     }
     public void calculateWarStatus() {
-
+        // Currently not in use. Might get used for additional WarPoints over time
     }
 }

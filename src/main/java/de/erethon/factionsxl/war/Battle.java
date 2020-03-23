@@ -39,6 +39,7 @@ public class Battle {
     private long expiration;
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
+    FConfig config = plugin.getFConfig();
 
     public Battle(Player player1, Player player2) {
         this.player1 = player1;
@@ -82,6 +83,9 @@ public class Battle {
         Set<WarParty> WP = f.getWarParties();
         Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
+            if (w.getPointsFromKills() <= config.getMaximumKillPoints()) {
+                w.addPoints(1);
+            }
             w.addKill();
             if (w.getFactions().contains(r.getOwner())) {
                 if (r.getInfluence() <= 100) {

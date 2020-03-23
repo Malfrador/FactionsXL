@@ -73,9 +73,11 @@ public class OccupyCommand extends FCommand {
             if (faction.getRelation(annexFrom) == Relation.ENEMY) {
                 if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
                     price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
+                    // Price for region with cores of owner is price * 2
                     if (region.getCoreFactions().containsKey(region.getOwner())) {
                         price = price * 2;
                     }
+                    // Price for regions with own claims is price/4
                     if (region.getClaimFactions().containsKey(faction)) {
                         price = price / 4;
                     }
@@ -99,7 +101,7 @@ public class OccupyCommand extends FCommand {
                     MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
                 }
             } else {
-                MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_ENEMY.getMessage());
+                MessageUtil.sendMessage(player, "&cYou can not occupy this region because you are not enemies or the truce period is still active.");
             }
         }
         else {

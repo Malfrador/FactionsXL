@@ -124,6 +124,7 @@ public class FConfig extends DREConfig {
     private double influenceNeeded = 10;
     private long cbLiberationExp = 60;
     private long truceTime = 24;
+    private int maximumKillPoints = 50;
 
     // Power etc.
     private int maxPower = 100;
@@ -576,6 +577,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * how many points your WarParty can get from kills
+     */
+    public int getMaximumKillPoints() {
+        return maximumKillPoints;
+    }
+
+    /**
+     * @return
      * the maximum power that a player may store
      */
     public int getMaxPower() {
@@ -865,6 +874,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("truceTime")) {
             config.set("truceTime", truceTime);
+        }
+
+        if (!config.contains("maxKillPoints")) {
+            config.set("maxKillPoints", maximumKillPoints);
         }
 
         if (!config.contains("claimTimeout")) {
@@ -1246,6 +1259,9 @@ public class FConfig extends DREConfig {
             cbLiberationExp = config.getLong("casusBelli.liberation");
         }
 
+        if (config.contains("maxKillPoints")) {
+            maximumKillPoints = config.getInt("maxKillPoints");
+        }
 
         if (config.contains("maxPower")) {
             maxPower = config.getInt("maxPower");
