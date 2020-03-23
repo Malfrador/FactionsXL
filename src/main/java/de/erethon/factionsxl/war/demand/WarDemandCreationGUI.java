@@ -77,17 +77,17 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
                 gui.addItem(GUIButton.setDisplay(new ItemStack(Material.ANVIL), t.getSimpleName()));
             }
         });
-        gui.addItem(send);
         ItemStack raidItem = new ItemStack(Material.GRASS_BLOCK);
         ItemMeta raidMeta = raidItem.getItemMeta();
         raidMeta.setDisplayName("§aRegion");
         raidItem.setItemMeta(raidMeta);
         gui.addItem(raidItem);
+        gui.setItem(17, send);
         ItemStack delItem = new ItemStack(Material.BARRIER);
         ItemMeta delMeta = delItem.getItemMeta();
         delMeta.setDisplayName("§cClear demands.");
         delItem.setItemMeta(delMeta);
-        gui.setItem(17, delItem);
+        gui.setItem(15, delItem);
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -113,11 +113,10 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
         }
         event.setCancelled(true);
         PageGUI.playSound(event);
-        ItemStack button = inventory.getItem(event.getSlot());
+        ItemStack button = event.getCurrentItem();
         if (button == null) {
             return;
         }
-        event.getWhoClicked().closeInventory();
         FPlayer player = plugin.getFPlayerCache().getByPlayer((Player) event.getWhoClicked());
         if (GUIButton.BACK.equals(button)) {
             Set<Faction> ownFactions = plugin.getFactionCache().getByLeader(player.getPlayer());
@@ -133,6 +132,8 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
         } else if (button.getItemMeta().getDisplayName().contains("Region")) {
             new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
+        } else if (button.getItemMeta().getDisplayName().contains(FMessage.RELATION_VASSAL.getMessage())) {
+            new RelationDemand();
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }

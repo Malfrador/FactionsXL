@@ -27,6 +27,7 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -67,7 +68,7 @@ public class OccupyCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
-        if (faction.isInWar() && annexFrom.isInWar()) {
+        if (faction.isInWar(region.getOwner()) && annexFrom.isInWar()) {
             double price;
             if (faction.getRelation(annexFrom) == Relation.ENEMY) {
                 if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
@@ -83,6 +84,12 @@ public class OccupyCommand extends FCommand {
                     } else {
                         ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
                         faction.getAccount().withdraw(price);
+                        for (WarParty wp : faction.getWarParties()) {
+                            if (wp.getFactions().contains(faction)) {
+                                wp.addPoints(10);
+                                wp.getEnemy().removePoints(10);
+                            }
+                        }
                         region.setOccupant(faction);
                         region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
                         faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);

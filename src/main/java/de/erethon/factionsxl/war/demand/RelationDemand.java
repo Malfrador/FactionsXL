@@ -22,6 +22,8 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.AmountSelectionGUI;
@@ -34,6 +36,7 @@ import java.util.Map;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.vignette.api.component.InventoryButton;
 import de.erethon.vignette.api.component.InventoryButtonBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,70 +44,36 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Daniel Saukel
  */
-public class MoneyDemand implements WarDemand {
+public class RelationDemand implements WarDemand {
 
-    private BigDecimal amount;
 
-    public MoneyDemand(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public MoneyDemand(Map<String, Object> args) {
-        amount = BigDecimal.valueOf((Double) args.get("amount"));
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
+    public RelationDemand() {
     }
 
     @Override
     public double getWarscoreCost() {
-        return amount.doubleValue() / 1000;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+        return 75;
     }
 
     public static ItemStack getGUIButton() {
-        return GUIButton.setDisplay(new ItemStack(Material.GOLD_INGOT), FMessage.WAR_DEMAND_CREATION_MENU_MONEY.getMessage());
+        return GUIButton.setDisplay(new ItemStack(Material.GREEN_WOOL), FMessage.RELATION_VASSAL.getMessage());
     }
 
-    public static void openSetupGUI(Player player) {
-        new AmountSelectionGUI<BigDecimal>(Min.MIN_0_01, Max.MAX_1000000, new BigDecimal(0)) {
-            @Override
-            public void onClickBack(Player player) {
-                FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
-            }
-
-            @Override
-            public void onClickContinue(Player player, BigDecimal amount) {
-                WarDemand war = (WarDemand) new MoneyDemand(amount);
-                FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
-                MessageUtil.sendMessage(player, "&aDemand added.");
-                FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).listWarDemands();
-                FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
-            }
-        }.open(player);
-    }
-
-    @Override
-    public void demand() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
     public void pay(WarParty wp, WarParty wp2) {
-        wp2.getLeader().getAccount().withdraw(amount.doubleValue());
-        float size = wp.getFactions().size();
-        for (Faction f : wp.getFactions()) {
-            f.getAccount().deposit(amount.doubleValue() / size);
-        }
+        new RelationRequest(Bukkit.getConsoleSender(), (Faction) wp.getLeader(), (Faction) wp2.getLeader(), Relation.VASSAL).confirm();
+        // TODO: Might break after government update
     }
 
     @Override
     public boolean canPay(WarParty wp) {
-        return wp.getLeader().getAccount().getBalance() >= amount.doubleValue();
+        return true;
+    }
+
+    @Override
+    public void demand() {
+
     }
 
     @Override
@@ -114,13 +83,13 @@ public class MoneyDemand implements WarDemand {
 
     @Override
     public String toString() {
-        return "&6Money&8: &e" + amount + " &8(&7Warscore&8: &5" + getWarscoreCost() + "&8)";
+        return "&6Vassal " + "&8(&7Warscore&8: &5" + getWarscoreCost() + "&8)";
     }
 
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> args = new HashMap<>();
-        args.put("amount", amount);
+        args.put("amount", getWarscoreCost());
         return args;
     }
 

@@ -91,7 +91,10 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 case RESTORATION_OF_UNION:
                     break;
                 case RECONQUEST:
-                    break;
+                    guiMeta.setDisplayName(FMessage.WAR_CB_RECONQUEST.getMessage());
+                    guiItem.setType(Material.GOLDEN_SWORD);
+                    guiItem.setItemMeta(guiMeta);
+                    gui.addItem(guiItem);
                 case RESUBJAGATION:
                     break;
             }
@@ -171,16 +174,19 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        else {
-            MessageUtil.sendMessage(player, "&cThis CB is not implemented yet. How did you get here?");
+        if (itemName.equals(FMessage.WAR_CB_RECONQUEST.getMessage())) {
+            for (CasusBelli cb : faction.getCasusBelli()) {
+                if (cb.getType() == CasusBelli.Type.RECONQUEST && cb.getTarget() == object) {
+                    casus = cb;
+                    break;
+                }
+            }
         }
-
         player.closeInventory();
         if (casus == null) {
             MessageUtil.sendMessage(player, "&cInvalid CB. Please contact an Admin if you think this is an error.");
             return;
         }
-        Bukkit.broadcastMessage("CB: " + casus.toString() + "O: " + object.getName() + "S: " + subject.toString());
         new CallToArmsMenu(subject, object, casus).open(player);
     }
 

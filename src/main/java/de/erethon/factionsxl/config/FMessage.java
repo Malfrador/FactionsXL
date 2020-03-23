@@ -492,6 +492,8 @@ public enum FMessage implements Message {
     WAR_CB_LIBERATION_DESC("war.cb.liberationDesc"),
     WAR_CB_RESUBJAGATION("war.cb.resubjagation"),
     WAR_CB_RESUBJAGATION_DESC("war.cb.resubjagationDesc"),
+    WAR_CB_RECONQUEST("war.cb.reconquest"),
+    WAR_CB_RECONQUEST_DESC("war.cb.reconquestDesc"),
     WAR_DECLARATION_ALLIES("war.declaration.allies"),
     WAR_DECLARATION_BROADCAST("war.declaration.broadcast"),
     WAR_DECLARATION_CANCELLED("war.declaration.cancelled"),

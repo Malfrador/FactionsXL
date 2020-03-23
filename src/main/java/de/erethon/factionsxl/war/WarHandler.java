@@ -22,7 +22,10 @@ package de.erethon.factionsxl.war;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 
@@ -36,6 +39,7 @@ public class WarHandler {
                 w.setTruce(false);
                 Faction attacker = (Faction) w.getAttacker().getLeader();
                 Faction defender = (Faction) w.getDefender().getLeader();
+                new RelationRequest(Bukkit.getConsoleSender(), (Faction) attacker, (Faction) defender, Relation.ENEMY).confirm();
                 MessageUtil.broadcastMessage(ChatColor.GREEN + "Der Waffenstillstand zwischen " + ChatColor.YELLOW + attacker + ChatColor.GREEN + " und " + ChatColor.YELLOW + defender + ChatColor.GREEN + "ist nun vorbei.");
             }
         }

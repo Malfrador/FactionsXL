@@ -22,8 +22,12 @@ package de.erethon.factionsxl.war.demand;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
+import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPlayer;
+import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.WarParty;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
@@ -38,6 +42,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class RegionDemand implements WarDemand, Listener, InventoryHolder {
@@ -56,6 +61,10 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     }
 
     public RegionDemand() { }
+
+    public RegionDemand(Map<String, Object> args) {
+        demandRegions = (List<Region>) args.get("regions");
+    }
 
     public List<Region> getDemandRegions() {
         return demandRegions;
@@ -141,7 +150,6 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             double cost = getDemandCost(faction);
             WarDemand war = (WarDemand) new RegionDemand(demandRegions, cost);
             FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
-            Bukkit.broadcastMessage(faction.getName());
             FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
             MessageUtil.sendMessage(player, "&aDemand added");
             FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).listWarDemands();
@@ -169,12 +177,20 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
 
     @Override
     public void pay(WarParty f, WarParty f2) {
-
+        for (Region r : demandRegions) {
+            if (r.getCoreFactions().containsKey(r.getOwner())) {
+                r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, f.getLeader(), new Date(System.currentTimeMillis() + (FConfig.MONTH * 3) )));
+                r.getOwner().sendMessage("&aYou now have a &6RECONQUEST &aCasus Belli against " + f.getLeader() + "&a!");
+            }
+            ParsingUtil.broadcastMessage(FMessage.CMD_GIVE_REGION_SUCCESS.getMessage(), r.getOwner(), r.getName(), f.getLeader());
+            r.setOwner((Faction) f.getLeader());
+        }
     }
 
     @Override
     public boolean canPay(WarParty wp) {
-        return false;
+        return true;
+
     }
 
     @Override
@@ -184,15 +200,16 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             list.append(ChatColor.YELLOW).append(r.getName()).append(ChatColor.DARK_GRAY).append(", ");
 
         }
-        list.append("&7Total&8: &6" + getWarscoreCost());
+        list.append("&8(&7Total&8: &5" + getWarscoreCost() + "&8)");
         return list.toString();
     }
 
     @Override
     public Map<String, Object> serialize() {
-        return null;
+        Map<String, Object> args = new HashMap<>();
+        args.put("regions", demandRegions);
+        return args;
     }
-
     @Override
     public Inventory getInventory() {
         return gui;

@@ -29,6 +29,8 @@ import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.FinalPeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
 import java.util.Collection;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -57,11 +59,12 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
                 offerTarget = party;
             }
         }
-
+        Bukkit.broadcastMessage(offerTarget.toString());
         if (offerTarget != null) {
             War war = offerTarget.getWar();
             WarParty demanding = war.getEnemy(offerTarget);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
+            Bukkit.broadcastMessage(demanding.toString());
         } else {
             War war = wars.getUnsafe(buttonFaction);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));

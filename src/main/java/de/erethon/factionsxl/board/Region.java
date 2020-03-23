@@ -461,6 +461,10 @@ public class Region {
             owner = plugin.getFactionCache().getById(config.getInt("owner"));
         }
 
+        if (config.contains("occupant")) {
+            occupant = plugin.getFactionCache().getById(config.getInt("occupant"));
+        }
+
         for (String chunk : config.getStringList("chunks")) {
             chunks.add(new LazyChunk(chunk));
         }
@@ -501,6 +505,7 @@ public class Region {
         }
         config.set("world", world.getName());
         config.set("owner", owner != null ? owner.getId() : null);
+        config.set("occupant", occupant != null ? occupant.getId() : null);
 
         List<String> serializedChunks = new ArrayList<>();
         for (LazyChunk chunk : chunks) {

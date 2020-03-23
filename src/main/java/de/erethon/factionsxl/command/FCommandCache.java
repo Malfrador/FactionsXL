@@ -27,10 +27,7 @@ import de.erethon.factionsxl.command.relation.RelationNeutralCommand;
 import de.erethon.factionsxl.command.relation.RelationOathCommand;
 import de.erethon.factionsxl.command.relation.RelationUniteCommand;
 import de.erethon.factionsxl.command.relation.RelationVassalizeCommand;
-import de.erethon.factionsxl.command.war.ConfirmWarCommand;
-import de.erethon.factionsxl.command.war.PeaceCommand;
-import de.erethon.factionsxl.command.war.WarCommand;
-import de.erethon.factionsxl.command.war.WarStatusCommand;
+import de.erethon.factionsxl.command.war.*;
 import de.erethon.factionsxl.config.FConfig;
 
 /**
@@ -51,6 +48,7 @@ public class FCommandCache extends DRECommandCache {
     public ClaimCommand claim = new ClaimCommand();
     public CoreCommand core = new CoreCommand();
     public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
+    public ConfirmPeaceRequestCommand confirmPeace = new ConfirmPeaceRequestCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
@@ -174,6 +172,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(tradeOffer);
         addCommand(addCasusBelli);
         addCommand(idea);
+        addCommand(confirmPeace);
         addCommand(peaceCommand);
         addCommand(warAnnex);
         addCommand(influence);

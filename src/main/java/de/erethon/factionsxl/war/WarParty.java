@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 /**
@@ -62,7 +64,6 @@ public class WarParty implements FEntity {
     public WarParty(Map<String, Object> serialized) {
         leader = factions.getById((int) serialized.get("leader"));
         ((List<Integer>) serialized.get("participants")).forEach(p -> participants.add(factions.getById(p)));
-        requests = (List<Request>) serialized.get("requests");
         kills = (int) serialized.get("kills");
         deaths = (int) serialized.get("deaths");
         points = (int) serialized.get("score");
@@ -93,6 +94,10 @@ public class WarParty implements FEntity {
     @Override
     public List<Request> getRequests() {
         return requests;
+    }
+
+    public void initRequests() {
+        requests = new ArrayList<>();
     }
 
     /**

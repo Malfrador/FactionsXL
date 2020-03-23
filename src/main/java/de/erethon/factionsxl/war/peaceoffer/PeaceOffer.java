@@ -123,6 +123,8 @@ public abstract class PeaceOffer extends Request {
         return war;
     }
 
+    public boolean canPay() {return false;}
+
     /**
      * @return the demands
      */

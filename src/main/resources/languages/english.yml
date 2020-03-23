@@ -574,6 +574,8 @@ war:
     liberationDesc: '&7&oFight for your liberty against your lord.'
     resubjagation: '&5Resubjagation'
     resubjagationDesc: '&7&oA former vassal of yours.'
+    reconquest: '&3Reconquest'
+    reconquestDesc: '&7&oReconquest core regions lost in other wars.'
   declaration:
     allies: '&9Allies: '
     broadcast: '&v1 &4of &v2 &4declared war on &v3&4!'
