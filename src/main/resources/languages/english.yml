@@ -202,6 +202,9 @@ error:
   regionIsCore: '&v1 &4is a core province of &v2&4.'
   selectIdeaGroup: '&7You have to select the idea group first.'
   specifyFaction: '&4You have to specify a faction.'
+  stability:
+    high: '&cThe stability of your lord is too high.'
+    low: '&cYour stability is too low.'
   vassal: '&4The faction &v1 &4is a vassal.'
   vassalIsMotherAdmin: '&4The player &v1 &4is already leader of the mother faction.'
 faction:

@@ -59,12 +59,10 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
                 offerTarget = party;
             }
         }
-        Bukkit.broadcastMessage(offerTarget.toString());
         if (offerTarget != null) {
             War war = offerTarget.getWar();
             WarParty demanding = war.getEnemy(offerTarget);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
-            Bukkit.broadcastMessage(demanding.toString());
         } else {
             War war = wars.getUnsafe(buttonFaction);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));

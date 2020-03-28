@@ -118,7 +118,6 @@ public class FinalPeaceOffer extends PeaceOffer {
 
         boolean add = true;
         if (getObject().getRequests() == null) {
-            Bukkit.broadcastMessage("Requests init");
             getObject().initRequests();
         }
         for (PeaceOffer check : getObject().getRequests(PeaceOffer.class)) {

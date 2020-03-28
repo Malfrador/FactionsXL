@@ -39,12 +39,18 @@ public class WarHandler {
                 w.setTruce(false);
                 Faction attacker = (Faction) w.getAttacker().getLeader();
                 Faction defender = (Faction) w.getDefender().getLeader();
-                new RelationRequest(Bukkit.getConsoleSender(), (Faction) attacker, (Faction) defender, Relation.ENEMY).confirm();
-                MessageUtil.broadcastMessage(ChatColor.GREEN + "Der Waffenstillstand zwischen " + ChatColor.YELLOW + attacker + ChatColor.GREEN + " und " + ChatColor.YELLOW + defender + ChatColor.GREEN + "ist nun vorbei.");
+                MessageUtil.broadcastMessage(ChatColor.GREEN + "Der Waffenstillstand zwischen " + ChatColor.YELLOW + attacker.getName() + ChatColor.GREEN + " und " + ChatColor.YELLOW + defender.getName() + ChatColor.GREEN + " ist nun vorbei.");
             }
         }
     }
     public void calculateWarStatus() {
-        // Currently not in use. Might get used for additional WarPoints over time
+        for (War w : plugin.getWarCache().getWars()) {
+            for (Faction f : w.getAttacker().getFactions()) {
+                f.setExhaustion(f.getExhaustion() + 0.1);
+            }
+            for (Faction f : w.getDefender().getFactions()) {
+                f.setExhaustion(f.getExhaustion() + 0.1);
+            }
+        }
     }
 }

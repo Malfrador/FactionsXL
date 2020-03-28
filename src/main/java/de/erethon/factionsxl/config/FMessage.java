@@ -435,6 +435,8 @@ public enum FMessage implements Message {
     RESOURCE_SUBCATEGORY_STONE("resource.subcategory.stone"),
     RESOURCE_SUBCATEGORY_WATER("resource.subcategory.water"),
     RESOURCE_SUBCATEGORY_WOOD("resource.subcategory.wood"),
+    STABILITY_LOW("error.stability.low"),
+    STABILITY_HIGH("error.stability.high"),
     SATURATION_LEVEL_FULLY_SATURATED("saturationLevel.fullySaturated"),
     SATURATION_LEVEL_MOSTLY_SATURATED("saturationLevel.mostlySaturated"),
     SATURATION_LEVEL_NOT_SATURATED("saturationLevel.notSaturated"),

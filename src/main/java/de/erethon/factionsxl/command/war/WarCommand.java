@@ -98,6 +98,7 @@ public class WarCommand extends FCommand {
         }
         //new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
         new CasusBelliMenu().open(player, object);
+        ParsingUtil.sendMessage(sender, "&7&oSelect Casus Belli...");
     }
 
 }

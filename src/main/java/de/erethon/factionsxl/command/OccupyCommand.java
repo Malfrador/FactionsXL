@@ -27,6 +27,7 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -34,6 +35,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Calendar;
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -59,54 +61,94 @@ public class OccupyCommand extends FCommand {
         Player player = (Player) sender;
         Faction faction = getSenderFactionOrFromArg(sender, args, 1);
         Region region = plugin.getBoard().getByLocation(player.getLocation());
-        Faction annexFrom = plugin.getBoard().getByLocation(player.getLocation()).getOwner();
+        if (region == null) {
+            MessageUtil.sendMessage(player, FMessage.ERROR_LAND_WILDERNESS.getMessage());
+            return;
+        }
         if (region.getOwner() == null) {
             MessageUtil.sendMessage(player, FMessage.ERROR_LAND_WILDERNESS.getMessage());
             return;
+        }
+
+        Faction annexFrom = region.getOwner();
+        if (region.getOccupant() != null) {
+            annexFrom = region.getOccupant();
         }
         if (!faction.isPrivileged(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
-        if (faction.isInWar(region.getOwner()) && annexFrom.isInWar()) {
-            double price;
-            if (faction.getRelation(annexFrom) == Relation.ENEMY) {
-                if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
-                    price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
-                    // Price for region with cores of owner is price * 2
-                    if (region.getCoreFactions().containsKey(region.getOwner())) {
-                        price = price * 2;
-                    }
-                    // Price for regions with own claims is price/4
-                    if (region.getClaimFactions().containsKey(faction)) {
-                        price = price / 4;
-                    }
-                    if (faction.getAccount().getBalance() < price) {
-                        ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
-                    } else {
-                        ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
-                        faction.getAccount().withdraw(price);
-                        for (WarParty wp : faction.getWarParties()) {
-                            if (wp.getFactions().contains(faction)) {
+        if ( !(faction.isInWar() && annexFrom.isInWar()) ) {
+            MessageUtil.sendMessage(player, "&cYou and the owner of this region are not at war!");
+            return;
+        }
+
+        if (annexFrom == faction) {
+            ParsingUtil.sendMessage(sender, "&cYou already occupied this region.");
+            return;
+        }
+
+        Set<War> warSet = plugin.getWarCache().getByFaction(faction);
+        War war = null;
+        for (War w : warSet) {
+            if ((w.getAttacker().getFactions().contains(annexFrom)) || (w.getDefender().getFactions().contains(annexFrom))) {
+                war = w;
+            }
+        }
+        if (war == null) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_IN_WAR.getMessage());
+            return;
+        }
+
+        double price;
+        if (!(war.getTruce())) {
+            if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
+                price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
+                // Price for region with cores of owner is price * 2
+                if (region.getCoreFactions().containsKey(annexFrom)) {
+                    price = price * 2;
+                }
+                // Price for regions with own claims is price/4
+                if (region.getClaimFactions().containsKey(faction)) {
+                    price = price / 4;
+                }
+                if (faction.getAccount().getBalance() < price) {
+                    ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
+                } else {
+                    ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
+                    faction.getAccount().withdraw(price);
+                    for (WarParty wp : faction.getWarParties()) {
+                        if (wp.getFactions().contains(faction)) {
+                            if (region.getCoreFactions().containsKey(region.getOwner())) {
+                                wp.addPoints(20);
+                                wp.getEnemy().removePoints(20);
+                            }
+                            else {
                                 wp.addPoints(10);
                                 wp.getEnemy().removePoints(10);
                             }
+                            faction.sendMessage("&7Warscore&8: &a" + wp.getPoints() + "&8:&c" + wp.getEnemy().getPoints());
                         }
-                        region.setOccupant(faction);
-                        region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
-                        faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                     }
-                } else {
-                    MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
+                    region.setOccupant(faction);
+                    if (region.getOwner() == region.getOccupant()) {
+                        region.clearOccupant();
+                        region.setOwner(faction);
+                    }
+
+                    region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
+                    annexFrom.setExhaustion(annexFrom.getExhaustion() + 5);
+
+                    faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                 }
             } else {
-                MessageUtil.sendMessage(player, "&cYou can not occupy this region because you are not enemies or the truce period is still active.");
+                MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
             }
+        } else {
+            MessageUtil.sendMessage(player, "&cYou can not occupy regions during the truce period!");
         }
-        else {
-                MessageUtil.sendMessage(player, "&cYou and the owner of this region are not at war!");
-            }
+
 
 
     }

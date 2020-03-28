@@ -47,8 +47,8 @@ public class FCommandCache extends DRECommandCache {
     public ChatCommand chat = new ChatCommand();
     public ClaimCommand claim = new ClaimCommand();
     public CoreCommand core = new CoreCommand();
-    public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
     public ConfirmPeaceRequestCommand confirmPeace = new ConfirmPeaceRequestCommand();
+    public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
@@ -58,6 +58,7 @@ public class FCommandCache extends DRECommandCache {
     public HelpCommand help = new HelpCommand();
     public HomeCommand home = new HomeCommand();
     public IdeaCommand idea = new IdeaCommand();
+    public IndependenceCommand independence = new IndependenceCommand();
     public IntegrateCommand integrate = new IntegrateCommand();
     public InfluenceCommand influence = new InfluenceCommand();
     public InviteCommand invite = new InviteCommand();
@@ -176,6 +177,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(peaceCommand);
         addCommand(warAnnex);
         addCommand(influence);
+        addCommand(independence);
 
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

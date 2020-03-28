@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.war;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -54,6 +55,8 @@ public class CallToArmsMenu implements Listener {
     private CasusBelli cb;
     private PageGUI gui;
     private HumanEntity cachedViewer;
+
+    FactionsXL plugin = FactionsXL.getInstance();
 
     public CallToArmsMenu(WarParty attacker, Faction defender, CasusBelli cb) {
 
@@ -146,10 +149,14 @@ public class CallToArmsMenu implements Listener {
         if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
             gui.removeButton2(button);
             gui.addButton1(button);
+            attackerCandidates.add(plugin.getFactionCache().getByName(button.getItemMeta().getDisplayName()));
+            MessageUtil.sendMessage(event.getWhoClicked(), "&7Added &6" + button.getItemMeta().getDisplayName() );
             gui.open(event.getWhoClicked(), 0, 0, 0);
         } else if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage())) {
             gui.removeButton1(button);
             gui.addButton2(button);
+            attackerCandidates.remove(plugin.getFactionCache().getByName(button.getItemMeta().getDisplayName()));
+            MessageUtil.sendMessage(event.getWhoClicked(), "&7Removed &6" + button.getItemMeta().getDisplayName() );
             gui.open(event.getWhoClicked(), 0, 0, 0);
         }
     }

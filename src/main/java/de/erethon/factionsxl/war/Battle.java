@@ -80,6 +80,10 @@ public class Battle {
         Faction f = factions.getByMember(winner);
         Faction fl = factions.getByMember(looser);
         Region r = plugin.getBoard().getByLocation(winner.getLocation());
+        Faction owner = r.getOwner();
+        if (r.getOccupant() != null) {
+            owner = r.getOccupant();
+        }
         Set<WarParty> WP = f.getWarParties();
         Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
@@ -88,16 +92,16 @@ public class Battle {
                 w.setPointsFromKills(w.getPointsFromKills() + 1);
             }
             w.addKill();
-            if (w.getFactions().contains(r.getOwner())) {
-                if (r.getInfluence() <= 100) {
-                    r.setInfluence(r.getInfluence() + 1);
-                    MessageUtil.sendActionBarMessage(winner, "&aRegion verteidigt! &8- &7Einfluss&8: &a+1 &7(" + r.getInfluence() + "&7)");
+            if (w.getFactions().contains(owner)) {
+                if (r.getInfluence() + config.getInfluenceFromKill() <= 100) {
+                    r.setInfluence(r.getInfluence() + config.getInfluenceFromKill());
+                    MessageUtil.sendActionBarMessage(winner, "&aRegion verteidigt! &8- &7Einfluss&8: &a+" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
                 }
             }
             else {
-                    if (r.getInfluence() >= 0) {
-                        r.setInfluence(r.getInfluence() - 1);
-                        MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-1 &7(" + r.getInfluence() + "&7)");
+                    if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
+                        r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
+                        MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
                     }
                 }
         }

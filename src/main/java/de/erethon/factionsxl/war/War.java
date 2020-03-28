@@ -23,6 +23,8 @@ import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
@@ -36,6 +38,7 @@ import java.util.Set;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -149,6 +152,14 @@ public class War {
         wars.getUnconfirmedWars().remove(this);
         wars.getWars().add(this);
         this.truce = true;
+        Set<Faction> factionSet =  this.getAttacker().getFactions();
+        Set<Faction> factionSetD = this.getDefender().getFactions();
+        // Set all relations to enemy
+        for (Faction f : factionSet) {
+            for (Faction f2 : factionSetD) {
+                new RelationRequest(Bukkit.getConsoleSender(), f, f2, Relation.ENEMY).confirm();
+            }
+        }
         FScoreboard.updateAllProviders();
         System.out.println("War" + this + "confirmed!");
     }
@@ -157,6 +168,12 @@ public class War {
         WarCache wars = FactionsXL.getInstance().getWarCache();
         Set<Faction> factionSet =  this.getAttacker().getFactions();
         Set<Faction> factionSetD = this.getDefender().getFactions();
+        // Set all relations to peace
+        for (Faction f : factionSet) {
+            for (Faction f2 : factionSetD) {
+                new RelationRequest(Bukkit.getConsoleSender(), f, f2, Relation.PEACE).confirm();
+            }
+        }
         // Remove Occupants from the Attacker
         for (Faction f : factionSet) {
             for (Region rg : f.getRegions()) {

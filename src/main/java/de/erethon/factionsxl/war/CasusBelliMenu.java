@@ -111,6 +111,9 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack item = event.getCurrentItem();
+        if (event.getCurrentItem() == null) {
+            return;
+        }
         String itemName = item.getItemMeta().getDisplayName();
 
         // Object

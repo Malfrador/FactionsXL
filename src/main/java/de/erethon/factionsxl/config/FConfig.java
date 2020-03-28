@@ -125,6 +125,7 @@ public class FConfig extends DREConfig {
     private long cbLiberationExp = 60;
     private long truceTime = 24;
     private int maximumKillPoints = 50;
+    private int influenceFromKill = 2;
 
     // Power etc.
     private int maxPower = 100;
@@ -137,6 +138,8 @@ public class FConfig extends DREConfig {
     private double influencePerDay = 5;
     private double coringPerDay = 5;
     public double claimTimeout = 7;
+    public int stabilityIndependence = -20;
+    public int stabilityIndependenceVassal = 0;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -326,6 +329,10 @@ public class FConfig extends DREConfig {
 
     public double getInfluenceNeeded() {
         return influenceNeeded;
+    }
+
+    public int getInfluenceFromKill() {
+        return influenceFromKill;
     }
 
     /**
@@ -641,6 +648,22 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * stability needed to declare independence
+     */
+    public int getStabilityIndependence() {
+        return stabilityIndependence;
+    }
+
+    /**
+     * @return
+     * stability needed to declare independence for vassals
+     */
+    public int getStabilityIndependenceVassal() {
+        return stabilityIndependenceVassal;
+    }
+
+    /**
+     * @return
      * true if hologram features are enabled;
      * false if not or if HolographicDisplays is not installed
      */
@@ -862,6 +885,18 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("influencePerDay")) {
             config.set("influencePerDay", influencePerDay);
+        }
+
+        if (!config.contains("minimumStability")) {
+            config.set("minimumStability", stabilityIndependence);
+        }
+
+        if (!config.contains("minimumStabilityVassal")) {
+            config.set("minimumStabilityVassal", stabilityIndependenceVassal);
+        }
+
+        if (!config.contains("influenceFromKill")) {
+            config.set("influenceFromKill", influenceFromKill);
         }
 
         if (!config.contains("influenceNeededForOccupy")) {
@@ -1261,6 +1296,18 @@ public class FConfig extends DREConfig {
 
         if (config.contains("maxKillPoints")) {
             maximumKillPoints = config.getInt("maxKillPoints");
+        }
+
+        if (config.contains("minimumStability")) {
+            stabilityIndependence = config.getInt("minimumStability");
+        }
+
+        if (config.contains("minimumStabilityVassal")) {
+            stabilityIndependenceVassal = config.getInt("minimumStabilityVassal");
+        }
+
+        if (config.contains("influenceFromKill")) {
+            influenceFromKill = config.getInt("influenceFromKill");
         }
 
         if (config.contains("maxPower")) {
