@@ -119,8 +119,6 @@ public abstract class Request implements ConfigurationSerializable {
     public abstract ItemStack getButton(Player player);
 
     /**
-     * @return
-     * the command to accept the request
      */
     public abstract String getAcceptCommand();
 

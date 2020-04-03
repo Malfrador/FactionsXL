@@ -49,7 +49,7 @@ public class MainCommand extends FCommand {
         MessageUtil.sendCenteredMessage(sender, "&4" + F[4] + "&f" + X[4] + L[4]);
         MessageUtil.sendCenteredMessage(sender, "&b&l######## " + FMessage.CMD_MAIN_WELCOME.getMessage() + " &av" + plugin.getDescription().getVersion() + " &b&l########");
         MessageUtil.sendCenteredMessage(sender, FMessage.CMD_MAIN_HELP.getMessage());
-        MessageUtil.sendCenteredMessage(sender, "&7\u00a92017-2019 Daniel Saukel; licensed under GPLv3.");
+        MessageUtil.sendCenteredMessage(sender, "&7\u00a92017-2020 Daniel Saukel, Malfrador; licensed under GPLv3.");
     }
 
 }

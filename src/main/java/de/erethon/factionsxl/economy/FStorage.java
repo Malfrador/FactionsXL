@@ -97,15 +97,14 @@ public class FStorage {
                     goods.put(entry.getKey(), goods.get(entry.getKey()) + entry.getValue());
                 }
             }
-            if (faction.getStability() >= 80) {
+            double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+            if (faction.getStability() >= 10) {
                 // Increase influence up to 100 if core
-                if (region.getCoreFactions().containsKey(faction) && region.getInfluence() <= 100) {
-                    double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                if (region.getCoreFactions().containsKey(faction) && region.getInfluence() + inf <= 100) {
                     region.setInfluence(region.getInfluence() + (int) inf);
                 }
                 // Increase influence up to 50 if not core
-                else if (!(region.getCoreFactions().containsKey(faction)) && region.getInfluence() <= 50) {
-                    double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
+                else if (!(region.getCoreFactions().containsKey(faction)) && region.getInfluence() + inf <= 50) {
                     region.setInfluence(region.getInfluence() + (int) inf);
                 }
             }

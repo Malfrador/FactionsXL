@@ -19,6 +19,7 @@
 package de.erethon.factionsxl.war;
 
 import de.erethon.commons.chat.MessageUtil;
+import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -30,7 +31,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -51,10 +55,12 @@ public class CallToArmsMenu implements Listener {
     private WarParty attacker;
     private Faction attackerLeader;
     private Set<Faction> attackerCandidates = new HashSet<>();
+    private Set<Faction> invitedAttackers = new HashSet<>();
     private WarParty defender;
     private CasusBelli cb;
     private PageGUI gui;
     private HumanEntity cachedViewer;
+    private boolean isReopen = false;
 
     FactionsXL plugin = FactionsXL.getInstance();
 
@@ -146,17 +152,35 @@ public class CallToArmsMenu implements Listener {
         if (!(event.getView().getTitle().contains(FMessage.WAR_CALL_TO_ARMS_TITLE.getMessage()))) {
             return;
         }
+        ItemMeta meta = button.getItemMeta();
+        List<String> lore = meta.getLore();
         if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
+            String name = ChatColor.stripColor(button.getItemMeta().getDisplayName());
+
+            Faction f = plugin.getFactionCache().getByName(name);
+            invitedAttackers.add(f);
+            MessageUtil.sendMessage(event.getWhoClicked(), "&7Added &6" + button.getItemMeta().getDisplayName() );
+            MessageUtil.sendMessage(event.getWhoClicked(), attackerCandidates.toString());
             gui.removeButton2(button);
             gui.addButton1(button);
-            attackerCandidates.add(plugin.getFactionCache().getByName(button.getItemMeta().getDisplayName()));
-            MessageUtil.sendMessage(event.getWhoClicked(), "&7Added &6" + button.getItemMeta().getDisplayName() );
+
+            lore.remove(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage());
+            lore.add(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage());
+
+            isReopen = true;
             gui.open(event.getWhoClicked(), 0, 0, 0);
         } else if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage())) {
+            String name = ChatColor.stripColor(button.getItemMeta().getDisplayName());
+            Faction f = plugin.getFactionCache().getByName(name);
+            invitedAttackers.remove(f);
+            MessageUtil.sendMessage(event.getWhoClicked(), "&7Removed &6" + button.getItemMeta().getDisplayName() );
+
+            lore.remove(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage());
+            lore.add(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage());
+
             gui.removeButton1(button);
             gui.addButton2(button);
-            attackerCandidates.remove(plugin.getFactionCache().getByName(button.getItemMeta().getDisplayName()));
-            MessageUtil.sendMessage(event.getWhoClicked(), "&7Removed &6" + button.getItemMeta().getDisplayName() );
+            isReopen = true;
             gui.open(event.getWhoClicked(), 0, 0, 0);
         }
     }
@@ -168,6 +192,13 @@ public class CallToArmsMenu implements Listener {
         }
         if (!(event.getView().getTitle().equals(FMessage.WAR_CALL_TO_ARMS_TITLE.getMessage()))) {
             return;
+        }
+        if (isReopen) {
+            isReopen = false;
+            return;
+        }
+        for (Faction f : invitedAttackers) {
+            attacker.addInvited(f);
         }
         War war = new War(attacker, defender, cb);
         FactionsXL.getInstance().getWarCache().getUnconfirmedWars().add(war);

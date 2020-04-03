@@ -18,6 +18,8 @@
  */
 package de.erethon.factionsxl.war;
 
+import at.pavlov.cannons.API.CannonsAPI;
+import at.pavlov.cannons.event.ProjectileImpactEvent;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -27,13 +29,17 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,6 +56,7 @@ public class WarTNT implements Listener {
     private long restoreTicks;
 
     private List<Entity> fired = new ArrayList<>();
+    private List<Location> cannonsTarget = new ArrayList<>();
     private CopyOnWriteArrayList<WeakReference<List<BlockState>>> blockLists = new CopyOnWriteArrayList<>();
 
     public WarTNT(long restoreTicks) {
@@ -75,8 +82,26 @@ public class WarTNT implements Listener {
     }
 
     @EventHandler
+    public void onCannonImpact (ProjectileImpactEvent event) {
+        cannonsTarget.add(event.getImpactLocation());
+    }
+
+    @EventHandler
+    public void onCannonExplosion(BlockExplodeEvent event) {
+        Location loc = event.getBlock().getLocation();
+        if (loc.getWorld().getEnvironment() == World.Environment.NETHER) {  // Bed explosions in Nether are usually not caused by cannons.
+            return;
+        }
+        event.setYield(0);
+        List<BlockState> blocks = new ArrayList<>();
+        event.blockList().forEach(b -> blocks.add(b.getState()));
+        new Task(blocks).runTaskTimer(plugin, restoreTicks * 2, restoreTicks);
+        blockLists.add(new WeakReference<>(blocks));
+    }
+
+    @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (!fired.contains(event.getEntity())) {
+        if ( !fired.contains(event.getEntity()) && !cannonsTarget.contains(event.getLocation())) {
             return;
         }
         event.setYield(0);
@@ -86,6 +111,7 @@ public class WarTNT implements Listener {
         blockLists.add(new WeakReference<>(blocks));
         fired.remove(event.getEntity());
     }
+
 
     public void restoreAll() {
         cleanBlockList();

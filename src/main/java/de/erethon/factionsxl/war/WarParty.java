@@ -47,6 +47,7 @@ public class WarParty implements FEntity {
 
     private LegalEntity leader;
     private Set<LegalEntity> participants = new HashSet<>();
+    private Set<Faction> invited = new HashSet<>();
     private List<Request> requests;
     private WarPartyRole role;
     public int kills;
@@ -65,6 +66,7 @@ public class WarParty implements FEntity {
     public WarParty(Map<String, Object> serialized) {
         leader = factions.getById((int) serialized.get("leader"));
         ((List<Integer>) serialized.get("participants")).forEach(p -> participants.add(factions.getById(p)));
+        ((List<Integer>) serialized.get("invited")).forEach(p -> invited.add(factions.getById(p)));
         kills = (int) serialized.get("kills");
         deaths = (int) serialized.get("deaths");
         points = (int) serialized.get("score");
@@ -128,6 +130,22 @@ public class WarParty implements FEntity {
 
     /**
      * @return
+     * a Set of all federations and factions that were invited by the leader
+     */
+    public Set<Faction> getInvited() {
+        return invited;
+    }
+
+    public void addInvited(Faction participant) {
+        invited.add(participant);
+    }
+
+    public void removeInvited(Faction participant) {
+        invited.remove(participant);
+    }
+
+    /**
+     * @return
      * a Set of all single factions and the factions of the federations that participate
      */
     public Set<Faction> getFactions() {
@@ -144,6 +162,10 @@ public class WarParty implements FEntity {
 
     public void addParticipant(LegalEntity participant) {
         participants.add(participant);
+    }
+
+    public void removeParticipant(LegalEntity participant) {
+        participants.remove(participant);
     }
 
     /**
@@ -237,6 +259,9 @@ public class WarParty implements FEntity {
         ArrayList<Integer> participants = new ArrayList<>();
         this.participants.forEach(p -> participants.add(p.getId()));
         serialized.put("participants", participants);
+        ArrayList<Integer> invited = new ArrayList<>();
+        this.invited.forEach(p -> invited.add(p.getId()));
+        serialized.put("invited", invited);
         serialized.put("kills", kills);
         serialized.put("deaths", this.deaths);
         serialized.put("score", points);

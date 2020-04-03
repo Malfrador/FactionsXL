@@ -59,6 +59,10 @@ public class CoreCommand extends FCommand {
             MessageUtil.sendMessage(player, FMessage.ERROR_LAND_NOT_OWNED.getMessage());
             return;
         }
+        if (!faction.isPrivileged(player)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
         if (faction.isInWar()) {
             ParsingUtil.sendMessage(player, FMessage.ERROR_AT_WAR.getMessage());
             return;

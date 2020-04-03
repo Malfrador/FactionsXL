@@ -47,7 +47,7 @@ public class WarStatusCommand extends FCommand {
     WarCache wars = FactionsXL.getInstance().getWarCache();
     FConfig config = FactionsXL.getInstance().getFConfig();
 
-    private String PLACEHOLDER = ChatColor.GOLD + " | " + ChatColor.DARK_BLUE;
+    private String PLACEHOLDER = ChatColor.DARK_GRAY + " | " + ChatColor.BLUE;
 
     public WarStatusCommand() {
         setCommand("warStatus");

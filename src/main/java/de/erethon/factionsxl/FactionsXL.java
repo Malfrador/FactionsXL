@@ -18,10 +18,11 @@
  */
 package de.erethon.factionsxl;
 
+import at.pavlov.cannons.API.CannonsAPI;
+import at.pavlov.cannons.Cannons;
 import com.griefcraft.lwc.LWC;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.compatibility.Internals;
-import de.erethon.commons.config.MessageHandler;
 import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
@@ -52,6 +53,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import de.erethon.vignette.api.VignetteAPI;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -101,6 +103,7 @@ public class FactionsXL extends DREPlugin {
     private BukkitTask powerTask;
     private boolean debugEnabled = true;
     private PrintWriter out;
+    private CannonsAPI cannonsAPI;
 
     public FactionsXL() {
         settings = DREPluginSettings.builder()
@@ -114,6 +117,8 @@ public class FactionsXL extends DREPlugin {
     @Override
     public void onEnable() {
         ConfigurationSerialization.registerClass(RelationRequest.class);
+        ConfigurationSerialization.registerClass(WarRequest.class);
+        ConfigurationSerialization.registerClass(PeaceOffer.class);
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
@@ -242,6 +247,10 @@ public class FactionsXL extends DREPlugin {
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
         }
+
+        if (manager.isPluginEnabled("Cannons")) {
+            loadCannonsAPI();
+        }
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
         manager.registerEvents(new WarListener(), this);
@@ -322,6 +331,14 @@ public class FactionsXL extends DREPlugin {
      */
     public CoringHandler getCoring() {
         return core;
+    }
+
+    /**
+     * @return
+     * the WarHandler
+     */
+    public WarHandler getWarHandler() {
+        return warHandler;
     }
 
     /**
@@ -433,6 +450,18 @@ public class FactionsXL extends DREPlugin {
      */
     public void loadWarHandler() {
         warHandler = new WarHandler();
+    }
+
+    public void loadCannonsAPI()
+    {
+        if (manager.isPluginEnabled("Cannons")) {
+            Cannons c = Cannons.getPlugin();
+            cannonsAPI = c.getCannonsAPI();
+        }
+    }
+
+    public CannonsAPI getCannonsAPI() {
+        return cannonsAPI;
     }
 
     /**

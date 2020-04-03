@@ -26,14 +26,14 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -127,6 +127,7 @@ public class War {
         MessageUtil.sendCenteredMessage(player, FMessage.WAR_DECLARATION_CASUS_BELLI.getMessage() + cb.getType().toString());
         String allies = ParsingUtil.factionsToString(attacker.getFactions(), ChatColor.BLUE);
         MessageUtil.sendCenteredMessage(player, FMessage.WAR_DECLARATION_ALLIES.getMessage() + allies);
+        MessageUtil.sendCenteredMessage(player, "&9&oInvited: " + ParsingUtil.factionsToString(attacker.getInvited(), ChatColor.ITALIC));
         String defenders = ParsingUtil.factionsToString(defender.getFactions(), ChatColor.RED);
         MessageUtil.sendCenteredMessage(player, FMessage.WAR_DECLARATION_DEFENDERS.getMessage() + defenders);
 

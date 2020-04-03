@@ -28,6 +28,8 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import static de.erethon.factionsxl.protection.EntityProtectionListener.Action.*;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.War;
+import de.erethon.factionsxl.war.WarCache;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -68,6 +70,7 @@ public class EntityProtectionListener implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
+    WarCache wc = plugin.getWarCache();
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -91,9 +94,20 @@ public class EntityProtectionListener implements Listener {
         }
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction dFaction = plugin.getFactionCache().getByMember(defender);
+        boolean truce = false;
+        if (wc.getWarTogether(aFaction, dFaction) != null) {
+            truce = wc.getWarTogether(aFaction, dFaction).getTruce();
+        }
+
         Faction rFaction = region != null ? region.getOwner() : null;
         double shield = config.getTerritoryShield();
-        if (aFaction != null && aFaction.getRelation(dFaction).isProtected()) {
+        if (region !=null && region.getOccupant() != null) {
+            Faction occupant = region.getOccupant();
+            if (occupant == aFaction) {
+                return;
+            }
+        }
+        if (aFaction != null && aFaction.getRelation(dFaction).isProtected() || truce) {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected() && (aFaction == null || !aFaction.isInWar(dFaction))) {
@@ -194,8 +208,15 @@ public class EntityProtectionListener implements Listener {
             return;
         }
 
+
         Faction aFaction = plugin.getFactionCache().getByMember(attacker);
         Faction owner = region.getOwner();
+        if ( region.getOccupant() != null) {
+            Faction occupant = region.getOccupant();
+            if (occupant == aFaction) {
+                return;
+            }
+        }
         Relation rel = owner.getRelation(aFaction);
         if (!rel.canBuild()) {
             event.setCancelled(true);

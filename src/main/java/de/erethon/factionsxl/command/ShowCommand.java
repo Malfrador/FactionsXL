@@ -136,7 +136,7 @@ public class ShowCommand extends FCommand {
                 }
                 String memPowerHover = FMessage.CMD_POWER.getMessage(ChatColor.GOLD + member.getName(), String.valueOf(memPower.intValue()));
                 HoverEvent onHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(memPowerHover));
-                BaseComponent[] components = TextComponent.fromLegacyText(c + member.getName());
+                BaseComponent[] components = TextComponent.fromLegacyText(c + plugin.getFPlayerCache().getByPlayer(member).getTitle() + " " + member.getName());
                 for (BaseComponent component : components) {
                     component.setHoverEvent(onHover);
                 }

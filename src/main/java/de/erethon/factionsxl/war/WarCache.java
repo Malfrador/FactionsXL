@@ -101,6 +101,20 @@ public class WarCache {
     }
 
     /**
+     * @param f1 the faction to check
+     * @param f2 the other faction
+     * @return the war the two factions are in. // TODO: Only works with the current system (one war only)
+     */
+    public War getWarTogether(Faction f1, Faction f2) {
+        for (War war : wars) {
+            if (war.getAttacker().getFactions().contains(f1) && war.getDefender().getFactions().contains(f2)) {
+                return war;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param party the WarParty to check
      * @return all wars in that the faction takes part
      */

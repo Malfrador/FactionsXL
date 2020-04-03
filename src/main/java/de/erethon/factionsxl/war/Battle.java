@@ -40,6 +40,7 @@ public class Battle {
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
     FConfig config = plugin.getFConfig();
+    WarCache warCache = plugin.getWarCache();
 
     public Battle(Player player1, Player player2) {
         this.player1 = player1;
@@ -81,12 +82,15 @@ public class Battle {
         Faction fl = factions.getByMember(looser);
         Region r = plugin.getBoard().getByLocation(winner.getLocation());
         Faction owner = r.getOwner();
-        if (r.getOccupant() != null) {
+        if (r.getOccupant() != null || r.getOccupant() == f) {
             owner = r.getOccupant();
         }
         Set<WarParty> WP = f.getWarParties();
         Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
+            if (warCache.getByParty(w).getTruce()) {
+                continue;
+            }
             if (w.getPointsFromKills() <= config.getMaximumKillPoints()) {
                 w.addPoints(1);
                 w.setPointsFromKills(w.getPointsFromKills() + 1);
@@ -99,13 +103,16 @@ public class Battle {
                 }
             }
             else {
-                    if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
-                        r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
-                        MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
-                    }
+                if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
+                    r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
+                    MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
                 }
+            }
         }
         for (WarParty wL : lWP) {
+            if (warCache.getByParty(wL).getTruce()) {
+                continue;
+            }
             if (wL.getPointsFromKills() <= config.getMaximumKillPoints()) {
                 wL.removePoints(1);
                 wL.setPointsFromKills(wL.getPointsFromKills() + 1);

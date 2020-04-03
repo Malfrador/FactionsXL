@@ -324,6 +324,12 @@ public class LandProtectionListener implements Listener {
 
             Faction bFaction = factions.getByMember(breaker);
             Faction owner = region.getOwner();
+            if (region.getOccupant() != null) {
+                Faction occupant = region.getOccupant();
+                if (occupant == bFaction) {
+                    return;
+                }
+            }
             Relation rel = owner.getRelation(bFaction);
             if (rel == Relation.ENEMY) {
                 Material type = event.getClickedBlock().getType();
@@ -359,6 +365,12 @@ public class LandProtectionListener implements Listener {
 
         Faction bFaction = factions.getByMember(breaker);
         Faction owner = region.getOwner();
+        if (region.getOccupant() != null) {
+            Faction occupant = region.getOccupant();
+            if (occupant == bFaction) {
+                return;
+            }
+        }
         Relation rel = owner.getRelation(bFaction);
         if (rel == Relation.ENEMY) {
             Material type = destroyed.getType();

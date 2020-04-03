@@ -341,7 +341,7 @@ public class Faction extends LegalEntity {
     public BaseComponent[] getStabilityModifiers(ChatColor c) {
         String stability = FMessage.CMD_SHOW_STABILITY.getMessage() + c + getStability();
         String base = FMessage.CMD_SHOW_STABILITY_MOD_BASE.getMessage() + color(this.stability) + "\n";
-        String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + color((int) (this.exhaustion * this.exhaustion)) + "\n";
+        String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + ChatColor.RED + "-" + Math.round((this.exhaustion * this.exhaustion) * 100.00) / 100.0 + "\n";
         String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((regions.size() - 1 * regions.size() - 1) / 2) + "\n";
         String adminNotMember = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_ABSENT_MONARCH.getMessage() + color(members.contains(admin) ? 0 : -25) + "\n";
         String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
@@ -1375,6 +1375,7 @@ public class Faction extends LegalEntity {
         type = GovernmentType.valueOf(config.getString("type"));
         open = config.getBoolean("open");
         stability = config.getInt("stability");
+        exhaustion = config.getDouble("exhaustion");
         manpowerModifier = config.getDouble("manpowerModifier", fConfig.getDefaultManpowerModifier());
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
@@ -1486,6 +1487,7 @@ public class Faction extends LegalEntity {
             config.set("type", type.toString());
             config.set("open", open);
             config.set("stability", stability);
+            config.set("exhaustion", exhaustion);
             if (!active) {
                 try {
                     config.save(file);

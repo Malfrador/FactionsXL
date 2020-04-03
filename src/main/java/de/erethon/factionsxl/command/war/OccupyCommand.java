@@ -16,17 +16,19 @@
  *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package de.erethon.factionsxl.command;
+package de.erethon.factionsxl.command.war;
 
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
+import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Bukkit;
@@ -36,6 +38,9 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Set;
+
+import static de.erethon.factionsxl.war.CasusBelli.*;
+import static de.erethon.factionsxl.war.CasusBelli.Type.RAID;
 
 /**
  * @author Daniel Saukel
@@ -100,6 +105,11 @@ public class OccupyCommand extends FCommand {
             return;
         }
 
+        if (war.getCasusBelli().getType() == RAID) {
+            ParsingUtil.sendMessage(sender, "&cYou can not occupy regions during a &6RAID&c!");
+            return;
+        }
+
         double price;
         if (!(war.getTruce())) {
             if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
@@ -137,6 +147,7 @@ public class OccupyCommand extends FCommand {
                     }
 
                     region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
+                    region.setInfluence((int) (config.getInfluenceNeeded() + 10));
                     annexFrom.setExhaustion(annexFrom.getExhaustion() + 5);
 
                     faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);

@@ -34,7 +34,7 @@ public class LongTagCommand extends FCommand {
 
     public LongTagCommand() {
         setCommand("longTag");
-        setAliases("setLongTag", "longName", "setLongName");
+        setAliases("setLongTag", "longName", "setLongName", "ltag");
         setMinArgs(-1);
         setMaxArgs(-1);
         setHelp(FMessage.HELP_LONG_TAG.getMessage());

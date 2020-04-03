@@ -74,14 +74,31 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         return cost;
     }
 
+    public double getRegionWarscore(Region r, Faction f) {
+        double c = 20;
+        if (r.getOccupant() == f) {
+            c = c - 6;                        // Besetzt: 12 WP
+        }
+        if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 6 WP
+            c = c / 2;
+        }
+        if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 6 - Core, Claim & Besetzt: 3 WP
+            c = c / 2;
+        }
+        return c;
+    }
+
     public double getDemandCost(Faction f) {
-        double cost = 0;
+        double cost = 20;
         for (Region r : demandRegions) {
             if (r.getOccupant() == f) {
-                cost = cost + 6;
+                cost = cost - 6;                        // Besetzt: 12 WP
             }
-            else {
-                cost = cost + 10;
+            if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 6 WP
+                cost = cost / 2;
+            }
+            if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 6 - Core, Claim & Besetzt: 3 WP
+                cost = cost / 2;
             }
         }
         return cost;
@@ -119,14 +136,10 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             ItemMeta guiMeta = guiItem.getItemMeta();
             List<String> lore = new ArrayList<>();
             guiMeta.setDisplayName(String.valueOf(r.getId()));
+
             lore.add(r.getName());
-            if (r.getOccupant() == faction) {
-                lore.add("§c§oRegion occupied by your faction!");
-                lore.add("§7Warscore§8: §5-" + 6);
-            }
-            else {
-                lore.add("§7Warscore§8: §5-" + 10);
-            }
+            lore.add("§7Warscore§8: §5-" + getRegionWarscore(r, faction));
+
             guiMeta.setLore(lore);
             guiItem.setItemMeta(guiMeta);
             gui.addItem(guiItem);

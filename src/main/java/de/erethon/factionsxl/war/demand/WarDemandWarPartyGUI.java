@@ -32,6 +32,7 @@ import java.util.Collection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -68,6 +69,7 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));
         }
         wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction);
+        HandlerList.unregisterAll(this);
     }
 
     @Override

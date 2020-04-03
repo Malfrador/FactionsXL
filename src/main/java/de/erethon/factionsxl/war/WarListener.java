@@ -68,7 +68,6 @@ public class WarListener implements Listener {
             }
         }
         if (takesPart == null) {
-            Bukkit.broadcastMessage("New battle");
             takesPart = new Battle(player1, player2);
             battleCache.add(takesPart);
             new Expiration(takesPart).runTaskTimer(plugin, 0L, FConfig.SECOND);

@@ -22,10 +22,13 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
+import de.erethon.factionsxl.war.WarRequest;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -60,8 +63,14 @@ public class ConfirmWarCommand extends FCommand {
                     wars.getUnconfirmedWars().remove(war);
                     MessageUtil.sendMessage(sender, FMessage.WAR_DECLARATION_CANCELLED.getMessage());
                 } else {
+                    for (Faction f : war.getAttacker().getInvited()) {
+                         new WarRequest((Faction) war.getAttacker().getLeader(), f, war.getAttacker()).send();
+                    }
                     war.confirm();
+                    MessageUtil.broadcastMessage(" ");
                     ParsingUtil.broadcastMessage(FMessage.WAR_DECLARATION_BROADCAST.getMessage(), getFSender(sender), getSenderFaction(sender), war.getDefender().getLeader());
+                    MessageUtil.broadcastMessage(" ");
+                    FScoreboard.updateAllProviders();
                 }
             }
         }

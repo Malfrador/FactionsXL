@@ -28,6 +28,7 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.demand.WarDemandWarPartyGUI;
@@ -82,6 +83,7 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         Player player = (Player) sender;
+        Faction f = factions.getByMember(player);
         boolean inWar = false;
         for (Faction faction : factions.getByLeader(player)) {
             if (faction.isInWar()) {
@@ -91,6 +93,10 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
         }
         if (!factions.getByMember(player).isInWar() && !inWar) {
             MessageUtil.sendMessage(sender, FMessage.ERROR_NOT_IN_WAR.getMessage());
+            return;
+        }
+        if (!f.isAdmin(player)) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
         player.openInventory(gui);
@@ -105,7 +111,6 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
         if (event.getInventory().getHolder() != this) {
             return;
         }
-        Bukkit.broadcastMessage("Peace Command click");
         event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();

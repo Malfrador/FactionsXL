@@ -49,6 +49,7 @@ public class FCommandCache extends DRECommandCache {
     public CoreCommand core = new CoreCommand();
     public ConfirmPeaceRequestCommand confirmPeace = new ConfirmPeaceRequestCommand();
     public ConfirmWarCommand confirmWar = new ConfirmWarCommand();
+    public ConfirmWarRequestCommand confirmWarRequest = new ConfirmWarRequestCommand();
     public CreateCommand create = new CreateCommand();
     public CreateBullCommand createBull = new CreateBullCommand();
     public CreateVassalCommand createVassal = new CreateVassalCommand();
@@ -174,6 +175,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(addCasusBelli);
         addCommand(idea);
         addCommand(confirmPeace);
+        addCommand(confirmWarRequest);
         addCommand(peaceCommand);
         addCommand(warAnnex);
         addCommand(influence);

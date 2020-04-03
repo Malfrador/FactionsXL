@@ -48,7 +48,7 @@ public class IndependenceCommand extends FCommand {
     public IndependenceCommand() {
         setCommand("independence");
         setAliases("i", "ind");
-        setMinArgs(1);
+        setMinArgs(0);
         setMaxArgs(1);
         setHelp("&c/f independence [Name]");
         setPermission(FPermission.CREATE.getNode());

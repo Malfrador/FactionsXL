@@ -24,6 +24,7 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.CoringHandler;
+import de.erethon.factionsxl.war.WarHandler;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -32,6 +33,7 @@ import org.bukkit.command.CommandSender;
 public class PaydayCommand extends FCommand {
 
     CoringHandler core =  FactionsXL.getInstance().getCoring();
+    WarHandler wh = FactionsXL.getInstance().getWarHandler();
 
     public PaydayCommand() {
         setCommand("payday");
@@ -47,6 +49,8 @@ public class PaydayCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         core.calculateCoringProgress();
         core.calculateClaimTime();
+        wh.calculateWarStatus();
+        wh.calculateWar();
         int i = args.length > 1 ? NumberUtil.parseInt(args[1], 1) : 1;
         do {
             for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {

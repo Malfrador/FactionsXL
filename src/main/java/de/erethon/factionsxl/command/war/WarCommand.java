@@ -23,6 +23,7 @@ import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.*;
@@ -37,6 +38,7 @@ import org.bukkit.entity.Player;
 public class WarCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    FactionCache cache = plugin.getFactionCache();
 
     public WarCommand() {
         setCommand("war");
@@ -64,7 +66,8 @@ public class WarCommand extends FCommand {
         // TO DO!
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
-        if (factions.isEmpty()) {
+        Faction f = cache.getByMember(player);
+        if (!f.isAdmin(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
