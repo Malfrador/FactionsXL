@@ -183,6 +183,7 @@ public class FPlayerData extends DREConfig {
     /* Serialization */
     @Override
     public void initialize() {
+        this.timeLastPlayed = System.currentTimeMillis();
         MessageUtil.log(plugin, FMessage.LOG_NEW_PLAYER_DATA.getMessage(file.getName()));
         save();
     }
