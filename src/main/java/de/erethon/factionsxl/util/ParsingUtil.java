@@ -29,9 +29,9 @@ import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.*;
+
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -139,7 +139,7 @@ public enum ParsingUtil {
      *
      * @param string
      * the String that contains the placeholders
-     * @param faction
+     * @param receiver
      * the faction the replacements are taken from
      */
     public static String replaceChatPlaceholders(String string, FPlayer sender, FPlayer receiver) {
@@ -269,7 +269,7 @@ public enum ParsingUtil {
         Economy econ = plugin.getEconomyProvider();
 
         if (string.contains(PLAYER_BALANCE.getPlaceholder()) && plugin.getFConfig().isEconomyEnabled()) {
-            string = string.replace(PLAYER_BALANCE.getPlaceholder(), econ.format(econ.getBalance(fPlayer.getPlayer())));
+            string = string.replace(PLAYER_BALANCE.getPlaceholder(), econ.format(plugin.getBalanceCache().getCachedBalance(fPlayer.getPlayer())));
         }
         string = string.replace(PLAYER_DYNASTY.getPlaceholder(), fPlayer.getDynasty() != null ? fPlayer.getDynasty().getName() : "None");
         string = string.replace(PLAYER_NAME.getPlaceholder(), fPlayer.getName());

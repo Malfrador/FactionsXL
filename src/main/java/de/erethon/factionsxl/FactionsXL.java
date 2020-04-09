@@ -27,9 +27,11 @@ import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
 import de.erethon.factionsxl.board.Board;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.board.dynmap.Atlas;
 import de.erethon.factionsxl.chat.ChatListener;
 import de.erethon.factionsxl.command.FCommandCache;
+import de.erethon.factionsxl.command.war.ConfirmWarRequestCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FData;
 import de.erethon.factionsxl.config.FMessage;
@@ -45,6 +47,7 @@ import de.erethon.factionsxl.player.PlayerListener;
 import de.erethon.factionsxl.protection.EntityProtectionListener;
 import de.erethon.factionsxl.protection.LWCIntegration;
 import de.erethon.factionsxl.protection.LandProtectionListener;
+import de.erethon.factionsxl.util.BalanceCache;
 import de.erethon.factionsxl.util.CoringHandler;
 import de.erethon.factionsxl.war.*;
 
@@ -53,7 +56,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import de.erethon.factionsxl.war.demand.ItemDemand;
+import de.erethon.factionsxl.war.demand.MoneyDemand;
+import de.erethon.factionsxl.war.demand.RegionDemand;
+import de.erethon.factionsxl.war.demand.RelationDemand;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
+import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
 import de.erethon.vignette.api.VignetteAPI;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
@@ -101,6 +109,7 @@ public class FactionsXL extends DREPlugin {
     private CoringHandler core;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
+    private BalanceCache balanceCache;
     private boolean debugEnabled = true;
     private PrintWriter out;
     private CannonsAPI cannonsAPI;
@@ -119,6 +128,11 @@ public class FactionsXL extends DREPlugin {
         ConfigurationSerialization.registerClass(RelationRequest.class);
         ConfigurationSerialization.registerClass(WarRequest.class);
         ConfigurationSerialization.registerClass(PeaceOffer.class);
+        ConfigurationSerialization.registerClass(SeparatePeaceOffer.class);
+        ConfigurationSerialization.registerClass(MoneyDemand.class);
+        ConfigurationSerialization.registerClass(RegionDemand.class);
+        ConfigurationSerialization.registerClass(RelationDemand.class);
+        ConfigurationSerialization.registerClass(ItemDemand.class);
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
@@ -226,12 +240,12 @@ public class FactionsXL extends DREPlugin {
         loadFData();
         loadFactions(FACTIONS, FEDERATIONS, TRADE_LEAGUES);
         loadBoard(BOARD);
-        loadWars(WARS);
-        loadWarHandler();
         loadFPlayers();
         fPlayers.loadAll();
         board.loadAll();
         factions.loadAll();
+        loadWars(WARS);
+        loadWarHandler();
         loadAtlas();
         loadCoring();
         loadFCommands();
@@ -246,6 +260,7 @@ public class FactionsXL extends DREPlugin {
         startPowerTask();
         if (fConfig.isEconomyEnabled()) {
             startIncomeTask();
+            createBalanceCache();
         }
 
         if (manager.isPluginEnabled("Cannons")) {
@@ -262,6 +277,14 @@ public class FactionsXL extends DREPlugin {
                 warHandler.calculateWarStatus();
             }
         }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
+        if (fConfig.isEconomyEnabled()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    balanceCache.run();
+                }
+            }.runTaskTimer(this, FConfig.SECOND * 30, FConfig.SECOND * 30);
+        }
 
         new BukkitRunnable() {
             @Override
@@ -614,6 +637,21 @@ public class FactionsXL extends DREPlugin {
         return incomeTask;
     }
 
+    /**
+     * @return
+     * the IncomeTask
+     */
+    public BalanceCache getBalanceCache() {
+        return balanceCache;
+    }
+
+    /**
+     * @return
+     * the IncomeTask
+     */
+    public void createBalanceCache() {
+        balanceCache = new BalanceCache();
+    }
     /**
      * start a new IncomeTask
      */
