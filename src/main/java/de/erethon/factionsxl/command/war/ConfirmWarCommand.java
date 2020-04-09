@@ -63,13 +63,13 @@ public class ConfirmWarCommand extends FCommand {
                     wars.getUnconfirmedWars().remove(war);
                     MessageUtil.sendMessage(sender, FMessage.WAR_DECLARATION_CANCELLED.getMessage());
                 } else {
-                    for (Faction f : war.getAttacker().getInvited()) {
-                         new WarRequest((Faction) war.getAttacker().getLeader(), f, war.getAttacker()).send();
-                    }
                     war.confirm();
                     MessageUtil.broadcastMessage(" ");
                     ParsingUtil.broadcastMessage(FMessage.WAR_DECLARATION_BROADCAST.getMessage(), getFSender(sender), getSenderFaction(sender), war.getDefender().getLeader());
                     MessageUtil.broadcastMessage(" ");
+                    for (Faction f : war.getAttacker().getInvited()) {
+                        new WarRequest((Faction) war.getAttacker().getLeader(), f, war.getAttacker()).send();
+                    }
                     FScoreboard.updateAllProviders();
                 }
             }

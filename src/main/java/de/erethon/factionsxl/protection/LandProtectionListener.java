@@ -34,6 +34,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import static org.bukkit.Material.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -303,7 +304,6 @@ public class LandProtectionListener implements Listener {
             OAK_BUTTON
     ));
 
-    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (config.isExcludedWorld(event.getPlayer().getWorld())) {
             return;

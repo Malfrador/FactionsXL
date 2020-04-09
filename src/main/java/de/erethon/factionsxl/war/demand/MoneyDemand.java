@@ -103,14 +103,31 @@ public class MoneyDemand implements WarDemand {
     }
 
     @Override
+    public void pay(Faction f, Faction f2) {
+        f2.getAccount().withdraw(amount.doubleValue());
+        f.getAccount().deposit(amount.doubleValue());
+    }
+
+    @Override
     public boolean canPay(WarParty wp) {
         return wp.getLeader().getAccount().getBalance() >= amount.doubleValue();
+    }
+
+    @Override
+    public boolean canPay(Faction f) {
+        return f.getAccount().getBalance() >= amount.doubleValue();
     }
 
     @Override
     public boolean canAffordWP(WarParty wp) {
         return wp.getPoints() >= getWarscoreCost();
     }
+
+    @Override
+    public boolean canAffordWP(Faction f) {
+        return  true;
+    }
+
 
     @Override
     public String toString() {

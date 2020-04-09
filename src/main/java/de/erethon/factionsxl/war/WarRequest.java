@@ -55,8 +55,8 @@ public class WarRequest extends Request {
         WP = WarParty;
         subject = leader;
         object = invited;
-        object.getRequests().add(this);
         expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
+        object.getRequests().add(this);
     }
 
     public WarRequest (Map<String, Object> args) {
@@ -123,13 +123,13 @@ public class WarRequest extends Request {
 
     @Override
     public String getDenyCommand() {
-        return null;
+        return "/f confirmWarRequest " + WP.getName() + " -cancel";
     }
 
     @Override
     public void sendSubjectMessage() {
         Faction f = getSubject();
-        f.sendMessage("&aYou invited &d" + getObject().getName() + "&a to join the war!");
+        f.sendMessage("&aYou invited &d" + getObject().getName() + "&a to join the war against &e" + WP.getEnemy().getName() + "&a!");
     }
 
     @Override
@@ -140,7 +140,7 @@ public class WarRequest extends Request {
     @Override
     public void sendObjectMessage() {
         Faction f = getObject();
-        f.sendMessage("&aYou have been invited by &d" + getSubject().getName() + "&a to join the war!");
+        f.sendMessage("&aYou have been invited by &d" + getSubject().getName() + "&a to join the war against &e" + WP.getEnemy().getName() + "&a!");
     }
 
     @Override

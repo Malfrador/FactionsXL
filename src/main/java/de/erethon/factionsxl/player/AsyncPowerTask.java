@@ -78,10 +78,6 @@ public class AsyncPowerTask extends BukkitRunnable {
 
         data.power = updatedPower;
         data.lastPowerUpdate = System.currentTimeMillis();
-        if (fConfig.getSendPowerUpdate())
-        {
-            FactionsXL.debug("Updated power values");
-        }
 
     }
 

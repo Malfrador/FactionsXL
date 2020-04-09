@@ -85,11 +85,17 @@ public abstract class WarPartyGUI implements Listener, StandardizedGUI, Inventor
         }
         Faction faction = plugin.getFactionCache().getByBanner(button);
         if (faction != null) {
-            onButtonClick((Player) event.getWhoClicked(), faction);
+            if (event.getClick().isLeftClick()) {
+                onButtonClick((Player) event.getWhoClicked(), true, false, faction);
+            }
+            if (event.getClick().isRightClick()) {
+                onButtonClick((Player) event.getWhoClicked(), false, true, faction);
+            }
         }
     }
 
-    public abstract void onButtonClick(Player whoClicked, Faction buttonFaction);
+
+    public abstract void onButtonClick(Player whoClicked, boolean leftClick, boolean RightClick, Faction buttonFaction);
 
     public void delete() {
         HandlerList.unregisterAll(this);

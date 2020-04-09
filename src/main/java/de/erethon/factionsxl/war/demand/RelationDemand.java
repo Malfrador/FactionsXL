@@ -67,7 +67,17 @@ public class RelationDemand implements WarDemand {
     }
 
     @Override
+    public void pay(Faction f, Faction f2) {
+
+    }
+
+    @Override
     public boolean canPay(WarParty wp) {
+        return true;
+    }
+
+    @Override
+    public boolean canPay(Faction f) {
         return true;
     }
 
@@ -79,6 +89,11 @@ public class RelationDemand implements WarDemand {
     @Override
     public boolean canAffordWP(WarParty wp) {
         return wp.getPoints() >= getWarscoreCost();
+    }
+
+    @Override
+    public boolean canAffordWP(Faction f) {
+        return false;
     }
 
     @Override

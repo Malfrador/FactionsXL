@@ -22,9 +22,8 @@ import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.entity.Request;
 import de.erethon.factionsxl.war.War;
-import de.erethon.factionsxl.war.demand.ItemDemand;
-import de.erethon.factionsxl.war.demand.MoneyDemand;
-import de.erethon.factionsxl.war.demand.WarDemand;
+import de.erethon.factionsxl.war.demand.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -40,10 +39,13 @@ import org.bukkit.inventory.ItemStack;
 public abstract class PeaceOffer extends Request {
 
     private static Map<Class<? extends WarDemand>, Method[]> types = new HashMap<>();
+    private boolean isOffer;
 
     static {
         registerDemandType(ItemDemand.class);
         registerDemandType(MoneyDemand.class);
+        registerDemandType(RelationDemand.class);
+        registerDemandType(RegionDemand.class);
     }
 
     /**
@@ -122,6 +124,10 @@ public abstract class PeaceOffer extends Request {
     public War getWar() {
         return war;
     }
+    public boolean isOffer() {
+        return isOffer;
+    }
+
 
     public boolean canPay() {return false;}
 

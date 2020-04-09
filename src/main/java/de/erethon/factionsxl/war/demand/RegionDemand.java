@@ -114,12 +114,20 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         return wp.getPoints() >= getWarscoreCost();
     }
 
+    @Override
+    public boolean canAffordWP(Faction f) {
+        return true;
+    }
+
     public void openSetupGUI(Player p, Faction enemy) {
-        gui = Bukkit.createInventory(this, 54, "§5Select Enemy Regions...");
+        gui = Bukkit.createInventory(this, 54, "§5Select Regions...");
         Bukkit.getPluginManager().registerEvents(this, plugin);
         FPlayer fp =  plugin.getFPlayerCache().getByPlayer(p);
         Faction faction = fp.getFaction();
         player = p;
+        if (fp.getPeaceOffer().isOffer()) {
+            enemy = faction;
+        }
         e = enemy;
         ItemStack doneItem = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         ItemMeta doneMeta = doneItem.getItemMeta();
@@ -138,7 +146,9 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             guiMeta.setDisplayName(String.valueOf(r.getId()));
 
             lore.add(r.getName());
-            lore.add("§7Warscore§8: §5-" + getRegionWarscore(r, faction));
+            if (!fp.getPeaceOffer().isOffer()) {
+                lore.add("§7Warscore§8: §5-" + getRegionWarscore(r, faction));
+            }
 
             guiMeta.setLore(lore);
             guiItem.setItemMeta(guiMeta);
@@ -201,7 +211,25 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     }
 
     @Override
+    public void pay(Faction f, Faction f2) {
+        for (Region r : demandRegions) {
+            if (r.getCoreFactions().containsKey(r.getOwner())) {
+                r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, f, new Date(System.currentTimeMillis() + (FConfig.MONTH * 3) )));
+                r.getOwner().sendMessage("&aYou now have a &6RECONQUEST &aCasus Belli against " + f.getName() + "&a!");
+            }
+            ParsingUtil.broadcastMessage(FMessage.CMD_GIVE_REGION_SUCCESS.getMessage(), r.getOwner(), r.getName(), f);
+            r.setOwner(f);
+        }
+    }
+
+    @Override
     public boolean canPay(WarParty wp) {
+        return true;
+
+    }
+
+    @Override
+    public boolean canPay(Faction f) {
         return true;
 
     }

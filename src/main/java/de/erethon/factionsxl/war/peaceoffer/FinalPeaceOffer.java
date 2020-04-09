@@ -23,7 +23,6 @@ import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
@@ -31,6 +30,7 @@ import de.erethon.factionsxl.war.WarPartyRole;
 import de.erethon.factionsxl.war.demand.WarDemand;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -44,6 +44,7 @@ import java.util.*;
 public class FinalPeaceOffer extends PeaceOffer {
 
     Double cost = 0.00;
+    Boolean isOffer = false;
     FactionsXL plugin = FactionsXL.getInstance();
 
     public FinalPeaceOffer(War war, WarParty demanding, WarParty target, WarDemand... demands) {
@@ -51,13 +52,27 @@ public class FinalPeaceOffer extends PeaceOffer {
         subject = demanding;
         object = target;
         this.demands = new ArrayList(Arrays.asList(demands));
-        object.getRequests().add(this);
+        expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
+        //object.getRequests().add(this);
+        //
+    }
+
+    public FinalPeaceOffer(War war, Boolean isOfferBool, WarParty demanding, WarParty target, WarDemand... demands) {
+        this.war = war;
+        subject = demanding;
+        object = target;
+        isOffer = isOfferBool;
+        this.demands = new ArrayList(Arrays.asList(demands));
+        expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
+        //object.getRequests().add(this);
+        //
     }
 
     public FinalPeaceOffer(Map<String, Object> args) {
         war = FactionsXL.getInstance().getWarCache().getByDate((long) args.get("war"));
         subject = WarPartyRole.valueOf((String) args.get("subject")) == WarPartyRole.ATTACKER ? war.getAttacker() : war.getDefender();
         object = getSubject().getRole() == WarPartyRole.ATTACKER ? war.getDefender() : war.getAttacker();
+        isOffer = (boolean) args.get("offer");
         demands = (List<WarDemand>) args.get("demands");
         expiration = (long) args.get("expiration");
     }
@@ -76,8 +91,15 @@ public class FinalPeaceOffer extends PeaceOffer {
     public boolean canPay() {
         boolean canPay = true;
         for (WarDemand demand : demands) {
-            if (!demand.canPay(getObject())) {
-                canPay = false;
+            if (isOffer) {
+                if (!demand.canPay(getSubject())) {
+                    canPay = false;
+                }
+            }
+            if (!isOffer) {
+                if (!demand.canPay(getObject())) {
+                    canPay = false;
+                }
             }
         }
         return canPay;
@@ -86,7 +108,13 @@ public class FinalPeaceOffer extends PeaceOffer {
     }
     @Override
     public void confirm() {
-        demands.forEach(d -> d.pay(getSubject(), getObject()));
+        if (isOffer) {
+            demands.forEach(d -> d.pay(getObject(), getSubject()));
+            Bukkit.broadcastMessage(getObject() + " -> " + getSubject());
+        }
+        if (!isOffer) {
+            demands.forEach(d -> d.pay(getSubject(), getObject()));
+        }
         war.end();
         MessageUtil.broadcastMessage(" ");
         MessageUtil.broadcastMessage("&aThe war between &6" + getObject().getName() + " &aand &6" + getSubject().getName() + "&a ended!");
@@ -98,10 +126,18 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public void send() {
-        if (getCost() > getSubject().getPoints()) {
+        if (!isOffer) {
+            if (getCost() > getSubject().getPoints()) {
+                for (Player player : subject.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
+                    MessageUtil.sendMessage(player, "&cYou do not have the Warscore required to make these demands!");
+                    MessageUtil.sendMessage(player, "&7Your Warscore&8: " + getSubject().getPoints() + " &7Needed&8: " + getCost());
+                }
+                return;
+            }
+        }
+        if (!canPay()) {
             for (Player player : subject.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cYou do not have the Warscore required to make these demands!");
-                MessageUtil.sendMessage(player, "&7Your Warscore&8: " + getSubject().getPoints() + " &7Needed&8: " + getCost());
+                MessageUtil.sendMessage(player, "&cYour faction can not afford this!");
             }
             return;
         }
@@ -141,18 +177,23 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public String getAcceptCommand() {
-        return "/f confirmPeace " + war.getStartDate().getTime();
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -accept";
     }
 
     @Override
     public String getDenyCommand() {
-        return getAcceptCommand() + " -deny";
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -deny";
     }
 
     @Override
     public void sendSubjectMessage() {
         for (Faction f : getSubject().getFactions()) {
-            f.sendMessage("&8&m----------&r &f&lPeace request&r &8&m----------");
+            if (isOffer) {
+                f.sendMessage("&8&m----------&r &f&lPeace offer&r &8&m----------");
+            }
+            else {
+                f.sendMessage("&8&m----------&r &f&lPeace demand&r &8&m----------");
+            }
             f.sendMessage(" ");
             for (Object d : demands) {
                 f.sendMessage(d.toString());
@@ -166,11 +207,20 @@ public class FinalPeaceOffer extends PeaceOffer {
     @Override
     public void sendObjectMessage() {
         for (Faction f : getObject().getFactions()) {
-            f.sendMessage("&8&m----------&r &f&lPeace request&r &8&m----------");
-            f.sendMessage(" ");
-            f.sendMessage("&7&oAccepting this request will end the war immediately.");
-            f.sendMessage("&7&oBut you will need to pay the following to the demanding faction: ");
-            f.sendMessage("&6&lDemands&8&l:");
+            if (isOffer) {
+                f.sendMessage("&8&m----------&r &f&lPeace offer&r &8&m----------");
+                f.sendMessage(" ");
+                f.sendMessage("&7&oAccepting this request will end the war immediately.");
+                f.sendMessage("&7&oand you will get the following from the demanding faction: ");
+                f.sendMessage("&6&lOffers&8&l:");
+            }
+            else {
+                f.sendMessage("&8&m----------&r &f&lPeace demand&r &8&m----------");
+                f.sendMessage(" ");
+                f.sendMessage("&7&oAccepting this request will end the war immediately.");
+                f.sendMessage("&7&oBut you will need to pay the following to the demanding faction: ");
+                f.sendMessage("&6&lDemands&8&l:");
+            }
             for (Object d : demands) {
                 f.sendMessage(d.toString());
             }
@@ -196,6 +246,11 @@ public class FinalPeaceOffer extends PeaceOffer {
         // should remove the request. Does not persist restarts anyway.
     }
 
+    public boolean isOffer() {
+        return isOffer;
+    }
+
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> args = new HashMap<>();
@@ -203,6 +258,7 @@ public class FinalPeaceOffer extends PeaceOffer {
         args.put("subject", getSubject().getRole().name());
         args.put("object", getObject().getRole().name());
         args.put("expiration", expiration);
+        args.put("offer", isOffer);
         args.put("demands", demands);
         return args;
     }

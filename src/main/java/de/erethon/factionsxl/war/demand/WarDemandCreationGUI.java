@@ -132,13 +132,15 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.getPeaceOffer().getDemands().clear();
             MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
         } else if (button.getItemMeta().getDisplayName().contains("Region")) {
+            if (player.getPeaceOffer().isOffer()) {
+                new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), plugin.getFactionCache().getByFPlayer(player));
+            }
             new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
         } else if (button.getItemMeta().getDisplayName().contains(FMessage.RELATION_VASSAL.getMessage())) {
             new RelationDemand();
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }
-        HandlerList.unregisterAll(this);
 
     }
 

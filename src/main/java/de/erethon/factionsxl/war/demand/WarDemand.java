@@ -42,12 +42,16 @@ public interface WarDemand extends ConfigurationSerializable {
      */
     public boolean canAffordWP(WarParty wp);
 
+    public boolean canAffordWP(Faction f);
+
     /**
      * Asks the demanded party to pay
      *
      * @param f, f2
      */
     public void pay(WarParty f, WarParty f2);
+
+    public void pay(Faction f, Faction f2);
 
     /**
      * Warscore cost of all demands
@@ -59,5 +63,7 @@ public interface WarDemand extends ConfigurationSerializable {
      * if the target faction is able to pay
      */
     public boolean canPay(WarParty wp);
+
+    public boolean canPay(Faction f);
 
 }

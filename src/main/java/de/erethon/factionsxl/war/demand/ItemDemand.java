@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.war.demand;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -60,14 +61,15 @@ public class ItemDemand implements WarDemand {
     }
 
     public static void openSetupGUI(Player player) {
-        new AddItemsGUI("Add Items", 54, true) {
+        MessageUtil.sendMessage(player, "&cThis demand type is currently disabled.");
+        /*new AddItemsGUI("Add Items", 54, true) {
 
             @Override
             public void onClose() {
                 FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(new ItemDemand(getStorageContents()));
                 FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
             }
-        }.open(player);
+        }.open(player);*/
     }
 
     @Override
@@ -81,8 +83,18 @@ public class ItemDemand implements WarDemand {
     }
 
     @Override
+    public boolean canAffordWP(Faction f) {
+        return true;
+    }
+
+    @Override
     public void pay(WarParty wp, WarParty wp2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void pay(Faction f, Faction f2) {
+
     }
 
     @Override
@@ -93,6 +105,11 @@ public class ItemDemand implements WarDemand {
     @Override
     public boolean canPay(WarParty f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean canPay(Faction f) {
+        return false;
     }
 
     @Override

@@ -28,6 +28,10 @@ import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import java.util.Collection;
 import java.util.HashSet;
+
+import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.WarPartyRole;
+import de.erethon.factionsxl.war.WarRequest;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -113,6 +117,41 @@ public class RelationCommand extends FCommand {
             new RelationRequest(sender, subjectFaction, objectFaction, relation).send();
         } else {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_RELATION.getMessage(), args[3]);
+        }
+        if (objectFaction.isInWar() || subjectFaction.isInWar()) {
+            if (relation != null && relation != Relation.OWN){
+                boolean isAttacker = false;
+                Faction leader = null;
+                Faction warFaction = null;
+                WarParty WarParty = null;
+                for (WarParty wp : subjectFaction.getWarParties()) {
+                    if (wp.getRole() == WarPartyRole.ATTACKER && wp.getLeader() == objectFaction) {
+                        isAttacker = true;
+                        leader = (Faction) wp.getLeader();
+                        warFaction = objectFaction;
+                        WarParty = wp;
+                        break;
+                    }
+                }
+                for (WarParty wp : objectFaction.getWarParties()) {
+                    if (wp.getRole() == WarPartyRole.ATTACKER && wp.getLeader() == objectFaction) {
+                        isAttacker = true;
+                        leader = (Faction) wp.getLeader();
+                        warFaction = subjectFaction;
+                        WarParty = wp;
+                        break;
+                    }
+                }
+                if (isAttacker && relation != Relation.PEACE) {
+                    new WarRequest(leader, warFaction, WarParty);
+                }
+                else if (relation != Relation.PEACE){
+                    WarParty.addParticipant(warFaction);
+                }
+                else {
+                    WarParty.removeParticipant(warFaction);
+                }
+            }
         }
     }
 

@@ -95,7 +95,7 @@ public class ClaimCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage(), region, faction);
             return;
         }
-        if (faction.isInWar()) {
+        if (faction.isInWar() && !(region.isNeutral())) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
             return;
         }

@@ -53,7 +53,7 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
     }
 
     @Override
-    public void onButtonClick(Player whoClicked, Faction buttonFaction) {
+    public void onButtonClick(Player whoClicked, boolean left, boolean right, Faction buttonFaction) {
         WarParty offerTarget = null;
         for (WarParty party : buttonFaction.getWarParties()) {
             if (party.getLeader() == buttonFaction) {
@@ -63,7 +63,12 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
         if (offerTarget != null) {
             War war = offerTarget.getWar();
             WarParty demanding = war.getEnemy(offerTarget);
-            fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
+            if (right) {
+                fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
+            }
+            if (left) {
+                fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, true, demanding, offerTarget));
+            }
         } else {
             War war = wars.getUnsafe(buttonFaction);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));

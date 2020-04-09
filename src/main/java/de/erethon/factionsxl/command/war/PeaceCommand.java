@@ -119,6 +119,8 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
             Set<WarParty> parties = new HashSet<>();
             ownFactions.forEach(f -> f.getWarParties().forEach(p -> parties.add(p.getEnemy())));
             new WarDemandWarPartyGUI(plugin, ownFactions, parties.toArray(new WarParty[]{})).open(player);
+            MessageUtil.sendMessage(player, "&6&o&lRIGHT CLICK&8: &f&lDemand");
+            MessageUtil.sendMessage(player, "&6&o&lLEFT CLICK&8: &f&lOffer");
         } else if (listReceived.equals(button)) {
             PageGUI received = new PageGUI(FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
             received.open(player);

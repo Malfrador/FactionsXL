@@ -144,6 +144,7 @@ public class OccupyCommand extends FCommand {
                     if (region.getOwner() == region.getOccupant()) {
                         region.clearOccupant();
                         region.setOwner(faction);
+                        faction.setExhaustion(faction.getExhaustion() - 4);
                     }
 
                     region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());

@@ -47,7 +47,7 @@ public class ConfirmWarRequestCommand extends FCommand {
     public ConfirmWarRequestCommand() {
         setCommand("confirmWarRequest");
         setMinArgs(1);
-        setMaxArgs(5);
+        setMaxArgs(2);
         setHelp("Internal command to confirm a war invite");
         setPermission(FPermission.WAR.getNode());
         setPlayerCommand(true);
@@ -85,6 +85,11 @@ public class ConfirmWarRequestCommand extends FCommand {
                 break;
             }
         }
-        warReq.confirm();
+        if (args.length == 3 && args[2].equalsIgnoreCase("-cancel")) {
+            warReq.purge();
+            MessageUtil.sendMessage(sender, FMessage.WAR_DECLARATION_CANCELLED.getMessage());
+        } else {
+            warReq.confirm();
+        }
     }
 }
