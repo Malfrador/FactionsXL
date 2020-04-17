@@ -21,12 +21,7 @@ package de.erethon.factionsxl.command;
 import de.erethon.commons.command.DRECommandCache;
 import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.factionsxl.FactionsXL;
-import de.erethon.factionsxl.command.relation.RelationAllyCommand;
-import de.erethon.factionsxl.command.relation.RelationCommand;
-import de.erethon.factionsxl.command.relation.RelationNeutralCommand;
-import de.erethon.factionsxl.command.relation.RelationOathCommand;
-import de.erethon.factionsxl.command.relation.RelationUniteCommand;
-import de.erethon.factionsxl.command.relation.RelationVassalizeCommand;
+import de.erethon.factionsxl.command.relation.*;
 import de.erethon.factionsxl.command.war.*;
 import de.erethon.factionsxl.config.FConfig;
 
@@ -45,6 +40,7 @@ public class FCommandCache extends DRECommandCache {
     public AdminCommand admin = new AdminCommand();
     public CasusBelliCommand casusBelli = new CasusBelliCommand();
     public ChatCommand chat = new ChatCommand();
+    public ChatSpyCommand chatSpy = new ChatSpyCommand();
     public ClaimCommand claim = new ClaimCommand();
     public CoreCommand core = new CoreCommand();
     public ConfirmPeaceRequestCommand confirmPeace = new ConfirmPeaceRequestCommand();
@@ -173,6 +169,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(storage);
         addCommand(tradeOffer);
         addCommand(addCasusBelli);
+        addCommand(chatSpy);
         addCommand(idea);
         addCommand(confirmPeace);
         addCommand(confirmWarRequest);

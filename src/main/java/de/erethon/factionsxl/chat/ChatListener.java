@@ -88,6 +88,11 @@ public class ChatListener implements Listener {
                 }
             }
             MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
+            for (Player team : Bukkit.getOnlinePlayers()) {
+                if (plugin.getFPlayerCache().getByPlayer(team).getData().getChatSpy()) {
+                    MessageUtil.sendMessage(team, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + channel + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + player.getName() + ": " + event.getMessage());
+                }
+            }
         }
     }
 }

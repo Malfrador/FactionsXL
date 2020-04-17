@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.command.relation;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
@@ -110,23 +111,25 @@ public class RelationCommand extends FCommand {
         }
         if (matching != null) {
             matching.confirm();
-            return;
         }
 
-        if (relation != null && relation != Relation.OWN && relation != Relation.PERSONAL_UNION) {
-            new RelationRequest(sender, subjectFaction, objectFaction, relation).send();
-        } else {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_RELATION.getMessage(), args[3]);
+        if (matching == null) {
+            if (relation != null && relation != Relation.OWN && relation != Relation.PERSONAL_UNION) {
+                new RelationRequest(sender, subjectFaction, objectFaction, relation).send();
+                return;
+            } else {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_RELATION.getMessage(), args[3]);
+                return;
+            }
         }
         if (objectFaction.isInWar() || subjectFaction.isInWar()) {
             if (relation != null && relation != Relation.OWN){
-                boolean isAttacker = false;
                 Faction leader = null;
                 Faction warFaction = null;
                 WarParty WarParty = null;
                 for (WarParty wp : subjectFaction.getWarParties()) {
-                    if (wp.getRole() == WarPartyRole.ATTACKER && wp.getLeader() == objectFaction) {
-                        isAttacker = true;
+                    if (wp.getLeader() == subjectFaction) {
+                        MessageUtil.log("Relation subject is in war against: " + wp.getName() + " -> adding them to the WarParty.");
                         leader = (Faction) wp.getLeader();
                         warFaction = objectFaction;
                         WarParty = wp;
@@ -134,23 +137,27 @@ public class RelationCommand extends FCommand {
                     }
                 }
                 for (WarParty wp : objectFaction.getWarParties()) {
-                    if (wp.getRole() == WarPartyRole.ATTACKER && wp.getLeader() == objectFaction) {
-                        isAttacker = true;
+                    if (wp.getLeader() == objectFaction) {
+                        MessageUtil.log("Relation object is in war against: " + wp.getName() + " -> adding them to the WarParty.");
                         leader = (Faction) wp.getLeader();
                         warFaction = subjectFaction;
                         WarParty = wp;
                         break;
                     }
                 }
-                if (isAttacker && relation != Relation.PEACE) {
-                    new WarRequest(leader, warFaction, WarParty);
+                if (WarParty != null && relation != Relation.PEACE) {
+                    new WarRequest(leader, warFaction, WarParty).send();
+                    return;
                 }
-                else if (relation != Relation.PEACE){
-                    WarParty.addParticipant(warFaction);
-                }
-                else {
+                if (WarParty != null && WarParty.getFactions().contains(warFaction)) {
                     WarParty.removeParticipant(warFaction);
+                    for (Faction f : WarParty.getEnemy().getFactions()) {
+                        new RelationRequest(sender, warFaction, f, Relation.PEACE).confirm();
+                    }
+                    MessageUtil.log("Removed " + warFaction.getName() + " from WarParty " + WarParty.getName() + " because alliance ended.");
+                    MessageUtil.broadcastMessage("&aThe faction &e" + warFaction.getName() + "&a abandoned their ally during the war.");
                 }
+
             }
         }
     }

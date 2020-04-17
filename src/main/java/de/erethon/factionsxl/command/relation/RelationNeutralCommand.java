@@ -18,15 +18,18 @@
  */
 package de.erethon.factionsxl.command.relation;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -92,6 +95,20 @@ public class RelationNeutralCommand extends FCommand {
                         subject.sendMessage(FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), subject, String.valueOf(String.valueOf(config.getPriceRelation(Relation.PEACE))));
                         return;
                     }
+                }
+                if (subject.isInWar() || object.isInWar()) {
+                    for (WarParty sWP : subject.getWarParties()) {
+                        if (sWP.getFactions().contains(subject)) {
+                            sWP.removeParticipant(subject);
+                        }
+                    }
+                    for (WarParty oWP : object.getWarParties()) {
+                        if (oWP.getFactions().contains(object)) {
+                            oWP.removeParticipant(object);
+                        }
+                    }
+                    MessageUtil.log("Removed " + subject.getName() + " from WarParty of " + object.getName() + " because alliance ended.");
+                    MessageUtil.broadcastMessage("&aThe faction &e" + subject.getName() + "&a abandoned their ally during the war.");
                 }
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, Relation.PEACE.getName());
         }

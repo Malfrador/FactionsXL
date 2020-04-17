@@ -51,7 +51,7 @@ public class IndependenceCommand extends FCommand {
         setMinArgs(0);
         setMaxArgs(1);
         setHelp("&c/f independence [Name]");
-        setPermission(FPermission.CREATE.getNode());
+        setPermission(FPermission.CREATE_VASSAL.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
     }
@@ -88,7 +88,7 @@ public class IndependenceCommand extends FCommand {
                 return;
             }
             // TODO: FMessage
-            MessageUtil.broadcastMessage("&aDie Fraktion &e" + faction.getName() + "&a hat die Instabilität von &e" + faction.getLord() + "&a genutzt und die Unabhängigkeit erklärt!" );
+            MessageUtil.broadcastMessage("&aDie Fraktion &e" + faction.getName() + "&a hat die Instabilität von &e" + faction.getLord().getName() + "&a genutzt und die Unabhängigkeit erklärt!" );
             Faction oldLord = faction.getLord();
             oldLord.getRelations().remove(faction);
             faction.getRelations().remove(oldLord);

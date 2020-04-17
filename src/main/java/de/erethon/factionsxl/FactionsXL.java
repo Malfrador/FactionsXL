@@ -27,11 +27,9 @@ import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
 import de.erethon.factionsxl.board.Board;
-import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.board.dynmap.Atlas;
 import de.erethon.factionsxl.chat.ChatListener;
 import de.erethon.factionsxl.command.FCommandCache;
-import de.erethon.factionsxl.command.war.ConfirmWarRequestCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FData;
 import de.erethon.factionsxl.config.FMessage;
@@ -278,6 +276,7 @@ public class FactionsXL extends DREPlugin {
             }
         }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
         if (fConfig.isEconomyEnabled()) {
+            MessageUtil.log("Balance cache enabled.");
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -639,19 +638,19 @@ public class FactionsXL extends DREPlugin {
 
     /**
      * @return
-     * the IncomeTask
+     * the balance cache
      */
     public BalanceCache getBalanceCache() {
         return balanceCache;
     }
 
     /**
-     * @return
-     * the IncomeTask
+     * a cache of player balances, to prevent too many DB queries when updating the scoreboard.
      */
     public void createBalanceCache() {
         balanceCache = new BalanceCache();
     }
+
     /**
      * start a new IncomeTask
      */

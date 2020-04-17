@@ -47,6 +47,7 @@ public class FPlayerData extends DREConfig {
     private Location home;
     private List<Request> requests;
     private boolean isPublic = true;
+    private boolean isSpying = false;
 
     public FPlayerData(File file) {
         super(file, CONFIG_VERSION);
@@ -170,6 +171,14 @@ public class FPlayerData extends DREConfig {
         isPublic = enabled;
     }
 
+    public boolean getChatSpy() {
+        return isSpying;
+    }
+
+    public void setChatSpy(boolean enabled) {
+        isSpying = enabled;
+    }
+
     /**
      * @return
      * the requests this player has
@@ -204,6 +213,9 @@ public class FPlayerData extends DREConfig {
         if (config.contains("isPublic")) {
             isPublic = config.getBoolean("publicChat");
         }
+        if (config.contains("chatSpy")) {
+            isSpying = config.getBoolean("chatSpy");
+        }
         FactionsXL.debug("Loaded " + this);
     }
 
@@ -218,6 +230,8 @@ public class FPlayerData extends DREConfig {
         config.set("requests", requests);
 
         config.set("publicChat", isPublic);
+        config.set("chatSpy", isSpying);
+
         try {
             config.save(file);
         } catch (IOException exception) {

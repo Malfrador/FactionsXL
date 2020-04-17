@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Daniel Saukel
@@ -68,7 +69,7 @@ public class ClaimCommand extends FCommand {
         if (region != null && !region.isWildernessClaim()) {
             boolean nextTo = false;
             for (Region r : regions) {
-                if (r.isNextTo(player.getWorld(), region)) {
+                if (r.isNextTo(region)) {
                     nextTo = true;
                     break;
                 }

@@ -57,6 +57,7 @@ public class WarRequest extends Request {
         object = invited;
         expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
         object.getRequests().add(this);
+        MessageUtil.broadcastMessage("contructor. " + WarParty.getName());
     }
 
     public WarRequest (Map<String, Object> args) {
@@ -92,6 +93,19 @@ public class WarRequest extends Request {
 
     @Override
     public void confirm() {
+        if (getObject().getRelation(getSubject()) == null) {
+            for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
+                MessageUtil.sendMessage(player, "&cThey first need to accept the alliance.");
+            }
+            return;
+        }
+        MessageUtil.broadcastMessage(getObject().getRelation(getSubject()).getFormatted());
+        if (!(getObject().getRelation(getSubject()) == Relation.ALLIANCE)) {
+            for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
+                MessageUtil.sendMessage(player, "&cThey first need to accept the alliance.");
+            }
+            return;
+        }
         Set<WarParty> allWPs = getSubject().getWarParties();
         for (WarParty wp : allWPs) {
             if (wp.getLeader() == getSubject()) {

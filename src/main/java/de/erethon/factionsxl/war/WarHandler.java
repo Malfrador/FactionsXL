@@ -46,10 +46,10 @@ public class WarHandler {
     public void calculateWarStatus() {
         for (War w : plugin.getWarCache().getWars()) {
             for (Faction f : w.getAttacker().getFactions()) {
-                f.setExhaustion(f.getExhaustion() + 0.1);
+                f.setExhaustion(f.getExhaustion() + config.getExhaustion());
             }
             for (Faction f : w.getDefender().getFactions()) {
-                f.setExhaustion(f.getExhaustion() + 0.1);
+                f.setExhaustion(f.getExhaustion() + config.getExhaustion());
             }
         }
     }

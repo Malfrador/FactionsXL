@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.war.demand;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
@@ -65,9 +66,11 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
             WarParty demanding = war.getEnemy(offerTarget);
             if (right) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
+                MessageUtil.sendMessage(whoClicked, "&a&lMake your demands!");
             }
             if (left) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, true, demanding, offerTarget));
+                MessageUtil.sendMessage(whoClicked, "&a&lMake your offer!");
             }
         } else {
             War war = wars.getUnsafe(buttonFaction);

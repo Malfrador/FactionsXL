@@ -126,6 +126,7 @@ public class FConfig extends DREConfig {
     private long truceTime = 24;
     private int maximumKillPoints = 50;
     private int influenceFromKill = 2;
+    private double exhaustionPerCycle = 0.001;
 
     // Power etc.
     private int maxPower = 100;
@@ -656,6 +657,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * war exhaustion per cycle
+     */
+    public double getExhaustion() {
+        return exhaustionPerCycle;
+    }
+
+    /**
+     * @return
      * stability needed to declare independence for vassals
      */
     public int getStabilityIndependenceVassal() {
@@ -901,6 +910,10 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("influenceNeededForOccupy")) {
             config.set("influenceNeededForOccupy", influenceNeeded);
+        }
+
+        if (!config.contains("exhaustionPerCycle")) {
+            config.set("exhaustionPerCycle", exhaustionPerCycle);
         }
 
         if (!config.contains("coringPerDay")) {
@@ -1308,6 +1321,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("influenceFromKill")) {
             influenceFromKill = config.getInt("influenceFromKill");
+        }
+
+        if (config.contains("exhaustionPerCycle")) {
+            exhaustionPerCycle = config.getDouble("exhaustionPerCycle");
         }
 
         if (config.contains("maxPower")) {

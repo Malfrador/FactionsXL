@@ -25,6 +25,7 @@ import java.util.HashSet;
 import de.erethon.commons.chat.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 
 /**
@@ -81,16 +82,16 @@ public class LazyChunk {
         }
     }
 
-    public Collection<Chunk> getChunksAround(World world) {
+    public Collection<ChunkSnapshot> getChunksAround(World world) {
 
         int[] offset = {-1,0,1};
-        Chunk chunk = this.asBukkitChunk(world);
+        ChunkSnapshot chunk = this.asBukkitChunk(world).getChunkSnapshot();
         int baseX = chunk.getX();
         int baseZ = chunk.getZ();
-        Collection<Chunk> chunksAroundPlayer = new HashSet<>();
+        Collection<ChunkSnapshot> chunksAroundPlayer = new HashSet<>();
         for(int x : offset) {
             for(int z : offset) {
-                Chunk c = world.getChunkAt(baseX + x, baseZ + z);
+                ChunkSnapshot c = world.getChunkAt(baseX + x, baseZ + z).getChunkSnapshot();
                 chunksAroundPlayer.add(c);
             }
         } return chunksAroundPlayer;
@@ -105,6 +106,16 @@ public class LazyChunk {
             chunk = bukkit.get();
         }
         return chunk;
+    }
+    public ChunkSnapshot asSnapshot(World world) {
+        Chunk chunk = null;
+        if (bukkit == null) {
+            chunk = world.getChunkAt(x, z);
+            bukkit = new WeakReference<>(chunk);
+        } else {
+            chunk = bukkit.get();
+        }
+        return chunk.getChunkSnapshot();
     }
 
     @Override

@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.board;
 
-import com.avaje.ebean.validation.NotNull;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
@@ -29,20 +28,17 @@ import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.LazyChunk;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Represents an undividable collection of claims.
@@ -69,6 +65,7 @@ public class Region {
     private Faction occupant;
     private World world;
     private Set<LazyChunk> chunks = new HashSet<>();
+    private Set<Region> adjacentRegions = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
 
 
@@ -377,37 +374,23 @@ public class Region {
 
     /**
      * @param region the region to check against
-     * @param world the world to check in
      * @return
      * if this region is next to another region.
      */
-    public boolean isNextTo(World world, Region region) {
-        Boolean sameChunks = false;
-        Collection<LazyChunk> chunks1 = this.getChunks();
-        Collection<LazyChunk> chunks2 = region.getChunks();
-        Collection<LazyChunk> allChunks = new CopyOnWriteArrayList<>();
-        for (LazyChunk c : chunks1) {
-            Collection<Chunk> chunksAround = c.getChunksAround(world);
-            for (Chunk ca : chunksAround) {
-                LazyChunk cl = new LazyChunk(ca.getX(), ca.getZ());
-                allChunks.add(cl);
-            }
-        }
-        for (LazyChunk c : allChunks) {
-            for (LazyChunk c2 : chunks2) {
-                if ((c.getX() == c2.getX()) && (c.getZ() == c2.getZ())) {
-                    sameChunks = true;
-                    break;
-                }
-            }
-        }
-        if (sameChunks) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public boolean isNextTo(Region region) {
+        return this.adjacentRegions.contains(region);
     }
+
+    public Set<Region> getNeighbours() {
+        return adjacentRegions;
+    }
+
+
+    public void addNeighbour(Region rg) {
+        adjacentRegions.add(rg);
+    }
+
+
 
     /**
      * @return
@@ -468,6 +451,9 @@ public class Region {
         for (String chunk : config.getStringList("chunks")) {
             chunks.add(new LazyChunk(chunk));
         }
+        for (Integer rg : config.getIntegerList("neighbours")) {
+            adjacentRegions.add(plugin.getBoard().getById(rg));
+        }
         for (Entry<String, Object> entry : ConfigUtil.getMap(config, "cores").entrySet()) {
             Faction faction = plugin.getFactionCache().getById(NumberUtil.parseInt(entry.getKey()));
             Date date = new Date((long) entry.getValue());
@@ -495,6 +481,7 @@ public class Region {
     }
 
     public void save() {
+        MessageUtil.log("Saving region: " + this);
         config.set("name", name);
         config.set("type", type.toString());
         config.set("level", level);
@@ -513,6 +500,7 @@ public class Region {
         }
         config.set("chunks", serializedChunks);
 
+
         Map<Integer, Long> serializedCores = new HashMap<>();
         for (Entry<Faction, Date> entry : cores.entrySet()) {
             serializedCores.put(entry.getKey().getId(), entry.getValue().getTime());
@@ -530,6 +518,14 @@ public class Region {
             serializedClaims.put(entry.getKey().getId(), entry.getValue().getTime());
         }
         config.set("claims", serializedClaims);
+
+        List<Integer>serializedRegions = new ArrayList<>();
+        for (Region rg : adjacentRegions) {
+            if (!(adjacentRegions.isEmpty()) && !(rg.getName() == null)) {
+                serializedRegions.add(rg.getId());
+            }
+        }
+        config.set("neighbours", serializedRegions);
 
         config.set("mapFillColor", mapFillColor);
         config.set("mapLineColor", mapLineColor);

@@ -36,6 +36,12 @@ public class BalanceCache extends BukkitRunnable {
     FactionsXL plugin = FactionsXL.getInstance();
     Economy econ = plugin.getEconomyProvider();
 
+    public BalanceCache() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            balanceCache.put(p, econ.getBalance(p));
+        }
+    }
+
     @Override
     public void run() {
         balanceCache.clear();
@@ -45,6 +51,9 @@ public class BalanceCache extends BukkitRunnable {
     }
 
     public double getCachedBalance(Player p) {
+        if (balanceCache.get(p) == null) {  // If player is not in cache, add to cache
+            balanceCache.put(p, econ.getBalance(p));
+        }
         return balanceCache.get(p);
     }
 }
