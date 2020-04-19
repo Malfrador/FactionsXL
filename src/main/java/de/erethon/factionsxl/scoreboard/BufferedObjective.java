@@ -58,7 +58,7 @@ public class BufferedObjective {
         this.scoreboard = scoreboard;
         this.baseName = createBaseName();
 
-        current = scoreboard.registerNewObjective(getNextObjectiveName(), "dummy");
+        current = scoreboard.registerNewObjective(getNextObjectiveName(), "dummy", "f_objective");
     }
 
     private String createBaseName() {
@@ -123,11 +123,11 @@ public class BufferedObjective {
         List<Team> bufferTeams = new ArrayList<>();
 
         for (Map.Entry<Integer, String> entry : contents.entrySet()) {
-            if (entry.getValue().length() > 16) {
+            if (entry.getValue().length() > 32) {
                 Team team = scoreboard.registerNewTeam(getNextTeamName());
                 bufferTeams.add(team);
 
-                Iterator<String> split = Splitter.fixedLength(16).split(entry.getValue()).iterator();
+                Iterator<String> split = Splitter.fixedLength(32).split(entry.getValue()).iterator();
 
                 team.setPrefix(split.next());
                 String name = split.next();

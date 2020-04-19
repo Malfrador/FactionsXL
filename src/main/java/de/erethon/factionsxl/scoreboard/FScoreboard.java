@@ -131,7 +131,7 @@ public class FScoreboard {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (removed || defaultProviders.isEmpty() || !defaultProviders.contains(defaultProviders.get(currentProvider))) {
+                if (removed || defaultProviders == null || defaultProviders.size() < currentProvider || !defaultProviders.contains(defaultProviders.get(currentProvider))) {
                     cancel();
                     return;
                 }
