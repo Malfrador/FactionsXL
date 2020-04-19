@@ -46,6 +46,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class SeparatePeaceOffer extends PeaceOffer {
 
     FactionsXL plugin = FactionsXL.getInstance();
+    Boolean isOffer = false;
     Double cost = 0.00;
 
     public SeparatePeaceOffer(War war, LegalEntity demanding, LegalEntity target, WarDemand... demands) {
@@ -56,8 +57,9 @@ public class SeparatePeaceOffer extends PeaceOffer {
         this.demands = new ArrayList(Arrays.asList(demands));
     }
 
-    public SeparatePeaceOffer(Map<String, Object> args) {
-        //TODO: WarCache noch nicht geladen. WarCache kann nicht vor Fraktionen geladen werden. Fraktionen brauchen aber WarCache, um das hier zu laden.
+    public SeparatePeaceOffer(Map<String, Object> args, boolean isO) {
+        isOffer = isO;
+        //TODO: Braucht noch OFFER
         new BukkitRunnable() {
 
             @Override
@@ -65,6 +67,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
                 war =  FactionsXL.getInstance().getWarCache().getByDate((long) args.get("war"));
                 subject = plugin.getFactionCache().getById((int) args.get("subject"));
                 object = plugin.getFactionCache().getById((int) args.get("object"));
+                isOffer = (boolean) args.get("offer");
                 demands = (List<WarDemand>) args.get("demands");
                 expiration = (long) args.get("expiration");
             }
@@ -86,8 +89,15 @@ public class SeparatePeaceOffer extends PeaceOffer {
     public boolean canPay() {
         boolean canPay = true;
         for (WarDemand demand : demands) {
-            if (!demand.canPay(getObject())) {
-                canPay = false;
+            if (isOffer) {
+                if (!demand.canPay(getSubject())) {
+                    canPay = false;
+                }
+            }
+            if (!isOffer) {
+                if (!demand.canPay(getObject())) {
+                    canPay = false;
+                }
             }
         }
         return canPay;
@@ -103,7 +113,12 @@ public class SeparatePeaceOffer extends PeaceOffer {
 
     @Override
     public void confirm() {
-        demands.forEach(d -> d.pay(getSubject(), getObject()));
+        if (isOffer) {
+            demands.forEach(d -> d.pay(getObject(), getSubject()));
+        }
+        if (!isOffer) {
+            demands.forEach(d -> d.pay(getSubject(), getObject()));
+        }
         if (war.getAttacker().getFactions().contains(getObject())) {
             war.getAttacker().removeParticipant(getObject());
         }
@@ -111,7 +126,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
             war.getDefender().removeParticipant(getObject());
         }
         MessageUtil.broadcastMessage(" ");
-        MessageUtil.broadcastMessage("&aThe faction &e" + getObject().getName() + " &adecided to leave the war against &6" + getSubject().getName() + "&a!");
+        ParsingUtil.broadcastMessage(FMessage.WAR_ALLY_LEFT_WAR.getMessage(), getObject(), getSubject());
         MessageUtil.broadcastMessage(" ");
         // TODO: Might break after government update
         // TODO: Add time modifier
@@ -137,7 +152,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
         }
         if (!(add)) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cRequest already sent. They first need to accept or deny.");
+                MessageUtil.sendMessage(player,  FMessage.WAR_DEMAND_REQUEST_ALREADY_SENT.getMessage());
             }
         }
         if (add) {
@@ -153,7 +168,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
 
     @Override
     public ItemStack getButton(Player player) {
-        String title = ParsingUtil.parseMessage(player, "&f&lPeace request &8- &6" + getSubject().getName());
+        String title = ParsingUtil.parseMessage(player, FMessage.WAR_GUI_BUTTON.getMessage(), getSubject());
         return GUIButton.setDisplay(new ItemStack(Material.WHITE_BANNER), title);
     }
 
@@ -170,29 +185,46 @@ public class SeparatePeaceOffer extends PeaceOffer {
     @Override
     public void sendSubjectMessage() {
         Faction f = getSubject();
-        f.sendMessage("&8&m----------&r &f&lPeace request&r &8&m----------");
+        if (isOffer) {
+            f.sendMessage(FMessage.WAR_OFFER_CHAT_TITLE.getMessage());
+        }
+        else {
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_TITLE.getMessage());
+        }
         f.sendMessage(" ");
         for (Object d : demands) {
             f.sendMessage(d.toString());
         }
         f.sendMessage(" ");
-        f.sendMessage("&aPeace request sent!");
+        f.sendMessage(FMessage.WAR_DEMAND_CHAT_SENT.getMessage());
 
     }
 
     @Override
     public void sendObjectMessage() {
         Faction f = getObject();
-        f.sendMessage("&8&m----------&r &f&lPeace request&r &8&m----------");
-        f.sendMessage(" ");
-        f.sendMessage("&7&oAccepting this request will end the war immediately.");
-        f.sendMessage("&7&oBut you will need to pay the following to the demanding faction: ");
-        f.sendMessage("&6&lDemands&8&l:");
+        if (isOffer) {
+            f.sendMessage(FMessage.WAR_OFFER_CHAT_TITLE.getMessage(getSubject().getName()));
+            f.sendMessage(" ");
+            f.sendMessage(FMessage.WAR_OFFER_CHAT_EXPLANATION_1_SEPARATE.getMessage());
+            f.sendMessage(FMessage.WAR_OFFER_CHAT_EXPLANATION_2_SEPARATE.getMessage());
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_DEMANDS.getMessage());
+        } else {
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_TITLE.getMessage(getSubject().getName()));
+            f.sendMessage(" ");
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_EXPLANATION_1_SEPARATE.getMessage());
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_EXPLANATION_2_SEPARATE.getMessage());
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_DEMANDS.getMessage());
+        }
         for (Object d : demands) {
             f.sendMessage(d.toString());
         }
         f.sendMessage(" ");
 
+    }
+
+    public boolean isOffer() {
+        return isOffer;
     }
 
     public void purge() {
@@ -206,6 +238,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
         args.put("subject", getSubject().getId());
         args.put("object", getObject().getId());
         args.put("demands", demands);
+        args.put("offer", isOffer);
         args.put("expiration", expiration);
         return args;
     }

@@ -21,6 +21,7 @@ package de.erethon.factionsxl.chat;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.player.FPlayerCache;
@@ -54,7 +55,7 @@ public class ChatListener implements Listener {
             return;
         }
         if (!fPlayer.getData().getPublicChat() && fPlayer.getChatChannel() == ChatChannel.PUBLIC) {
-            player.sendMessage(ChatColor.GREEN + "Du hast den Public-Chat deaktiviert! Nutze /f togglepublic");
+            MessageUtil.sendMessage(player, FMessage.CHAT_PUBLIC_DISABLED.getMessage());
             event.setCancelled(true);
         }
 
@@ -88,9 +89,11 @@ public class ChatListener implements Listener {
                 }
             }
             MessageUtil.log("[FXL-Chat] [" + channel + "] " + player.getName() + ": " + event.getMessage());
-            for (Player team : Bukkit.getOnlinePlayers()) {
-                if (plugin.getFPlayerCache().getByPlayer(team).getData().getChatSpy()) {
-                    MessageUtil.sendMessage(team, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + channel + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + player.getName() + ": " + event.getMessage());
+            if (channel != ChatChannel.PUBLIC) {
+                for (Player team : Bukkit.getOnlinePlayers()) {
+                    if (plugin.getFPlayerCache().getByPlayer(team).getData().getChatSpy()) {
+                        MessageUtil.sendMessage(team, ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + channel + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY + player.getName() + ": " + event.getMessage());
+                    }
                 }
             }
         }

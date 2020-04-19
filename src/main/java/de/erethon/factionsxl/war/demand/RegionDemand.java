@@ -120,7 +120,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     }
 
     public void openSetupGUI(Player p, Faction enemy) {
-        gui = Bukkit.createInventory(this, 54, "§5Select Regions...");
+        gui = Bukkit.createInventory(this, 54, FMessage.WAR_DEMAND_REGION_TITLE.getMessage());
         Bukkit.getPluginManager().registerEvents(this, plugin);
         FPlayer fp =  plugin.getFPlayerCache().getByPlayer(p);
         Faction faction = fp.getFaction();
@@ -131,7 +131,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         e = enemy;
         ItemStack doneItem = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         ItemMeta doneMeta = doneItem.getItemMeta();
-        doneMeta.setDisplayName("§aDone.");
+        doneMeta.setDisplayName(FMessage.WAR_DEMAND_REGION_DONE.getMessage());
         doneItem.setItemMeta(doneMeta);
         int i = 0;
         while (i <= 7) {
@@ -147,7 +147,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
 
             lore.add(r.getName());
             if (!fp.getPeaceOffer().isOffer()) {
-                lore.add("§7Warscore§8: §5-" + getRegionWarscore(r, faction));
+                lore.add(FMessage.WAR_DEMAND_REGION_WARSCORE.getMessage(String.valueOf(getRegionWarscore(r, faction))));
             }
 
             guiMeta.setLore(lore);
@@ -169,12 +169,12 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         if (item == null) {
             return;
         }
-        if (item.getItemMeta().getDisplayName().contains("Done.")) {
+        if (item.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_REGION_DONE.getMessage())) {
             double cost = getDemandCost(faction);
             WarDemand war = (WarDemand) new RegionDemand(demandRegions, cost);
             FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
             FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
-            MessageUtil.sendMessage(player, "&aDemand added");
+            MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_REGION_SUCCESS.getMessage());
             FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).listWarDemands();
             return;
         }
@@ -183,11 +183,11 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
             if (r.getId() == ID) {
                 if (demandRegions.contains(r)) {
                     demandRegions.remove(r);
-                    MessageUtil.sendMessage(player, "&aRegion &e" + r.getName() + " &aremoved.");
+                    MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_REGION_REMOVED.getMessage(r.getName()));
                 }
                 else {
                     demandRegions.add(r);
-                    MessageUtil.sendMessage(player, "&aRegion &e" + r.getName() + " &aadded.");
+                    MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_REGION_ADDED.getMessage(r.getName()));
                 }
             }
         }
@@ -203,7 +203,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         for (Region r : demandRegions) {
             if (r.getCoreFactions().containsKey(r.getOwner())) {
                 r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, f.getLeader(), new Date(System.currentTimeMillis() + (FConfig.MONTH * 3) )));
-                r.getOwner().sendMessage("&aYou now have a &6RECONQUEST &aCasus Belli against " + f.getLeader() + "&a!");
+                r.getOwner().sendMessage(FMessage.WAR_DEMAND_REGION_CB_ADDED.getMessage(), f.getLeader());
             }
             ParsingUtil.broadcastMessage(FMessage.CMD_GIVE_REGION_SUCCESS.getMessage(), r.getOwner(), r.getName(), f.getLeader());
             r.setOwner((Faction) f.getLeader());
@@ -215,7 +215,7 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         for (Region r : demandRegions) {
             if (r.getCoreFactions().containsKey(r.getOwner())) {
                 r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, f, new Date(System.currentTimeMillis() + (FConfig.MONTH * 3) )));
-                r.getOwner().sendMessage("&aYou now have a &6RECONQUEST &aCasus Belli against " + f.getName() + "&a!");
+                r.getOwner().sendMessage(FMessage.WAR_DEMAND_REGION_CB_ADDED.getMessage(), f);
             }
             ParsingUtil.broadcastMessage(FMessage.CMD_GIVE_REGION_SUCCESS.getMessage(), r.getOwner(), r.getName(), f);
             r.setOwner(f);
@@ -236,12 +236,12 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
 
     @Override
     public String toString() {
-        StringBuilder list = new StringBuilder("&aRegions: ");
+        StringBuilder list = new StringBuilder(FMessage.WAR_DEMAND_REGION_REGIONS_CHAT.getMessage());
         for (Region r : getDemandRegions()) {
             list.append(ChatColor.YELLOW).append(r.getName()).append(ChatColor.DARK_GRAY).append(", ");
 
         }
-        list.append("&8(&7Total&8: &5" + getWarscoreCost() + "&8)");
+        list.append(FMessage.WAR_DEMAND_REGION_TOTAL_WARSCORE_CHAT.getMessage(String.valueOf(getWarscoreCost())));
         return list.toString();
     }
 

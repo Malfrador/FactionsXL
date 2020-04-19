@@ -59,7 +59,7 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     private FactionsXL plugin;
 
-    private Inventory gui = Bukkit.createInventory(this, 18, FMessage.WAR_DEMAND_CREATION_MENU_TITLE.getMessage());
+    private Inventory gui;
 
     private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_CREATION_MENU_LIST.getMessage());
     private ItemStack send = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_DEMAND_CREATION_MENU_SEND.getMessage());
@@ -68,6 +68,21 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     public WarDemandCreationGUI(FactionsXL plugin) {
         this.plugin = plugin;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void open(Player player) {
+        player.openInventory(gui);
+    }
+
+    public void open(Player player, Faction e, boolean isOffer) {
+        this.enemy = e;
+        if (isOffer)
+            gui = Bukkit.createInventory(this, 18, FMessage.WAR_DEMAND_CREATION_MENU_TITLE_OFFER.getMessage());
+        else {
+            gui = Bukkit.createInventory(this, 18, FMessage.WAR_DEMAND_CREATION_MENU_TITLE_DEMAND.getMessage());
+        }
         StandardizedGUI.addHeader(gui);
         gui.addItem(listDemands);
         PeaceOffer.getDemandTypes().forEach(t -> {
@@ -80,25 +95,15 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
         });
         ItemStack raidItem = new ItemStack(Material.GRASS_BLOCK);
         ItemMeta raidMeta = raidItem.getItemMeta();
-        raidMeta.setDisplayName("§aRegion");
+        raidMeta.setDisplayName(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage());
         raidItem.setItemMeta(raidMeta);
         gui.addItem(raidItem);
         gui.setItem(17, send);
         ItemStack delItem = new ItemStack(Material.BARRIER);
         ItemMeta delMeta = delItem.getItemMeta();
-        delMeta.setDisplayName("§cClear demands.");
+        delMeta.setDisplayName(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage());
         delItem.setItemMeta(delMeta);
         gui.setItem(15, delItem);
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
-
-    @Override
-    public void open(Player player) {
-        player.openInventory(gui);
-    }
-
-    public void open(Player player, Faction e) {
-        this.enemy = e;
         player.openInventory(gui);
     }
 
@@ -128,10 +133,10 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.listWarDemands();
         } else if (send.equals(button)) {
             player.getPeaceOffer().send();
-        } else if (button.getItemMeta().getDisplayName().contains("Clear demands")) {
+        } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage())) {
             player.getPeaceOffer().getDemands().clear();
-            MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
-        } else if (button.getItemMeta().getDisplayName().contains("Region")) {
+            MessageUtil.sendMessage(event.getWhoClicked(), FMessage.WAR_DEMAND_CREATION_MENU_CLEARED.getMessage());
+        } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage())) {
             if (player.getPeaceOffer().isOffer()) {
                 new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), plugin.getFactionCache().getByFPlayer(player));
             }

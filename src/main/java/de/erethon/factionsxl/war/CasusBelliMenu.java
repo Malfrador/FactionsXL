@@ -122,9 +122,8 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
             ParsingUtil.sendMessage(player, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), object);
             return;
         }
-        // TO DO!
-        if (object.isInWar()) {
-            player.sendMessage("&cKriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
+        if (object.isInWar(faction)) {
+            MessageUtil.sendMessage(player,"&cDu bist bereits in diesem Krieg.");
             return;
         }
 
@@ -188,7 +187,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
         }
         player.closeInventory();
         if (casus == null) {
-            MessageUtil.sendMessage(player, "&cInvalid CB. Please contact an Admin if you think this is an error.");
+            MessageUtil.sendMessage(player, FMessage.WAR_CB_INVALID.getMessage());
             return;
         }
         new CallToArmsMenu(subject, object, casus).open(player);

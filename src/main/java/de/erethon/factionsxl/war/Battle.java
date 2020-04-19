@@ -22,6 +22,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import org.bukkit.entity.Player;
@@ -99,13 +100,13 @@ public class Battle {
             if (w.getFactions().contains(owner)) {
                 if (r.getInfluence() + config.getInfluenceFromKill() <= 100) {
                     r.setInfluence(r.getInfluence() + config.getInfluenceFromKill());
-                    MessageUtil.sendActionBarMessage(winner, "&aRegion verteidigt! &8- &7Einfluss&8: &a+" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
                 }
             }
             else {
                 if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
                     r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
-                    MessageUtil.sendActionBarMessage(winner, "&aRegion geschwächt! &8- &7Einfluss&8: &c-" + config.getInfluenceFromKill() + "&7(" + r.getInfluence() + "&7)");
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
                 }
             }
         }

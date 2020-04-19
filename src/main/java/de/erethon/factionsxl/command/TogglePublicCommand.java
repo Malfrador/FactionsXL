@@ -44,11 +44,11 @@ public class TogglePublicCommand extends FCommand {
     public void onExecute(String[] args, CommandSender sender) {
         if (!getFSender(sender).getData().getPublicChat()) {
             getFSender(sender).getData().setPublicChat(true);
-            sender.sendMessage(ChatColor.GREEN + "Du empfängst nun wieder den Public-Chat.");
+            sender.sendMessage(FMessage.CMD_TOGGLEPUBLIC_ON.getMessage());
         }
         else {
             getFSender(sender).getData().setPublicChat(false);
-            sender.sendMessage(ChatColor.GREEN + "Du empfängst den Public-Chat nun nicht mehr.");
+            sender.sendMessage(FMessage.CMD_TOGGLEPUBLIC_OFF.getMessage());
         }
     }
 

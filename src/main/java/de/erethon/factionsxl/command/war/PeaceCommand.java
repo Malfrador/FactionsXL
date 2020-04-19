@@ -47,16 +47,16 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Daniel Saukel
  */
-public class PeaceCommand extends FCommand implements Listener, InventoryHolder {
+public class PeaceCommand extends FCommand implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
     WarCache wars = plugin.getWarCache();
 
-    private Inventory gui = Bukkit.createInventory(this, 9, FMessage.CMD_PEACE_TITLE.getMessage());
-    private ItemStack create = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_CREATE.getMessage());
-    private ItemStack listReceived = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
-    private ItemStack listSent = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_SENT.getMessage());
+    //private Inventory gui = Bukkit.createInventory(this, 9, FMessage.CMD_PEACE_TITLE.getMessage());
+    //private ItemStack create = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_CREATE.getMessage());
+    //private ItemStack listReceived = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
+    //private ItemStack listSent = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_SENT.getMessage());
 
     public PeaceCommand() {
         setCommand("peace");
@@ -66,7 +66,7 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
         setPermission(FPermission.WAR.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        /**Bukkit.getPluginManager().registerEvents(this, plugin);
         gui.setContents(new ItemStack[]{
                 GUIButton.PLACEHOLDER,
                 GUIButton.PLACEHOLDER,
@@ -77,7 +77,7 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
                 GUIButton.PLACEHOLDER,
                 GUIButton.PLACEHOLDER,
                 GUIButton.PLACEHOLDER
-        });
+        });**/
     }
 
     @Override
@@ -99,10 +99,15 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
-        player.openInventory(gui);
+        Set<Faction> ownFactions = factions.getByLeader(player);
+        Set<WarParty> parties = new HashSet<>();
+        ownFactions.forEach(fc -> f.getWarParties().forEach(p -> parties.add(p.getEnemy())));
+        new WarDemandWarPartyGUI(plugin, ownFactions, parties.toArray(new WarParty[]{})).open(player);
+        MessageUtil.sendMessage(player, "&6&o&lRIGHT CLICK&8: &f&lDemand");
+        MessageUtil.sendMessage(player, "&6&o&lLEFT CLICK&8: &f&lOffer");
     }
 
-    @EventHandler
+    /**@EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
@@ -133,5 +138,5 @@ public class PeaceCommand extends FCommand implements Listener, InventoryHolder 
     @Override
     public Inventory getInventory() {
         return gui;
-    }
+    }**/
 }

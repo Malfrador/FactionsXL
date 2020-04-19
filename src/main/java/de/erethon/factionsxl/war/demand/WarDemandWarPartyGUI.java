@@ -66,17 +66,18 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
             WarParty demanding = war.getEnemy(offerTarget);
             if (right) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, demanding, offerTarget));
-                MessageUtil.sendMessage(whoClicked, "&a&lMake your demands!");
+                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_DEMANDS.getMessage());
+                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, false);
             }
             if (left) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new FinalPeaceOffer(war, true, demanding, offerTarget));
-                MessageUtil.sendMessage(whoClicked, "&a&lMake your offer!");
+                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_OFFER.getMessage());
+                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, true);
             }
         } else {
             War war = wars.getUnsafe(buttonFaction);
             fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));
         }
-        wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction);
         HandlerList.unregisterAll(this);
     }
 

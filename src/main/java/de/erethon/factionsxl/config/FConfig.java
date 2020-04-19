@@ -127,6 +127,7 @@ public class FConfig extends DREConfig {
     private int maximumKillPoints = 50;
     private int influenceFromKill = 2;
     private double exhaustionPerCycle = 0.001;
+    private double exhaustionWhenLoosing = 0.002;
 
     // Power etc.
     private int maxPower = 100;
@@ -665,6 +666,14 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * war exhaustion per cycle when loosing the war
+     */
+    public double getExhaustionLoosing() {
+        return exhaustionWhenLoosing;
+    }
+
+    /**
+     * @return
      * stability needed to declare independence for vassals
      */
     public int getStabilityIndependenceVassal() {
@@ -892,40 +901,44 @@ public class FConfig extends DREConfig {
             config.set("saturationPerDay", saturationPerDay);
         }
 
-        if (!config.contains("influencePerDay")) {
-            config.set("influencePerDay", influencePerDay);
+        if (!config.contains("war.influencePerDay")) {
+            config.set("war.influencePerDay", influencePerDay);
         }
 
-        if (!config.contains("minimumStability")) {
-            config.set("minimumStability", stabilityIndependence);
+        if (!config.contains("war.minimumStability")) {
+            config.set("war.minimumStability", stabilityIndependence);
         }
 
-        if (!config.contains("minimumStabilityVassal")) {
-            config.set("minimumStabilityVassal", stabilityIndependenceVassal);
+        if (!config.contains("war.minimumStabilityVassal")) {
+            config.set("war.minimumStabilityVassal", stabilityIndependenceVassal);
         }
 
-        if (!config.contains("influenceFromKill")) {
-            config.set("influenceFromKill", influenceFromKill);
+        if (!config.contains("war.influenceFromKill")) {
+            config.set("war.influenceFromKill", influenceFromKill);
         }
 
-        if (!config.contains("influenceNeededForOccupy")) {
-            config.set("influenceNeededForOccupy", influenceNeeded);
+        if (!config.contains("war.influenceNeededForOccupy")) {
+            config.set("war.influenceNeededForOccupy", influenceNeeded);
         }
 
-        if (!config.contains("exhaustionPerCycle")) {
-            config.set("exhaustionPerCycle", exhaustionPerCycle);
+        if (!config.contains("war.exhaustionPerCycle")) {
+            config.set("war.exhaustionPerCycle", exhaustionPerCycle);
+        }
+
+        if (!config.contains("war.exhaustionWhenLoosing")) {
+            config.set("war.exhaustionWhenLoosing", exhaustionWhenLoosing);
         }
 
         if (!config.contains("coringPerDay")) {
             config.set("coringPerDay", coringPerDay);
         }
 
-        if (!config.contains("truceTime")) {
-            config.set("truceTime", truceTime);
+        if (!config.contains("war.truceTime")) {
+            config.set("war.truceTime", truceTime);
         }
 
-        if (!config.contains("maxKillPoints")) {
-            config.set("maxKillPoints", maximumKillPoints);
+        if (!config.contains("war.maxKillPoints")) {
+            config.set("war.maxKillPoints", maximumKillPoints);
         }
 
         if (!config.contains("claimTimeout")) {
@@ -1031,12 +1044,12 @@ public class FConfig extends DREConfig {
             config.set("capitalProtectionEnabled", capitalProtectionEnabled);
         }
 
-        if (!config.contains("warExplosionRestorationTime")) {
-            config.set("warExplosionRestorationTime", warExplosionRestorationTime);
+        if (!config.contains("war.warExplosionRestorationTime")) {
+            config.set("war.warExplosionRestorationTime", warExplosionRestorationTime);
         }
 
-        if (!config.contains("casusBelli.liberation")) {
-            config.set("casusBelli.liberation", cbLiberationExp);
+        if (!config.contains("war.casusBelli.liberation")) {
+            config.set("war.casusBelli.liberation", cbLiberationExp);
         }
 
         if (!config.contains("maxPower")) {
@@ -1299,32 +1312,36 @@ public class FConfig extends DREConfig {
             capitalProtectionEnabled = config.getBoolean("capitalProtectionEnabled");
         }
 
-        if (config.contains("warExplosionRestorationTime")) {
-            warExplosionRestorationTime = config.getDouble("warExplosionRestorationTime");
+        if (config.contains("war.warExplosionRestorationTime")) {
+            warExplosionRestorationTime = config.getDouble("war.warExplosionRestorationTime");
         }
 
-        if (config.contains("casusBelli.liberation")) {
-            cbLiberationExp = config.getLong("casusBelli.liberation");
+        if (config.contains("war.casusBelli.liberation")) {
+            cbLiberationExp = config.getLong("war.casusBelli.liberation");
         }
 
-        if (config.contains("maxKillPoints")) {
-            maximumKillPoints = config.getInt("maxKillPoints");
+        if (config.contains("war.maxKillPoints")) {
+            maximumKillPoints = config.getInt("war.maxKillPoints");
         }
 
-        if (config.contains("minimumStability")) {
-            stabilityIndependence = config.getInt("minimumStability");
+        if (config.contains("war.minimumStability")) {
+            stabilityIndependence = config.getInt("war.minimumStability");
         }
 
-        if (config.contains("minimumStabilityVassal")) {
-            stabilityIndependenceVassal = config.getInt("minimumStabilityVassal");
+        if (config.contains("war.minimumStabilityVassal")) {
+            stabilityIndependenceVassal = config.getInt("war.minimumStabilityVassal");
         }
 
-        if (config.contains("influenceFromKill")) {
-            influenceFromKill = config.getInt("influenceFromKill");
+        if (config.contains("war.influenceFromKill")) {
+            influenceFromKill = config.getInt("war.influenceFromKill");
         }
 
-        if (config.contains("exhaustionPerCycle")) {
-            exhaustionPerCycle = config.getDouble("exhaustionPerCycle");
+        if (config.contains("war.exhaustionPerCycle")) {
+            exhaustionPerCycle = config.getDouble("war.exhaustionPerCycle");
+        }
+
+        if (config.contains("war.exhaustionWhenLoosing")) {
+            exhaustionWhenLoosing = config.getDouble("war.exhaustionWhenLoosing");
         }
 
         if (config.contains("maxPower")) {
@@ -1355,12 +1372,12 @@ public class FConfig extends DREConfig {
             influencePerDay = config.getDouble("influencePerDay");
         }
 
-        if (config.contains("influenceNeededForOccupy")) {
-            influenceNeeded = config.getDouble("influenceNeededForOccupy");
+        if (config.contains("war.influenceNeededForOccupy")) {
+            influenceNeeded = config.getDouble("war.influenceNeededForOccupy");
         }
 
-        if (config.contains("truceTime")) {
-            truceTime = config.getLong("truceTime");
+        if (config.contains("war.truceTime")) {
+            truceTime = config.getLong("war.truceTime");
         }
 
         if (config.contains("claimTimeout")) {

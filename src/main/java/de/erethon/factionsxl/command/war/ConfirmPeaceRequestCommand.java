@@ -54,7 +54,7 @@ public class ConfirmPeaceRequestCommand extends FCommand {
         setCommand("confirmPeace");
         setMinArgs(1);
         setMaxArgs(5);
-        setHelp("Internal command to confirm a peace request");
+        setHelp(FMessage.CMD_PEACE_CONFIRM_HELP.getMessage());
         setPermission(FPermission.WAR.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -75,10 +75,10 @@ public class ConfirmPeaceRequestCommand extends FCommand {
         }
         War war = plugin.getWarCache().getByDate(Long.parseLong(args[1]));
         if (!(war.getAttacker().getFactions().contains(faction)) && !(war.getDefender().getFactions().contains(faction))) {
-            MessageUtil.sendMessage(sender, "&cYou are not participating in this war.");
+            MessageUtil.sendMessage(sender, FMessage.CMD_PEACE_CONFIRM_NOT_IN_WAR.getMessage());
             return;
         }
-        if (args.length > 3) {
+        if (args.length == 4) {
             Faction subjectFaction = plugin.getFactionCache().getByName(args[4]);
 
             Faction objectFaction = plugin.getFactionCache().getByName(args[3]);
@@ -109,9 +109,9 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                     break;
                 }
             }
-            if (args[2].equals("-deny") && matching.canPay() && !matching.isOffer()) {
-                MessageUtil.broadcastMessage("&aDie Fraktion &e" + objectFaction + "&a hat ein Friedensangebot abgelehnt. Die Kriegsermüdung ist leicht gestiegen.");
-                 objectFaction.setExhaustion(objectFaction.getExhaustion() + 5);
+            if (args[2].equals("-deny")) {
+                ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_FACTION.getMessage(), objectFaction);
+                return;
 
             }
             if (matching != null) {
@@ -119,7 +119,7 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                 return;
             }
 
-            MessageUtil.broadcastMessage("&aDie beiden Fraktionen &e" + subjectFaction.getName() + "&a und &e" + objectFaction.getName() + "&a haben ihren Krieg beendet.");
+            ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_SUCCESS.getMessage(), objectFaction, subjectFaction);
 
         } else {
             Set<WarParty> warParties = faction.getWarParties();
@@ -131,14 +131,14 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                 }
             }
             if (wp == null) {
-                MessageUtil.sendMessage(sender, "&cYou are not the leader of this war.");
+                MessageUtil.sendMessage(sender, FMessage.CMD_PEACE_CONFIRM_NOT_LEADER.getMessage());
                 return;
             }
             Collection<PeaceOffer> requests = null;
             try {
                 requests = wp.getRequests(PeaceOffer.class);
             } catch (NullPointerException e) {
-                MessageUtil.sendMessage(player, "&cNo peace requests or peace request is empty.");
+                MessageUtil.sendMessage(player, FMessage.CMD_PEACE_CONFIRM_EMPTY.getMessage());
             }
             if (requests == null) {
                 return;
@@ -150,14 +150,17 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                     break;
                 }
             }
-            if (args[2].equals("-deny") && peace.canPay() && !peace.isOffer()) {
-                MessageUtil.broadcastMessage("&aDie Kriegspartei &e" + wp.getName() + "&a hat ein Friedensangebot abgelehnt. Ihre Kriegsermüdung ist gestiegen.");
-                for (Faction f : wp.getFactions()) {
-                    f.setExhaustion(f.getExhaustion() + 5);
+            if (args[2].equals("-deny")) {
+                ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_WARPARTY.getMessage(), wp.getName());
+                if (peace.canPay() && !peace.isOffer()) {
+                    for (Faction f : wp.getFactions()) {
+                        f.setExhaustion(f.getExhaustion() + 2);
+                    }
                 }
+                return;
             }
             if (!peace.canPay()) {
-                MessageUtil.sendMessage(player, "&cYou or the other faction can not afford this.");
+                MessageUtil.sendMessage(player, FMessage.CMD_PEACE_CONFIRM_CANTAFFORD.getMessage());
                 return;
             }
             peace.confirm();

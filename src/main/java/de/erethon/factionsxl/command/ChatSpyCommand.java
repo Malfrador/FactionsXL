@@ -34,7 +34,7 @@ public class ChatSpyCommand extends FCommand {
         setAliases("spy");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp(FMessage.HELP_CHAT.getMessage());
+        setHelp(FMessage.CMD_CHATSPY_HELP.getMessage());
         setPermission("fxl.chat.spycommand");
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -52,11 +52,11 @@ public class ChatSpyCommand extends FCommand {
         fplayer = plugin.getFPlayerCache().getByPlayer(player);
         if (fplayer.getData().getChatSpy()) {
             fplayer.getData().setChatSpy(false);
-            MessageUtil.sendMessage(player, "&cChat spy disabled.");
+            MessageUtil.sendMessage(player, FMessage.CMD_CHATSPY_ON.getMessage());
         }
         else {
             fplayer.getData().setChatSpy(true);
-            MessageUtil.sendMessage(player, "&aChat spy enabled.");
+            MessageUtil.sendMessage(player, FMessage.CMD_CHATSPY_OFF.getMessage());
         }
     }
 

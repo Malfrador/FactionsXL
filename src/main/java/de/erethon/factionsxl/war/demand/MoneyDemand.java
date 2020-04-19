@@ -81,7 +81,7 @@ public class MoneyDemand implements WarDemand {
             public void onClickContinue(Player player, BigDecimal amount) {
                 WarDemand war = (WarDemand) new MoneyDemand(amount);
                 FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(war);
-                MessageUtil.sendMessage(player, "&aDemand added.");
+                MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_MONEY_ADDED.getMessage());
                 FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).listWarDemands();
                 FactionsXL.getInstance().getWarCache().getWarDemandCreationMenu().open(player);
             }
@@ -110,11 +110,17 @@ public class MoneyDemand implements WarDemand {
 
     @Override
     public boolean canPay(WarParty wp) {
+        if (amount.doubleValue() < 0) {
+            return false;
+        }
         return wp.getLeader().getAccount().getBalance() >= amount.doubleValue();
     }
 
     @Override
     public boolean canPay(Faction f) {
+        if (amount.doubleValue() < 0) {
+            return false;
+        }
         return f.getAccount().getBalance() >= amount.doubleValue();
     }
 
@@ -131,7 +137,7 @@ public class MoneyDemand implements WarDemand {
 
     @Override
     public String toString() {
-        return "&6Money&8: &e" + amount + " &8(&7Warscore&8: &5" + getWarscoreCost() + "&8)";
+        return FMessage.WAR_DEMAND_MONEY_CHAT.getMessage(String.valueOf(amount), String.valueOf(getWarscoreCost()));
     }
 
     @Override

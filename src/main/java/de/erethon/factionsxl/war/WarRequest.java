@@ -30,6 +30,7 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.StandardizedGUI;
+import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -57,7 +58,6 @@ public class WarRequest extends Request {
         object = invited;
         expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
         object.getRequests().add(this);
-        MessageUtil.broadcastMessage("contructor. " + WarParty.getName());
     }
 
     public WarRequest (Map<String, Object> args) {
@@ -95,14 +95,14 @@ public class WarRequest extends Request {
     public void confirm() {
         if (getObject().getRelation(getSubject()) == null) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cThey first need to accept the alliance.");
+                MessageUtil.sendMessage(player, FMessage.WAR_REQUEST_NO_ALLIANCE.getMessage());
             }
             return;
         }
         MessageUtil.broadcastMessage(getObject().getRelation(getSubject()).getFormatted());
         if (!(getObject().getRelation(getSubject()) == Relation.ALLIANCE)) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cThey first need to accept the alliance.");
+                MessageUtil.sendMessage(player, FMessage.WAR_REQUEST_NO_ALLIANCE.getMessage());
             }
             return;
         }
@@ -121,13 +121,13 @@ public class WarRequest extends Request {
         }
 
         object.getRequests().remove(this);
-        MessageUtil.broadcastMessage("&aThe faction &e" + getObject().getName() + "&a joined the war against &e" + WP.getEnemy().getName() + "&a!");
+        ParsingUtil.broadcastMessage(FMessage.WAR_REQUEST_WAR_JOINED.getMessage(), getObject(), WP.getEnemy().getLeader());
         purge();
     }
 
     @Override
     public ItemStack getButton(Player player) {
-        return GUIButton.setDisplay(StandardizedGUI.MAILBOX, "War Invite");
+        return GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_REQUEST_TITLE.getMessage());
     }
 
     @Override
@@ -143,7 +143,7 @@ public class WarRequest extends Request {
     @Override
     public void sendSubjectMessage() {
         Faction f = getSubject();
-        f.sendMessage("&aYou invited &d" + getObject().getName() + "&a to join the war against &e" + WP.getEnemy().getName() + "&a!");
+        f.sendMessage(FMessage.WAR_REQUEST_INVITE.getMessage(), getObject(), WP.getEnemy().getLeader());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class WarRequest extends Request {
     @Override
     public void sendObjectMessage() {
         Faction f = getObject();
-        f.sendMessage("&aYou have been invited by &d" + getSubject().getName() + "&a to join the war against &e" + WP.getEnemy().getName() + "&a!");
+        f.sendMessage(FMessage.WAR_REQUEST_RECEIVED.getMessage(), getSubject(), WP.getEnemy().getLeader());
     }
 
     @Override

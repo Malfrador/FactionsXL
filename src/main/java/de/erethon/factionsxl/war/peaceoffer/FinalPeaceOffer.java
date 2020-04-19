@@ -110,14 +110,13 @@ public class FinalPeaceOffer extends PeaceOffer {
     public void confirm() {
         if (isOffer) {
             demands.forEach(d -> d.pay(getObject(), getSubject()));
-            Bukkit.broadcastMessage(getObject() + " -> " + getSubject());
         }
         if (!isOffer) {
             demands.forEach(d -> d.pay(getSubject(), getObject()));
         }
         war.end();
         MessageUtil.broadcastMessage(" ");
-        MessageUtil.broadcastMessage("&aThe war between &6" + getObject().getName() + " &aand &6" + getSubject().getName() + "&a ended!");
+        ParsingUtil.broadcastMessage(FMessage.WAR_ENDED.getMessage(), getObject().getLeader(), getSubject().getLeader());
         MessageUtil.broadcastMessage(" ");
             // TODO: Might break after government update
             // TODO: Add time modifier
@@ -129,15 +128,15 @@ public class FinalPeaceOffer extends PeaceOffer {
         if (!isOffer) {
             if (getCost() > getSubject().getPoints()) {
                 for (Player player : subject.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                    MessageUtil.sendMessage(player, "&cYou do not have the Warscore required to make these demands!");
-                    MessageUtil.sendMessage(player, "&7Your Warscore&8: " + getSubject().getPoints() + " &7Needed&8: " + getCost());
+                    MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_NO_WARSCORE.getMessage());
+                    MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_WARSCORE_NEEDED.getMessage( String.valueOf(getSubject().getPoints()), String.valueOf(getCost())));
                 }
                 return;
             }
         }
         if (!canPay()) {
             for (Player player : subject.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cYour faction can not afford this!");
+                MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_CANT_AFFORD.getMessage());
             }
             return;
         }
@@ -161,7 +160,7 @@ public class FinalPeaceOffer extends PeaceOffer {
         }
         if (!(add)) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player, "&cRequest already sent. They first need to accept or deny.");
+                MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_REQUEST_ALREADY_SENT.getMessage());
             }
         }
         if (add) {
@@ -189,18 +188,18 @@ public class FinalPeaceOffer extends PeaceOffer {
     public void sendSubjectMessage() {
         for (Faction f : getSubject().getFactions()) {
             if (isOffer) {
-                f.sendMessage("&8&m----------&r &f&lPeace offer&r &8&m----------");
+                f.sendMessage(FMessage.WAR_OFFER_CHAT_TITLE.getMessage(getSubject().getName()));
             }
             else {
-                f.sendMessage("&8&m----------&r &f&lPeace demand&r &8&m----------");
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_TITLE.getMessage(getSubject().getName()));
             }
             f.sendMessage(" ");
             for (Object d : demands) {
                 f.sendMessage(d.toString());
             }
-            f.sendMessage("&7Total Warscore&8: &5" + getCost() + "&8/&6" + getSubject().getPoints());
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_TOTAL_WARSCORE.getMessage(String.valueOf(getCost()), String.valueOf(getSubject().getPoints())));
             f.sendMessage(" ");
-            f.sendMessage("&aPeace request sent!");
+            f.sendMessage(FMessage.WAR_DEMAND_CHAT_SENT.getMessage());
         }
     }
 
@@ -208,18 +207,18 @@ public class FinalPeaceOffer extends PeaceOffer {
     public void sendObjectMessage() {
         for (Faction f : getObject().getFactions()) {
             if (isOffer) {
-                f.sendMessage("&8&m----------&r &f&lPeace offer&r &8&m----------");
+                f.sendMessage(FMessage.WAR_OFFER_CHAT_TITLE.getMessage(getSubject().getName()));
                 f.sendMessage(" ");
-                f.sendMessage("&7&oAccepting this request will end the war immediately.");
-                f.sendMessage("&7&oand you will get the following from the demanding faction: ");
-                f.sendMessage("&6&lOffers&8&l:");
+                f.sendMessage(FMessage.WAR_OFFER_CHAT_EXPLANATION_1.getMessage());
+                f.sendMessage(FMessage.WAR_OFFER_CHAT_EXPLANATION_2.getMessage());
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_DEMANDS.getMessage());
             }
             else {
-                f.sendMessage("&8&m----------&r &f&lPeace demand&r &8&m----------");
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_TITLE.getMessage(getSubject().getName()));
                 f.sendMessage(" ");
-                f.sendMessage("&7&oAccepting this request will end the war immediately.");
-                f.sendMessage("&7&oBut you will need to pay the following to the demanding faction: ");
-                f.sendMessage("&6&lDemands&8&l:");
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_EXPLANATION_1.getMessage());
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_EXPLANATION_2.getMessage());
+                f.sendMessage(FMessage.WAR_DEMAND_CHAT_DEMANDS.getMessage());
             }
             for (Object d : demands) {
                 f.sendMessage(d.toString());
@@ -230,7 +229,7 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public ItemStack getButton(Player player) {
-        String title = ParsingUtil.parseMessage(player, "&f&lPeace request &8- &6" + getSubject().getName());
+        String title = ParsingUtil.parseMessage(player, FMessage.WAR_GUI_BUTTON.getMessage(), getSubject());
         return GUIButton.setDisplay(new ItemStack(Material.WHITE_BANNER), title);
     }
 
@@ -243,7 +242,7 @@ public class FinalPeaceOffer extends PeaceOffer {
     }
 
     public void purge() {
-        // should remove the request. Does not persist restarts anyway.
+        // should remove the request. Does not persist restarts anyways.
     }
 
     public boolean isOffer() {

@@ -159,7 +159,7 @@ public class CallToArmsMenu implements Listener {
 
             Faction f = plugin.getFactionCache().getByName(name);
             invitedAttackers.add(f);
-            MessageUtil.sendMessage(event.getWhoClicked(), "&7Added &6" + button.getItemMeta().getDisplayName() );
+            MessageUtil.sendMessage(event.getWhoClicked(), FMessage.WAR_CALL_TO_ARMS_ADDED_FACTION.getMessage(button.getItemMeta().getDisplayName()));
             MessageUtil.sendMessage(event.getWhoClicked(), attackerCandidates.toString());
             gui.removeButton2(button);
             gui.addButton1(button);
@@ -173,7 +173,7 @@ public class CallToArmsMenu implements Listener {
             String name = ChatColor.stripColor(button.getItemMeta().getDisplayName());
             Faction f = plugin.getFactionCache().getByName(name);
             invitedAttackers.remove(f);
-            MessageUtil.sendMessage(event.getWhoClicked(), "&7Removed &6" + button.getItemMeta().getDisplayName() );
+            MessageUtil.sendMessage(event.getWhoClicked(), FMessage.WAR_CALL_TO_ARMS_REMOVED_FACTION.getMessage(button.getItemMeta().getDisplayName()));
 
             lore.remove(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage());
             lore.add(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage());

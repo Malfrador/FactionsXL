@@ -123,8 +123,9 @@ public class WorldCommand extends FCommand {
             listNeighbours(player, region);
 
         } else if (sub.equalsIgnoreCase("calcAllAdjacent") || sub.equalsIgnoreCase("calcAll")) {
-            calcAllNeighbours();
-            MessageUtil.sendMessage(player, "&aCalculating &a&lall&r &aneighbours started. See console for progress.");
+            //calcAllNeighbours();
+            //MessageUtil.sendMessage(player, "&aCalculating &a&lall&r &aneighbours started. See console for progress.");
+            MessageUtil.sendMessage(player, "&cThis feature is currently disabled.");
 
         } else {
             MessageUtil.sendMessage(player, "&6/f &aw&8orld &5- &7Help");

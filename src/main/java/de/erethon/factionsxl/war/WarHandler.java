@@ -22,9 +22,11 @@ package de.erethon.factionsxl.war;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
+import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -39,17 +41,30 @@ public class WarHandler {
                 w.setTruce(false);
                 Faction attacker = (Faction) w.getAttacker().getLeader();
                 Faction defender = (Faction) w.getDefender().getLeader();
-                MessageUtil.broadcastMessage(ChatColor.GREEN + "Der Waffenstillstand zwischen " + ChatColor.YELLOW + attacker.getName() + ChatColor.GREEN + " und " + ChatColor.YELLOW + defender.getName() + ChatColor.GREEN + " ist nun vorbei.");
+                ParsingUtil.broadcastMessage(FMessage.WAR_TRUCE_ENDED.getMessage(), attacker, defender);
             }
         }
     }
     public void calculateWarStatus() {
         for (War w : plugin.getWarCache().getWars()) {
             for (Faction f : w.getAttacker().getFactions()) {
+                if (w.getAttacker().getPoints() < 0) {
+                    f.setExhaustion(f.getExhaustion() + config.getExhaustionLoosing());
+                    return;
+                }
                 f.setExhaustion(f.getExhaustion() + config.getExhaustion());
             }
             for (Faction f : w.getDefender().getFactions()) {
+                if (w.getDefender().getPoints() < 0) {
+                    f.setExhaustion(f.getExhaustion() + config.getExhaustionLoosing());
+                    return;
+                }
                 f.setExhaustion(f.getExhaustion() + config.getExhaustion());
+            }
+        }
+        for (Faction f : plugin.getFactionCache().getActive()) {
+            if (!f.isInWar() && f.getExhaustion() >= 0) {
+                f.setExhaustion(f.getExhaustion() - config.getExhaustion());
             }
         }
     }

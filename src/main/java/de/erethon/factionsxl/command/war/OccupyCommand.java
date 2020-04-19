@@ -35,12 +35,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.tokens.FlowMappingEndToken;
 
 import java.util.Calendar;
 import java.util.Set;
 
 import static de.erethon.factionsxl.war.CasusBelli.*;
-import static de.erethon.factionsxl.war.CasusBelli.Type.RAID;
+import static de.erethon.factionsxl.war.CasusBelli.Type.*;
 
 /**
  * @author Daniel Saukel
@@ -55,7 +56,7 @@ public class OccupyCommand extends FCommand {
         setAliases("a", "annex", "o");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp("Annex land for your faction. Can only be used with influence below 10.");
+        setHelp(FMessage.WAR_OCCUPY_HELP.getMessage());
         setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -84,12 +85,12 @@ public class OccupyCommand extends FCommand {
             return;
         }
         if ( !(faction.isInWar() && annexFrom.isInWar()) ) {
-            MessageUtil.sendMessage(player, "&cYou and the owner of this region are not at war!");
+            MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_AT_WAR.getMessage());
             return;
         }
 
         if (annexFrom == faction) {
-            ParsingUtil.sendMessage(sender, "&cYou already occupied this region.");
+            ParsingUtil.sendMessage(sender, FMessage.WAR_OCCUPY_ALREADY_OCCUPIED.getMessage());
             return;
         }
 
@@ -101,12 +102,12 @@ public class OccupyCommand extends FCommand {
             }
         }
         if (war == null) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_IN_WAR.getMessage());
+            ParsingUtil.sendMessage(sender, FMessage.WAR_OCCUPY_NOT_AT_WAR.getMessage());
             return;
         }
 
         if (war.getCasusBelli().getType() == RAID) {
-            ParsingUtil.sendMessage(sender, "&cYou can not occupy regions during a &6RAID&c!");
+            ParsingUtil.sendMessage(sender, FMessage.WAR_OCCUPY_RAID.getMessage());
             return;
         }
 
@@ -129,15 +130,19 @@ public class OccupyCommand extends FCommand {
                     faction.getAccount().withdraw(price);
                     for (WarParty wp : faction.getWarParties()) {
                         if (wp.getFactions().contains(faction)) {
-                            if (region.getCoreFactions().containsKey(region.getOwner())) {
+                            if (region.getCoreFactions().containsKey(region.getOwner()) && wp.getWar().getCasusBelli().getType() == (RECONQUEST)) {
                                 wp.addPoints(20);
                                 wp.getEnemy().removePoints(20);
                             }
-                            else {
-                                wp.addPoints(10);
-                                wp.getEnemy().removePoints(10);
+                            else if ( (wp.getWar().getCasusBelli().getType() == (CONQUEST)) && wp.getWar().getCasusBelli().getTarget() == region.getOwner() ) {
+                                wp.addPoints(15);
+                                wp.getEnemy().removePoints(15);
                             }
-                            faction.sendMessage("&7Warscore&8: &a" + wp.getPoints() + "&8:&c" + wp.getEnemy().getPoints());
+                            else {
+                                wp.addPoints(5);
+                                wp.getEnemy().removePoints(5);
+                            }
+                            faction.sendMessage(FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
                         }
                     }
                     region.setOccupant(faction);
@@ -158,7 +163,7 @@ public class OccupyCommand extends FCommand {
                 MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
             }
         } else {
-            MessageUtil.sendMessage(player, "&cYou can not occupy regions during the truce period!");
+            MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_TRUCE.getMessage());
         }
 
 

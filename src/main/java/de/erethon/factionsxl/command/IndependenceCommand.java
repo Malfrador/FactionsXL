@@ -50,7 +50,7 @@ public class IndependenceCommand extends FCommand {
         setAliases("i", "ind");
         setMinArgs(0);
         setMaxArgs(1);
-        setHelp("&c/f independence [Name]");
+        setHelp(FMessage.CMD_INDEPENDENCE_HELP.getMessage());
         setPermission(FPermission.CREATE_VASSAL.getNode());
         setPlayerCommand(true);
         setConsoleCommand(false);
@@ -88,7 +88,7 @@ public class IndependenceCommand extends FCommand {
                 return;
             }
             // TODO: FMessage
-            MessageUtil.broadcastMessage("&aDie Fraktion &e" + faction.getName() + "&a hat die Instabilität von &e" + faction.getLord().getName() + "&a genutzt und die Unabhängigkeit erklärt!" );
+            ParsingUtil.broadcastMessage(FMessage.CMD_INDEPENDENCE_VASSAL.getMessage(), faction.getName(), faction.getLord().getName());
             Faction oldLord = faction.getLord();
             oldLord.getRelations().remove(faction);
             faction.getRelations().remove(oldLord);
@@ -103,7 +103,7 @@ public class IndependenceCommand extends FCommand {
             Faction newFaction = factions.getByMember(player);
             region.setOwner(newFaction);
             faction.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, newFaction, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
-            MessageUtil.broadcastMessage("Aufgrund der Instabilität von &e" + faction.getName() + "&a hat sich eine neue Fraktion abgespalten: &e" + newFaction.getName() );
+            ParsingUtil.broadcastMessage(FMessage.CMD_INDEPENDENCE_NEWFACTION.getMessage(), faction.getName(), newFaction.getName());
         }
     }
 }

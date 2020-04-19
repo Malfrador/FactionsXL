@@ -108,7 +108,7 @@ public class RelationNeutralCommand extends FCommand {
                         }
                     }
                     MessageUtil.log("Removed " + subject.getName() + " from WarParty of " + object.getName() + " because alliance ended.");
-                    MessageUtil.broadcastMessage("&aThe faction &e" + subject.getName() + "&a abandoned their ally during the war.");
+                    ParsingUtil.broadcastMessage(FMessage.WAR_ALLY_ABANDONED.getMessage(), subject);
                 }
                 ParsingUtil.broadcastMessage(FMessage.RELATION_CONFIRMED.getMessage(), subject, object, Relation.PEACE.getName());
         }

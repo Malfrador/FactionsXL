@@ -68,10 +68,9 @@ public class ClaimCommand extends FCommand {
         Set<Region> regions = faction.getRegions();
         if (region != null && !region.isWildernessClaim()) {
             boolean nextTo = false;
-            for (Region r : regions) {
-                if (r.isNextTo(region)) {
+            for (Region r : region.getNeighbours()) {
+                if (r.getOwner() == faction) {
                     nextTo = true;
-                    break;
                 }
             }
             if (!nextTo) {

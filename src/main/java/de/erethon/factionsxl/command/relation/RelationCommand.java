@@ -155,7 +155,7 @@ public class RelationCommand extends FCommand {
                         new RelationRequest(sender, warFaction, f, Relation.PEACE).confirm();
                     }
                     MessageUtil.log("Removed " + warFaction.getName() + " from WarParty " + WarParty.getName() + " because alliance ended.");
-                    MessageUtil.broadcastMessage("&aThe faction &e" + warFaction.getName() + "&a abandoned their ally during the war.");
+                    ParsingUtil.broadcastMessage(FMessage.WAR_ALLY_ABANDONED.getMessage(), warFaction);
                 }
 
             }

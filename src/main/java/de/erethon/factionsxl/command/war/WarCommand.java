@@ -59,11 +59,10 @@ public class WarCommand extends FCommand {
             return;
         }
         // TO DO!
-        if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
-            sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
-            return;
-        }
-        // TO DO!
+        //if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
+           //sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
+            //return;
+        //}
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         Faction f = cache.getByMember(player);
@@ -99,9 +98,8 @@ public class WarCommand extends FCommand {
         for (Faction faction : factions) {
             subject.addParticipant(faction);
         }
-        //new CallToArmsMenu(subject, object, new CasusBelli(CasusBelli.Type.RAID, object, null)).open(player);
         new CasusBelliMenu().open(player, object);
-        ParsingUtil.sendMessage(sender, "&7&oSelect Casus Belli...");
+        ParsingUtil.sendMessage(sender, FMessage.CMD_WAR_SELECTCB.getMessage());
     }
 
 }

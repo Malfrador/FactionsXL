@@ -48,7 +48,7 @@ public class Dynasty {
     /* Getters and setters */
     /**
      * @return
-     * the dynstasty's name
+     * the dynasty's name
      */
     public String getName() {
         return name;

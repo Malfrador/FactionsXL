@@ -116,11 +116,11 @@ public class WarStatusCommand extends FCommand {
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_DATE.getMessage() + date);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_ATTACKERS.getMessage() + attackers);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLS_AND_DEATHS.getMessage(String.valueOf(attackerKills), String.valueOf(attackerDeaths), String.valueOf(attackerKD)));
-        MessageUtil.sendMessage(sender, "&7Kriegspunkte durch Kills&8: &5" + war.getAttacker().getPointsFromKills() + "&8/&7" + config.getMaximumKillPoints());
+        MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLPOINTS.getMessage(String.valueOf(war.getDefender().getPointsFromKills()), String.valueOf(config.getMaximumKillPoints())));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_POINTS.getMessage() + String.valueOf(attackerPoints));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_DEFENDERS.getMessage() + defenders);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLS_AND_DEATHS.getMessage(String.valueOf(defenderKills), String.valueOf(defenderDeaths), String.valueOf(defenderKD)));
-        MessageUtil.sendMessage(sender, "&7Kriegspunkte durch Kills&8: &5" + war.getDefender().getPointsFromKills() + "&8/&7" + config.getMaximumKillPoints());
+        MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLPOINTS.getMessage(String.valueOf(war.getDefender().getPointsFromKills()), String.valueOf(config.getMaximumKillPoints())));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_POINTS.getMessage() + String.valueOf(defenderPoints));
         FScoreboard.get((Player) sender).setTemporarySidebar(new FWarSidebar(war));
     }
