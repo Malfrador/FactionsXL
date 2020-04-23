@@ -17,6 +17,8 @@
 package de.erethon.factionsxl.command;
 
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
+import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.FAccount;
 import de.erethon.factionsxl.faction.Faction;
@@ -29,80 +31,66 @@ import org.bukkit.entity.Player;
 /**
  * @author Daniel Saukel
  */
-public class MoneyCommand extends FCommand {
+public class InfluenceCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     Economy econ = plugin.getEconomyProvider();
 
-    public MoneyCommand() {
-        setCommand("money");
-        setAliases("m", "econ", "economy");
-        setMinArgs(1);
-        setMaxArgs(3);
-        setHelp(FMessage.HELP_MONEY.getMessage());
-        setPermission(FPermission.MONEY.getNode());
+    public InfluenceCommand() {
+        setCommand("influx");
+        setAliases("influence");
+        setMinArgs(0);
+        setMaxArgs(1);
+        setHelp("Pay money to restore full influence - /f influx [Amount]");
+        setPermission(FPermission.CLAIM.getNode());
         setPlayerCommand(true);
-        setConsoleCommand(true);
+        setConsoleCommand(false);
     }
 
     @Override
     public void onExecute(String[] args, CommandSender sender) {
-        i = 1;
-        Faction faction = getSenderFactionOrFromArg(sender, args, 1, true);
+        Player player = (Player) sender;
+        Faction faction = getSenderFaction(sender);
+        Region region = plugin.getBoard().getByLocation(player.getLocation());
         if (faction == null) {
             return;
         }
-
         if (args.length <= i) {
             displayHelp(sender);
             return;
         }
-
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(player, "&cYou can not pay for influence while at war!");
+            return;
+        }
+        if (!(region.getOwner() == faction)) {
+            ParsingUtil.sendMessage(player, "&cYou can only pay for influence in your own regions!");
+            return;
+        }
         double amount = 0;
-        if (args.length >= i + 2) {
+        if (args.length == 2) {
             try {
-                amount = Double.parseDouble(args[i + 1]);
+                amount = Double.parseDouble(args[1]);
             } catch (NumberFormatException exception) {
-                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_NUMERIC.getMessage(), args[3]);
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_NUMERIC.getMessage(), args[1]);
                 return;
             }
         }
-
-        switch (args[i].toLowerCase()) {
-            case "b":
-            case "balance":
-                ParsingUtil.sendMessage(sender, FMessage.CMD_MONEY_BALANCE.getMessage(), faction, faction.getAccount().getFormatted());
-                break;
-            case "d":
-            case "deposit":
-                deposit(sender, faction, amount);
-                break;
-            case "w":
-            case "withdraw":
-                withdraw(sender, faction, amount);
-                break;
-        }
-    }
-
-    public void deposit(CommandSender sender, Faction faction, double amount) {
-        FAccount acc = faction.getAccount();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (econ.has(player, amount)) {
-                econ.withdrawPlayer(player, amount);
-                acc.deposit(amount);
-                faction.sendMessage(FMessage.CMD_MONEY_DEPOSIT_SUCCESS.getMessage(), player, econ.format(amount), faction);
-                faction.sendMessage(FMessage.CMD_MONEY_BALANCE.getMessage(), faction, acc.getFormatted());
-            } else {
-                ParsingUtil.sendMessage(sender, FMessage.CMD_MONEY_DEPOSIT_FAIL.getMessage(), econ.format(amount));
+        if (region.getInfluence() + (amount / 10) <= 100) {
+            if (faction.getAccount().getBalance() < amount) {
+                ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(amount));
+                return;
             }
-        } else {
-            acc.deposit(amount);
-            faction.sendMessage(FMessage.CMD_MONEY_DEPOSIT_SUCCESS.getMessage(), sender, econ.format(amount), faction);
-            ParsingUtil.sendMessage(sender, FMessage.CMD_MONEY_BALANCE.getMessage(), faction, acc.getFormatted());
+            else {
+                withdraw(player, faction, amount);
+                region.setInfluence((int) (region.getInfluence() + (amount / 10)));
+                ParsingUtil.sendMessage(sender, "&aInfluence added");
+            }
+        }
+        else {
+            ParsingUtil.sendMessage(sender, "&cYou are adding too much influence!");
         }
     }
-
     public void withdraw(CommandSender sender, Faction faction, double amount) {
         if (!faction.isPrivileged(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
@@ -126,5 +114,4 @@ public class MoneyCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.CMD_MONEY_BALANCE.getMessage(), faction, acc.getFormatted());
         }
     }
-
 }

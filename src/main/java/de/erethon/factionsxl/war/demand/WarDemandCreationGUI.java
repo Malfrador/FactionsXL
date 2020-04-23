@@ -1,20 +1,18 @@
 /*
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.demand;
 
@@ -63,8 +61,6 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_CREATION_MENU_LIST.getMessage());
     private ItemStack send = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_DEMAND_CREATION_MENU_SEND.getMessage());
-    private Faction enemy;
-
 
     public WarDemandCreationGUI(FactionsXL plugin) {
         this.plugin = plugin;
@@ -103,7 +99,16 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
         ItemMeta delMeta = delItem.getItemMeta();
         delMeta.setDisplayName(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage());
         delItem.setItemMeta(delMeta);
+<<<<<<< HEAD
         gui.setItem(15, delItem);
+=======
+        gui.setItem(17, delItem);
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public void open(Player player) {
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
         player.openInventory(gui);
     }
 
@@ -135,6 +140,7 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.getPeaceOffer().send();
         } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage())) {
             player.getPeaceOffer().getDemands().clear();
+<<<<<<< HEAD
             MessageUtil.sendMessage(event.getWhoClicked(), FMessage.WAR_DEMAND_CREATION_MENU_CLEARED.getMessage());
         } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage())) {
             if (player.getPeaceOffer().isOffer()) {
@@ -143,6 +149,11 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
         } else if (button.getItemMeta().getDisplayName().contains(FMessage.RELATION_VASSAL.getMessage())) {
             new RelationDemand();
+=======
+            MessageUtil.sendMessage(event.getWhoClicked(), "&aDemands reset.");
+        } else if (button.getItemMeta().getDisplayName().contains("Region")) {
+            new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), player.getFaction());
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }

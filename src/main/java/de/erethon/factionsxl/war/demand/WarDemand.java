@@ -1,20 +1,18 @@
 /*
+ * Copyright (c) 2017-2019 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.demand;
 
@@ -38,6 +36,7 @@ public interface WarDemand extends ConfigurationSerializable {
     public void demand();
 
     /**
+<<<<<<< HEAD
      * if the demanded has enough Warscore
      */
     public boolean canAffordWP(WarParty wp);
@@ -45,6 +44,8 @@ public interface WarDemand extends ConfigurationSerializable {
     public boolean canAffordWP(Faction f);
 
     /**
+=======
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
      * Asks the demanded party to pay
      *
      * @param f, f2
@@ -52,11 +53,6 @@ public interface WarDemand extends ConfigurationSerializable {
     public void pay(WarParty f, WarParty f2);
 
     public void pay(Faction f, Faction f2);
-
-    /**
-     * Warscore cost of all demands
-     */
-    public double getWarscoreCost();
 
     /**
      * @return

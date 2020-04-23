@@ -1,20 +1,18 @@
 /*
+ * Copyright (C) 2017-2018 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.peaceoffer;
 
@@ -92,6 +90,7 @@ public class FinalPeaceOffer extends PeaceOffer {
     public boolean canPay() {
         boolean canPay = true;
         for (WarDemand demand : demands) {
+<<<<<<< HEAD
             if (isOffer) {
                 if (!demand.canPay(getSubject())) {
                     canPay = false;
@@ -113,6 +112,13 @@ public class FinalPeaceOffer extends PeaceOffer {
             demands.forEach(d -> d.pay(getObject(), getSubject()));
         }
         if (!isOffer) {
+=======
+            if (!demand.canPay(getObject())) {
+                canPay = false;
+            }
+        }
+        if (canPay) {
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
             demands.forEach(d -> d.pay(getSubject(), getObject()));
         }
         war.end();
@@ -121,7 +127,11 @@ public class FinalPeaceOffer extends PeaceOffer {
         MessageUtil.broadcastMessage(" ");
             // TODO: Might break after government update
             // TODO: Add time modifier
+<<<<<<< HEAD
         purge();
+=======
+        }
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
     }
 
     @Override
@@ -177,7 +187,12 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public String getAcceptCommand() {
+<<<<<<< HEAD
         return "/f confirmPeace " + war.getStartDate().getTime() + " -acceptFinal";
+=======
+        war.end();
+        return "/factionsxl relation " + getObject().getName() + " " + getSubject().getName() + " " + "peace";
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
     }
 
     @Override
@@ -242,6 +257,7 @@ public class FinalPeaceOffer extends PeaceOffer {
         return Math.round(cost * 100.00) / 100.0;
     }
 
+<<<<<<< HEAD
     public void purge() {
         Collection<FinalPeaceOffer> subjectOffers = getSubject().getRequests(FinalPeaceOffer.class);
         Collection<FinalPeaceOffer> objectOffers = getObject().getRequests(FinalPeaceOffer.class);
@@ -265,6 +281,8 @@ public class FinalPeaceOffer extends PeaceOffer {
     }
 
 
+=======
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> args = new HashMap<>();

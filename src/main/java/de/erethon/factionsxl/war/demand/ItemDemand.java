@@ -1,20 +1,18 @@
 /*
+ * Copyright (c) 2017-2019 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.war.demand;
 
@@ -22,7 +20,6 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.AddItemsGUI;
 import java.util.HashMap;
@@ -61,9 +58,13 @@ public class ItemDemand implements WarDemand {
     }
 
     public static void openSetupGUI(Player player) {
+<<<<<<< HEAD
         MessageUtil.sendMessage(player, "&cThis demand type is currently disabled.");
         /*new AddItemsGUI("Add Items", 54, true) {
 
+=======
+        new AddItemsGUI("Add Items", 54, true) {
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
             @Override
             public void onClose() {
                 FactionsXL.getInstance().getFPlayerCache().getByPlayer(player).getPeaceOffer().getDemands().add(new ItemDemand(getStorageContents()));
@@ -78,6 +79,7 @@ public class ItemDemand implements WarDemand {
     }
 
     @Override
+<<<<<<< HEAD
     public boolean canAffordWP(WarParty wp) {
         return false;
     }
@@ -88,11 +90,14 @@ public class ItemDemand implements WarDemand {
     }
 
     @Override
+=======
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
     public void pay(WarParty wp, WarParty wp2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
+<<<<<<< HEAD
     public void pay(Faction f, Faction f2) {
 
     }
@@ -103,6 +108,8 @@ public class ItemDemand implements WarDemand {
     }
 
     @Override
+=======
+>>>>>>> parent of 2f40fe8... Updated copyright notice 2018 -> 2020
     public boolean canPay(WarParty f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
