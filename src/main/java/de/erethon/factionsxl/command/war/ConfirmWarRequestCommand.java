@@ -29,14 +29,15 @@ import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.WarCache;
-import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.WarRequest;
-import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.Set;
+
+/**
+ * @author Malfrador
+ */
 
 public class ConfirmWarRequestCommand extends FCommand {
 

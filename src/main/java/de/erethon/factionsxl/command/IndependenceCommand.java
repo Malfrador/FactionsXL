@@ -19,7 +19,6 @@
 
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -37,6 +36,10 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Date;
+
+/**
+ * @author Malfrador
+ */
 
 public class IndependenceCommand extends FCommand {
 

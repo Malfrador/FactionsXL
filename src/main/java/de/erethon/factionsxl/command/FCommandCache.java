@@ -57,7 +57,6 @@ public class FCommandCache extends DRECommandCache {
     public IdeaCommand idea = new IdeaCommand();
     public IndependenceCommand independence = new IndependenceCommand();
     public IntegrateCommand integrate = new IntegrateCommand();
-    public InfluenceCommand influence = new InfluenceCommand();
     public InviteCommand invite = new InviteCommand();
     public JoinCommand join = new JoinCommand();
     public KickCommand kick = new KickCommand();
@@ -175,7 +174,6 @@ public class FCommandCache extends DRECommandCache {
         addCommand(confirmWarRequest);
         addCommand(peaceCommand);
         addCommand(warAnnex);
-        addCommand(influence);
         addCommand(independence);
 
         FConfig config = FactionsXL.getInstance().getFConfig();

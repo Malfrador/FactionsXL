@@ -19,17 +19,15 @@
 
 package de.erethon.factionsxl.war;
 
-import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.entity.Relation;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.ParsingUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
+/**
+ * @author Malfrador
+ */
 
 public class WarHandler {
     FactionsXL plugin = FactionsXL.getInstance();

@@ -22,10 +22,13 @@ package de.erethon.factionsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+/**
+ * @author Malfrador
+ */
 
 public class ChatSpyCommand extends FCommand {
 

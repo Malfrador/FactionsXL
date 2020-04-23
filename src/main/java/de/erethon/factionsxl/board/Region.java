@@ -235,14 +235,14 @@ public class Region {
     }
 
     /**
-     * set the occupying faction of this reason
+     * set the occupying faction of this region
      */
     public void setOccupant(Faction f) {
         occupant = f;
     }
 
     /**
-     * set the occupying faction of this reason
+     * remove the occupying faction from the region
      */
     public void clearOccupant() {
         occupant = null;

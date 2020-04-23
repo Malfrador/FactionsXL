@@ -26,15 +26,18 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.*;
-
-import java.util.Set;
+import de.erethon.factionsxl.war.CasusBelliMenu;
+import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.WarPartyRole;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
  */
+
 public class WarCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();

@@ -24,27 +24,22 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.yaml.snakeyaml.tokens.FlowMappingEndToken;
 
 import java.util.Calendar;
 import java.util.Set;
 
-import static de.erethon.factionsxl.war.CasusBelli.*;
 import static de.erethon.factionsxl.war.CasusBelli.Type.*;
 
 /**
- * @author Daniel Saukel
+ * @author Malfrador
  */
 public class OccupyCommand extends FCommand {
 

@@ -24,25 +24,25 @@ import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.entity.Request;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.management.relation.RelationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+/**
+ * @author Malfrador
+ */
 
 public class WarRequest extends Request {
 
@@ -112,13 +112,8 @@ public class WarRequest extends Request {
                 WP = wp;
             }
         }
-        WP.addParticipant((LegalEntity) object);
+        WP.joinWar((LegalEntity) object);
         WP.removeInvited((Faction) object);
-        Set<Faction> factionSet = WP.getEnemy().getFactions();
-        // Set all relations to enemy
-        for (Faction f : factionSet) {
-            new RelationRequest(Bukkit.getConsoleSender(), (Faction) object, f, Relation.ENEMY).confirm();
-        }
 
         object.getRequests().remove(this);
         ParsingUtil.broadcastMessage(FMessage.WAR_REQUEST_WAR_JOINED.getMessage(), getObject(), WP.getEnemy().getLeader());

@@ -29,11 +29,10 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-
 /**
  * @author Malfrador
  */
+
 public class CoreCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();

@@ -18,15 +18,14 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.factionsxl.chat.ChatChannel;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.player.FPermission;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author Daniel Saukel
+ * @author Malfrador
  */
+
 public class TogglePublicCommand extends FCommand {
 
     public TogglePublicCommand() {

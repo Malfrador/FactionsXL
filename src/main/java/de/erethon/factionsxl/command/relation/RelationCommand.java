@@ -27,13 +27,12 @@ import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.util.Collection;
-import java.util.HashSet;
-
 import de.erethon.factionsxl.war.WarParty;
-import de.erethon.factionsxl.war.WarPartyRole;
 import de.erethon.factionsxl.war.WarRequest;
 import org.bukkit.command.CommandSender;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author Daniel Saukel
@@ -150,7 +149,7 @@ public class RelationCommand extends FCommand {
                     return;
                 }
                 if (WarParty != null && WarParty.getFactions().contains(warFaction)) {
-                    WarParty.removeParticipant(warFaction);
+                    WarParty.leaveWar(warFaction);
                     for (Faction f : WarParty.getEnemy().getFactions()) {
                         new RelationRequest(sender, warFaction, f, Relation.PEACE).confirm();
                     }

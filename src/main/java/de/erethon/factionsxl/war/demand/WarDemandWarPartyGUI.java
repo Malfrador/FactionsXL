@@ -29,12 +29,11 @@ import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.FinalPeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
-import java.util.Collection;
-
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
+
+import java.util.Collection;
 
 /**
  * @author Daniel Saukel
@@ -76,7 +75,16 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
             }
         } else {
             War war = wars.getUnsafe(buttonFaction);
-            fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, ownFactions.toArray(new Faction[]{})[0], buttonFaction));
+            if (right) {
+                fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, fPlayers.getByPlayer(whoClicked).getFaction() , buttonFaction, false));
+                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_OFFER.getMessage());
+                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, true);
+            }
+            if (left) {
+                fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, fPlayers.getByPlayer(whoClicked).getFaction(), buttonFaction, true));
+                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_OFFER.getMessage());
+                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, true);
+            }
         }
         HandlerList.unregisterAll(this);
     }

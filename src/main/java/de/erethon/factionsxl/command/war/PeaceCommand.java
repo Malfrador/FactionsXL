@@ -19,44 +19,31 @@
 package de.erethon.factionsxl.command.war;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.gui.GUIButton;
-import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
-import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.demand.WarDemandWarPartyGUI;
-import java.util.HashSet;
-import java.util.Set;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * @author Daniel Saukel
+ * @author Malfrador
  */
 public class PeaceCommand extends FCommand implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
     WarCache wars = plugin.getWarCache();
-
-    //private Inventory gui = Bukkit.createInventory(this, 9, FMessage.CMD_PEACE_TITLE.getMessage());
-    //private ItemStack create = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_CREATE.getMessage());
-    //private ItemStack listReceived = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
-    //private ItemStack listSent = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.CMD_PEACE_LIST_SENT.getMessage());
 
     public PeaceCommand() {
         setCommand("peace");
@@ -67,17 +54,17 @@ public class PeaceCommand extends FCommand implements Listener {
         setPlayerCommand(true);
         setConsoleCommand(false);
         /**Bukkit.getPluginManager().registerEvents(this, plugin);
-        gui.setContents(new ItemStack[]{
-                GUIButton.PLACEHOLDER,
-                GUIButton.PLACEHOLDER,
-                GUIButton.PLACEHOLDER,
-                create,
-                listReceived,
-                listSent,
-                GUIButton.PLACEHOLDER,
-                GUIButton.PLACEHOLDER,
-                GUIButton.PLACEHOLDER
-        });**/
+         gui.setContents(new ItemStack[]{
+         GUIButton.PLACEHOLDER,
+         GUIButton.PLACEHOLDER,
+         GUIButton.PLACEHOLDER,
+         create,
+         listReceived,
+         listSent,
+         GUIButton.PLACEHOLDER,
+         GUIButton.PLACEHOLDER,
+         GUIButton.PLACEHOLDER
+         });**/
     }
 
     @Override
@@ -106,37 +93,4 @@ public class PeaceCommand extends FCommand implements Listener {
         MessageUtil.sendMessage(player, "&6&o&lRIGHT CLICK&8: &f&lDemand");
         MessageUtil.sendMessage(player, "&6&o&lLEFT CLICK&8: &f&lOffer");
     }
-
-    /**@EventHandler
-    public void onClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-        Player player = (Player) event.getWhoClicked();
-        if (event.getInventory().getHolder() != this) {
-            return;
-        }
-        event.setCancelled(true);
-        PageGUI.playSound(event);
-        ItemStack button = event.getCurrentItem();
-        if (create.equals(button)) {
-            Set<Faction> ownFactions = factions.getByLeader(player);
-            Set<WarParty> parties = new HashSet<>();
-            ownFactions.forEach(f -> f.getWarParties().forEach(p -> parties.add(p.getEnemy())));
-            new WarDemandWarPartyGUI(plugin, ownFactions, parties.toArray(new WarParty[]{})).open(player);
-            MessageUtil.sendMessage(player, "&6&o&lRIGHT CLICK&8: &f&lDemand");
-            MessageUtil.sendMessage(player, "&6&o&lLEFT CLICK&8: &f&lOffer");
-        } else if (listReceived.equals(button)) {
-            PageGUI received = new PageGUI(FMessage.CMD_PEACE_LIST_RECEIVED.getMessage());
-            received.open(player);
-        } else if (listSent.equals(button)) {
-            PageGUI sent = new PageGUI(FMessage.CMD_PEACE_LIST_SENT.getMessage());
-            sent.open(player);
-        }
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return gui;
-    }**/
 }

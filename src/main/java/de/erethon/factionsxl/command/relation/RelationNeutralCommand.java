@@ -24,7 +24,6 @@ import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
@@ -99,12 +98,12 @@ public class RelationNeutralCommand extends FCommand {
                 if (subject.isInWar() || object.isInWar()) {
                     for (WarParty sWP : subject.getWarParties()) {
                         if (sWP.getFactions().contains(subject)) {
-                            sWP.removeParticipant(subject);
+                            sWP.leaveWar(subject);
                         }
                     }
                     for (WarParty oWP : object.getWarParties()) {
                         if (oWP.getFactions().contains(object)) {
-                            oWP.removeParticipant(object);
+                            oWP.leaveWar(object);
                         }
                     }
                     MessageUtil.log("Removed " + subject.getName() + " from WarParty of " + object.getName() + " because alliance ended.");

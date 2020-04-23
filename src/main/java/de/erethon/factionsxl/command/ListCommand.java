@@ -25,8 +25,6 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.GovernmentType;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.util.Arrays;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +37,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -107,6 +108,7 @@ public class ListCommand extends FCommand implements Listener, InventoryHolder {
             return;
         }
         event.setCancelled(true);
+
         PageGUI.playSound(event);
         ItemStack button = event.getCurrentItem();
         if (button != null && button.hasItemMeta() && button.getItemMeta().hasDisplayName()) {

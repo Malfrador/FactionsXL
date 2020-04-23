@@ -34,6 +34,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Daniel Saukel
  */
+
 public class ConfirmWarCommand extends FCommand {
 
     WarCache wars = FactionsXL.getInstance().getWarCache();

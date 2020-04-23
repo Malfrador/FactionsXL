@@ -48,12 +48,6 @@ import de.erethon.factionsxl.protection.LandProtectionListener;
 import de.erethon.factionsxl.util.BalanceCache;
 import de.erethon.factionsxl.util.CoringHandler;
 import de.erethon.factionsxl.war.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import de.erethon.factionsxl.war.demand.ItemDemand;
 import de.erethon.factionsxl.war.demand.MoneyDemand;
 import de.erethon.factionsxl.war.demand.RegionDemand;
@@ -67,6 +61,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * The main class of FactionsXL.
@@ -135,7 +134,7 @@ public class FactionsXL extends DREPlugin {
         initFolders();
         debugToFile("Enabling...");
         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.14.4 to work. It is not compatible with CraftBukkit and older versions.");
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.13.2-1.15.2 to work. It is not compatible with CraftBukkit and older versions.");
             manager.disablePlugin(this);
             return;
         }
@@ -276,7 +275,6 @@ public class FactionsXL extends DREPlugin {
             }
         }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
         if (fConfig.isEconomyEnabled()) {
-            MessageUtil.log("Balance cache enabled.");
             new BukkitRunnable() {
                 @Override
                 public void run() {
