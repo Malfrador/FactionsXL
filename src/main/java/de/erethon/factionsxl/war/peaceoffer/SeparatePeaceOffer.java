@@ -49,17 +49,16 @@ public class SeparatePeaceOffer extends PeaceOffer {
     Boolean isOffer = false;
     Double cost = 0.00;
 
-    public SeparatePeaceOffer(War war, LegalEntity demanding, LegalEntity target, WarDemand... demands) {
+    public SeparatePeaceOffer(War war, LegalEntity demanding, LegalEntity target, boolean isOfferBool, WarDemand... demands) {
         this.war = war;
         subject = demanding;
         object = target;
+        isOffer = isOfferBool;
         expiration = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
         this.demands = new ArrayList(Arrays.asList(demands));
     }
 
-    public SeparatePeaceOffer(Map<String, Object> args, boolean isO) {
-        isOffer = isO;
-        //TODO: Braucht noch OFFER
+    public SeparatePeaceOffer(Map<String, Object> args) {
         new BukkitRunnable() {
 
             @Override
@@ -119,11 +118,12 @@ public class SeparatePeaceOffer extends PeaceOffer {
         if (!isOffer) {
             demands.forEach(d -> d.pay(getSubject(), getObject()));
         }
+
         if (war.getAttacker().getFactions().contains(getObject())) {
-            war.getAttacker().removeParticipant(getObject());
+            war.getAttacker().leaveWar(getObject());
         }
         if (war.getDefender().getFactions().contains(getObject())) {
-            war.getDefender().removeParticipant(getObject());
+            war.getDefender().leaveWar(getObject());
         }
         MessageUtil.broadcastMessage(" ");
         ParsingUtil.broadcastMessage(FMessage.WAR_ALLY_LEFT_WAR.getMessage(), getObject(), getSubject());
@@ -144,7 +144,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
         deny.setClickEvent(onClickDeny);
 
         boolean add = true;
-        for (PeaceOffer check : getObject().getRequests(PeaceOffer.class)) {
+        for (SeparatePeaceOffer check : getObject().getRequests(SeparatePeaceOffer.class)) {
             if (check.getSubject() == subject && check.getObject() == object) {
                 add = false;
                 break;
@@ -152,7 +152,7 @@ public class SeparatePeaceOffer extends PeaceOffer {
         }
         if (!(add)) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
-                MessageUtil.sendMessage(player,  FMessage.WAR_DEMAND_REQUEST_ALREADY_SENT.getMessage());
+                MessageUtil.sendMessage(player, FMessage.WAR_DEMAND_REQUEST_ALREADY_SENT.getMessage());
             }
         }
         if (add) {
@@ -174,12 +174,12 @@ public class SeparatePeaceOffer extends PeaceOffer {
 
     @Override
     public String getAcceptCommand() {
-        return "/f confirmPeace " + war.getStartDate().getTime() + " -accept " + object.getName() + " " + subject.getName();
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -acceptSingle " + object.getName() + " " + subject.getName();
     }
 
     @Override
     public String getDenyCommand() {
-        return "/f confirmPeace " + war.getStartDate().getTime() + " -deny " + object.getName() + " " + subject.getName();
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -denySingle " + object.getName() + " " + subject.getName();
     }
 
     @Override
@@ -228,7 +228,16 @@ public class SeparatePeaceOffer extends PeaceOffer {
     }
 
     public void purge() {
-        // should remove the request. Does not persist restarts anyway.
+        for (PeaceOffer req : getSubject().getRequests(SeparatePeaceOffer.class)) {
+            if ((req.getObject() == getObject() && req.getSubject() == getSubject()) || (req.getObject() == getSubject() && req.getSubject() == getObject())) {
+                getSubject().getRequests().remove(req);
+            }
+        }
+        for (PeaceOffer req : getObject().getRequests(SeparatePeaceOffer.class)) {
+            if ((req.getObject() == getObject() && req.getSubject() == getSubject()) || (req.getObject() == getSubject() && req.getSubject() == getObject())) {
+                getObject().getRequests().remove(req);
+            }
+        }
     }
 
     @Override

@@ -32,6 +32,7 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.peaceoffer.FinalPeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
 import org.bukkit.Bukkit;
@@ -43,8 +44,9 @@ import java.security.SecurityPermission;
 import java.util.*;
 
 /**
- * @author Daniel Saukel
+ * @author Malfrador
  */
+
 public class ConfirmPeaceRequestCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
@@ -78,10 +80,10 @@ public class ConfirmPeaceRequestCommand extends FCommand {
             MessageUtil.sendMessage(sender, FMessage.CMD_PEACE_CONFIRM_NOT_IN_WAR.getMessage());
             return;
         }
-        if (args.length == 4) {
-            Faction subjectFaction = plugin.getFactionCache().getByName(args[4]);
-
+        if (args[2].contains("Single")) {
             Faction objectFaction = plugin.getFactionCache().getByName(args[3]);
+
+            Faction subjectFaction = plugin.getFactionCache().getByName(args[4]);
             if (objectFaction == null) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[3]);
                 return;
@@ -91,37 +93,33 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_OWN_FACTION.getMessage());
                 return;
             }
-            Collection<SeparatePeaceOffer> requests = subjectFaction.getRequests(SeparatePeaceOffer.class);
-            for (SeparatePeaceOffer request : requests) {
-                HashSet<SeparatePeaceOffer> toRemove = new HashSet<>();
-                if (request.getSubject().equals(subjectFaction) && request.getObject().equals(objectFaction)) {
-                    toRemove.add(request);
-                    objectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, objectFaction);
-                    subjectFaction.sendMessage(FMessage.RELATION_DENIED.getMessage(), subjectFaction, objectFaction);
-                }
-                subjectFaction.getRequests().removeAll(toRemove);
-                return;
-            }
+            Collection<SeparatePeaceOffer> requests = objectFaction.getRequests(SeparatePeaceOffer.class);
+            MessageUtil.log(requests.toString());
+            MessageUtil.log(objectFaction.getRequests(SeparatePeaceOffer.class).toString());
+
             SeparatePeaceOffer matching = null;
             for (SeparatePeaceOffer request : requests) {
-                if (request.getSubject().equals(objectFaction) && request.getObject().equals(subjectFaction)) {
+                if (request.getSubject().equals(subjectFaction) && request.getObject().equals(objectFaction)) {
                     matching = request;
                     break;
                 }
             }
-            if (args[2].equals("-deny")) {
+            if (args[2].equals("-denySingle") && matching != null) {
                 ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_FACTION.getMessage(), objectFaction);
+                matching.purge();
                 return;
 
             }
             if (matching != null) {
                 matching.confirm();
-                return;
+                ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_SUCCESS.getMessage(), objectFaction, subjectFaction);
+            }
+            else {
+                MessageUtil.sendMessage(player, "&cError. No Peace request found.");
             }
 
-            ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_SUCCESS.getMessage(), objectFaction, subjectFaction);
 
-        } else {
+        } else if (args[2].contains("Final")) {
             Set<WarParty> warParties = faction.getWarParties();
             WarParty wp = null;
             for (WarParty w : warParties) {
@@ -134,24 +132,25 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                 MessageUtil.sendMessage(sender, FMessage.CMD_PEACE_CONFIRM_NOT_LEADER.getMessage());
                 return;
             }
-            Collection<PeaceOffer> requests = null;
+            Collection<FinalPeaceOffer> requests = null;
             try {
-                requests = wp.getRequests(PeaceOffer.class);
+                requests = wp.getRequests(FinalPeaceOffer.class);
             } catch (NullPointerException e) {
                 MessageUtil.sendMessage(player, FMessage.CMD_PEACE_CONFIRM_EMPTY.getMessage());
             }
             if (requests == null) {
                 return;
             }
-            PeaceOffer peace = null;
-            for (PeaceOffer p : requests) {
+            FinalPeaceOffer peace = null;
+            for (FinalPeaceOffer p : requests) {
                 if (p.getWar() == war) {
                     peace = p;
                     break;
                 }
             }
-            if (args[2].equals("-deny")) {
+            if (args[2].equals("-denyFinal")) {
                 ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_WARPARTY.getMessage(), wp.getName());
+                peace.purge();
                 if (peace.canPay() && !peace.isOffer()) {
                     for (Faction f : wp.getFactions()) {
                         f.setExhaustion(f.getExhaustion() + 2);
@@ -167,6 +166,9 @@ public class ConfirmPeaceRequestCommand extends FCommand {
             FScoreboard.updateAllProviders();
 
 
+        }
+        else {
+            MessageUtil.log("Invalid argument. This should never happen.");
         }
     }
 }

@@ -22,6 +22,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
@@ -176,12 +177,12 @@ public class FinalPeaceOffer extends PeaceOffer {
 
     @Override
     public String getAcceptCommand() {
-        return "/f confirmPeace " + war.getStartDate().getTime() + " -accept";
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -acceptFinal";
     }
 
     @Override
     public String getDenyCommand() {
-        return "/f confirmPeace " + war.getStartDate().getTime() + " -deny";
+        return "/f confirmPeace " + war.getStartDate().getTime() + " -denyFinal";
     }
 
     @Override
@@ -242,7 +243,21 @@ public class FinalPeaceOffer extends PeaceOffer {
     }
 
     public void purge() {
-        // should remove the request. Does not persist restarts anyways.
+        Collection<FinalPeaceOffer> subjectOffers = getSubject().getRequests(FinalPeaceOffer.class);
+        Collection<FinalPeaceOffer> objectOffers = getObject().getRequests(FinalPeaceOffer.class);
+        if (objectOffers == null || subjectOffers == null) {
+            return;
+        }
+        for (FinalPeaceOffer req : subjectOffers) {
+            if ((req.getObject() == getObject() && req.getSubject() == getSubject()) || (req.getObject() == getSubject() && req.getSubject() == getObject())) {
+                getSubject().getRequests().remove(req);
+            }
+        }
+        for (FinalPeaceOffer req : objectOffers) {
+            if ((req.getObject() == getObject() && req.getSubject() == getSubject()) || (req.getObject() == getSubject() && req.getSubject() == getObject())) {
+                getObject().getRequests().remove(req);
+            }
+        }
     }
 
     public boolean isOffer() {

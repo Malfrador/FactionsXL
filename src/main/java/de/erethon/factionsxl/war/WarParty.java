@@ -20,8 +20,10 @@ package de.erethon.factionsxl.war;
 
 import de.erethon.commons.player.PlayerCollection;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.entity.FEntity;
 import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.entity.Request;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
@@ -166,6 +168,32 @@ public class WarParty implements FEntity {
 
     public void removeParticipant(LegalEntity participant) {
         participants.remove(participant);
+    }
+
+    public void joinWar(LegalEntity faction) {
+        Set<Faction> factionEnemy =  this.getEnemy().getFactions();
+        for (Faction f : factionEnemy) {
+            new RelationRequest(Bukkit.getConsoleSender(), f, (Faction) faction, Relation.ENEMY).confirm();
+        }
+        addParticipant(faction);
+    }
+
+    public void leaveWar(LegalEntity faction) {
+        Set<Faction> factionEnemy =  this.getEnemy().getFactions();
+        Set<Faction> factions = this.getFactions();
+        // Set all relations with the participant to peace
+        for (Faction f : factionEnemy) {
+            new RelationRequest(Bukkit.getConsoleSender(), f, (Faction) faction, Relation.PEACE).confirm();
+        }
+        // Remove regions occupied by the participant
+        for (Faction f : factionEnemy) {
+            for (Region rg : f.getRegions()) {
+                if (rg.getOccupant() != null && rg.getOccupant().equals(faction)) {
+                    rg.clearOccupant();
+                }
+            }
+        }
+        removeParticipant(faction);
     }
 
     /**
