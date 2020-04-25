@@ -25,12 +25,13 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.CasusBelli;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Daniel Saukel
@@ -117,6 +118,7 @@ public class ClaimCommand extends FCommand {
         }
         else {
             region.getClaimFactions().put(faction, Calendar.getInstance().getTime());
+            faction.getCasusBelli().add(new CasusBelli( CasusBelli.Type.CONQUEST, region.getOwner(), new Date(System.currentTimeMillis() + FConfig.MONTH  )));
         }
         ParsingUtil.sendMessage(sender, FMessage.CMD_CLAIM_SUCCESS.getMessage(), region);
     }

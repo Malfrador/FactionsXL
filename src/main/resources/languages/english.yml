@@ -87,7 +87,10 @@ cmd:
     owner: '&6Owner: '
     population: '&6Population: '
     price: '&6Price: '
+    priceCore: '&6Core cost: '
     type: '&6Type: '
+    occupier: '&6Occupier: '
+    influence: '&6Influence: '
   reload:
     done: '&aSuccessfully reloaded FactionsXL.'
   requests:

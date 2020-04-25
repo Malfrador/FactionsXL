@@ -95,7 +95,7 @@ public class IndependenceCommand extends FCommand {
             Faction oldLord = faction.getLord();
             oldLord.getRelations().remove(faction);
             faction.getRelations().remove(oldLord);
-            oldLord.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, faction, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
+            oldLord.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RESUBJAGATION, faction, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
         }
         else {
             Location location = player.getLocation();
@@ -105,7 +105,7 @@ public class IndependenceCommand extends FCommand {
             region.getClaimFactions().put(faction, Calendar.getInstance().getTime());
             Faction newFaction = factions.getByMember(player);
             region.setOwner(newFaction);
-            faction.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, newFaction, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
+            faction.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RESUBJAGATION, newFaction, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
             ParsingUtil.broadcastMessage(FMessage.CMD_INDEPENDENCE_NEWFACTION.getMessage(), faction.getName(), newFaction.getName());
         }
     }
