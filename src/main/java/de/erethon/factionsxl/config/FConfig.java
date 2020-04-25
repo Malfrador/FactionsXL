@@ -24,24 +24,22 @@ import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.ProgressBar;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.RegionType;
-import static de.erethon.factionsxl.board.RegionType.*;
 import de.erethon.factionsxl.board.dynmap.DynmapStyle;
-import static de.erethon.factionsxl.board.dynmap.DynmapStyle.DEFAULT_STYLE;
 import de.erethon.factionsxl.chat.ChatChannel;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.entity.Relation;
-import static de.erethon.factionsxl.entity.Relation.*;
-import static de.erethon.factionsxl.util.ParsingUtil.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
+
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static de.erethon.factionsxl.board.RegionType.*;
+import static de.erethon.factionsxl.board.dynmap.DynmapStyle.DEFAULT_STYLE;
+import static de.erethon.factionsxl.entity.Relation.*;
+import static de.erethon.factionsxl.util.ParsingUtil.*;
 
 /**
  * Represents the main config.yml.
@@ -128,6 +126,8 @@ public class FConfig extends DREConfig {
     private int influenceFromKill = 2;
     private double exhaustionPerCycle = 0.001;
     private double exhaustionWhenLoosing = 0.002;
+    private boolean onlyDemandOccupied = true;
+    private boolean forceWarGoalsForAllWinners = false;
 
     // Power etc.
     private int maxPower = 100;
@@ -682,6 +682,25 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * if its only possible to demand already occupied regions
+     */
+    public boolean isOnlyDemandOccupied() {
+        return onlyDemandOccupied;
+    }
+
+    /**
+     * @return
+     * if all allies should get their war goals
+     */
+    public boolean isForceWarGoalsForAllWinners() {
+        return forceWarGoalsForAllWinners;
+    }
+
+
+
+
+    /**
+     * @return
      * true if hologram features are enabled;
      * false if not or if HolographicDisplays is not installed
      */
@@ -937,8 +956,16 @@ public class FConfig extends DREConfig {
             config.set("war.truceTime", truceTime);
         }
 
+        if (!config.contains("war.occupyNeededForDemand")) {
+            config.set("war.occupyNeededForDemand", onlyDemandOccupied);
+        }
+
         if (!config.contains("war.maxKillPoints")) {
             config.set("war.maxKillPoints", maximumKillPoints);
+        }
+
+        if (!config.contains("war.forceWarGoalsForAllWinners")) {
+            config.set("war.forceWarGoalsForAllWinners", forceWarGoalsForAllWinners);
         }
 
         if (!config.contains("claimTimeout")) {
@@ -1342,6 +1369,14 @@ public class FConfig extends DREConfig {
 
         if (config.contains("war.exhaustionWhenLoosing")) {
             exhaustionWhenLoosing = config.getDouble("war.exhaustionWhenLoosing");
+        }
+
+        if (config.contains("war.occupyNeededForDemand")) {
+            onlyDemandOccupied = config.getBoolean("war.occupyNeededForDemand");
+        }
+
+        if (config.contains("war.forceWarGoalsForAllWinners")) {
+            forceWarGoalsForAllWinners = config.getBoolean("forceWarGoalsForAllWinners");
         }
 
         if (config.contains("maxPower")) {
