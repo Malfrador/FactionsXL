@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.config;
 
-import com.google.common.util.concurrent.CycleDetectingLockFactory;
 import de.erethon.commons.config.Message;
 import de.erethon.commons.config.MessageHandler;
 import de.erethon.factionsxl.FactionsXL;
@@ -90,7 +89,10 @@ public enum FMessage implements Message {
     CMD_REGION_OWNER("cmd.region.owner"),
     CMD_REGION_POPULATION("cmd.region.population"),
     CMD_REGION_PRICE("cmd.region.price"),
+    CMD_REGION_PRICE_CORE("cmd.region.priceCore"),
     CMD_REGION_TYPE("cmd.region.type"),
+    CMD_REGION_OCCUPIER("cmd.region.occupier"),
+    CMD_REGION_INFLUENCE("cmd.region.influence"),
     CMD_RELOAD_DONE("cmd.reload.done"),
     CMD_REQUESTS_TITLE("cmd.requests.title"),
     CMD_SET_ANTHEM_SUCCESS("cmd.setAnthem.success"),
@@ -514,8 +516,8 @@ public enum FMessage implements Message {
     WAR_CB_BORDER_DESC("war.cb.borderDesc"),
     WAR_CB_CONQUEST("war.cb.conquest"),
     WAR_CB_CONQUEST_DESC("war.cb.conquest.desc"),
-    WAR_CB_LIBERATION("war.cb.liberation"),
-    WAR_CB_LIBERATION_DESC("war.cb.liberationDesc"),
+    WAR_CB_INDEPENDENCE("war.cb.liberation"), // Independence and liberation are switched...
+    WAR_CB_INDEPENDENCE_DESC("war.cb.liberationDesc"),
     WAR_CB_RESUBJAGATION("war.cb.resubjagation"),
     WAR_CB_RESUBJAGATION_DESC("war.cb.resubjagationDesc"),
     WAR_CB_RECONQUEST("war.cb.reconquest"),
