@@ -81,12 +81,12 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 case IMPERIAL_BAN:
                     break;
                 case INDEPENDENCE:
-                    break;
-                case LIBERATION:
-                    guiMeta.setDisplayName(FMessage.WAR_CB_LIBERATION.getMessage());
+                    guiMeta.setDisplayName(FMessage.WAR_CB_INDEPENDENCE.getMessage());
                     guiItem.setType(Material.LEAD);
                     guiItem.setItemMeta(guiMeta);
                     gui.addItem(guiItem);
+                case LIBERATION:
+                    break;
                 case BORDER_FRICTION:
                     guiMeta.setDisplayName(FMessage.WAR_CB_BORDER.getMessage());
                     guiItem.setType(Material.STICKY_PISTON);
@@ -164,9 +164,9 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        if (itemName.equals(FMessage.WAR_CB_LIBERATION.getMessage())) {
+        if (itemName.equals(FMessage.WAR_CB_INDEPENDENCE.getMessage())) {
             for (CasusBelli cb : faction.getCasusBelli()) {
-                if (cb.getType() == CasusBelli.Type.LIBERATION && cb.getTarget() == object) {
+                if (cb.getType() == CasusBelli.Type.INDEPENDENCE && cb.getTarget() == object) {
                     casus = cb;
                     break;
                 }

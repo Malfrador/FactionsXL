@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.misc.SimpleDateUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -37,9 +36,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -119,7 +115,7 @@ public class CreateVassalCommand extends FCommand {
         Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);
-        vassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.LIBERATION, mother, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
+        vassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, mother, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
         vassal.setAllod(false);
         ParsingUtil.broadcastMessage(FMessage.CMD_CREATE_SUCCESS.getMessage(), sender.getName(), args[1]);
         ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), mother, vassal);

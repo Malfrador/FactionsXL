@@ -29,15 +29,10 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.faction.Federation;
 import de.erethon.factionsxl.faction.LegalEntity;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+
+import java.util.*;
 
 /**
  * @author Daniel Saukel
@@ -266,6 +261,7 @@ public class WarParty implements FEntity {
     public WarPartyRole getRole() {
         return role;
     }
+
 
     public War getWar() {
         return plugin.getWarCache().getByParty(this);

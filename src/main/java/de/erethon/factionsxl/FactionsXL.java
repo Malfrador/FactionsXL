@@ -103,6 +103,7 @@ public class FactionsXL extends DREPlugin {
     private LWCIntegration lwcIntegration;
     private WarTNT warTNT;
     private WarHandler warHandler;
+    private WarPoints warPoints;
     private CoringHandler core;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
@@ -243,6 +244,7 @@ public class FactionsXL extends DREPlugin {
         factions.loadAll();
         loadWars(WARS);
         loadWarHandler();
+        loadWarPoints();
         loadAtlas();
         loadCoring();
         loadFCommands();
@@ -290,6 +292,7 @@ public class FactionsXL extends DREPlugin {
             }
         }.runTaskTimer(this, 200L, FConfig.HOUR);
     }
+
 
     public void saveData() {
         fData.save();
@@ -647,6 +650,17 @@ public class FactionsXL extends DREPlugin {
      */
     public void createBalanceCache() {
         balanceCache = new BalanceCache();
+    }
+
+    /**
+     * the war point calculator
+     */
+    public void loadWarPoints() {
+        warPoints = new WarPoints();
+    }
+
+    public WarPoints getWarPoints() {
+        return warPoints;
     }
 
     /**

@@ -29,7 +29,6 @@ import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.WarParty;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,7 +41,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class RegionDemand implements WarDemand, Listener, InventoryHolder {
@@ -53,6 +51,8 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     FPlayer fplayer;
     double cost;
     private List<Region> demandRegions = new ArrayList<>();
+
+    FConfig config = plugin.getFConfig();
 
 
     public RegionDemand(List<Region> regions, double warscore) {
@@ -140,6 +140,10 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         }
         gui.addItem(doneItem);
         for (Region r : enemy.getRegions()) {
+            // Show only regions that are occupied by the demanding party
+            if (config.isOnlyDemandOccupied() && r.getOccupant() != null && r.getOccupant() != faction) {
+                continue;
+            }
             ItemStack guiItem = new ItemStack(Material.GRASS_BLOCK);
             ItemMeta guiMeta = guiItem.getItemMeta();
             List<String> lore = new ArrayList<>();
