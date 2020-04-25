@@ -42,6 +42,7 @@ public class Battle {
     FactionCache factions = plugin.getFactionCache();
     FConfig config = plugin.getFConfig();
     WarCache warCache = plugin.getWarCache();
+    WarPoints points = plugin.getWarPoints();
 
     public Battle(Player player1, Player player2) {
         this.player1 = player1;
@@ -93,7 +94,7 @@ public class Battle {
                 continue;
             }
             if (w.getPointsFromKills() <= config.getMaximumKillPoints()) {
-                w.addPoints(1);
+                points.updateScore(w, WarAction.KILL);
                 w.setPointsFromKills(w.getPointsFromKills() + 1);
             }
             w.addKill();
@@ -101,12 +102,14 @@ public class Battle {
                 if (r.getInfluence() + config.getInfluenceFromKill() <= 100) {
                     r.setInfluence(r.getInfluence() + config.getInfluenceFromKill());
                     MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
+                    break;
                 }
             }
-            else {
+            else if (w.getEnemy().getFactions().contains(owner)){
                 if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
                     r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
                     MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
+                    break;
                 }
             }
         }
@@ -115,7 +118,6 @@ public class Battle {
                 continue;
             }
             if (wL.getPointsFromKills() <= config.getMaximumKillPoints()) {
-                wL.removePoints(1);
                 wL.setPointsFromKills(wL.getPointsFromKills() + 1);
             }
             wL.addDeath();

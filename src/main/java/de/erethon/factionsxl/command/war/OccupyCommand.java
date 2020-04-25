@@ -28,7 +28,9 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
+import de.erethon.factionsxl.war.WarAction;
 import de.erethon.factionsxl.war.WarParty;
+import de.erethon.factionsxl.war.WarPoints;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,7 +38,7 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 import java.util.Set;
 
-import static de.erethon.factionsxl.war.CasusBelli.Type.*;
+import static de.erethon.factionsxl.war.CasusBelli.Type.RAID;
 
 /**
  * @author Malfrador
@@ -45,6 +47,7 @@ public class OccupyCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
+    WarPoints points = plugin.getWarPoints();
 
     public OccupyCommand() {
         setCommand("occupy");
@@ -84,6 +87,7 @@ public class OccupyCommand extends FCommand {
             return;
         }
 
+
         if (annexFrom == faction) {
             ParsingUtil.sendMessage(sender, FMessage.WAR_OCCUPY_ALREADY_OCCUPIED.getMessage());
             return;
@@ -106,9 +110,20 @@ public class OccupyCommand extends FCommand {
             return;
         }
 
+        WarParty factionWP = null;
+        for (WarParty wp : faction.getWarParties()) {
+            if (wp.getWar() == war) {
+                factionWP = wp;
+            }
+        }
+        if (factionWP == null || factionWP.getFactions().contains(region.getOwner())) {
+            MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_AT_WAR.getMessage());
+            return;
+        }
+
         double price;
         if (!(war.getTruce())) {
-            if (region.getInfluence() <= config.getInfluenceNeeded() || ( ( region.getCoreFactions().containsKey(faction) ) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()) ) ) {
+            if (region.getInfluence() <= config.getInfluenceNeeded() || ((region.getCoreFactions().containsKey(faction)) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()))) {
                 price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
                 // Price for region with cores of owner is price * 2
                 if (region.getCoreFactions().containsKey(annexFrom)) {
@@ -118,50 +133,51 @@ public class OccupyCommand extends FCommand {
                 if (region.getClaimFactions().containsKey(faction)) {
                     price = price / 4;
                 }
+                if (region.getInfluence() == 0) {
+                    price = 0;
+                }
                 if (faction.getAccount().getBalance() < price) {
                     ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
-                } else {
-                    ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
-                    faction.getAccount().withdraw(price);
-                    for (WarParty wp : faction.getWarParties()) {
-                        if (wp.getFactions().contains(faction)) {
-                            if (region.getCoreFactions().containsKey(region.getOwner()) && wp.getWar().getCasusBelli().getType() == (RECONQUEST)) {
-                                wp.addPoints(20);
-                                wp.getEnemy().removePoints(20);
-                            }
-                            else if ( (wp.getWar().getCasusBelli().getType() == (CONQUEST)) && wp.getWar().getCasusBelli().getTarget() == region.getOwner() ) {
-                                wp.addPoints(15);
-                                wp.getEnemy().removePoints(15);
-                            }
-                            else {
-                                wp.addPoints(5);
-                                wp.getEnemy().removePoints(5);
-                            }
-                            faction.sendMessage(FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
+                    return;
+                }
+                ParsingUtil.sendMessage(player, FMessage.FACTION_PAID.getMessage(), faction, String.valueOf(price));
+                faction.getAccount().withdraw(price);
+                for (WarParty wp : faction.getWarParties()) {
+                    if (wp.getFactions().contains(faction)) {
+                        if (region.getCoreFactions().containsKey(region.getOwner())) {
+                            points.updateScore(wp, WarAction.OCCUPY_CORE);
+                        } else if (region.getClaimFactions().containsKey(faction)) {
+                            points.updateScore(wp, WarAction.OCCUPY_CLAIM);
+                        } else if (wp.getWar().getCasusBelli().getTarget() == region.getOwner()) {
+                            points.updateScore(wp, WarAction.OCCUPY_WAR_TARGET);
+                        } else if (wp.getWar().getCasusBelli().getTarget() == region.getOwner() && region.getCoreFactions().containsKey(annexFrom)) {
+                            points.updateScore(wp, WarAction.OCCUPY_WAR_TARGET_CORE);
+                        } else {
+                            points.updateScore(wp, WarAction.OCCUPY);
                         }
                     }
-                    region.setOccupant(faction);
-                    if (region.getOwner() == region.getOccupant()) {
-                        region.clearOccupant();
-                        region.setOwner(faction);
-                        faction.setExhaustion(faction.getExhaustion() - 4);
-                    }
-
-                    region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
-                    region.setInfluence((int) (config.getInfluenceNeeded() + 10));
-                    annexFrom.setExhaustion(annexFrom.getExhaustion() + 5);
-
-                    faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
                 }
+                region.setOccupant(faction);
+                if (region.getOwner() == region.getOccupant()) {
+                    region.clearOccupant();
+                    region.setOwner(faction);
+                    faction.setExhaustion(faction.getExhaustion() - 4);
+                }
+
+                region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
+                region.setInfluence((int) (config.getInfluenceNeeded() + 10));
+                annexFrom.setExhaustion(annexFrom.getExhaustion() + 5);
+
+                faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+
+
             } else {
                 MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_INFLUENCE_TOO_HIGH.getMessage());
             }
-        } else {
+        }
+        else {
             MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_TRUCE.getMessage());
         }
-
-
-
     }
 }
