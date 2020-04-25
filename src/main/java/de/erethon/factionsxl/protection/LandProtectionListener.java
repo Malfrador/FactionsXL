@@ -28,13 +28,8 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.Material;
-import static org.bukkit.Material.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -45,6 +40,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.bukkit.Material.*;
 
 /**
  * @author Daniel Saukel
@@ -111,7 +112,10 @@ public class LandProtectionListener implements Listener {
             GLASS,
             GLASS_PANE,
             GRASS,
+            FERN,
+            LARGE_FERN,
             GRASS_PATH,
+            GRASS_BLOCK,
             GRAVEL,
             HAY_BLOCK,
             ICE,
@@ -212,6 +216,7 @@ public class LandProtectionListener implements Listener {
             TNT,
             TORCH,
             VINE,
+            LILY_PAD,
             WHITE_BANNER,
             ORANGE_BANNER,
             MAGENTA_BANNER,
