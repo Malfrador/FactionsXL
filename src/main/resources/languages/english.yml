@@ -15,9 +15,9 @@ cmd:
     success: '&v1 &agave &v2 &athe leadership of &v3&a.'
   casusBelli:
     head: '&aTarget &4| &aType &4| &aExpiration'
-    noExpiration: No expiration
+    noExpiration: 'No expiration'
   chatSpy:
-    help: /f spy - Toggles chat spy mode.
+    help: '/f spy - Toggles chat spy mode.'
     on: '&aEnabled chat spy mode.'
     off: '&aDisabled chat spy mode.'
   claim:

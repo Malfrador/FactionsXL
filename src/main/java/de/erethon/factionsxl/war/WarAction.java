@@ -23,8 +23,9 @@ public enum WarAction {
     OCCUPY,
     OCCUPY_CORE,
     OCCUPY_CLAIM,
+    OCCUPY_CAPITAL,
     OCCUPY_WAR_TARGET,
-    OCCUPY_WAR_TARGET_CORE,
+    REOCCUPY_OWN_CORE,
     KILL,
 
 

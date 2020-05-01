@@ -128,6 +128,9 @@ public class FConfig extends DREConfig {
     private double exhaustionWhenLoosing = 0.002;
     private boolean onlyDemandOccupied = true;
     private boolean forceWarGoalsForAllWinners = false;
+    private boolean forceWarGoalsForAllDefenders = false;
+    private boolean defenderRaidBounty = false;
+    private boolean powerGainInWar = true;
 
     // Power etc.
     private int maxPower = 100;
@@ -142,6 +145,8 @@ public class FConfig extends DREConfig {
     public double claimTimeout = 7;
     public int stabilityIndependence = -20;
     public int stabilityIndependenceVassal = 0;
+    public double stabilityRegionSizeModifier = 0.5;
+    public double stabilityMemberPowerModifier = 2.0;
 
     // Holograms
     private boolean hologramsEnabled = true;
@@ -258,13 +263,6 @@ public class FConfig extends DREConfig {
     }
 
     /* Getters and setters */
-    /**
-     * @return
-     * should we send "Updated power values" to console when updating power?
-     */
-    public boolean getSendPowerUpdate() {
-        return sendPowerUpdate;
-    }
     /**
      * @return
      * the language
@@ -658,6 +656,22 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * stability calculation modifier for region size
+     */
+    public double getStabilityRegionSizeModifier() {
+        return stabilityRegionSizeModifier;
+    }
+
+    /**
+     * @return
+     * stability calculation modifier for region size
+     */
+    public double getStabilityMemberPowerModifier() {
+        return stabilityMemberPowerModifier;
+    }
+
+    /**
+     * @return
      * war exhaustion per cycle
      */
     public double getExhaustion() {
@@ -694,6 +708,30 @@ public class FConfig extends DREConfig {
      */
     public boolean isForceWarGoalsForAllWinners() {
         return forceWarGoalsForAllWinners;
+    }
+
+    /**
+     * @return
+     * if all allies should get their war goals
+     */
+    public boolean isDefenderRaidBounty() {
+        return defenderRaidBounty;
+    }
+
+    /**
+     * @return
+     * same but for winning as a defender
+     */
+    public boolean isForceWarGoalsForAllDefenders() {
+        return forceWarGoalsForAllDefenders;
+    }
+
+    /**
+     * @return
+     * if killing in war should give you power back
+     */
+    public boolean isPowerGainInWar() {
+        return powerGainInWar;
     }
 
 
@@ -968,6 +1006,14 @@ public class FConfig extends DREConfig {
             config.set("war.forceWarGoalsForAllWinners", forceWarGoalsForAllWinners);
         }
 
+        if (!config.contains("war.forceWarGoalsForAllDefenders")) {
+            config.set("war.forceWarGoalsForAllDefenders", forceWarGoalsForAllDefenders);
+        }
+
+        if (!config.contains("war.defenderRaidBounty")) {
+            config.set("war.defenderRaidBounty", defenderRaidBounty);
+        }
+
         if (!config.contains("claimTimeout")) {
             config.set("claimTimeout", claimTimeout);
         }
@@ -1077,6 +1123,18 @@ public class FConfig extends DREConfig {
 
         if (!config.contains("war.casusBelli.liberation")) {
             config.set("war.casusBelli.liberation", cbLiberationExp);
+        }
+
+        if (!config.contains("war.powerGain")) {
+            config.set("war.powerGain", powerGainInWar);
+        }
+
+        if (!config.contains("stabilityRegionSizeModifier")) {
+            config.set("stabilityRegionSizeModifier", stabilityRegionSizeModifier);
+        }
+
+        if (!config.contains("stabilityMemberPowerModifier")) {
+            config.set("stabilityMemberPowerModifier", stabilityMemberPowerModifier);
         }
 
         if (!config.contains("maxPower")) {
@@ -1376,7 +1434,27 @@ public class FConfig extends DREConfig {
         }
 
         if (config.contains("war.forceWarGoalsForAllWinners")) {
-            forceWarGoalsForAllWinners = config.getBoolean("forceWarGoalsForAllWinners");
+            forceWarGoalsForAllWinners = config.getBoolean("war.forceWarGoalsForAllWinners");
+        }
+
+        if (config.contains("war.forceWarGoalsForAllDefenders")) {
+            forceWarGoalsForAllDefenders = config.getBoolean("war.forceWarGoalsForAllDefenders");
+        }
+
+        if (config.contains("war.defenderRaidBounty")) {
+            defenderRaidBounty = config.getBoolean("war.defenderRaidBounty");
+        }
+
+        if (config.contains("war.powerGain")) {
+            powerGainInWar = config.getBoolean("war.powerGain");
+        }
+
+        if (config.contains("stabilityRegionSizeModifier")) {
+            stabilityRegionSizeModifier = config.getDouble("stabilityRegionSizeModifier");
+        }
+
+        if (config.contains("stabilityMemberPowerModifier")) {
+            stabilityMemberPowerModifier = config.getDouble("stabilityMemberPowerModifier");
         }
 
         if (config.contains("maxPower")) {

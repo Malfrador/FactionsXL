@@ -50,7 +50,7 @@ public class PaydayCommand extends FCommand {
         core.calculateCoringProgress();
         core.calculateClaimTime();
         wh.calculateWarStatus();
-        wh.calculateWar();
+        wh.updateTruce();
         int i = args.length > 1 ? NumberUtil.parseInt(args[1], 1) : 1;
         do {
             for (Faction faction : FactionsXL.getInstance().getFactionCache().getActive()) {

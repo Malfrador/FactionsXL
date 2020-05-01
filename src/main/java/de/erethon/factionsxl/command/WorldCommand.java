@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.command;
 
-import com.google.common.collect.Lists;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.NumberUtil;
@@ -33,17 +32,16 @@ import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
-
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-
 import de.erethon.factionsxl.util.RegionProcessing;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Daniel Saukel
@@ -107,8 +105,27 @@ public class WorldCommand extends FCommand {
             region.setLevel(NumberUtil.parseInt(args[i], 1));
             ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_LEVEL.getMessage(), region, args[i]);
 
-        } else if (sub.equalsIgnoreCase("addCore") || sub.equalsIgnoreCase("addClaim") || sub.equalsIgnoreCase("removeCore") || sub.equalsIgnoreCase("removeClaim")) {
-            handleFaction(player, region, factions.getByName(args[i]), args, i);
+        } else if (sub.equalsIgnoreCase("addCore")) {
+            Faction faction = factions.getAllByName(args[i]);
+            if (faction != null) {
+                region.getCoreFactions().putIfAbsent(faction, Calendar.getInstance().getTime());
+            }
+        } else if (sub.equalsIgnoreCase("addClaim")) {
+            Faction faction = factions.getAllByName(args[i]);
+            if (faction != null) {
+                region.getClaimFactions().putIfAbsent(faction, Calendar.getInstance().getTime());
+            }
+
+        } else if (sub.equalsIgnoreCase("removeCore")) {
+            Faction faction = factions.getAllByName(args[i]);
+            if (faction != null) {
+                region.getCoreFactions().remove(faction);
+            }
+        } else if (sub.equalsIgnoreCase("removeClaim")) {
+            Faction faction = factions.getAllByName(args[i]);
+            if (faction != null) {
+                region.getClaimFactions().remove(faction);
+            }
 
         } else if (sub.equalsIgnoreCase("calcAdjacent") || sub.equalsIgnoreCase("calc") || sub.equalsIgnoreCase("ca")) {
             calculateNeighbors(player, region);

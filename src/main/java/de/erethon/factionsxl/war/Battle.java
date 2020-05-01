@@ -93,9 +93,13 @@ public class Battle {
             if (warCache.getByParty(w).getTruce()) {
                 continue;
             }
-            if (w.getPointsFromKills() <= config.getMaximumKillPoints()) {
+            if (w.getPointsFromKills() <= config.getMaximumKillPoints() && (w.getWar().getCasusBelli().getType() != CasusBelli.Type.RAID)) {
                 points.updateScore(w, WarAction.KILL);
                 w.setPointsFromKills(w.getPointsFromKills() + 1);
+            }
+            if (w.getWar().getCasusBelli().getType() == CasusBelli.Type.RAID) {
+                points.updateScore(w, WarAction.KILL);
+
             }
             w.addKill();
             if (w.getFactions().contains(owner)) {
@@ -117,8 +121,12 @@ public class Battle {
             if (warCache.getByParty(wL).getTruce()) {
                 continue;
             }
-            if (wL.getPointsFromKills() <= config.getMaximumKillPoints()) {
+            if (wL.getPointsFromKills() <= config.getMaximumKillPoints() && (wL.getWar().getCasusBelli().getType() != CasusBelli.Type.RAID)) {
                 wL.setPointsFromKills(wL.getPointsFromKills() + 1);
+            }
+            if (wL.getWar().getCasusBelli().getType() == CasusBelli.Type.RAID) {
+                points.updateScore(wL, WarAction.KILL);
+
             }
             wL.addDeath();
         }

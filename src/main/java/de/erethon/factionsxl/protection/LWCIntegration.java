@@ -80,7 +80,10 @@ public class LWCIntegration extends JavaModule {
             return false;
         }
         Faction faction = region.getOwner();
-        return faction.isInWar(plugin.getFactionCache().getByMember(player)) || faction.isAdmin(player);
+        if (faction.isInWar(plugin.getFactionCache().getByMember(player)) && region.getInfluence() <= 30) {
+            return true;
+        }
+        return faction.isAdmin(player);
     }
 
 }

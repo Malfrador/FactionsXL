@@ -27,10 +27,7 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.War;
-import de.erethon.factionsxl.war.WarAction;
-import de.erethon.factionsxl.war.WarParty;
-import de.erethon.factionsxl.war.WarPoints;
+import de.erethon.factionsxl.war.*;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,6 +45,7 @@ public class OccupyCommand extends FCommand {
     FactionsXL plugin = FactionsXL.getInstance();
     FConfig config = plugin.getFConfig();
     WarPoints points = plugin.getWarPoints();
+    WarHandler handler = plugin.getWarHandler();
 
     public OccupyCommand() {
         setCommand("occupy");
@@ -116,7 +114,7 @@ public class OccupyCommand extends FCommand {
                 factionWP = wp;
             }
         }
-        if (factionWP == null || factionWP.getFactions().contains(region.getOwner())) {
+        if (factionWP == null || (factionWP.getFactions().contains(region.getOwner()) && region.getOccupant() == null)) {
             MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_AT_WAR.getMessage());
             return;
         }
@@ -148,25 +146,37 @@ public class OccupyCommand extends FCommand {
                             points.updateScore(wp, WarAction.OCCUPY_CORE);
                         } else if (region.getClaimFactions().containsKey(faction)) {
                             points.updateScore(wp, WarAction.OCCUPY_CLAIM);
-                        } else if (wp.getWar().getCasusBelli().getTarget() == region.getOwner()) {
+                        } else if (wp.getWar().getCasusBelli().getTarget() == region.getOwner() && wp.getRole() == WarPartyRole.ATTACKER) {
                             points.updateScore(wp, WarAction.OCCUPY_WAR_TARGET);
-                        } else if (wp.getWar().getCasusBelli().getTarget() == region.getOwner() && region.getCoreFactions().containsKey(annexFrom)) {
-                            points.updateScore(wp, WarAction.OCCUPY_WAR_TARGET_CORE);
+                        } else if (annexFrom.getCapital() == region) {
+                            points.updateScore(wp, WarAction.OCCUPY_CAPITAL);
+                        } else if (region.getCoreFactions().containsKey(faction)) {
+                            points.updateScore(wp, WarAction.REOCCUPY_OWN_CORE);
                         } else {
                             points.updateScore(wp, WarAction.OCCUPY);
                         }
                     }
                 }
+                int occupiedRegions = 0;
+                Faction enemyLeader = (Faction) factionWP.getEnemy().getLeader();
+                for (Region r : enemyLeader.getRegions()) {
+                    if (r.getOccupant() != null) {
+                        occupiedRegions++;
+                    }
+                }
+                if (occupiedRegions >= enemyLeader.getRegions().size()) {
+                    handler.forceWarGoal(factionWP);
+                }
                 region.setOccupant(faction);
                 if (region.getOwner() == region.getOccupant()) {
                     region.clearOccupant();
                     region.setOwner(faction);
-                    faction.setExhaustion(faction.getExhaustion() - 4);
+                    faction.setExhaustion(faction.getExhaustion() - 5);
                 }
 
                 region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
                 region.setInfluence((int) (config.getInfluenceNeeded() + 10));
-                annexFrom.setExhaustion(annexFrom.getExhaustion() + 5);
+                annexFrom.setExhaustion(annexFrom.getExhaustion() + 3);
 
                 faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);

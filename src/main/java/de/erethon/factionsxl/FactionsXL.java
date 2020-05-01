@@ -272,7 +272,7 @@ public class FactionsXL extends DREPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                warHandler.calculateWar();
+                warHandler.updateTruce();
                 warHandler.calculateWarStatus();
             }
         }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
