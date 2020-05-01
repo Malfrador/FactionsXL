@@ -28,14 +28,6 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -43,6 +35,11 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Facton instance manager.
@@ -300,6 +297,24 @@ public class FactionCache {
      */
     public Faction getInactiveByName(String name) {
         for (Faction faction : inactiveFactions) {
+            if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param name
+     * the name to check
+     * @return
+     * the inactive faction that has this name
+     */
+    public Faction getAllByName(String name) {
+        Set<Faction> allFactions = new HashSet<>();
+        allFactions.addAll(inactiveFactions);
+        allFactions.addAll(factions);
+        for (Faction faction : allFactions) {
             if (faction.getName().equalsIgnoreCase(name) || faction.getShortName().equalsIgnoreCase(name) || faction.getLongName().equalsIgnoreCase(name)) {
                 return faction;
             }

@@ -30,12 +30,7 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.board.dynmap.DynmapStyle;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.economy.EconomyMenu;
-import de.erethon.factionsxl.economy.FAccount;
-import de.erethon.factionsxl.economy.FStorage;
-import de.erethon.factionsxl.economy.Resource;
-import de.erethon.factionsxl.economy.ResourceSubcategory;
-import de.erethon.factionsxl.economy.TradeMenu;
+import de.erethon.factionsxl.economy.*;
 import de.erethon.factionsxl.entity.FEntity;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.Request;
@@ -53,26 +48,11 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelli;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -81,6 +61,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static java.lang.Math.round;
 
@@ -102,6 +87,7 @@ public class Faction extends LegalEntity {
     String mapIcon = "redflag";
     DynmapStyle dynmapStyle;
     boolean mapVisibility = true;
+    boolean invincible = false;
     GovernmentType type;
     boolean open;
     double prestige;
@@ -253,6 +239,14 @@ public class Faction extends LegalEntity {
 
     /**
      * @return
+     * if this faction can be attacked
+     */
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    /**
+     * @return
      * the type of the government
      */
     public GovernmentType getGovernmentType() {
@@ -319,14 +313,17 @@ public class Faction extends LegalEntity {
      * the stability value
      */
     public int getStability() {
-        int i = (int) round(stability - exhaustion * exhaustion) - (regions.size() - 1 * regions.size() - 1) / 2;
+        int regionModifier = (int) Math.round(fConfig.getStabilityRegionSizeModifier());
+        int regionStability = (regions.size() * regions.size()) * regionModifier;
+        int i = (int) round(stability - exhaustion * exhaustion) - regionStability;
+
         if (!members.contains(admin)) {
             i = i - 25;
         }
-        if (getPower() > chunks.size()) {
-            i += 10;
-        } else if (getPower() < chunks.size()) {
-            i -= 10;
+        if ((getPower() * fConfig.getStabilityMemberPowerModifier()) > chunks.size()) {
+            i += 50;
+        } else if ((getPower() * fConfig.getStabilityMemberPowerModifier()) < chunks.size()) {
+            i -= 50;
         }
         /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
@@ -342,13 +339,13 @@ public class Faction extends LegalEntity {
         String stability = FMessage.CMD_SHOW_STABILITY.getMessage() + c + getStability();
         String base = FMessage.CMD_SHOW_STABILITY_MOD_BASE.getMessage() + color(this.stability) + "\n";
         String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + ChatColor.RED + "-" + Math.round((this.exhaustion * this.exhaustion) * 100.00) / 100.0 + "\n";
-        String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((regions.size() - 1 * regions.size() - 1) / 2) + "\n";
+        String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((regions.size() * (regions.size() + 1)) / 2) + "\n";
         String adminNotMember = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_ABSENT_MONARCH.getMessage() + color(members.contains(admin) ? 0 : -25) + "\n";
         String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
-        if (getPower() > chunks.size()) {
-            power += ChatColor.GREEN + "+10";
-        } else if (getPower() < chunks.size()) {
-            power += ChatColor.DARK_RED + "-10";
+        if ((getPower() * fConfig.getStabilityMemberPowerModifier()) > chunks.size()) {
+            power += ChatColor.GREEN + "+50";
+        } else if ((getPower() * fConfig.getStabilityMemberPowerModifier()) < chunks.size()) {
+            power += ChatColor.DARK_RED + "-50";
         } else {
             power += ChatColor.YELLOW + "0";
         }
@@ -1371,6 +1368,7 @@ public class Faction extends LegalEntity {
         mapLineColor = config.getString("mapLineColor");
         mapIcon = config.getString("mapIcon");
         mapVisibility = config.getBoolean("mapVisibility");
+        invincible = config.getBoolean("invincible");
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
         open = config.getBoolean("open");
@@ -1483,6 +1481,7 @@ public class Faction extends LegalEntity {
             config.set("mapLineColor", mapLineColor);
             config.set("mapIcon", mapIcon);
             config.set("mapVisibility", mapVisibility);
+            config.set("invincible", invincible);
             config.set("creationDate", creationDate);
             config.set("type", type.toString());
             config.set("open", open);

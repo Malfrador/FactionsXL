@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.command.war;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
@@ -61,16 +62,25 @@ public class WarCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_SUCH_FACTION.getMessage(), args[1]);
             return;
         }
+
+        if (object.isInvincible()) {
+            ParsingUtil.sendMessage(sender, "&cDu kannst diese Fraktion nicht angreifen!");
+            return;
+        }
         // TO DO!
-        //if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
-           //sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
-            //return;
-        //}
+        if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
+           sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
+           return;
+        }
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         Faction f = cache.getByMember(player);
         if (!f.isAdmin(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
+            return;
+        }
+        if (f.getStability() <= 20)  {
+            MessageUtil.sendMessage(player, "&c Nicht genug Stabilität, um einen Krieg zu erklären.");
             return;
         }
         for (Faction faction : factions) {
