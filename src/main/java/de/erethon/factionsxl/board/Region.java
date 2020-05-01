@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.board;
 
-import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.commons.misc.NumberUtil;
@@ -481,7 +480,6 @@ public class Region {
     }
 
     public void save() {
-        MessageUtil.log("Saving region: " + this);
         config.set("name", name);
         config.set("type", type.toString());
         config.set("level", level);
