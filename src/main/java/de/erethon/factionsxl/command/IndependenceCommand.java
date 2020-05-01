@@ -67,7 +67,11 @@ public class IndependenceCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_JOIN_FACTION.getMessage());
             return;
         }
-        
+
+        if (args.length < 1) {
+            ParsingUtil.sendMessage(sender, "&c/f independence <Name>");
+            return;
+        }
         Faction faction = fPlayer.getFaction();
         if ( (faction.getFAdmin() == fPlayer) && !faction.isVassal() ) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
