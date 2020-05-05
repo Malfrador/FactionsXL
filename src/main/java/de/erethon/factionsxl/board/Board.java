@@ -22,17 +22,17 @@ import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.util.LazyChunk;
-import java.io.File;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Stores all regions and claim ownerships.
@@ -83,9 +83,12 @@ public class Board {
      * the region that contains the chunk
      */
     public Region getByName(String name) {
-        for (Region region : regions) {
-            if (region.getName().equals(name)) {
-                return region;
+        for (Region rg : regions) {
+            if (rg.getName() == null) {
+                continue;
+            }
+            if (rg.getName().equals(name)) {
+                return rg;
             }
         }
         return null;
