@@ -31,6 +31,7 @@ import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
 
 import java.util.Date;
+import java.util.Set;
 
 import static de.erethon.factionsxl.war.CasusBelli.Type.RAID;
 
@@ -44,7 +45,7 @@ public class WarHandler {
     public void updateTruce() {
         long now = System.currentTimeMillis();
         for (War w : plugin.getWarCache().getWars()) {
-            if ((w.getTruce()) && (now > w.getStartDate().getTime() + config.getTruceTime()) ) {
+            if ((w.getTruce()) && (now > (w.getStartDate().getTime() + config.getTruceTime())) ) {
                 w.setTruce(false);
                 Faction attacker = (Faction) w.getAttacker().getLeader();
                 Faction defender = (Faction) w.getDefender().getLeader();
@@ -54,6 +55,7 @@ public class WarHandler {
     }
     public void calculateWarStatus() {
         for (War war : plugin.getWarCache().getWars()) {
+            //relationFixer(war); //temporary fix for wrong relations in wars.
             // Add exhaustion
             for (Faction f : war.getAttacker().getFactions()) {
                 if (war.getAttacker().getPoints() < 0) {
@@ -62,8 +64,9 @@ public class WarHandler {
                 f.setExhaustion(f.getExhaustion() + config.getExhaustion());
             }
             for (Faction f : war.getDefender().getFactions()) {
-                if (war.getDefender().getPoints() < 0) {
+                if ((war.getDefender().getPoints() < 0) || (war.getDefender().getKD() < 1)) {
                     f.setExhaustion(f.getExhaustion() + config.getExhaustionLoosing());
+                    continue;
                 }
                 f.setExhaustion(f.getExhaustion() + config.getExhaustion());
             }
@@ -81,6 +84,17 @@ public class WarHandler {
                 return;
             }
 
+            Faction aLeader = (Faction) war.getAttacker().getLeader();
+            Faction dLeader = (Faction) war.getDefender().getLeader();
+            if (aLeader.getStability() <= 0) {
+                defenderGoals(war.getDefender());
+                war.end();
+                return;
+            }
+            if (dLeader.getStability() <= 0) {
+                forceWarGoal(war.getAttacker());
+                return;
+            }
 
         }
 
@@ -96,6 +110,7 @@ public class WarHandler {
     public void forceWarGoal(WarParty warParty) {
         MessageUtil.log("Ending war " + warParty.getWar().toString());
         WarParty enemy = warParty.getEnemy();
+        Faction enemyLeader = (Faction) enemy.getLeader();
         switch (warParty.getWar().getCasusBelli().getType()) {
             case BORDER_FRICTION: // Not implemented
             case LIBERATION:
@@ -111,8 +126,7 @@ public class WarHandler {
                 break;
 
             case RECONQUEST: // Gives all core regions back to their owner. If current (loosing) owner has a core there as well, add Reconquest CB.
-                Faction leader = (Faction) warParty.getLeader();
-                for (Region r : leader.getRegions()) {
+                for (Region r : enemyLeader.getRegions()) {
                     if (r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
                         if (r.getCoreFactions().containsKey(r.getOwner())) {
                             r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
@@ -120,36 +134,40 @@ public class WarHandler {
                         r.setOwner((Faction) warParty.getLeader());
                     }
                 }
+                if (enemyLeader.getRegions().isEmpty()) {
+                    enemyLeader.disband();
+                }
                 break;
 
 
             case CONQUEST: // Give all claimed regions to all winners / just regions claimed by the leader to the leader. Adds Reconquest CB if core
-                for (Faction f : enemy.getFactions()) {
-                    for (Region r : f.getRegions()) {
-                        if (config.isForceWarGoalsForAllWinners()) {
-                            for (Faction ally : warParty.getFactions()) {
-                                if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
-                                    if (r.getCoreFactions().containsKey(r.getOwner())) {
-                                        r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
-                                    }
-                                    r.setOwner(ally);
-                                    if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
-                                        r.setOwner((Faction) warParty.getLeader());
-                                    }
-                                }
-                            }
-                        }
-
-                        else {
-                            if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+                for (Region r : enemyLeader.getRegions()) {
+                    if (config.isForceWarGoalsForAllWinners()) {
+                        for (Faction ally : warParty.getFactions()) {
+                            if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
                                 if (r.getCoreFactions().containsKey(r.getOwner())) {
                                     r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
                                 }
-                                r.setOwner((Faction) warParty.getLeader());
+                                r.setOwner(ally);
+                                if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+                                    r.setOwner((Faction) warParty.getLeader());
+                                }
                             }
-
                         }
                     }
+
+                    else {
+                        if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+                            if (r.getCoreFactions().containsKey(r.getOwner())) {
+                                r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
+                            }
+                            r.setOwner((Faction) warParty.getLeader());
+                        }
+
+                    }
+                }
+                if (enemyLeader.getRegions().isEmpty()) {
+                    enemyLeader.disband();
                 }
                 break;
 
@@ -164,7 +182,7 @@ public class WarHandler {
                 Faction newLord = (Faction) warParty.getLeader();
                 Faction newVassal = (Faction) warParty.getWar().getCasusBelli().getTarget();
                 new RelationRequest(Bukkit.getConsoleSender(), newLord, newVassal, Relation.VASSAL).confirm();
-                newVassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RESUBJAGATION, newLord, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
+                newVassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, newLord, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
                 break;
         }
 
@@ -183,27 +201,45 @@ public class WarHandler {
             enemyF.getAccount().withdraw(bounty);
             return;
         }
-        for (Faction f : enemy.getFactions()) {
-            for (Region r : f.getRegions()) {
-                if (config.isForceWarGoalsForAllDefenders()) {
-                    for (Faction ally : warParty.getFactions()) {
-                        if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
-                            if (r.getCoreFactions().containsKey(r.getOwner())) {
-                                r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
-                            }
-                            r.setOwner(ally);
-                        }
-                    }
-                }
-
-                else {
-                    if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+        Faction enemyLeader = (Faction) enemy.getLeader();
+        for (Region r : enemyLeader.getRegions()) {
+            if (config.isForceWarGoalsForAllDefenders()) {
+                for (Faction ally : warParty.getFactions()) {
+                    if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
                         if (r.getCoreFactions().containsKey(r.getOwner())) {
                             r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
                         }
-                        r.setOwner((Faction) warParty.getLeader());
+                        r.setOwner(ally);
                     }
+                }
+            }
 
+            else {
+                if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+                    if (r.getCoreFactions().containsKey(r.getOwner())) {
+                        r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
+                    }
+                    r.setOwner((Faction) warParty.getLeader());
+                }
+
+            }
+        }
+        if (enemyLeader.getRegions().isEmpty()) {
+            enemyLeader.disband();
+        }
+    }
+
+    public void relationFixer(War war) {
+        Set<Faction> factionSetA =  war.getAttacker().getFactions();
+        Set<Faction> factionSetD = war.getDefender().getFactions();
+        // Set all relations to enemy
+        for (Faction attacker : factionSetA) {
+            for (Faction defender : factionSetD) {
+                if (attacker != defender) { // To prevent self-declaration, for example for vassals
+                    if (attacker.getRelation(defender) != Relation.ENEMY) {
+                        new RelationRequest(Bukkit.getConsoleSender(), attacker, defender, Relation.ENEMY).confirm();
+                        MessageUtil.log("Relation fixer found a wrong relation: " + attacker.getName() + " & " + defender.getName());
+                    }
                 }
             }
         }

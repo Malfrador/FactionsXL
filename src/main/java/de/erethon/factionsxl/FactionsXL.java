@@ -275,7 +275,7 @@ public class FactionsXL extends DREPlugin {
                 warHandler.updateTruce();
                 warHandler.calculateWarStatus();
             }
-        }.runTaskTimer(this, FConfig.MINUTE * 5, FConfig.MINUTE * 5);
+        }.runTaskTimer(this, 1, FConfig.MINUTE * 5);
         if (fConfig.isEconomyEnabled()) {
             new BukkitRunnable() {
                 @Override
@@ -291,6 +291,10 @@ public class FactionsXL extends DREPlugin {
                 fPlayers.autoKick();
             }
         }.runTaskTimer(this, 200L, FConfig.HOUR);
+
+        for (War war : wars.getWars()) {
+            warHandler.relationFixer(war);
+        }
     }
 
 
@@ -605,7 +609,7 @@ public class FactionsXL extends DREPlugin {
      * load / reload the instance of WarTNT
      */
     public void loadWarTNT() {
-        warTNT = new WarTNT(fConfig.getWarExplosionRestorationTime());
+        warTNT = new WarTNT(fConfig.getWarExplosionTNTRestorationTime(), fConfig.getWarExplosionSiegeRestorationTime());
         manager.registerEvents(warTNT, this);
     }
 

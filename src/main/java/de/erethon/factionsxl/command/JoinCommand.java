@@ -18,10 +18,12 @@
  */
 package de.erethon.factionsxl.command;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.scoreboard.FTeamWrapper;
 import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.command.CommandSender;
@@ -58,9 +60,26 @@ public class JoinCommand extends FCommand {
             return;
         }
 
+        FPlayer fPlayer = plugin.getFPlayerCache().getByPlayer(player);
+        long now = System.currentTimeMillis(); // 3600000
+
+        if (player.hasPermission("fxl.bypass") && args.length == 2) {
+            faction.getMembers().add(player);
+            fPlayer.getData().setLastJoinedFaction(now);
+            faction.sendMessage(FMessage.FACTION_JOIN_ACCEPT.getMessage(), player);
+            FTeamWrapper.updatePrefixes(faction);
+            faction.getInvitedPlayers().remove(player);
+            return;
+        }
+        if ( (fPlayer.getData().getLastJoinedFaction()) != 0 && (fPlayer.getData().getLastJoinedFaction() + 3600000) > now  ){
+            MessageUtil.sendMessage(player, "&cDu musst eine Stunde warten, bevor du wieder einer Fraktion beitreten kannst.");
+            return;
+        }
+
         if (faction.getInvitedPlayers().contains(player) || faction.isPrivileged(player) || faction.isOpen()) {
             if (args.length == 2) {
                 faction.getMembers().add(player);
+                fPlayer.getData().setLastJoinedFaction(now);
                 faction.sendMessage(FMessage.FACTION_JOIN_ACCEPT.getMessage(), player);
                 FTeamWrapper.updatePrefixes(faction);
             } else {

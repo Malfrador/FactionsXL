@@ -31,13 +31,14 @@ import de.erethon.factionsxl.scoreboard.sidebar.FWarSidebar;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
-import java.util.Set;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -98,13 +99,13 @@ public class WarStatusCommand extends FCommand {
 
     public void showWarInfo(CommandSender sender, War war) {
         String attackerLeader = war.getAttacker().getLeader().getName();
-        String attackers = ParsingUtil.factionsToString(war.getAttacker().getFactions(), ChatColor.DARK_RED);
+        String attackers = ParsingUtil.factionsToString(war.getAttacker().getFactions(), ChatColor.GRAY);
         int attackerKills = war.getAttacker().kills;
         int attackerDeaths = war.getAttacker().deaths;
         double attackerKD = war.getAttacker().getKD();
         int attackerPoints = war.getAttacker().getPoints();
         String defenderLeader = war.getDefender().getLeader().getName();
-        String defenders = ParsingUtil.factionsToString(war.getDefender().getFactions(), ChatColor.DARK_RED);
+        String defenders = ParsingUtil.factionsToString(war.getDefender().getFactions(), ChatColor.GRAY);
         int defenderKills = war.getDefender().kills;
         int defenderDeaths = war.getDefender().deaths;
         double defenderKD = war.getDefender().getKD();
@@ -114,13 +115,12 @@ public class WarStatusCommand extends FCommand {
         MessageUtil.sendCenteredMessage(sender, ChatColor.DARK_RED + attackerLeader + ChatColor.RED + " vs. " + ChatColor.DARK_RED + defenderLeader);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_CASUS_BELLI.getMessage() + cb);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_DATE.getMessage() + date);
+        MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLPOINTS.getMessage(String.valueOf(war.getDefender().getPointsFromKills()), String.valueOf(config.getMaximumKillPoints())));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_ATTACKERS.getMessage() + attackers);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLS_AND_DEATHS.getMessage(String.valueOf(attackerKills), String.valueOf(attackerDeaths), String.valueOf(attackerKD)));
-        MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLPOINTS.getMessage(String.valueOf(war.getDefender().getPointsFromKills()), String.valueOf(config.getMaximumKillPoints())));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_POINTS.getMessage() + String.valueOf(attackerPoints));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_DEFENDERS.getMessage() + defenders);
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLS_AND_DEATHS.getMessage(String.valueOf(defenderKills), String.valueOf(defenderDeaths), String.valueOf(defenderKD)));
-        MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_KILLPOINTS.getMessage(String.valueOf(war.getDefender().getPointsFromKills()), String.valueOf(config.getMaximumKillPoints())));
         MessageUtil.sendMessage(sender, FMessage.CMD_WAR_STATUS_POINTS.getMessage() + String.valueOf(defenderPoints));
         FScoreboard.get((Player) sender).setTemporarySidebar(new FWarSidebar(war));
     }

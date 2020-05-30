@@ -58,6 +58,10 @@ public class CoreCommand extends FCommand {
             MessageUtil.sendMessage(player, FMessage.ERROR_LAND_NOT_OWNED.getMessage());
             return;
         }
+        if (region.getCoreFactions().containsKey(faction)) {
+            MessageUtil.sendMessage(player, FMessage.ERROR_REGION_IS_CORE.getMessage());
+            return;
+        }
         if (!faction.isPrivileged(player)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;

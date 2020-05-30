@@ -26,11 +26,13 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FTeamWrapper;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.util.HashMap;
-import java.util.Map;
+import de.erethon.factionsxl.war.CasusBelli;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Daniel Saukel
@@ -160,10 +162,12 @@ public class RelationRequest extends Request {
         } else if (relation == Relation.VASSAL) {
             getObject().getRelations().put(getSubject(), Relation.LORD);
             getObject().setAllod(true);
+            getObject().getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, getSubject(), null));
             ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), getSubject(), getObject());
         } else if (relation == Relation.LORD) {
             getObject().getRelations().put(getSubject(), Relation.VASSAL);
             getSubject().setAllod(true);
+            getObject().getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, getSubject(), null));
             ParsingUtil.broadcastMessage(FMessage.RELATION_VASSALIZED.getMessage(), getObject(), getSubject());
         }
         if (!getSubject().isVassal()) {

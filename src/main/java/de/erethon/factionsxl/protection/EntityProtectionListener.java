@@ -26,24 +26,13 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
-import static de.erethon.factionsxl.protection.EntityProtectionListener.Action.*;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.entity.LingeringPotionSplashEvent;
-import org.bukkit.event.entity.PlayerLeashEntityEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -51,6 +40,8 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.projectiles.ProjectileSource;
+
+import static de.erethon.factionsxl.protection.EntityProtectionListener.Action.*;
 
 /**
  * @author Daniel Saukel
@@ -111,8 +102,8 @@ public class EntityProtectionListener implements Listener {
             ParsingUtil.sendActionBarMessage(attacker, FMessage.PROTECTION_CANNOT_ATTACK_PLAYER.getMessage(), dFaction);
             event.setCancelled(true);
         } else if (rFaction != null && rFaction.getRelation(dFaction).isProtected() && (aFaction == null || !aFaction.isInWar(dFaction))) {
-            if (config.isTerritoryProtectionEnabled() && (!config.isCapitalProtectionEnabled()
-                    || rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
+            if (config.isTerritoryProtectionEnabled() || (config.isCapitalProtectionEnabled()
+                    && rFaction.getCapital().equals(plugin.getBoard().getByLocation(eDefender.getLocation())))) {
                 ParsingUtil.sendActionBarMessage(attacker, (config.isCapitalProtectionEnabled() ? FMessage.PROTECTION_CANNOT_ATTACK_CAPITAL
                         : FMessage.PROTECTION_CANNOT_ATTACK_FACTION).getMessage(), rFaction);
                 event.setCancelled(true);

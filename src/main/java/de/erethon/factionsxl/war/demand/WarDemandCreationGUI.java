@@ -22,34 +22,26 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
-import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import de.erethon.vignette.api.InventoryGUI;
-import de.erethon.vignette.api.SingleInventoryGUI;
-import de.erethon.vignette.api.layout.CenteredInventoryLayout;
-import de.erethon.vignette.api.layout.FlowInventoryLayout;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -98,6 +90,11 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
         raidMeta.setDisplayName(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage());
         raidItem.setItemMeta(raidMeta);
         gui.addItem(raidItem);
+        ItemStack relItem = new ItemStack(Material.BLUE_CONCRETE);
+        ItemMeta relMeta = relItem.getItemMeta();
+        relMeta.setDisplayName("§eBeziehung");
+        relItem.setItemMeta(relMeta);
+        gui.addItem(relItem);
         gui.setItem(17, send);
         ItemStack delItem = new ItemStack(Material.BARRIER);
         ItemMeta delMeta = delItem.getItemMeta();
@@ -133,16 +130,19 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
             player.listWarDemands();
         } else if (send.equals(button)) {
             player.getPeaceOffer().send();
-        } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage())) {
+        } else if (button.getItemMeta() != null && button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_CLEAR_BUTTON.getMessage())) {
             player.getPeaceOffer().getDemands().clear();
             MessageUtil.sendMessage(event.getWhoClicked(), FMessage.WAR_DEMAND_CREATION_MENU_CLEARED.getMessage());
-        } else if (button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage())) {
+        } else if (button.getItemMeta() != null && button.getItemMeta().getDisplayName().contains(FMessage.WAR_DEMAND_CREATION_MENU_REGION_BUTTON.getMessage())) {
             if (player.getPeaceOffer().isOffer()) {
                 new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), plugin.getFactionCache().getByFPlayer(player));
             }
             new RegionDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
-        } else if (button.getItemMeta().getDisplayName().contains(FMessage.RELATION_VASSAL.getMessage())) {
-            new RelationDemand();
+        } else if (button.getItemMeta() != null && button.getItemMeta().getDisplayName().contains("§eBeziehung")) {
+            if (player.getPeaceOffer().isOffer()) {
+                new RelationDemand().openSetupGUI((Player) event.getWhoClicked(), plugin.getFactionCache().getByFPlayer(player));
+            }
+            new RelationDemand().openSetupGUI((Player) event.getWhoClicked(), enemy);
         } else {
             PeaceOffer.openSetupGUI(PeaceOffer.getDemandType(button), player.getPlayer());
         }

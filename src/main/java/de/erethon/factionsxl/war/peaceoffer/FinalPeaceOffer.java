@@ -22,7 +22,6 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.War;
@@ -31,7 +30,6 @@ import de.erethon.factionsxl.war.WarPartyRole;
 import de.erethon.factionsxl.war.demand.WarDemand;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -121,7 +119,7 @@ public class FinalPeaceOffer extends PeaceOffer {
         MessageUtil.broadcastMessage(" ");
             // TODO: Might break after government update
             // TODO: Add time modifier
-        purge();
+        //purge();
     }
 
     @Override

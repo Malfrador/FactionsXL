@@ -105,6 +105,9 @@ public class FCommandCache extends DRECommandCache {
     public OccupyCommand warAnnex = new OccupyCommand();
     public WorldCommand world = new WorldCommand();
 
+    public WarInviteCommand warInviteCommand = new WarInviteCommand();
+    public WarAdminCommand editWar = new WarAdminCommand();
+
     public FCommandCache(DREPlugin plugin) {
         super(LABEL, plugin);
         this.plugin = plugin;
@@ -175,6 +178,10 @@ public class FCommandCache extends DRECommandCache {
         addCommand(peaceCommand);
         addCommand(warAnnex);
         addCommand(independence);
+
+        // debug/Workaround
+        addCommand(warInviteCommand);
+        addCommand(editWar);
 
         FConfig config = FactionsXL.getInstance().getFConfig();
         if (config.isEconomyEnabled()) {

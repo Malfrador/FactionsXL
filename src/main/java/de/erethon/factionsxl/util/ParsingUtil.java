@@ -29,13 +29,6 @@ import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarParty;
-
-import java.util.*;
-
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -44,6 +37,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Partially adapted from FactionsOne by Sataniel.
@@ -177,8 +174,12 @@ public enum ParsingUtil {
             }
         } catch (NoClassDefFoundError error) {
         }
-
-        return ChatColor.translateAlternateColorCodes('&', string);
+        if (sender.getPlayer().hasPermission("fxl.chat.color")) {
+            return ChatColor.translateAlternateColorCodes('&', string);
+        }
+        else {
+            return string;
+        }
     }
 
     /**

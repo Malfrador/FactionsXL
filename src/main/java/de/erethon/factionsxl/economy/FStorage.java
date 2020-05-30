@@ -98,7 +98,7 @@ public class FStorage {
                 }
             }
             double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
-            if (faction.getStability() >= 10) {
+            if (faction.getStability() >= 30) {
                 // Increase influence up to 100 if core
                 if (region.getCoreFactions().containsKey(faction) && region.getInfluence() + inf <= 100) {
                     region.setInfluence(region.getInfluence() + (int) inf);

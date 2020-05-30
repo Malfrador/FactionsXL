@@ -106,6 +106,10 @@ public class MoneyCommand extends FCommand {
     }
 
     public void withdraw(CommandSender sender, Faction faction, double amount) {
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(sender, "&cIm Krieg kann kein Geld abgehoben werden.");
+            return;
+        }
         if (!faction.isPrivileged(sender)) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;

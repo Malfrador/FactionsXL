@@ -112,6 +112,16 @@ public class RegionCommand extends FCommand {
         if (region.getOccupant() != null) {
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OCCUPIER.getMessage() + c + region.getOccupant().getName());
         }
+        ArrayList<BaseComponent> adjacentList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText("§6Angrenzend: ")));
+        boolean adjacentFirst = true;
+        for (Region rg : region.getNeighbours()) {
+            if (!adjacentFirst) {
+                adjacentList.addAll(Arrays.asList(TextComponent.fromLegacyText(ChatColor.GOLD + ", ")));
+            }
+            adjacentFirst = false;
+            adjacentList.addAll(Arrays.asList(TextComponent.fromLegacyText(rg.getName())));
+        }
+        MessageUtil.sendMessage(player, adjacentList.toArray(new BaseComponent[]{}));
         BaseComponent[] income1 = TextComponent.fromLegacyText(FMessage.CMD_REGION_TYPE.getMessage());
         BaseComponent[] income2 = TextComponent.fromLegacyText(c + region.getType().getName() + " (" + region.getLevel() + ")");
         BaseComponent[] incomeHover = new BaseComponent[]{};

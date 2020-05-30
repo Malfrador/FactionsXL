@@ -150,9 +150,6 @@ public class RelationCommand extends FCommand {
                 }
                 if (WarParty != null && WarParty.getFactions().contains(warFaction)) {
                     WarParty.leaveWar(warFaction);
-                    for (Faction f : WarParty.getEnemy().getFactions()) {
-                        new RelationRequest(sender, warFaction, f, Relation.PEACE).confirm();
-                    }
                     MessageUtil.log("Removed " + warFaction.getName() + " from WarParty " + WarParty.getName() + " because alliance ended.");
                     ParsingUtil.broadcastMessage(FMessage.WAR_ALLY_ABANDONED.getMessage(), warFaction);
                 }

@@ -26,6 +26,7 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelli;
+import de.erethon.factionsxl.war.War;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -96,13 +97,19 @@ public class ClaimCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage(), region, faction);
             return;
         }
-        if (faction.isInWar() && !(region.isNeutral())) {
-            ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
-            return;
+        if (region.getOwner() != null) {
+            War war = plugin.getWarCache().getWarTogether(region.getOwner(), faction );
+            if (war.getAttacker().getFactions().contains(faction)) {
+                ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
+                return;
+            }
         }
 
         if (plugin.getFConfig().isEconomyEnabled()) {
             double price = region.getClaimPrice(faction);
+            if (region.getCoreFactions().containsKey(region.getOwner())) {
+                price = price * 2;
+            }
             if (faction.getAccount().getBalance() < price) {
                 ParsingUtil.sendMessage(player, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), faction, String.valueOf(price));
                 return;

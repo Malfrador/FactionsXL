@@ -345,7 +345,8 @@ public class WorldCommand extends FCommand {
             return;
         }
         rgOwn.addNeighbour(rgAdd);
-        MessageUtil.sendMessage(p, "&aAdded &e" + rgAdd.getName() + "&a to adjacent regions for &e" + rgOwn.getName() + "&a.");
+        rgAdd.addNeighbour(rgOwn);
+        MessageUtil.sendMessage(p, "&e" + rgAdd.getName() + "&a and &e" + rgOwn.getName() + "&a are now adjacent to each other.");
     }
 
     private void removeNeighbour(Player p, String[] args) {
@@ -355,8 +356,9 @@ public class WorldCommand extends FCommand {
             MessageUtil.sendMessage(p, "&cInvalid region.");
             return;
         }
+        rgRem.getNeighbours().remove(rgOwn);
         rgOwn.getNeighbours().remove(rgRem);
-        MessageUtil.sendMessage(p, "&aRemoved &e" + rgRem.getName() + "&afrom adjacent regions for &e" + rgOwn.getName() + "&a.");
+        MessageUtil.sendMessage(p, "&e" + rgRem.getName() + "&a and &e" + rgOwn.getName() + "&a are no longer adjacent.");
     }
 
     private void calculateNeighbors(Player p, Region rg) {

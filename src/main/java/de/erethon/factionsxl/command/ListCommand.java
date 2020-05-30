@@ -91,9 +91,10 @@ public class ListCommand extends FCommand implements Listener, InventoryHolder {
             }
             String power = String.valueOf(faction.getPower());
             String provinces = String.valueOf(faction.getRegions().size());
+            String expansion = String.valueOf(faction.getExpansion());
             meta.setLore(Arrays.asList(FMessage.CMD_SHOW_GOVERNMENT_TYPE.getMessage() + c + govType,
                     FMessage.CMD_SHOW_LEADER.getMessage() + c + leader,
-                    FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces)
+                    FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces, expansion)
             ));
             meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
             banner.setItemMeta(meta);

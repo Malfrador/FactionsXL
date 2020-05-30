@@ -23,11 +23,12 @@ import de.erethon.commons.config.DREConfig;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Request;
+import org.bukkit.Location;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Location;
 
 /**
  * @author Daniel Saukel
@@ -41,6 +42,7 @@ public class FPlayerData extends DREConfig {
     private String lastName;
     private String title;
     private long timeLastPlayed;
+    private long lastJoinedFaction;
     private double powerBase;
     private boolean scoreboardEnabled = plugin.getFConfig().isScoreboardEnabledByDefault();
     private boolean anthemsEnabled = true;
@@ -66,6 +68,10 @@ public class FPlayerData extends DREConfig {
     public String getLastName() {
         return lastName;
     }
+
+    public long getLastJoinedFaction() { return lastJoinedFaction; }
+
+    public void setLastJoinedFaction(long time) { lastJoinedFaction = time; }
 
     /**
      * @param name
@@ -206,6 +212,9 @@ public class FPlayerData extends DREConfig {
         if (config.contains("timeLastPlayed")) {
             timeLastPlayed = config.getLong("timeLastPlayed");
         }
+        if (config.contains("timeLastJoinedFaction")) {
+            lastJoinedFaction = config.getLong("timeLastJoinedFaction");
+        }
         scoreboardEnabled = config.getBoolean("scoreboardEnabled", scoreboardEnabled);
         anthemsEnabled = config.getBoolean("anthemsEnabled", anthemsEnabled);
         home = (Location) config.get("home");
@@ -224,6 +233,7 @@ public class FPlayerData extends DREConfig {
         config.set("lastName", lastName);
         config.set("title", title);
         config.set("timeLastPlayed", timeLastPlayed);
+        config.set("timeLastJoinedFaction", lastJoinedFaction);
         config.set("scoreboardEnabled", scoreboardEnabled);
         config.set("anthemsEnabled", anthemsEnabled);
         config.set("home", home);

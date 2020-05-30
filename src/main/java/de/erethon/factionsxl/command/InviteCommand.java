@@ -58,7 +58,7 @@ public class InviteCommand extends FCommand {
         }
 
         Player player = Bukkit.getPlayer(args[i]);
-        if (!player.isOnline()) {
+        if (player == null || !player.isOnline()) {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_PLAYER_NOT_ONLINE.getMessage(), args[i]);
             return;
         }

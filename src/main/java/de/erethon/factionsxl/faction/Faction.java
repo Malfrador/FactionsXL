@@ -91,7 +91,7 @@ public class Faction extends LegalEntity {
     GovernmentType type;
     boolean open;
     double prestige;
-    int stability;
+    int stabilityBase;
     double exhaustion;
     double manpowerModifier;
     Location home;
@@ -298,14 +298,14 @@ public class Faction extends LegalEntity {
      * the power of all players
      */
     public int getPower() {
-        Double power = 0D;
+        double power = 0D;
         for (UUID member : members.getUniqueIds()) {
             Double d = plugin.getFData().power.get(member);
             if (d != null) {
                 power += d;
             }
         }
-        return power.intValue();
+        return (int) power;
     }
 
     /**
@@ -313,17 +313,19 @@ public class Faction extends LegalEntity {
      * the stability value
      */
     public int getStability() {
-        int regionModifier = (int) Math.round(fConfig.getStabilityRegionSizeModifier());
-        int regionStability = (regions.size() * regions.size()) * regionModifier;
-        int i = (int) round(stability - exhaustion * exhaustion) - regionStability;
+        int base = 50;
+        int exhaustionExponent = 1;
+        int sizeExponent = 1;
+        int sizeExemptAmount = fConfig.getStabilityRegionExempt();
+        double powerPerRegion = fConfig.getPowerPerRegion();
+        double powerRegionRatio = getPower() / (regions.size() * powerPerRegion);
+        double warExhaustion = Math.pow((-1 * exhaustion) * exhaustion, exhaustionExponent);
+        double factionSize = Math.pow((-1 * (regions.size() - sizeExemptAmount)), sizeExponent);
+        double power = getPower() / (regions.size() * powerPerRegion) * powerRegionRatio;
+        int i = base + (int) round(warExhaustion + factionSize + power);
 
         if (!members.contains(admin)) {
             i = i - 25;
-        }
-        if ((getPower() * fConfig.getStabilityMemberPowerModifier()) > chunks.size()) {
-            i += 50;
-        } else if ((getPower() * fConfig.getStabilityMemberPowerModifier()) < chunks.size()) {
-            i -= 50;
         }
         /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
@@ -336,20 +338,22 @@ public class Faction extends LegalEntity {
      * the stability value with all modifiers as hover texts
      */
     public BaseComponent[] getStabilityModifiers(ChatColor c) {
+        int base = 50;
+        int exhaustionExponent = 1;
+        int sizeExponent = 1;
+        int sizeExemptAmount = fConfig.getStabilityRegionExempt();
+        double powerPerRegion = fConfig.getPowerPerRegion();
+        double powerRegionRatio = getPower() / (regions.size() * powerPerRegion);
+        double warExhaustion = Math.pow((-1 * exhaustion) * exhaustion, exhaustionExponent);
+        double factionSize = Math.pow((-1 * (regions.size() - sizeExemptAmount)), sizeExponent);
+        double pow = getPower() / (regions.size() * powerPerRegion) * powerRegionRatio;
         String stability = FMessage.CMD_SHOW_STABILITY.getMessage() + c + getStability();
-        String base = FMessage.CMD_SHOW_STABILITY_MOD_BASE.getMessage() + color(this.stability) + "\n";
-        String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + ChatColor.RED + "-" + Math.round((this.exhaustion * this.exhaustion) * 100.00) / 100.0 + "\n";
-        String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((regions.size() * (regions.size() + 1)) / 2) + "\n";
+        String b = FMessage.CMD_SHOW_STABILITY_MOD_BASE.getMessage() + color(base) + "\n";
+        String exhaustion = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_EXHAUSTION.getMessage() + color((int) Math.round(warExhaustion)) + "\n";
+        String size = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_PROVINCES.getMessage() + color((int) Math.round(factionSize)) + "\n";
         String adminNotMember = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_ABSENT_MONARCH.getMessage() + color(members.contains(admin) ? 0 : -25) + "\n";
         String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
-        if ((getPower() * fConfig.getStabilityMemberPowerModifier()) > chunks.size()) {
-            power += ChatColor.GREEN + "+50";
-        } else if ((getPower() * fConfig.getStabilityMemberPowerModifier()) < chunks.size()) {
-            power += ChatColor.DARK_RED + "-50";
-        } else {
-            power += ChatColor.YELLOW + "0";
-        }
-        power += "\n";
+        power += color((int) Math.round(pow)) + "" + ChatColor.DARK_GRAY + " (" + ChatColor.GRAY + Math.round(powerRegionRatio * 100) + "%" + ChatColor.DARK_GRAY + ")" + "\n";
         /*int i = 0;
         for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
@@ -358,7 +362,7 @@ public class Faction extends LegalEntity {
 
         BaseComponent[] msg = TextComponent.fromLegacyText(stability);
         for (BaseComponent component : msg) {
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(base + exhaustion + size + adminNotMember + power)));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(b + exhaustion + size + adminNotMember + power)));
         }
         return msg;
     }
@@ -377,8 +381,8 @@ public class Faction extends LegalEntity {
      * @param stability
      * the stability value to set
      */
-    public void setStability(int stability) {
-        this.stability = stability;
+    public void setStabilityBase(int stability) {
+        this.stabilityBase = stability;
     }
 
     /**
@@ -1372,7 +1376,7 @@ public class Faction extends LegalEntity {
         creationDate = config.getLong("creationDate");
         type = GovernmentType.valueOf(config.getString("type"));
         open = config.getBoolean("open");
-        stability = config.getInt("stability");
+        stabilityBase = config.getInt("stability");
         exhaustion = config.getDouble("exhaustion");
         manpowerModifier = config.getDouble("manpowerModifier", fConfig.getDefaultManpowerModifier());
         setHome((Location) config.get("home"));
@@ -1485,7 +1489,7 @@ public class Faction extends LegalEntity {
             config.set("creationDate", creationDate);
             config.set("type", type.toString());
             config.set("open", open);
-            config.set("stability", stability);
+            config.set("stability", stabilityBase);
             config.set("exhaustion", exhaustion);
             if (!active) {
                 try {

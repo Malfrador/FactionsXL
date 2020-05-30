@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.player;
 
-import com.google.common.collect.ObjectArrays;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.player.PlayerCollection;
 import de.erethon.commons.player.PlayerUtil;
@@ -34,17 +33,14 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.demand.WarDemand;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 /**
  * Represents a player.
@@ -62,6 +58,7 @@ public class FPlayer implements FEntity, PlayerWrapper {
     private Region autoclaiming;
     private Region lastRegion;
     private PeaceOffer peaceOffer;
+    private double lastPlayed;
 
     private FPlayerData data;
 
@@ -96,6 +93,7 @@ public class FPlayer implements FEntity, PlayerWrapper {
     public Player getPlayer() {
         return player;
     }
+
 
     /**
      * @return
@@ -330,6 +328,9 @@ public class FPlayer implements FEntity, PlayerWrapper {
         Region region = plugin.getBoard().getByLocation(home);
         if (region == null || region.getOwner() == null) {
             return true;
+        }
+        if (region.getOwner().getRelation(this) == Relation.ENEMY) {
+            return false;
         }
         if (!region.getOwner().getRelation(this).canBuild()) {
             return false;

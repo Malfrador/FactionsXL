@@ -22,8 +22,6 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.entity.Relation;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
@@ -33,15 +31,12 @@ import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.WarCache;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.FinalPeaceOffer;
-import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import de.erethon.factionsxl.war.peaceoffer.SeparatePeaceOffer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.server.BroadcastMessageEvent;
 
-import java.security.SecurityPermission;
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Malfrador
@@ -104,6 +99,11 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                     break;
                 }
             }
+            if (matching != null && faction.getStability() < matching.getCost() ) {
+                matching.confirm();
+                ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_SUCCESS.getMessage(), objectFaction, subjectFaction);
+                return;
+            }
             if (args[2].equals("-denySingle") && matching != null) {
                 ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_FACTION.getMessage(), objectFaction);
                 matching.purge();
@@ -147,6 +147,14 @@ public class ConfirmPeaceRequestCommand extends FCommand {
                     peace = p;
                     break;
                 }
+            }
+            if (peace == null) {
+                return;
+            }
+            if (faction.getStability() < peace.getCost()) { // Auto confirm if not enough stability
+                peace.confirm();
+                FScoreboard.updateAllProviders();
+                return;
             }
             if (args[2].equals("-denyFinal")) {
                 ParsingUtil.broadcastMessage(FMessage.CMD_PEACE_CONFIRM_REJECTED_WARPARTY.getMessage(), wp.getName());

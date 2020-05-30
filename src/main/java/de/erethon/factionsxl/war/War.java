@@ -26,15 +26,9 @@ import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
-import de.erethon.factionsxl.faction.LegalEntity;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.ParsingUtil;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Consumer;
-
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -43,6 +37,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Daniel Saukel
@@ -153,12 +153,14 @@ public class War {
         wars.getUnconfirmedWars().remove(this);
         wars.getWars().add(this);
         this.truce = true;
-        Set<Faction> factionSet =  this.getAttacker().getFactions();
+        Set<Faction> factionSetA =  this.getAttacker().getFactions();
         Set<Faction> factionSetD = this.getDefender().getFactions();
         // Set all relations to enemy
-        for (Faction f : factionSet) {
-            for (Faction f2 : factionSetD) {
-                new RelationRequest(Bukkit.getConsoleSender(), f, f2, Relation.ENEMY).confirm();
+        for (Faction attacker : factionSetA) {
+            for (Faction defender : factionSetD) {
+                if (attacker != defender) { // To prevent self-declaration, for example for vassals
+                    new RelationRequest(Bukkit.getConsoleSender(), attacker, defender, Relation.ENEMY).confirm();
+                }
             }
         }
         FScoreboard.updateAllProviders();
@@ -173,6 +175,12 @@ public class War {
         for (Faction f : factionSet) {
             for (Faction f2 : factionSetD) {
                 new RelationRequest(Bukkit.getConsoleSender(), f, f2, Relation.PEACE).confirm();
+                if (f.isVassal()) {
+                    new RelationRequest(Bukkit.getConsoleSender(), f.getLord(), f2, Relation.PEACE).confirm();
+                }
+                if (f2.isVassal()) {
+                    new RelationRequest(Bukkit.getConsoleSender(), f, f2.getLord(), Relation.PEACE).confirm();
+                }
             }
         }
         // Remove Occupants from the Attacker

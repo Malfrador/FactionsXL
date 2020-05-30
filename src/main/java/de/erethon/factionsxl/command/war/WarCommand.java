@@ -79,8 +79,12 @@ public class WarCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
+        if (f.isVassal() && !(f.getLord() == object)) {
+            MessageUtil.sendMessage(player, "&cVasallen können nur ihrem Lord den Krieg erklären.");
+            return;
+        }
         if (f.getStability() <= 20)  {
-            MessageUtil.sendMessage(player, "&c Nicht genug Stabilität, um einen Krieg zu erklären.");
+            MessageUtil.sendMessage(player, "&cNicht genug Stabilität, um einen Krieg zu erklären.");
             return;
         }
         for (Faction faction : factions) {

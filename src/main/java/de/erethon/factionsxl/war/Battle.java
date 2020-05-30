@@ -124,10 +124,6 @@ public class Battle {
             if (wL.getPointsFromKills() <= config.getMaximumKillPoints() && (wL.getWar().getCasusBelli().getType() != CasusBelli.Type.RAID)) {
                 wL.setPointsFromKills(wL.getPointsFromKills() + 1);
             }
-            if (wL.getWar().getCasusBelli().getType() == CasusBelli.Type.RAID) {
-                points.updateScore(wL, WarAction.KILL);
-
-            }
             wL.addDeath();
         }
     }

@@ -175,7 +175,6 @@ public class WarParty implements FEntity {
 
     public void leaveWar(LegalEntity faction) {
         Set<Faction> factionEnemy =  this.getEnemy().getFactions();
-        Set<Faction> factions = this.getFactions();
         // Set all relations with the participant to peace
         for (Faction f : factionEnemy) {
             new RelationRequest(Bukkit.getConsoleSender(), f, (Faction) faction, Relation.PEACE).confirm();

@@ -95,15 +95,10 @@ public class RelationNeutralCommand extends FCommand {
                         return;
                     }
                 }
-                if (subject.isInWar() || object.isInWar()) {
+                if (subject.isInWar()) {
                     for (WarParty sWP : subject.getWarParties()) {
-                        if (sWP.getFactions().contains(subject)) {
+                        if (sWP.getFactions().contains(subject) && sWP.getLeader() == object) {
                             sWP.leaveWar(subject);
-                        }
-                    }
-                    for (WarParty oWP : object.getWarParties()) {
-                        if (oWP.getFactions().contains(object)) {
-                            oWP.leaveWar(object);
                         }
                     }
                     MessageUtil.log("Removed " + subject.getName() + " from WarParty of " + object.getName() + " because alliance ended.");

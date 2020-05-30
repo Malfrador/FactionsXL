@@ -77,13 +77,16 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
     public double getRegionWarscore(Region r, Faction f) {
         double c = 20;
         if (r.getOccupant() == f) {
-            c = c - 6;                        // Besetzt: 12 WP
+            c = c - 10;                        // Besetzt: 12 WP
         }
-        if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 6 WP
+        if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 5 WP
             c = c / 2;
         }
-        if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 6 - Core, Claim & Besetzt: 3 WP
+        if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 5 - Core, Claim & Besetzt: 2,5 WP
             c = c / 2;
+        }
+        if (r.getCoreFactions().containsKey(r.getOwner())) { // Core of enemy: * 2
+            c = c * 2;
         }
         return c;
     }
@@ -92,13 +95,16 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
         double cost = 20;
         for (Region r : demandRegions) {
             if (r.getOccupant() == f) {
-                cost = cost - 6;                        // Besetzt: 12 WP
+                cost = cost - 10;                        // Besetzt: 12 WP
             }
-            if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 6 WP
+            if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 5 WP
                 cost = cost / 2;
             }
-            if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 6 - Core, Claim & Besetzt: 3 WP
+            if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 5 - Core, Claim & Besetzt: 2,5 WP
                 cost = cost / 2;
+            }
+            if (r.getCoreFactions().containsKey(r.getOwner())) { // Core of enemy: * 2
+                cost = cost * 2;
             }
         }
         return cost;

@@ -131,7 +131,6 @@ public class LandProtectionListener implements Listener {
             MELON,
             MELON_STEM,
             NETHER_WART_BLOCK,
-            PACKED_ICE,
             PODZOL,
             POTATOES,
             PUMPKIN,
@@ -254,6 +253,8 @@ public class LandProtectionListener implements Listener {
 
     private static final Set<Material> NO_INTERACT = new HashSet<>(Arrays.asList(
             ANVIL,
+            CHIPPED_ANVIL,
+            DAMAGED_ANVIL,
             BEACON,
             BLACK_SHULKER_BOX,
             BLUE_SHULKER_BOX,
@@ -387,6 +388,8 @@ public class LandProtectionListener implements Listener {
                 if (!WAR_PLACABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
                 }
+            } else if (event instanceof PlayerBucketEmptyEvent) {
+                event.setCancelled(true);
             }
         } else if (!rel.canBuild()) {
             event.setCancelled(true);

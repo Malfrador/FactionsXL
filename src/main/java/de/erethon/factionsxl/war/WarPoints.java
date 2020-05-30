@@ -45,7 +45,9 @@ public class WarPoints {
             }
         }
         double mod = occupied / regions;
-        MessageUtil.log("Occupied: " + occupied + " Total: " + regions + " Mod: " + String.valueOf(mod));
+        if (mod == 0) {
+            mod = 1;
+        }
         switch (warParty.getWar().getCasusBelli().getType()) {
             case RAID:
                 switch (action) {
@@ -57,7 +59,7 @@ public class WarPoints {
                     case REOCCUPY_OWN_CORE:
                         break;
                     case KILL:
-                        setScore(warParty, 1, 0);
+                        setScore(warParty, 1, 1);
                         break;
                 }
                 break;
@@ -79,7 +81,7 @@ public class WarPoints {
                         setScore(warParty, 25, mod);
                         break;
                     case KILL:
-                        setScore(warParty, 1, 0);
+                        setScore(warParty, 1, 1);
                         break;
                 }
                 break;
@@ -104,7 +106,7 @@ public class WarPoints {
                         setScore(warParty, 22, mod);
                         break;
                     case KILL:
-                        setScore(warParty, 1, 0);
+                        setScore(warParty, 1, 1);
                         break;
                 }
                 break;
@@ -124,7 +126,7 @@ public class WarPoints {
                         setScore(warParty, 20, mod);
                         break;
                     case KILL:
-                        setScore(warParty, 1, 0);
+                        setScore(warParty, 1, 1);
                         break;
                 }
             case RESUBJAGATION:
@@ -147,7 +149,7 @@ public class WarPoints {
                         setScore(warParty, 18, mod);
                         break;
                     case KILL:
-                        setScore(warParty, 1, 0);
+                        setScore(warParty, 1, 1);
                         break;
                 }
                 break;
@@ -159,12 +161,13 @@ public class WarPoints {
                 break;
         }
     }
-    public void setScore(WarParty wp, int score, double modifier) {
+    public void setScore(WarParty wp, int sc, double modifier) {
         double finalScore = 0.00;
-        finalScore = score * (1 + modifier);
-        score =  (int)Math.round(finalScore);
+        finalScore = sc * modifier;
+        int score =  (int)Math.round(finalScore);
         wp.addPoints(score);
         wp.getEnemy().removePoints(score);
+        MessageUtil.log("Score change: " + wp.getName() + " Score: " + score + " Mod: " + String.valueOf(modifier));
 
         for (Faction f : wp.getFactions()) {
             f.sendMessage(FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
