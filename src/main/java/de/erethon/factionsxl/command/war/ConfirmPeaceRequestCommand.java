@@ -151,7 +151,11 @@ public class ConfirmPeaceRequestCommand extends FCommand {
             if (peace == null) {
                 return;
             }
-            if (faction.getStability() < peace.getCost()) { // Auto confirm if not enough stability
+            if (wp.getEnemy().getPoints() >= 50) { // Auto confirm if enemy has over 50 score
+                if (!peace.canPay()) {
+                    MessageUtil.sendMessage(player, FMessage.CMD_PEACE_CONFIRM_CANTAFFORD.getMessage());
+                    return;
+                }
                 peace.confirm();
                 FScoreboard.updateAllProviders();
                 return;

@@ -86,12 +86,12 @@ public class WarHandler {
 
             Faction aLeader = (Faction) war.getAttacker().getLeader();
             Faction dLeader = (Faction) war.getDefender().getLeader();
-            if (aLeader.getStability() <= 0) {
+            if (aLeader.getStability() <= 1) {
                 defenderGoals(war.getDefender());
                 war.end();
                 return;
             }
-            if (dLeader.getStability() <= 0) {
+            if (dLeader.getStability() <= 1) {
                 forceWarGoal(war.getAttacker());
                 return;
             }
@@ -160,7 +160,7 @@ public class WarHandler {
                         if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
                             if (r.getCoreFactions().containsKey(r.getOwner())) {
                                 r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
-                            }
+                            }   
                             r.setOwner((Faction) warParty.getLeader());
                         }
 
@@ -178,10 +178,13 @@ public class WarHandler {
                 independent.getRelations().remove(lord);
                 lord.getCasusBelli().add(new CasusBelli(CasusBelli.Type.RESUBJAGATION, independent, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
                 break;
+
+            case SUBJAGATION:
             case RESUBJAGATION: // Make loosing faction vassal
                 Faction newLord = (Faction) warParty.getLeader();
                 Faction newVassal = (Faction) warParty.getWar().getCasusBelli().getTarget();
                 new RelationRequest(Bukkit.getConsoleSender(), newLord, newVassal, Relation.VASSAL).confirm();
+                newVassal.setAllod(true);
                 newVassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, newLord, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
                 break;
         }
@@ -227,6 +230,20 @@ public class WarHandler {
         if (enemyLeader.getRegions().isEmpty()) {
             enemyLeader.disband();
         }
+    }
+
+    // True if the peace time for faction is over. Peace time is last score * day
+    public boolean isPeace(Faction faction) {
+        long time = faction.getTimeLastPeace();
+        int days = faction.getScoreLastPeace() / 2;
+        if (time == 0) {
+            return false;
+        }
+        if (days < 0) {
+            days = days * (-1);
+        }
+        long now = System.currentTimeMillis();
+        return (time + (86400000 * days)) > now;
     }
 
     public void relationFixer(War war) {

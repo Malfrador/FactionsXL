@@ -49,7 +49,7 @@ public class OccupyCommand extends FCommand {
 
     public OccupyCommand() {
         setCommand("occupy");
-        setAliases("a", "annex", "o");
+        setAliases("a", "annex", "o", "attack");
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.WAR_OCCUPY_HELP.getMessage());
@@ -121,6 +121,41 @@ public class OccupyCommand extends FCommand {
 
         double price;
         if (!(war.getTruce())) {
+            Faction enemyLeader = (Faction) factionWP.getEnemy().getLeader();
+            long now = System.currentTimeMillis();
+            if (region.getAttackStartTime() == 0) {
+                if (region.isAttackable(factionWP)) {
+                    if (enemyLeader.getCapital().equals(region) && getOccupiedRegionsOfLeader(factionWP.getEnemy()) < (enemyLeader.getRegions().size() * 0.75)) {
+                        MessageUtil.sendMessage(sender, "&cDu kannst die feindliche Hauptstadt erst angreifen, wenn du 75% der Regionen des Feindes besetzt hast.");
+                        return;
+                    }
+                    if (region.isAttacked()) {
+                        MessageUtil.sendMessage(sender, "&cDiese Region wird bereits angegriffen.");
+                        return;
+                    }
+                    if (region.getLastDefendedTime() != 0 && (now < (region.getLastDefendedTime() + 172800000))) { // 48 Stunden
+                        MessageUtil.sendMessage(sender, "&cDiese Region ist noch geschützt.");
+                        return;
+                    }
+                    if (plugin.getOccupationManager().isAlreadyAttacked(faction)) {
+                        MessageUtil.sendMessage(sender, "&cEine Region dieser Fraktion wird bereits angegriffen.");
+                        return;
+                    }
+                    if (plugin.getOccupationManager().canStartOccupation(factionWP, factionWP.getEnemy())) {
+                        MessageUtil.sendMessage(sender, "&cDu kannst aktuell keinen Angriff starten. Der Beteiligungs-Unterschied ist zu groß.");
+                        return;
+                    }
+                    region.setAttackStartTime(System.currentTimeMillis());
+                    MessageUtil.sendMessage(sender, "&aAngriff gestartet! Der Feind erhält 20 Minuten Vorbereitungszeit. Der Angriff dauert insgesamt 120 Minuten.");
+                    for (Faction f : factionWP.getEnemy().getFactions()) {
+                        f.sendMessage("&aEure Region &6" + region.getName() + " &awird angegriffen!");
+                    }
+                } else {
+                    MessageUtil.sendMessage(sender, "&cDu kannst Regionen nur angreifen wenn sie an eigene oder besetzte Regionen angrenzen.");
+                }
+                return;
+            }
+
             if (region.getInfluence() <= config.getInfluenceNeeded() || ((region.getCoreFactions().containsKey(faction)) && (config.getInfluenceNeeded() * 2 >= region.getInfluence()))) {
                 price = region.getClaimPrice(faction) * (region.getInfluence() + 1); // Multiply base price by influence. You can annex earlier, but its more expensive
                 // Price for region with cores of owner is price * 2
@@ -157,20 +192,15 @@ public class OccupyCommand extends FCommand {
                         }
                     }
                 }
-                int occupiedRegions = 0;
-                Faction enemyLeader = (Faction) factionWP.getEnemy().getLeader();
-                for (Region r : enemyLeader.getRegions()) {
-                    if (r.getOccupant() != null) {
-                        occupiedRegions++;
-                    }
-                }
-                if (occupiedRegions >= enemyLeader.getRegions().size()) {
+                if (getOccupiedRegionsOfLeader(factionWP.getEnemy()) >= enemyLeader.getRegions().size()) {
                     handler.forceWarGoal(factionWP);
                 }
                 region.setOccupant(faction);
                 if (region.getOwner() == region.getOccupant()) {
                     region.clearOccupant();
                     region.setOwner(faction);
+                    region.setAttacked(false);
+                    region.setAttackStartTime(0);
                     faction.setExhaustion(faction.getExhaustion() - 5);
                 }
 
@@ -189,5 +219,16 @@ public class OccupyCommand extends FCommand {
         else {
             MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_TRUCE.getMessage());
         }
+    }
+
+    public int getOccupiedRegionsOfLeader(WarParty wp) {
+        int occupiedRegions = 0;
+        Faction leader = (Faction) wp.getLeader();
+        for (Region r : leader.getRegions()) {
+            if (r.getOccupant() != null) {
+                occupiedRegions++;
+            }
+        }
+        return occupiedRegions;
     }
 }

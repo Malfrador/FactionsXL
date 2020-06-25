@@ -27,6 +27,7 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
+import de.erethon.factionsxl.player.FPlayerCache;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.ParsingUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -34,20 +35,22 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Daniel Saukel
  */
 public class War {
+
+    FactionsXL plugin = FactionsXL.getInstance();
+    FPlayerCache fPlayers = plugin.getFPlayerCache();
 
     private File file;
     private FileConfiguration config;
@@ -56,6 +59,7 @@ public class War {
     private boolean truce;
     private CasusBelli cb;
     private Date startDate;
+    Map<OfflinePlayer, Double> participatingPlayers = new HashMap<>();; // Participation
 
     public War(WarParty attacker, WarParty defender, CasusBelli cb) {
         this.attacker = attacker;
@@ -63,6 +67,7 @@ public class War {
         this.cb = cb;
         this.truce = false;
         startDate = Calendar.getInstance().getTime();
+        this.participatingPlayers = new HashMap<>();
         this.file = new File(FactionsXL.WARS, System.currentTimeMillis() + ".yml");
     }
 
@@ -74,6 +79,10 @@ public class War {
         truce = config.getBoolean("truce");
         cb = new CasusBelli(config.getConfigurationSection("casusBelli"));
         startDate = new Date(config.getLong("startDate"));
+        for (String rawData : config.getStringList("participatingPlayers")) {
+            String[] raw = rawData.split(":");
+            participatingPlayers.put(Bukkit.getOfflinePlayer(UUID.fromString(raw[0])), Double.parseDouble(raw[1]));
+        }
     }
 
     /* Getters */
@@ -112,6 +121,43 @@ public class War {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public double getPlayerParticipation(OfflinePlayer player) {
+        if (participatingPlayers == null || !participatingPlayers.containsKey(player)) {
+            return 0;
+        }
+        return participatingPlayers.get(player);
+    }
+
+    public void setPlayerParticipation(OfflinePlayer player, double value) {
+        double current;
+        if (participatingPlayers.containsKey(player)) {
+            current = participatingPlayers.get(player);
+        } else {
+            current = 0;
+        }
+        participatingPlayers.put(player, current + value);
+    }
+
+    public void addPlayerParticipation(OfflinePlayer player, WarPlayerAction action) {
+        switch (action) {
+            case KILL:
+                setPlayerParticipation(player, 1);
+                break;
+            case PLACED_SIEGE:
+                setPlayerParticipation(player, 0.4);
+                break;
+            case PLACED_TNT:
+                setPlayerParticipation(player, 0.3);
+                break;
+            case DESTROYED_IMPORTANT_BLOCK:
+                setPlayerParticipation(player, 0.2);
+                break;
+            case GRIEF:
+                setPlayerParticipation(player, 0.1);
+                break;
+        }
     }
 
     /* Actions */
@@ -199,6 +245,19 @@ public class War {
                 }
             }
         }
+
+        // set timeLastPeace and score for looser
+        Faction attacker = (Faction) getAttacker().getLeader();
+        Faction defender = (Faction) getDefender().getLeader();
+        if (getDefender().getPoints() < 0) {
+            defender.setTimeLastPeace(System.currentTimeMillis());
+            defender.setScoreLastPeace(getDefender().getPoints());
+        }
+        if (getAttacker().getPoints() < 0) {
+            attacker.setTimeLastPeace(System.currentTimeMillis());
+            attacker.setScoreLastPeace(getAttacker().getPoints());
+        }
+
         wars.getWars().remove(this);
         file.delete();
         System.out.println("War" + this + "ended!");
@@ -211,6 +270,12 @@ public class War {
         config.set("truce", truce);
         config.set("casusBelli", cb.serialize());
         config.set("startDate", startDate.getTime());
+        List<String> playerData = new ArrayList<>();
+        for (OfflinePlayer p : participatingPlayers.keySet()) {
+            String data = p.getUniqueId().toString() + ":" + participatingPlayers.get(p);
+            playerData.add(data);
+        }
+        config.set("participatingPlayers", playerData);
         try {
             config.save(file);
         } catch (IOException exception) {

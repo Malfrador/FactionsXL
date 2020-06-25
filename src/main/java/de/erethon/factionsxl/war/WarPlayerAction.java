@@ -19,15 +19,11 @@
 
 package de.erethon.factionsxl.war;
 
-// Things people do in a war. Used to increase war participation.
-
-public enum WarAction {
-    OCCUPY,
-    OCCUPY_CORE,
-    OCCUPY_CLAIM,
-    OCCUPY_CAPITAL,
-    OCCUPY_WAR_TARGET,
-    REOCCUPY_OWN_CORE,
+public enum WarPlayerAction {
     KILL,
+    PLACED_TNT,
+    PLACED_SIEGE,
+    DESTROYED_IMPORTANT_BLOCK,
+    GRIEF,
 
 }

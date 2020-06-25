@@ -81,6 +81,7 @@ public class CreateCommand extends FCommand {
         }
 
         plugin.getFactionCache().create(player, args[1]);
+        fPlayer.getData().addCreated();
         ParsingUtil.broadcastMessage(FMessage.CMD_CREATE_SUCCESS.getMessage(), sender.getName(), args[1]);
     }
 

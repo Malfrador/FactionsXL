@@ -71,6 +71,10 @@ public class SetCapitalCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NO_CORE.getMessage());
             return;
         }
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_AT_WAR.getMessage());
+            return;
+        }
         long moveAllowedTime = faction.getTimeLastCapitalMove() + plugin.getFConfig().getMoveCapitalCooldown();
         FactionsXL.debug("setCapitalCommand: timeLastCapitalMove=" + SimpleDateUtil.ddMMyyyyhhmm(faction.getTimeLastCapitalMove())
                 + "; moveAllowedTime=" + SimpleDateUtil.ddMMyyyyhhmm(moveAllowedTime) + "; system=" + SimpleDateUtil.ddMMyyyyhhmm(System.currentTimeMillis()));

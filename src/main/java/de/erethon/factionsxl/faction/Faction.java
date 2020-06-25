@@ -98,6 +98,8 @@ public class Faction extends LegalEntity {
     Hologram homeHolo;
     Region capital;
     long timeLastCapitalMove;
+    long timeLastPeace;
+    int scoreLastPeace;
     Set<LazyChunk> chunks = new HashSet<>();
     Set<Region> regions = new HashSet<>();
     PlayerCollection formerAdmins = new PlayerCollection();
@@ -243,6 +245,22 @@ public class Faction extends LegalEntity {
      */
     public boolean isInvincible() {
         return invincible;
+    }
+
+    public long getTimeLastPeace() {
+        return timeLastPeace;
+    }
+
+    public void setTimeLastPeace(long timeLastPeace) {
+        this.timeLastPeace = timeLastPeace;
+    }
+
+    public int getScoreLastPeace() {
+        return scoreLastPeace;
+    }
+
+    public void setScoreLastPeace(int scoreLastPeace) {
+        this.scoreLastPeace = scoreLastPeace;
     }
 
     /**
@@ -1382,6 +1400,12 @@ public class Faction extends LegalEntity {
         setHome((Location) config.get("home"));
         capital = plugin.getBoard().getById(config.getInt("capital"));
         timeLastCapitalMove = config.getLong("timeLastCapitalMove", 0);
+        if (config.contains("timeLastPeace")) {
+            timeLastPeace = config.getLong("timeLastPeace", timeLastPeace);
+        }
+        if (config.contains("scoreLastPeace")) {
+            scoreLastPeace = config.getInt("scoreLastPeace", scoreLastPeace);
+        }
 
         admin = UUID.fromString(config.getString("admin"));
         mods.add(config.getStringList("mods"));
@@ -1505,6 +1529,8 @@ public class Faction extends LegalEntity {
             }
             config.set("capital", capital.getId());
             config.set("timeLastCapitalMove", timeLastCapitalMove);
+            config.set("timeLastPeace", timeLastPeace);
+            config.set("scoreLastPeace", scoreLastPeace);
             config.set("admin", admin.toString());
             config.set("formerAdmins", formerAdmins.serialize());
 

@@ -25,6 +25,8 @@ import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
+import de.erethon.factionsxl.player.FPlayer;
+import de.erethon.factionsxl.player.FPlayerCache;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -40,6 +42,7 @@ public class Battle {
     private long expiration;
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
+    FPlayerCache fplayers = plugin.getFPlayerCache();
     FConfig config = plugin.getFConfig();
     WarCache warCache = plugin.getWarCache();
     WarPoints points = plugin.getWarPoints();
@@ -82,11 +85,18 @@ public class Battle {
     public void win(Player winner, Player looser) {
         Faction f = factions.getByMember(winner);
         Faction fl = factions.getByMember(looser);
+        FPlayer winnerFP = fplayers.getByPlayer(winner);
+        FPlayer looserFP = fplayers.getByPlayer(looser);
         Region r = plugin.getBoard().getByLocation(winner.getLocation());
-        Faction owner = r.getOwner();
+        Faction owner = r.getOwner(); // NPE
         if (r.getOccupant() != null || r.getOccupant() == f) {
+            MessageUtil.broadcastMessage("Ownah");
             owner = r.getOccupant();
         }
+
+        winnerFP.getData().addKill();
+        looserFP.getData().addDeath();
+
         Set<WarParty> WP = f.getWarParties();
         Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
@@ -102,16 +112,16 @@ public class Battle {
 
             }
             w.addKill();
+            w.getWar().addPlayerParticipation(winnerFP.getPlayer(), WarPlayerAction.KILL);
             if (w.getFactions().contains(owner)) {
-                if (r.getInfluence() + config.getInfluenceFromKill() <= 100) {
-                    r.setInfluence(r.getInfluence() + config.getInfluenceFromKill());
+                if (r.isAttacked()) {
+                    addInfluence(w, r, winnerFP);;
                     MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
                     break;
                 }
-            }
-            else if (w.getEnemy().getFactions().contains(owner)){
-                if (r.getInfluence() - config.getInfluenceFromKill() >= 0) {
-                    r.setInfluence(r.getInfluence() - config.getInfluenceFromKill());
+            } else if (w.getEnemy().getFactions().contains(owner)){
+                if (r.isAttacked()) {
+                    removeInfluence(w, r, winnerFP);
                     MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
                     break;
                 }
@@ -126,6 +136,30 @@ public class Battle {
             }
             wL.addDeath();
         }
+    }
+
+    public void removeInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
+        int influence = (int) Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer()));
+        if (influence > 8) {
+            influence = 8;
+        }
+        if (rg.getInfluence() - influence < 0) {
+            rg.setInfluence(0);
+            return;
+        }
+        rg.setInfluence(rg.getInfluence() - influence);
+    }
+
+    public void addInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
+        int influence = (int) Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer()));
+        if (influence > 8) {
+            influence = 8;
+        }
+        if (rg.getInfluence() + influence > 100) {
+            rg.setInfluence(100);
+            return;
+        }
+        rg.setInfluence(rg.getInfluence() + influence);
     }
 
     @Override

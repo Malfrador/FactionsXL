@@ -28,6 +28,7 @@ import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelliMenu;
+import de.erethon.factionsxl.war.WarHandler;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.WarPartyRole;
 import org.bukkit.command.CommandSender;
@@ -43,6 +44,7 @@ public class WarCommand extends FCommand {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache cache = plugin.getFactionCache();
+    WarHandler warHandler = plugin.getWarHandler();
 
     public WarCommand() {
         setCommand("war");
@@ -65,6 +67,10 @@ public class WarCommand extends FCommand {
 
         if (object.isInvincible()) {
             ParsingUtil.sendMessage(sender, "&cDu kannst diese Fraktion nicht angreifen!");
+            return;
+        }
+        if (warHandler.isPeace(object)) {
+            ParsingUtil.sendMessage(sender, "&cDiese Fraktion befindet sich in der Friedenszeit.");
             return;
         }
         // TO DO!

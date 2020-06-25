@@ -27,6 +27,7 @@ import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.LazyChunk;
+import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -66,6 +67,9 @@ public class Region {
     private Set<LazyChunk> chunks = new HashSet<>();
     private Set<Region> adjacentRegions = new HashSet<>();
     private Map<Faction, Date> cores = new HashMap<>();
+    private boolean isAttacked = false;
+    private long attackStartTime = 0;
+    private long lastDefendedTime = 0;
 
 
     private Map<Faction, Integer> coringProgress = new HashMap<>();
@@ -349,6 +353,22 @@ public class Region {
 
     /**
      * @return
+     * true if the region has no owner
+     */
+    public boolean isAttacked() {
+        return isAttacked;
+    }
+
+    /**
+     * @return
+     * true if the region has no owner
+     */
+    public void setAttacked(boolean attacked) {
+        isAttacked = attacked;
+    }
+
+    /**
+     * @return
      * if the region is unclaimable
      */
     public boolean isUnclaimable() {
@@ -389,7 +409,22 @@ public class Region {
         adjacentRegions.add(rg);
     }
 
-
+    /**
+     * @param warParty that wants to attack
+     * @return
+     * if the warParty can attack in this region
+     */
+    public boolean isAttackable(WarParty warParty) {
+        for (Region rg : this.getNeighbours()) {
+            if (warParty.getFactions().contains(rg.getOwner())) {
+                return true;
+            }
+            if (rg.getOccupant() != null && warParty.getFactions().contains(rg.getOccupant())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @return
@@ -405,6 +440,38 @@ public class Region {
      */
     public int getInfluence() {
         return influence;
+    }
+
+    /**
+     * @param time
+     * time when the attack started
+     */
+    public void setAttackStartTime(long time) {
+        attackStartTime = time;
+    }
+
+    /**
+     * @return
+     * when the attack on the region started
+     */
+    public long getAttackStartTime() {
+        return attackStartTime;
+    }
+
+    /**
+     * @param time
+     * time when the last attack ended
+     */
+    public void setLastDefendedTime(long time) {
+        lastDefendedTime = time;
+    }
+
+    /**
+     * @return
+     * the influence of the owner on the region
+     */
+    public long getLastDefendedTime() {
+        return lastDefendedTime;
     }
 
     /**
@@ -472,6 +539,15 @@ public class Region {
         mapLineColor = config.getString("mapLineColor");
         unclaimable = config.getBoolean("unclaimable", false);
         influence = config.getInt("influence");
+        if (config.contains("isAttacked")) {
+            isAttacked = config.getBoolean("isAttacked");
+        }
+        if (config.contains("attackStartTime")) {
+            attackStartTime = config.getLong("attackStartTime");
+        }
+        if (config.contains("lastDefendedTime")) {
+            lastDefendedTime = config.getLong("lastDefendedTime");
+        }
 
         if (this.config == null) {
             this.config = YamlConfiguration.loadConfiguration(file);
@@ -528,6 +604,9 @@ public class Region {
         config.set("mapFillColor", mapFillColor);
         config.set("mapLineColor", mapLineColor);
         config.set("unclaimable", unclaimable);
+        config.set("isAttacked", isAttacked);
+        config.set("attackStartTime", attackStartTime);
+        config.set("lastDefendedTime", lastDefendedTime);
         config.set("influence", influence);
 
         try {

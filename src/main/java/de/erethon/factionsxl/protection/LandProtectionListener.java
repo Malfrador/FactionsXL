@@ -18,6 +18,7 @@
  */
 package de.erethon.factionsxl.protection;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -27,7 +28,12 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
+import de.erethon.factionsxl.player.FPlayer;
+import de.erethon.factionsxl.player.FPlayerCache;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.War;
+import de.erethon.factionsxl.war.WarCache;
+import de.erethon.factionsxl.war.WarPlayerAction;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -54,7 +60,9 @@ public class LandProtectionListener implements Listener {
 
     FactionsXL plugin = FactionsXL.getInstance();
     FactionCache factions = plugin.getFactionCache();
+    FPlayerCache fPlayers = plugin.getFPlayerCache();
     Board board = plugin.getBoard();
+    WarCache wars = plugin.getWarCache();
     FConfig config = plugin.getFConfig();
     boolean wildernessProtected = config.isWildernessProtected();
 
@@ -251,6 +259,63 @@ public class LandProtectionListener implements Listener {
             COBWEB
     ));
 
+    private static final Set<Material> WAR_IMPORTANT = new HashSet<>(Arrays.asList(
+            ANVIL,
+            CHIPPED_ANVIL,
+            DAMAGED_ANVIL,
+            BEACON,
+            BLACK_SHULKER_BOX,
+            BLUE_SHULKER_BOX,
+            BREWING_STAND,
+            BROWN_SHULKER_BOX,
+            CAKE,
+            CAULDRON,
+            CHEST,
+            COMPARATOR,
+            CYAN_SHULKER_BOX,
+            DISPENSER,
+            DRAGON_EGG,
+            DROPPER,
+            ENCHANTING_TABLE,
+            ENDER_CHEST,
+            END_PORTAL_FRAME,
+            FIRE,
+            FURNACE,
+            GRASS,
+            GRAY_SHULKER_BOX,
+            GREEN_SHULKER_BOX,
+            HEAVY_WEIGHTED_PRESSURE_PLATE,
+            HOPPER,
+            LIGHT_BLUE_SHULKER_BOX,
+            LIGHT_GRAY_SHULKER_BOX,
+            LIGHT_WEIGHTED_PRESSURE_PLATE,
+            LIME_SHULKER_BOX,
+            MAGENTA_SHULKER_BOX,
+            NOTE_BLOCK,
+            ORANGE_SHULKER_BOX,
+            PINK_SHULKER_BOX,
+            PURPLE_SHULKER_BOX,
+            RED_SHULKER_BOX,
+            REPEATER,
+            WHITE_SHULKER_BOX,
+            YELLOW_SHULKER_BOX,
+            LEVER,
+            ACACIA_DOOR,
+            BIRCH_DOOR,
+            DARK_OAK_DOOR,
+            JUNGLE_DOOR,
+            SPRUCE_DOOR,
+            OAK_DOOR,
+            STONE_BUTTON,
+            ACACIA_BUTTON,
+            BIRCH_BUTTON,
+            DARK_OAK_BUTTON,
+            JUNGLE_BUTTON,
+            SPRUCE_BUTTON,
+            OAK_BUTTON
+
+    ));
+
     private static final Set<Material> NO_INTERACT = new HashSet<>(Arrays.asList(
             ANVIL,
             CHIPPED_ANVIL,
@@ -371,6 +436,7 @@ public class LandProtectionListener implements Listener {
 
         Faction bFaction = factions.getByMember(breaker);
         Faction owner = region.getOwner();
+        FPlayer fPlayer = fPlayers.getByPlayer(breaker);
         if (region.getOccupant() != null) {
             Faction occupant = region.getOccupant();
             if (occupant == bFaction) {
@@ -380,13 +446,32 @@ public class LandProtectionListener implements Listener {
         Relation rel = owner.getRelation(bFaction);
         if (rel == Relation.ENEMY) {
             Material type = destroyed.getType();
+            War w = wars.getWarTogether(owner, bFaction);
+            if (!region.isAttacked()) {
+                event.setCancelled(true);
+                MessageUtil.sendMessage(breaker, "&cDiese Region wird aktuell nicht angegriffen. Greife sie erst mit /f occupy an.");
+                return;
+            }
             if (event instanceof BlockBreakEvent) {
                 if (!WAR_BREAKABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
+                    return;
+                }
+                if (WAR_IMPORTANT.contains(type)) {
+                    w.addPlayerParticipation(breaker, WarPlayerAction.DESTROYED_IMPORTANT_BLOCK);
+                } else {
+                    w.addPlayerParticipation(breaker, WarPlayerAction.GRIEF);
                 }
             } else if (event instanceof BlockPlaceEvent) {
                 if (!WAR_PLACABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
+                }
+                if (type.equals(TNT)) {
+                    w.addPlayerParticipation(breaker, WarPlayerAction.PLACED_TNT);
+                }
+                if (type.equals(CHEST) && breaker.getInventory().getItemInMainHand().getItemMeta() != null &&
+                        breaker.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Blaupause")) {
+                    w.addPlayerParticipation(breaker, WarPlayerAction.PLACED_SIEGE);
                 }
             } else if (event instanceof PlayerBucketEmptyEvent) {
                 event.setCancelled(true);

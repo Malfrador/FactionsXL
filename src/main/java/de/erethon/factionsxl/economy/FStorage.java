@@ -98,13 +98,13 @@ public class FStorage {
                 }
             }
             double inf = FactionsXL.getInstance().getFConfig().getInfluencePerDay();
-            if (faction.getStability() >= 30) {
+            if (faction.getStability() >= 30 && !faction.isInWar()) {
                 // Increase influence up to 100 if core
                 if (region.getCoreFactions().containsKey(faction) && region.getInfluence() + inf <= 100) {
                     region.setInfluence(region.getInfluence() + (int) inf);
                 }
                 // Increase influence up to 50 if not core
-                else if (!(region.getCoreFactions().containsKey(faction)) && region.getInfluence() + inf <= 50) {
+                else if (!(region.getCoreFactions().containsKey(faction)) && (region.getInfluence() + inf <= 50) && !faction.isInWar()) {
                     region.setInfluence(region.getInfluence() + (int) inf);
                 }
             }

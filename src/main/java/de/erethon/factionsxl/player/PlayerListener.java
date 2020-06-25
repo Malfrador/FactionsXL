@@ -37,9 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -85,7 +83,33 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         FPlayer fPlayer = fPlayers.getByPlayer(event.getPlayer());
         FScoreboard.remove(fPlayer);
+        fPlayer.getData().setTimeLastLogout(System.currentTimeMillis());
         fPlayers.removePlayer(fPlayer);
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getTo() == null) {
+            return;
+        }
+        Region rg = board.getByLocation(event.getTo());
+        if (rg == null) {
+            return;
+        }
+        Player player = event.getPlayer();
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
+        fPlayer.setLastRegion(rg);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Region rg = board.getByLocation(event.getRespawnLocation());
+        if (rg == null) {
+            return;
+        }
+        Player player = event.getPlayer();
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
+        fPlayer.setLastRegion(rg);
     }
 
     @EventHandler

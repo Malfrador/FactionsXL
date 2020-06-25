@@ -93,6 +93,7 @@ public class FCommandCache extends DRECommandCache {
     public SetPowerCommand setPower = new SetPowerCommand();
     public ShortTagCommand shortTag = new ShortTagCommand();
     public ShowCommand show = new ShowCommand();
+    public StatsCommand stats = new StatsCommand();
     public StorageCommand storage = new StorageCommand();
     public TagCommand tag = new TagCommand();
     public TitleCommand title = new TitleCommand();
@@ -178,6 +179,7 @@ public class FCommandCache extends DRECommandCache {
         addCommand(peaceCommand);
         addCommand(warAnnex);
         addCommand(independence);
+        addCommand(stats);
 
         // debug/Workaround
         addCommand(warInviteCommand);
@@ -202,5 +204,7 @@ public class FCommandCache extends DRECommandCache {
         plugin.getCommand("home").setExecutor(alias);
         plugin.getCommand("setHome").setExecutor(alias);
     }
+
+
 
 }

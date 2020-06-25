@@ -30,6 +30,7 @@ import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.dynmap.Atlas;
 import de.erethon.factionsxl.chat.ChatListener;
 import de.erethon.factionsxl.command.FCommandCache;
+import de.erethon.factionsxl.command.FCommandCompleter;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FData;
 import de.erethon.factionsxl.config.FMessage;
@@ -104,6 +105,8 @@ public class FactionsXL extends DREPlugin {
     private WarTNT warTNT;
     private WarHandler warHandler;
     private WarPoints warPoints;
+    private CasusBelliManager casusBelliManager;
+    private OccupationManager occupationManager;
     private CoringHandler core;
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
@@ -245,7 +248,9 @@ public class FactionsXL extends DREPlugin {
         loadWars(WARS);
         loadWarHandler();
         loadWarPoints();
+        loadCBManager();
         loadAtlas();
+        loadOccupationManager();
         loadCoring();
         loadFCommands();
         loadChatListener();
@@ -268,6 +273,7 @@ public class FactionsXL extends DREPlugin {
         manager.registerEvents(new FBull(), this);
         manager.registerEvents(new FMob(), this);
         manager.registerEvents(new WarListener(), this);
+        getCommand("factionsxl").setTabCompleter(new FCommandCompleter());
 
         new BukkitRunnable() {
             @Override
@@ -276,6 +282,20 @@ public class FactionsXL extends DREPlugin {
                 warHandler.calculateWarStatus();
             }
         }.runTaskTimer(this, 1, FConfig.MINUTE * 5);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                occupationManager.updateOccupationStatus();
+            }
+        }.runTaskTimer(this, 1, FConfig.SECOND * 60);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                occupationManager.showTimers();
+            }
+        }.runTaskTimerAsynchronously(this, 1, FConfig.SECOND);
+
         if (fConfig.isEconomyEnabled()) {
             new BukkitRunnable() {
                 @Override
@@ -366,6 +386,36 @@ public class FactionsXL extends DREPlugin {
      */
     public WarHandler getWarHandler() {
         return warHandler;
+    }
+
+    /**
+     * @return
+     * the OccupationManager
+     */
+    public OccupationManager getOccupationManager() {
+        return occupationManager;
+    }
+
+    /**
+     * new OccupationManager
+     */
+    public void loadOccupationManager() {
+        occupationManager = new OccupationManager();
+    }
+
+    /**
+     * new CBManager
+     */
+    public void loadCBManager() {
+       casusBelliManager = new CasusBelliManager();
+    }
+
+    /**
+     * @return
+     * the CBManager
+     */
+    public CasusBelliManager getCBManager() {
+        return casusBelliManager;
     }
 
     /**

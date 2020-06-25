@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -39,9 +40,10 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static org.bukkit.Material.*;
 
 /**
  * @author Daniel Saukel
@@ -59,6 +61,17 @@ public class WarTNT implements Listener {
     private List<Location> cannonsTarget = new ArrayList<>();
     private CopyOnWriteArrayList<WeakReference<List<BlockState>>> blockListsTNT = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<WeakReference<List<BlockState>>> blockListsSiege = new CopyOnWriteArrayList<>();
+
+    private static final Set<Material> NO_REGEN_INVENTORY = new HashSet<>(Arrays.asList(
+            CHEST,
+            TRAPPED_CHEST,
+            FURNACE,
+            DISPENSER,
+            DROPPER,
+            HOPPER,
+            OBSERVER
+
+    ));
 
     public WarTNT(long restoreTNT, long restoreSiege) {
         this.restoreTicksTNT = restoreTNT;
@@ -156,6 +169,12 @@ public class WarTNT implements Listener {
                 cleanBlockList();
             }
             restore.get(0).update(true);
+            Material mat = restore.get(0).getBlock().getType();
+            if (NO_REGEN_INVENTORY.contains(mat)) {
+                Location loc = restore.get(0).getLocation();
+                Container cont = (Container) loc.getBlock().getState();
+                cont.getInventory().clear();
+            }
             restore.remove(0);
         }
 

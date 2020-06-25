@@ -76,16 +76,16 @@ public class RegionDemand implements WarDemand, Listener, InventoryHolder {
 
     public double getRegionWarscore(Region r, Faction f) {
         double c = 20;
-        if (r.getOccupant() == f) {
-            c = c - 10;                        // Besetzt: 12 WP
+        if (r.getOccupant() == f) {                                         // Basis-WP: 20
+            c = c - 10;                                                     // Besetzt: 10 WP
         }
-        if (r.getClaimFactions().containsKey(f)) {  // Claim: 10 WP - Claim & Besetzt: 5 WP
+        if (r.getClaimFactions().containsKey(f)) {                          // Claim: 10 WP - Claim & Besetzt: 5 WP
             c = c / 2;
         }
-        if (r.getCoreFactions().containsKey(f)) {   // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 5 - Core, Claim & Besetzt: 2,5 WP
+        if (r.getCoreFactions().containsKey(f)) {                           // Core: 10 WP - Core & Claim: 5 - Core & Besetzt: 5 - Core, Claim & Besetzt: 2,5 WP
             c = c / 2;
         }
-        if (r.getCoreFactions().containsKey(r.getOwner())) { // Core of enemy: * 2
+        if (r.getCoreFactions().containsKey(r.getOwner())) {                // Core: * 2
             c = c * 2;
         }
         return c;

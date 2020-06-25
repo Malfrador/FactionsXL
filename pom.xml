@@ -68,9 +68,9 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -145,12 +145,12 @@
     </dependencies>
     <repositories>
         <repository>
-            <id>dre-repo</id>
-            <url>https://erethon.de/repo/</url>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+            <id>dre-repo</id>
+            <url>https://erethon.de/repo/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
