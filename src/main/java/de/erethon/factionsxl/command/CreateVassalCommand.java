@@ -86,6 +86,12 @@ public class CreateVassalCommand extends FCommand {
             return;
         }
 
+        if (config.isNameForbidden(args[1])) {
+            // TODO: FMessage (with next big update)
+            ParsingUtil.sendMessage(sender, "&4Dieser Fraktions-Name ist nicht erlaubt.");
+            return;
+        }
+
         if (config.isEconomyEnabled()) {
             if (mother.getAccount().getBalance() < config.getPriceCreateVassal()) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_NOT_ENOUGH_MONEY_FACTION.getMessage(), mother, String.valueOf(config.getPriceCreateVassal()));
