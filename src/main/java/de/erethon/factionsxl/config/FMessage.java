@@ -604,6 +604,21 @@ public enum FMessage implements Message {
     }
 
     @Override
+    public String getMessage() {
+        if (this.getMessageHandler().getMessage(this) == null) {
+            return "Invalid Message at " + getPath();
+        }
+        return this.getMessageHandler().getMessage(this);
+    }
+    @Override
+    public String getMessage(String... args) {
+        if (this.getMessageHandler().getMessage(this, args) == null) {
+            return "Invalid Message at " + getPath();
+        }
+        return this.getMessageHandler().getMessage(this, args);
+    }
+
+    @Override
     public MessageHandler getMessageHandler() {
         return FactionsXL.getInstance().getMessageHandler();
     }
