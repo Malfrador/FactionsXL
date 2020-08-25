@@ -70,6 +70,7 @@ public class FConfig extends DREConfig {
     private int maxIdeaGroups = 2;
     private int moveCapitalCooldown = 30;
     private List<String> excludedWorlds = new ArrayList<>();
+    private List<String> forbiddenNames = new ArrayList<>();
 
     // Consume
     private double defaultManpowerModifier = 1;
@@ -539,6 +540,29 @@ public class FConfig extends DREConfig {
 
     /**
      * @return
+     * a List of regex faction names that are not allowed in tags and long tags.
+     */
+    public List<String> getForbiddenNames() {
+        return forbiddenNames;
+    }
+
+    /**
+     * @param s
+     * the name to check
+     * @return
+     * if this string matches a string in the list of forbidden faction names
+     */
+    public boolean isNameForbidden(String s) {
+        for (String regex : forbiddenNames) {
+            if (s.matches(regex)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return
      * if players shall be protected in their territory
      */
     public boolean isTerritoryProtectionEnabled() {
@@ -969,6 +993,10 @@ public class FConfig extends DREConfig {
             config.set("excludedWorlds", excludedWorlds);
         }
 
+        if (!config.contains("forbiddenNames")) {
+            config.set("forbiddenNames", forbiddenNames);
+        }
+
         if (!config.contains("defaultManpowerModifier")) {
             config.set("defaultManpowerModifier", defaultManpowerModifier);
         }
@@ -1316,6 +1344,10 @@ public class FConfig extends DREConfig {
 
         if (config.contains("excludedWorlds")) {
             excludedWorlds = config.getStringList("excludedWorlds");
+        }
+
+        if (config.contains("forbiddenNames")) {
+            forbiddenNames = config.getStringList("forbiddenNames");
         }
 
         if (config.contains("defaultManpowerModifier")) {
