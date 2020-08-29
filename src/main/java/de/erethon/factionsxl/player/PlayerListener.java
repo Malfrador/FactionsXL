@@ -30,7 +30,6 @@ import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.WarParty;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -157,7 +156,7 @@ public class PlayerListener implements Listener {
             return;
         }
         // board.getByChunk() is otherwise creating lag spikes
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, new BukkitRunnable() {
+        BukkitRunnable run = new BukkitRunnable() {
             @Override
             public void run() {
                 Chunk fromChunk = event.getFrom().getChunk();
@@ -171,7 +170,12 @@ public class PlayerListener implements Listener {
 
 
                 Region fromRegion = fPlayer.getLastRegion();
-                Region toRegion = board.getByChunk(toChunk);
+                Region toRegion;
+                if (fromRegion == null) {
+                    toRegion = board.getByChunk(toChunk);
+                } else {
+                    toRegion = board.getByChunk(toChunk, fromRegion);
+                }
                 fPlayer.setLastRegion(toRegion);
 
                 if (fPlayer.isAutoclaiming() && toRegion == null) {
@@ -208,7 +212,8 @@ public class PlayerListener implements Listener {
                     }
                 }
             }
-        });
+        };
+        run.runTaskAsynchronously(plugin);
     }
 
     private void stopSound(Player player, Faction faction) {
