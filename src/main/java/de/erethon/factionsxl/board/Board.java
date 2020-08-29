@@ -122,6 +122,30 @@ public class Board {
     }
 
     /**
+     * Tries adjacent regions first, then falls back to getByChunk(Chunk)
+     * @param chunk
+     * the chunk to check
+     * @param region
+     * A known region
+     * @return
+     * the region that contains the chunk
+     */
+    public Region getByChunk(Chunk chunk, Region region) {
+        Region rg = null;
+        for (Region r : region.getNeighbours()) {
+            for (LazyChunk rChunk : region.getChunks()) {
+                if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
+                    rg = r;
+                }
+            }
+        }
+        if (rg == null) {
+            rg = getByChunk(chunk);
+        }
+        return rg;
+    }
+
+    /**
      * @return
      * a list of all regions
      */
