@@ -424,6 +424,10 @@ public class Region {
         return false;
     }
 
+    public Set<BuildSite> getBuildings() {
+        return buildings;
+    }
+
     /**
      * @return
      * the world where the region is

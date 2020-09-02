@@ -16,11 +16,12 @@
  */
 package de.erethon.factionsxl.economy;
 
-import de.erethon.commons.gui.PageGUI;
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import de.erethon.factionsxl.population.SaturationLevel;
 import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.ChatColor;
@@ -78,7 +79,9 @@ public class FStorage {
     public void payday() {
         // Region income
         for (Region region : faction.getRegions()) {
+            MessageUtil.log(region.getName());
             for (Entry<Resource, Integer> entry : region.getResources().entrySet()) {
+                MessageUtil.log(entry.toString());
                 if (entry.getKey() == Resource.TAXES) {
                     faction.getAccount().deposit(entry.getValue());
                 } else if (entry.getKey() == Resource.MANPOWER) {
@@ -92,6 +95,7 @@ public class FStorage {
                     }
                     region.setPopulation(newPop);
                 } else {
+                    MessageUtil.log("Income: " + entry.getValue() + ": " + entry.getKey());
                     goods.put(entry.getKey(), goods.get(entry.getKey()) + entry.getValue());
                 }
             }
@@ -171,6 +175,10 @@ public class FStorage {
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         }
         faction.sendMessage(FMessage.STORAGE_PAYDAY.getMessage());
+    }
+
+    public boolean canAfford(Resource resource, int amount) {
+        return getGoods().get(resource) >= amount;
     }
 
     public Map<String, Integer> serialize() {

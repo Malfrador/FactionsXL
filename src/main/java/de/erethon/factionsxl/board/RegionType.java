@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.board;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.factionsxl.config.FMessage;
@@ -49,7 +50,7 @@ public enum RegionType {
     WARZONE(0, FMessage.REGION_WAR_ZONE);
 
     private int maxPopulation;
-    private List<Map<Resource, Integer>> resources = new ArrayList<>();
+    private static List<Map<Resource, Integer>> resources = new ArrayList<>();
     private FMessage name;
 
     RegionType(int maxPopulation, FMessage name) {
@@ -91,8 +92,10 @@ public enum RegionType {
      */
     public Map<Resource, Integer> getResources(int level) {
         if (level > 0 && resources.size() > level) {
+            MessageUtil.log("Got resources");
             return resources.get(level - 1);
         } else {
+            MessageUtil.log("Empty resources");
             return new HashMap<>();
         }
     }
@@ -116,25 +119,30 @@ public enum RegionType {
     /**
      * Loads the resource prices
      */
-    public static void loadResources(Map<String, Object> resources) {
-        for (Entry<String, Object> entry : resources.entrySet()) {
+    public static void loadResources(Map<String, Object> rs) {
+        for (Entry<String, Object> entry : rs.entrySet()) {
+            MessageUtil.log(entry.toString());
             if (!EnumUtil.isValidEnum(RegionType.class, entry.getKey()) || !(entry.getValue() instanceof ConfigurationSection)) {
                 continue;
             }
             Map<?, ?> levelMap = (Map<?, ?>) ConfigUtil.getMap((ConfigurationSection) entry.getValue(), new String());
             for (Entry<?, ?> lEntry : levelMap.entrySet()) {
+                MessageUtil.log(lEntry.toString());
                 if (!(lEntry.getValue() instanceof ConfigurationSection)) {
                     continue;
                 }
                 Map<Resource, Integer> map = new HashMap<>();
                 Map<?, ?> resourceMap = (Map<?, ?>) ConfigUtil.getMap((ConfigurationSection) lEntry.getValue(), new String());
                 for (Entry<?, ?> rEntry : resourceMap.entrySet()) {
+                    MessageUtil.log(rEntry.toString());
                     if (!(rEntry.getKey() instanceof String) || !EnumUtil.isValidEnum(Resource.class, (String) rEntry.getKey()) || !(rEntry.getValue() instanceof Integer)) {
                         continue;
                     }
                     map.put(Resource.valueOf((String) rEntry.getKey()), (Integer) rEntry.getValue());
                 }
                 valueOf(entry.getKey()).resources.add(map);
+                MessageUtil.log("Added: " + map.toString());
+                resources.add(map);
             }
         }
     }
