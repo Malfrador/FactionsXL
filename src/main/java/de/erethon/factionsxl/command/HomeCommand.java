@@ -18,7 +18,6 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.player.PlayerUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
@@ -70,7 +69,7 @@ public class HomeCommand extends FCommand {
         }
 
         if (FPermission.hasPermission(sender, FPermission.BYPASS)) {
-            PlayerUtil.secureTeleport(player, faction.getHome());
+            player.teleport(faction.getHome());
             return;
         }
 

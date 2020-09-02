@@ -19,12 +19,12 @@
 package de.erethon.factionsxl.war.demand;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.gui.GUIButton;
-import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
+import de.erethon.factionsxl.legacygui.GUIButton;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
@@ -53,8 +53,8 @@ public class WarDemandCreationGUI implements Listener, StandardizedGUI, Inventor
 
     private Inventory gui;
 
-    private ItemStack listDemands = GUIButton.setDisplay(new ItemStack(Material.BOOK), FMessage.WAR_DEMAND_CREATION_MENU_LIST.getMessage());
-    private ItemStack send = GUIButton.setDisplay(StandardizedGUI.MAILBOX, FMessage.WAR_DEMAND_CREATION_MENU_SEND.getMessage());
+    private ItemStack listDemands = new ItemStack(Material.BOOK);
+    private ItemStack send = new ItemStack(Material.PLAYER_HEAD);
     private Faction enemy;
 
 

@@ -20,7 +20,6 @@ package de.erethon.factionsxl.util;
 
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.misc.ProgressBar;
-import de.erethon.commons.player.PlayerUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
@@ -67,12 +66,11 @@ public class CooldownTeleportationTask extends ProgressBar {
                     econ.withdrawPlayer(player, config.getPriceHomeWarp());
                 }
             }
-            PlayerUtil.secureTeleport(player, targetLocation);
         }
-
-        if (secondsLeft == 0) {
-            teleport = true;
-        }
+    }
+    @Override
+    public void onFinish() {
+        player.teleport(targetLocation);
     }
 
 }

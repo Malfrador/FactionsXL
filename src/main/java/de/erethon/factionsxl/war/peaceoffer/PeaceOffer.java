@@ -18,9 +18,9 @@
  */
 package de.erethon.factionsxl.war.peaceoffer;
 
-import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.entity.Request;
+import de.erethon.factionsxl.legacygui.GUIButton;
 import de.erethon.factionsxl.war.War;
 import de.erethon.factionsxl.war.demand.*;
 
