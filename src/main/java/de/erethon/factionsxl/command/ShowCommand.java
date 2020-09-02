@@ -19,6 +19,7 @@ package de.erethon.factionsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.faction.Faction;
@@ -105,8 +106,12 @@ public class ShowCommand extends FCommand {
             MessageUtil.sendMessage(player, FMessage.CMD_SHOW_CAPITAL.getMessage() + c + faction.getCapital().getName());
             String power = String.valueOf(faction.getPower());
             String provinces = String.valueOf(faction.getRegions().size());
-            String value = String.valueOf(faction.getExpansion());
-            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces, value));
+            int pop = 0;
+            for (Region rg : faction.getRegions()) {
+                pop = pop + rg.getPopulation();
+            }
+            String population = String.valueOf(pop);
+            MessageUtil.sendMessage(player, FMessage.CMD_SHOW_INFO.getMessage(c.toString(), power, provinces, population));
             MessageUtil.sendMessage(player, faction.getStabilityModifiers(c));
 
             ArrayList<BaseComponent> relList = new ArrayList<>(Arrays.asList(TextComponent.fromLegacyText(FMessage.CMD_SHOW_RELATIONS.getMessage())));

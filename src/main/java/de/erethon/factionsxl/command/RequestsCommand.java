@@ -16,9 +16,9 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.gui.PageGUI;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Request;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import org.bukkit.Bukkit;

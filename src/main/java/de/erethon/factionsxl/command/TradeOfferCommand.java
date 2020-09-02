@@ -16,7 +16,6 @@
  */
 package de.erethon.factionsxl.command;
 
-import de.erethon.commons.gui.PageGUI;
 import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -24,6 +23,7 @@ import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.economy.TradeOffer;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import org.bukkit.Bukkit;
@@ -47,9 +47,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.erethon.commons.gui.GUIButton.PLACEHOLDER;
-import static de.erethon.commons.gui.GUIButton.setDisplay;
 import static de.erethon.factionsxl.gui.StandardizedGUI.*;
+import static de.erethon.factionsxl.legacygui.GUIButton.PLACEHOLDER;
+import static de.erethon.factionsxl.legacygui.GUIButton.setDisplay;
 
 /**
  * @author Daniel Saukel
@@ -391,7 +391,7 @@ public class TradeOfferCommand extends FCommand implements Listener, InventoryHo
     }
     // TODO: Broken
     private BigDecimal readPriceFromTitle(String title) {
-        String price = title.split(ChatColor.DARK_AQUA.toString())[3];
+        String price = title.split(ChatColor.DARK_AQUA.toString())[2];
         return new BigDecimal(price);
     }
 

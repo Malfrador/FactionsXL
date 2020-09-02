@@ -16,13 +16,14 @@
  */
 package de.erethon.factionsxl.population;
 
-import de.erethon.commons.gui.GUIButton;
-import de.erethon.commons.gui.PageGUI;
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
+import de.erethon.factionsxl.legacygui.GUIButton;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -74,6 +75,7 @@ public class SaturationMenu implements Listener, InventoryHolder {
     }
 
     private void setupGUI() {
+        MessageUtil.broadcastMessage("setup gui");
         gui = Bukkit.createInventory(this, 27, FMessage.POPULATION_ADJUST_CONSUME.getMessage(faction.getName()));
         ItemStack banner = faction.getBannerStack();
         ItemMeta meta = banner.getItemMeta();
@@ -110,7 +112,7 @@ public class SaturationMenu implements Listener, InventoryHolder {
     public void onClick(InventoryClickEvent event) {
         HumanEntity player = event.getWhoClicked();
         Inventory i = event.getClickedInventory();
-        if (event.getInventory().getHolder() != this) {
+        if (i != null && i.getHolder() != this) {
             return;
         }
         event.setCancelled(true);

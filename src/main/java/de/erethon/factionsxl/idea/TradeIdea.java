@@ -28,27 +28,27 @@ import java.util.Map;
 /**
  * @author Daniel Saukel
  */
-public enum SettlerIdea implements Idea {
+public enum TradeIdea implements Idea {
 
-    COLONIZATION(GUIButton.PLAYER_HEAD, FMessage.IDEA_NAME_SETTLER_COLONIZATION, FMessage.IDEA_DESC_SETTLER_COLONIZATION, new HashMap<Resource, Integer>() {
+    TRADE_IDEA(GUIButton.PLAYER_HEAD, FMessage.IDEA_NAME_TRADE, FMessage.IDEA_DESC_TRADE, new HashMap<Resource, Integer>() {
         {
-            //put(Resource.COAL, 400);
-            put(Resource.GRAVEL, 250);
-            //put(Resource.OAK, 200);
+            put(Resource.COAL, 400);
+            //put(Resource.GRAVEL, 250);
+            put(Resource.OAK, 200);
             //put(Resource.CLAY, 600);
             //put(Resource.MANPOWER, 10000);
             put(Resource.TAXES, 10000);
         }
     });
 
-    public static final IdeaGroup GROUP = IdeaGroup.SETTLER;
+    public static final IdeaGroup GROUP = IdeaGroup.TRADE;
 
     private ItemStack icon;
     private FMessage name;
     private FMessage description;
     private Map<Resource, Integer> price = new HashMap<>();
 
-    SettlerIdea(ItemStack icon, FMessage name, FMessage description, Map<Resource, Integer> price) {
+    TradeIdea(ItemStack icon, FMessage name, FMessage description, Map<Resource, Integer> price) {
         this.icon = icon;
         this.name = name;
         this.description = description;

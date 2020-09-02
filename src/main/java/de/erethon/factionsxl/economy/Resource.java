@@ -18,7 +18,6 @@ package de.erethon.factionsxl.economy;
 
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.factionsxl.config.FMessage;
-import de.erethon.factionsxl.gui.StandardizedGUI;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -84,7 +83,7 @@ public enum Resource {
     SALMON(FMessage.RESOURCE_SALMON, new ItemStack(Material.SALMON, 1), 10),
     INK(FMessage.RESOURCE_INK, new ItemStack(Material.INK_SAC), 17.5),
     SALT(FMessage.RESOURCE_SALT, new ItemStack(Material.SUGAR), 40),
-    WATER(FMessage.RESOURCE_WATER, StandardizedGUI.GUI_WATER_BOTTLE.clone(), 0.1),
+    WATER(FMessage.RESOURCE_WATER, new ItemStack(Material.GLASS_BOTTLE), 0.1),
     // Seabed
     CLAY(FMessage.RESOURCE_CLAY, new ItemStack(Material.CLAY), 15),
     PRISMARINE(FMessage.RESOURCE_PRISMARINE, new ItemStack(Material.PRISMARINE_SHARD), 150),

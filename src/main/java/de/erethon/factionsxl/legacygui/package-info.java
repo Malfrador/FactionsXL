@@ -19,4 +19,4 @@
  * Taken from an older version of the DRECommons library; supposed to replaced by Vignette
  */
 @Deprecated
-package de.erethon.commons.gui;
+package de.erethon.factionsxl.legacygui;

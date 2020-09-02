@@ -16,8 +16,6 @@
  */
 package de.erethon.factionsxl.population;
 
-import de.erethon.commons.gui.GUIButton;
-import de.erethon.commons.gui.PageGUI;
 import de.erethon.commons.misc.ProgressBar;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
@@ -25,6 +23,8 @@ import de.erethon.factionsxl.economy.Resource;
 import de.erethon.factionsxl.economy.ResourceSubcategory;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
+import de.erethon.factionsxl.legacygui.GUIButton;
+import de.erethon.factionsxl.legacygui.PageGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -98,7 +98,7 @@ public class PopulationMenu implements Listener {
             ItemMeta meta = icon.getItemMeta();
             int max = subcategory.getResources().length;
             List<String> lore = new ArrayList<>();
-            lore.add(ProgressBar.getBar((double) percentage));
+            lore.add(ProgressBar.BAR);
             SaturationLevel level = SaturationLevel.getByPercentage(percentage, subcategory.isBasic());
             lore.add(level.getColor().toString() + percentage + "%");
             for (SaturationLevel sLevel : SaturationLevel.values()) {

@@ -16,8 +16,8 @@
  */
 package de.erethon.factionsxl.economy;
 
-import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.legacygui.GUIButton;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

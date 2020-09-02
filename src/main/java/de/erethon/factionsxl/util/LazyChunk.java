@@ -93,6 +93,21 @@ public class LazyChunk {
         } return chunksAroundPlayer;
     }
 
+    public Collection<Chunk> getFastChunksAround(World world) {
+
+        int[] offset = {-1,0,1};
+        Chunk chunk = this.asBukkitChunk(world);
+        int baseX = chunk.getX();
+        int baseZ = chunk.getZ();
+        Collection<Chunk> chunksAroundPlayer = new HashSet<>();
+        for(int x : offset) {
+            for(int z : offset) {
+                Chunk c = world.getChunkAt(baseX + x, baseZ + z);
+                chunksAroundPlayer.add(c);
+            }
+        } return chunksAroundPlayer;
+    }
+
     public Chunk asBukkitChunk(World world) {
         Chunk chunk = null;
         if (bukkit == null) {
