@@ -26,6 +26,9 @@ import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.dynmap.Atlas;
+import de.erethon.factionsxl.building.BuildSite;
+import de.erethon.factionsxl.building.BuildingListener;
+import de.erethon.factionsxl.building.BuildingManager;
 import de.erethon.factionsxl.chat.ChatListener;
 import de.erethon.factionsxl.command.FCommandCache;
 import de.erethon.factionsxl.command.FCommandCompleter;
@@ -79,6 +82,7 @@ public class FactionsXL extends DREPlugin {
 
     public static File BACKUPS;
     public static File BOARD;
+    public static File BUILDINGS;
     public static File LANGUAGES;
     public static File PLAYERS;
     public static File DYNASTIES;
@@ -109,6 +113,7 @@ public class FactionsXL extends DREPlugin {
     private BukkitTask incomeTask;
     private BukkitTask powerTask;
     private BalanceCache balanceCache;
+    private BuildingManager buildingManager;
     private boolean debugEnabled = true;
     private PrintWriter out;
     private CannonsAPI cannonsAPI;
@@ -118,7 +123,7 @@ public class FactionsXL extends DREPlugin {
                 .spigot(true)
                 .economy(true)
                 .metrics(true)
-                .internals(Internals.v1_13_R2, Internals.v1_14_R1, Internals.v1_15_R1)
+                .internals(Internals.v1_13_R2, Internals.v1_14_R1, Internals.v1_15_R1, Internals.v1_16_R1)
                 .build();
     }
 
@@ -132,13 +137,12 @@ public class FactionsXL extends DREPlugin {
         ConfigurationSerialization.registerClass(RegionDemand.class);
         ConfigurationSerialization.registerClass(RelationDemand.class);
         ConfigurationSerialization.registerClass(ItemDemand.class);
+        ConfigurationSerialization.registerClass(BuildSite.class);
         super.onEnable();
         initFolders();
         debugToFile("Enabling...");
         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
             MessageUtil.log(this, "&4This plugin requires Spigot 1.13.2-1.15.2 to work. It is not compatible with CraftBukkit and older versions.");
-            manager.disablePlugin(this);
-            return;
         }
         instance = this;
 
@@ -177,6 +181,11 @@ public class FactionsXL extends DREPlugin {
         BOARD = new File(getDataFolder(), "board");
         if (!BOARD.exists()) {
             BOARD.mkdir();
+        }
+
+        BUILDINGS = new File(getDataFolder(), "buildings");
+        if (!BUILDINGS.exists()) {
+            BUILDINGS.mkdir();
         }
 
         LANGUAGES = new File(getDataFolder(), "languages");
@@ -249,12 +258,16 @@ public class FactionsXL extends DREPlugin {
         loadCBManager();
         loadAtlas();
         loadOccupationManager();
+        loadBuildings();
         loadCoring();
         loadFCommands();
         loadChatListener();
         loadPlayerListener();
         loadEntityProtectionListener();
         loadLandProtectionListener();
+
+        new BuildingListener();
+
         if (fConfig.isLWCEnabled()) {
             loadLWC();
         }
@@ -494,6 +507,21 @@ public class FactionsXL extends DREPlugin {
     }
 
     /**
+     * new BuildingManager
+     */
+    public void loadBuildings() {
+        buildingManager = new BuildingManager();
+    }
+
+    /**
+     * @return
+     * the loaded instance of BuildingManager
+     */
+    public BuildingManager getBuildingManager() {
+        return buildingManager;
+    }
+
+    /**
      * load / reload a new instance of Atlas
      */
     public void loadAtlas() {
@@ -521,7 +549,7 @@ public class FactionsXL extends DREPlugin {
     }
 
     /**
-     * load / reload a new instance of WarCache
+     * load / reload a new instance of WarHandler
      */
     public void loadWarHandler() {
         warHandler = new WarHandler();

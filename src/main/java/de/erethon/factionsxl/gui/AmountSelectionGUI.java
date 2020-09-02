@@ -34,8 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.erethon.commons.gui.GUIButton.*;
 import static de.erethon.factionsxl.gui.AmountSelectionGUI.Min.MIN_0_01;
+import static de.erethon.factionsxl.legacygui.GUIButton.*;
 
 /**
  * @author Daniel Saukel

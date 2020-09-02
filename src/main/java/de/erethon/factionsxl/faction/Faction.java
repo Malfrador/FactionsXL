@@ -26,6 +26,7 @@ import de.erethon.commons.player.PlayerCollection;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.board.dynmap.DynmapStyle;
+import de.erethon.factionsxl.building.BuildSite;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.economy.*;
@@ -116,6 +117,7 @@ public class Faction extends LegalEntity {
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
     Set<Idea> ideas = new HashSet<>();
+    Set<BuildSite> buildings = new HashSet<>();
     Set<CasusBelli> casusBelli = new HashSet<>();
     Set<War> callsToArms = new HashSet<>();
     boolean allod = true;
@@ -343,9 +345,9 @@ public class Faction extends LegalEntity {
         if (!members.contains(admin)) {
             i = i - 25;
         }
-        /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
+        for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
-        }*/
+        }
         return i;
     }
 
@@ -370,15 +372,15 @@ public class Faction extends LegalEntity {
         String adminNotMember = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_ABSENT_MONARCH.getMessage() + color(members.contains(admin) ? 0 : -25) + "\n";
         String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
         power += color((int) Math.round(pow)) + "" + ChatColor.DARK_GRAY + " (" + ChatColor.GRAY + Math.round(powerRegionRatio * 100) + "%" + ChatColor.DARK_GRAY + ")" + "\n";
-        /*int i = 0;
+        int i = 0;
         for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
         }
-        String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);*/
+        String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);
 
         BaseComponent[] msg = TextComponent.fromLegacyText(stability);
         for (BaseComponent component : msg) {
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(b + exhaustion + size + adminNotMember + power)));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(b + exhaustion + size + adminNotMember + power + wealth)));
         }
         return msg;
     }
@@ -1020,6 +1022,14 @@ public class Faction extends LegalEntity {
 
     /**
      * @return
+     * the the faction-wide buildings this faction has completed.
+     */
+    public Set<BuildSite> getFactionBuildings() {
+        return buildings;
+    }
+
+    /**
+     * @return
      * the casus belli of this faction
      */
     public Set<CasusBelli> getCasusBelli() {
@@ -1476,6 +1486,12 @@ public class Faction extends LegalEntity {
             }
         }
         ideaMenu = new IdeaMenu(this);
+        ConfigurationSection bs = config.getConfigurationSection("buildSites");
+        if (bs != null) {
+            for (String b : bs.getKeys(false)) {
+                buildings.add(new BuildSite(config.getConfigurationSection("buildSites." + b)));
+            }
+        }
         ConfigurationSection cbs = config.getConfigurationSection("casusBelli");
         if (cbs != null) {
             for (String cb : cbs.getKeys(false)) {
@@ -1578,9 +1594,14 @@ public class Faction extends LegalEntity {
             }
             config.set("ideas", ideaIds);
             int i = 0;
-            for (CasusBelli cb : casusBelli) {
-                config.set("casusBelli." + i, cb.serialize());
+            for (BuildSite b : buildings) {
+                config.set("buildSites." + i, b.serialize());
                 i++;
+            }
+            int i2 = 0;
+            for (CasusBelli cb : casusBelli) {
+                config.set("casusBelli." + i2, cb.serialize());
+                i2++;
             }
             config.set("isAllod", allod);
             config.set("requests", requests);
