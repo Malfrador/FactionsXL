@@ -35,7 +35,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Daniel Saukel
@@ -153,65 +152,54 @@ public class PlayerListener implements Listener {
         if (fConfig.isExcludedWorld(event.getPlayer().getWorld())) {
             return;
         }
-        // board.getByChunk() is otherwise creating lag spikes
-        BukkitRunnable run = new BukkitRunnable() {
-            @Override
-            public void run() {
-                Chunk fromChunk = event.getFrom().getChunk();
-                Chunk toChunk = event.getTo().getChunk();
-                if (fromChunk == toChunk) {
-                    return;
-                }
+        Chunk fromChunk = event.getFrom().getChunk();
+        Chunk toChunk = event.getTo().getChunk();
+        if (fromChunk == toChunk) {
+            return;
+        }
 
-                Player player = event.getPlayer();
-                FPlayer fPlayer = fPlayers.getByPlayer(player);
+        Player player = event.getPlayer();
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
 
 
-                Region fromRegion = fPlayer.getLastRegion();
-                Region toRegion;
-                if (fromRegion == null) {
-                    toRegion = board.getByChunk(toChunk);
-                } else {
-                    toRegion = board.getByChunk(toChunk, fromRegion);
-                }
-                fPlayer.setLastRegion(toRegion);
+        Region fromRegion = fPlayer.getLastRegion();
+        Region toRegion;
+        toRegion = board.getByChunk(toChunk, fromRegion);
+        fPlayer.setLastRegion(toRegion);
 
-                if (fPlayer.isAutoclaiming() && toRegion == null) {
-                    fPlayer.getAutoclaimingRegion().getChunks().add(new LazyChunk(toChunk));
-                    ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_ADDED.getMessage(), fPlayer.getAutoclaimingRegion());
-                    return;
-                }
+        if (fPlayer.isAutoclaiming() && toRegion == null) {
+            fPlayer.getAutoclaimingRegion().getChunks().add(new LazyChunk(toChunk));
+            ParsingUtil.sendMessage(player, FMessage.CMD_WORLD_CHUNK_ADDED.getMessage(), fPlayer.getAutoclaimingRegion());
+            return;
+        }
 
-                if (fromRegion == toRegion) {
-                    return;
-                }
+        if (fromRegion == toRegion) {
+            return;
+        }
 
-                String regionName;
-                String main = ParsingUtil.getRegionName(player, toRegion);
-                if (toRegion == null || toRegion.getType() != RegionType.WARZONE) {
-                    regionName = main;
-                } else {
-                    String warZone = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "[" + FMessage.REGION_WAR_ZONE.getMessage().toUpperCase() + "]";
-                    regionName = warZone + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + main + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + warZone;
-                }
+        String regionName;
+        String main = ParsingUtil.getRegionName(player, toRegion);
+        if (toRegion == null || toRegion.getType() != RegionType.WARZONE) {
+            regionName = main;
+        } else {
+            String warZone = ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "[" + FMessage.REGION_WAR_ZONE.getMessage().toUpperCase() + "]";
+            regionName = warZone + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + main + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + warZone;
+        }
 
-                MessageUtil.sendActionBarMessage(event.getPlayer(), regionName);
-                if (toRegion != null) {
-                    Faction fromFaction = fromRegion != null ? fromRegion.getOwner() : null;
-                    Faction toFaction = toRegion != null ? toRegion.getOwner() : null;
-                    if (fromFaction != toFaction) {
-                        stopSound(player, fromFaction);
-                        if (toFaction != null && toFaction.getDescription() != null) {
-                            MessageUtil.sendCenteredMessage(player, ParsingUtil.getFactionName(player, toFaction));
-                            MessageUtil.sendCenteredMessage(player, toFaction.getDescription());
-                            stopSound(player, toFaction);
-                            player.playSound(player.getLocation(), toFaction.getAnthem(), 1, 1);
-                        }
-                    }
+        MessageUtil.sendActionBarMessage(event.getPlayer(), regionName);
+        if (toRegion != null) {
+            Faction fromFaction = fromRegion != null ? fromRegion.getOwner() : null;
+            Faction toFaction = toRegion != null ? toRegion.getOwner() : null;
+            if (fromFaction != toFaction) {
+                stopSound(player, fromFaction);
+                if (toFaction != null && toFaction.getDescription() != null) {
+                    MessageUtil.sendCenteredMessage(player, ParsingUtil.getFactionName(player, toFaction));
+                    MessageUtil.sendCenteredMessage(player, toFaction.getDescription());
+                    stopSound(player, toFaction);
+                    player.playSound(player.getLocation(), toFaction.getAnthem(), 1, 1);
                 }
             }
-        };
-        run.runTaskAsynchronously(plugin);
+        }
     }
 
     private void stopSound(Player player, Faction faction) {
