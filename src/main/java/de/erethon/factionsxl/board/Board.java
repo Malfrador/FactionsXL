@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.board;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
@@ -122,7 +123,8 @@ public class Board {
     }
 
     /**
-     * Tries adjacent regions first, then falls back to getByChunk(Chunk)
+     * Tries adjacent regions first, then falls back to getByChunk(Chunk).
+     * Should be a lot faster in most cases.
      * @param chunk
      * the chunk to check
      * @param region
@@ -132,17 +134,23 @@ public class Board {
      */
     public Region getByChunk(Chunk chunk, Region region) {
         Region rg = null;
-        for (Region r : region.getNeighbours()) {
-            for (LazyChunk rChunk : region.getChunks()) {
+        // Check chunks of the region first.
+        for (LazyChunk ownChunk : region.getChunks()) {
+            if (ownChunk.getX() == chunk.getX() && ownChunk.getZ() == chunk.getZ()) {
+                return region;
+            }
+        }
+        // If no results found, check chunks of adjacent regions.
+        for (Region rNeighbour : region.getNeighbours()) {
+            MessageUtil.log(rNeighbour.getName());
+            for (LazyChunk rChunk : rNeighbour.getChunks()) {
                 if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
-                    rg = r;
+                    return rNeighbour;
                 }
             }
         }
-        if (rg == null) {
-            rg = getByChunk(chunk);
-        }
-        return rg;
+        // If still no region found, check the entire board.
+        return getByChunk(chunk);
     }
 
     /**
