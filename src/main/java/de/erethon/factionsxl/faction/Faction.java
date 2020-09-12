@@ -345,9 +345,9 @@ public class Faction extends LegalEntity {
         if (!members.contains(admin)) {
             i = i - 25;
         }
-        for (ResourceSubcategory category : ResourceSubcategory.values()) {
+        /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
-        }
+        }*/
         return i;
     }
 
@@ -373,14 +373,14 @@ public class Faction extends LegalEntity {
         String power = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_POWER.getMessage();
         power += color((int) Math.round(pow)) + "" + ChatColor.DARK_GRAY + " (" + ChatColor.GRAY + Math.round(powerRegionRatio * 100) + "%" + ChatColor.DARK_GRAY + ")" + "\n";
         int i = 0;
-        for (ResourceSubcategory category : ResourceSubcategory.values()) {
+        /*for (ResourceSubcategory category : ResourceSubcategory.values()) {
             i += isSubcategorySaturated(category).getStabilityBonus();
         }
-        String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);
+        String wealth = ChatColor.RESET + FMessage.CMD_SHOW_STABILITY_MOD_WEALTH.getMessage() + color(i);*/
 
         BaseComponent[] msg = TextComponent.fromLegacyText(stability);
         for (BaseComponent component : msg) {
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(b + exhaustion + size + adminNotMember + power + wealth)));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(b + exhaustion + size + adminNotMember + power)));
         }
         return msg;
     }
