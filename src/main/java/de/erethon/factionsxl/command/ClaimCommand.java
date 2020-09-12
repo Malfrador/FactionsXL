@@ -93,8 +93,8 @@ public class ClaimCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_LAND_NOT_FOR_SALE.getMessage(), region, faction);
             return;
         }
-        if (region.getOwner() != null) {
-            War war = plugin.getWarCache().getWarTogether(region.getOwner(), faction );
+        War war = plugin.getWarCache().getWarTogether(region.getOwner(), faction );
+        if (region.getOwner() != null && war != null) {
             if (war.getAttacker().getFactions().contains(faction)) {
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
                 return;
@@ -115,8 +115,8 @@ public class ClaimCommand extends FCommand {
             }
         }
 
-        region.setInfluence(50);
         if (region.isNeutral()) {
+            region.setInfluence(50);
             region.setOwner(faction);
         }
         else {

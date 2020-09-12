@@ -27,7 +27,7 @@ import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.scoreboard.FScoreboard;
 import de.erethon.factionsxl.util.LazyChunk;
 import de.erethon.factionsxl.util.ParsingUtil;
-import de.erethon.factionsxl.war.WarParty;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -88,23 +88,26 @@ public class PlayerListener implements Listener {
         if (event.getTo() == null) {
             return;
         }
-        Region rg = board.getByLocation(event.getTo());
-        if (rg == null) {
+        if (!Bukkit.getOnlinePlayers().contains(event.getPlayer())) {
             return;
         }
         Player player = event.getPlayer();
         FPlayer fPlayer = fPlayers.getByPlayer(player);
+        Region rg = board.getByChunk(event.getTo().getChunk(), fPlayer.getLastRegion());
+        if (rg == null) {
+            return;
+        }
         fPlayer.setLastRegion(rg);
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Region rg = board.getByLocation(event.getRespawnLocation());
+        Player player = event.getPlayer();
+        FPlayer fPlayer = fPlayers.getByPlayer(player);
+        Region rg = board.getByChunk(event.getRespawnLocation().getChunk(), fPlayer.getLastRegion());
         if (rg == null) {
             return;
         }
-        Player player = event.getPlayer();
-        FPlayer fPlayer = fPlayers.getByPlayer(player);
         fPlayer.setLastRegion(rg);
     }
 
@@ -122,20 +125,7 @@ public class PlayerListener implements Listener {
         double loss = fConfig.getPowerDeathLoss();
         double newPower = killedF.getPower() - loss;
         killedF.setPower(newPower < fConfig.getMinPower() ? fConfig.getMinPower() : newPower);
-        // Gamerule: doImmediateRespawn needs to be true here!
         if (killerP != null) {
-            if (killerFc != null) {
-                for (WarParty w : killerFc.getWarParties()) {
-                    if (w.getEnemy().getFactions().contains(killedFc)) {
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                            public void run() {
-                                killedP.teleport(killedFc.getHome());
-                            }
-                        }, 2);
-                        break;
-                    }
-                }
-            }
             if ((killerFc != null && !killerFc.isInWar(killedFc) || (killerFc != null && killerFc.isInWar(killedFc) && fConfig.isPowerGainInWar()))) {
                 double newKPower = killerF.getPower() + loss;
                 killerF.setPower(newKPower > fConfig.getMaxPower() ? fConfig.getMaxPower() : newKPower);

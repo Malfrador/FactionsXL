@@ -31,6 +31,7 @@ public enum FMessage implements Message {
     BULL_ID("bull.id"),
     BULL_RIGHT_KLICK("bull.rightClick"),
     BUILDING_SITE_CREATED("building.site.created"),
+    BUILDING_SITE_HINT("building.site.hint"),
     CHAT_CHANNEL_SWITCHED("chat.channelSwitched"),
     CHAT_PREFIX_ADMIN("chat.prefix.admin"),
     CHAT_PREFIX_MEMBER("chat.prefix.member"),

@@ -16,7 +16,6 @@
  */
 package de.erethon.factionsxl.board;
 
-import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.config.ConfigUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
@@ -135,17 +134,18 @@ public class Board {
     public Region getByChunk(Chunk chunk, Region region) {
         Region rg = null;
         // Check chunks of the region first.
-        for (LazyChunk ownChunk : region.getChunks()) {
-            if (ownChunk.getX() == chunk.getX() && ownChunk.getZ() == chunk.getZ()) {
-                return region;
+        if (region != null) {
+            for (LazyChunk ownChunk : region.getChunks()) {
+                if (ownChunk.getX() == chunk.getX() && ownChunk.getZ() == chunk.getZ()) {
+                    return region;
+                }
             }
-        }
         // If no results found, check chunks of adjacent regions.
-        for (Region rNeighbour : region.getNeighbours()) {
-            MessageUtil.log(rNeighbour.getName());
-            for (LazyChunk rChunk : rNeighbour.getChunks()) {
-                if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
-                    return rNeighbour;
+            for (Region rNeighbour : region.getNeighbours()) {
+                for (LazyChunk rChunk : rNeighbour.getChunks()) {
+                    if (rChunk.getX() == chunk.getX() && rChunk.getZ() == chunk.getZ()) {
+                        return rNeighbour;
+                    }
                 }
             }
         }

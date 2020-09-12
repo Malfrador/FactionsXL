@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Represents a player.
@@ -57,6 +58,7 @@ public class FPlayer implements FEntity, PlayerWrapper {
     private Region lastRegion;
     private PeaceOffer peaceOffer;
     private double lastPlayed;
+    private List<Player> lastDamagers = new CopyOnWriteArrayList<>();
 
     private FPlayerData data;
 
@@ -428,6 +430,10 @@ public class FPlayer implements FEntity, PlayerWrapper {
         for (WarDemand demand : demands) {
             MessageUtil.sendMessage(player, "&8 - " + demand.toString());
         }
+    }
+
+    public List<Player> getLastDamagers() {
+        return lastDamagers;
     }
 
     @Override

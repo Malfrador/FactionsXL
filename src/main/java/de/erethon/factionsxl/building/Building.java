@@ -17,9 +17,7 @@
 
 package de.erethon.factionsxl.building;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.misc.NumberUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
@@ -35,11 +33,8 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +59,7 @@ public class Building {
     private FileConfiguration config;
 
     private String id;
+    private String name;
     private List<String> description;
     private boolean isCoreRequired;
     private boolean isCapitalRequired;
@@ -90,7 +86,7 @@ public class Building {
 
     public void build(Player p, Faction faction, Region rg, Location center) {
         pay(faction);
-        new BuildSite(this, rg, getCorner1(center), getCorner2(center));
+        new BuildSite(this, rg, getCorner1(center), getCorner2(center), center.getBlock());
         MessageUtil.sendMessage(p, FMessage.BUILDING_SITE_CREATED.getMessage());
     }
 
@@ -168,7 +164,7 @@ public class Building {
 
     public boolean hasRequiredBuilding(Faction f) {
         Set<Building> buildings = new HashSet<>();
-        if (getRequiredBuildings() == null) {
+        if (getRequiredBuildings() == null || getRequiredBuildings().isEmpty()) {
             return true;
         }
         if (f.getFactionBuildings() == null || f.getFactionBuildings().isEmpty()) {
@@ -189,7 +185,7 @@ public class Building {
 
     public boolean hasRequiredBuilding(Region rg) {
         Set<Building> buildings = new HashSet<>();
-        if (getRequiredBuildings() == null) {
+        if (getRequiredBuildings() == null || getRequiredBuildings().isEmpty()) {
             return true;
         }
         if (rg.getBuildings() == null || rg.getBuildings().isEmpty()) {
@@ -346,8 +342,13 @@ public class Building {
         return description;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void load() {
         ConfigurationSection config = this.config;
+        name = config.getString("name");
         isCoreRequired = config.getBoolean("coreRequired");
         isCapitalRequired = config.getBoolean("capitalRequired");
         isFactionBuilding = config.getBoolean("isFactionBuilding");
