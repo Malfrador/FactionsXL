@@ -136,7 +136,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
             return;
         }
 
-        // Subject:
+        // Subject
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         if (factions.isEmpty()) {

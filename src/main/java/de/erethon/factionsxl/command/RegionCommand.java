@@ -106,7 +106,10 @@ public class RegionCommand extends FCommand {
             double amount = region.getClaimPrice(faction) * config.getPriceCoreMultiplier();
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_PRICE_CORE.getMessage() + c + String.valueOf(amount));
         }
-        MessageUtil.sendMessage(sender,FMessage.CMD_REGION_INFLUENCE.getMessage() + c + region.getInfluence());
+        MessageUtil.sendMessage(sender,FMessage.CMD_REGION_INFLUENCE.getMessage() + c + region.getInfluence() + "%");
+        if (region.isAttacked()) {
+            MessageUtil.sendMessage(sender, "&aEinfluss für Besetzung: &7" + config.getInfluenceNeeded() + "%");
+        }
         if (region.getOccupant() != null) {
             MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OCCUPIER.getMessage() + c + region.getOccupant().getName());
         }

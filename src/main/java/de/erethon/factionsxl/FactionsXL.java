@@ -142,7 +142,7 @@ public class FactionsXL extends DREPlugin {
         initFolders();
         debugToFile("Enabling...");
         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.13.2-1.15.2 to work. It is not compatible with CraftBukkit and older versions.");
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.13.2-1.16.2 to work. It is not compatible with CraftBukkit and older versions.");
         }
         instance = this;
 
@@ -305,7 +305,7 @@ public class FactionsXL extends DREPlugin {
             public void run() {
                 occupationManager.showTimers();
             }
-        }.runTaskTimerAsynchronously(this, 1, FConfig.SECOND);
+        }.runTaskTimerAsynchronously(this, 5, FConfig.SECOND);
 
         if (fConfig.isEconomyEnabled()) {
             new BukkitRunnable() {

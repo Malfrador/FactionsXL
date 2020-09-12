@@ -97,7 +97,6 @@ public class WarRequest extends Request {
             }
             return;
         }
-        MessageUtil.broadcastMessage(getObject().getRelation(getSubject()).getFormatted());
         if (!(getObject().getRelation(getSubject()) == Relation.ALLIANCE)) {
             for (Player player : object.getRequestAuthorizedPlayers(getClass()).getOnlinePlayers()) {
                 MessageUtil.sendMessage(player, FMessage.WAR_REQUEST_NO_ALLIANCE.getMessage());
