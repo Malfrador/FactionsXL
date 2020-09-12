@@ -22,12 +22,14 @@ import de.erethon.factionsxl.board.Board;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.event.FPlayerFactionLeaveEvent;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.CasusBelli;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -103,6 +105,10 @@ public class IndependenceCommand extends FCommand {
             Location location = player.getLocation();
             Region region = board.getByLocation(location);
             faction.getMembers().remove(player);
+
+            FPlayerFactionLeaveEvent event = new FPlayerFactionLeaveEvent(plugin.getFPlayerCache().getByPlayer(player), faction);
+            Bukkit.getPluginManager().callEvent(event);
+
             factions.create(player, args[1]);
             region.getClaimFactions().put(faction, Calendar.getInstance().getTime());
             Faction newFaction = factions.getByMember(player);

@@ -22,6 +22,7 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
+import de.erethon.factionsxl.event.FPlayerFactionLeaveEvent;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
@@ -116,6 +117,10 @@ public class CreateVassalCommand extends FCommand {
             mother.getOnlineMembers().remove(leader.getPlayer());
         }
         FTeamWrapper.updatePrefixes(mother);
+
+        FPlayerFactionLeaveEvent event = new FPlayerFactionLeaveEvent(plugin.getFPlayerCache().getByPlayer(leader), mother);
+        Bukkit.getPluginManager().callEvent(event);
+
         Faction vassal = plugin.getFactionCache().create(leader, location, args[1]);
         mother.getRelations().put(vassal, Relation.VASSAL);
         vassal.getRelations().put(mother, Relation.LORD);

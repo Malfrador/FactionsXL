@@ -19,11 +19,13 @@ package de.erethon.factionsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.event.FPlayerFactionJoinEvent;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.player.FPlayer;
 import de.erethon.factionsxl.scoreboard.FTeamWrapper;
 import de.erethon.factionsxl.util.ParsingUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -76,6 +78,10 @@ public class JoinCommand extends FCommand {
 
         if (faction.getInvitedPlayers().contains(player) || faction.isPrivileged(player) || faction.isOpen()) {
             if (args.length == 2) {
+
+                FPlayerFactionJoinEvent event = new FPlayerFactionJoinEvent(fPlayer, faction);
+                Bukkit.getPluginManager().callEvent(event);
+
                 faction.getMembers().add(player);
                 fPlayer.getData().setLastJoinedFaction(now);
                 faction.sendMessage(FMessage.FACTION_JOIN_ACCEPT.getMessage(), player);
