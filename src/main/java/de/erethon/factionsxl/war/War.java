@@ -23,6 +23,8 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.RelationRequest;
+import de.erethon.factionsxl.event.WarDeclarationEvent;
+import de.erethon.factionsxl.event.WarEndEvent;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.gui.StandardizedGUI;
 import de.erethon.factionsxl.player.FPlayerCache;
@@ -188,6 +190,12 @@ public class War {
      * When a player confirms the war.
      */
     public void confirm() {
+        WarDeclarationEvent event = new WarDeclarationEvent(attacker, defender, cb);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         try {
             file.createNewFile();
         } catch (IOException exception) {
@@ -211,6 +219,11 @@ public class War {
         System.out.println("War" + this + "confirmed!");
     }
     public void end() {
+        WarEndEvent event = new WarEndEvent(attacker, defender, cb);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
         Set<Faction> factionSet =  this.getAttacker().getFactions();

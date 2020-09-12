@@ -55,8 +55,8 @@ public class OccupationManager {
                             MessageUtil.log("Region " + rg.getName() + " is now safe.");
                             rg.setAttackStartTime(0);
                             rg.setLastDefendedTime(now);
-                            f.sendMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
-                            f.sendMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
+                            MessageUtil.broadcastMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
+                            MessageUtil.broadcastMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
                         }
                     }
                 }
@@ -77,8 +77,8 @@ public class OccupationManager {
                             MessageUtil.log("Region " + rg.getName() + " is now safe.");
                             rg.setAttackStartTime(0);
                             rg.setLastDefendedTime(now);
-                            f.sendMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
-                            f.sendMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
+                            MessageUtil.broadcastMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
+                            MessageUtil.broadcastMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
                         }
                     }
                 }
@@ -150,7 +150,7 @@ public class OccupationManager {
             Region rg = fp.getLastRegion();
             if (rg.getAttackStartTime() != 0) {
                 if (rg.isAttacked()) {
-                    MessageUtil.sendActionBarMessage(fp.getPlayer(), "&cAngriff: &6" + getTimeLeft(rg) + "&6 Minuten");
+                    MessageUtil.sendActionBarMessage(fp.getPlayer(), "&cAngriff: &6" + getTimeLeft(rg) + "&6 Minuten &8| &7Einfluss: &a" + rg.getInfluence() + "%");
                 } else {
                     MessageUtil.sendActionBarMessage(fp.getPlayer(), "&7Vorbereitungszeit: &6" + getTimeLeft(rg) + "&6 Minuten");
                 }
@@ -211,9 +211,7 @@ public class OccupationManager {
             return false;
         }
         double part = (attackerParticipation - defenderParticipation);
-        if (part < 0) {
-            part = part * (-1);
-        }
+        part = Math.abs(part);
         return part > 10;
     }
 

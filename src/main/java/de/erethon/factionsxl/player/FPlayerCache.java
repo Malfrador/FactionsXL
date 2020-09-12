@@ -18,6 +18,7 @@ package de.erethon.factionsxl.player;
 
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.factionsxl.FactionsXL;
+import de.erethon.factionsxl.event.FPlayerFactionLeaveEvent;
 import de.erethon.factionsxl.faction.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -34,6 +35,8 @@ import java.util.UUID;
  * @author Daniel Saukel
  */
 public class FPlayerCache {
+
+    FactionsXL plugin = FactionsXL.getInstance();
 
     private Set<FPlayer> fPlayers = new HashSet<>();
 
@@ -166,6 +169,8 @@ public class FPlayerCache {
                 if ((System.currentTimeMillis() > (player.getLastPlayed() + FactionsXL.getInstance().getFConfig().getAutoKickTime())) && !player.isOnline()) {
                     FactionsXL.debug("Kicking " + player + " / Last played: " + new java.util.Date(player.getLastPlayed()));
                     faction.kick(player);
+                    FPlayerFactionLeaveEvent event = new FPlayerFactionLeaveEvent(plugin.getFPlayerCache().getByPlayer(player), faction);
+                    Bukkit.getPluginManager().callEvent(event);
                 }
             }
             OfflinePlayer admin = faction.getAdmin();
