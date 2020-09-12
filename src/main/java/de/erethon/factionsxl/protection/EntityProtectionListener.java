@@ -39,12 +39,15 @@ import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.util.List;
+
 import static de.erethon.factionsxl.protection.EntityProtectionListener.Action.*;
 
 /**
  * @author Daniel Saukel
  */
 public class EntityProtectionListener implements Listener {
+
 
     enum Action {
         ATTACK,
@@ -240,7 +243,18 @@ public class EntityProtectionListener implements Listener {
     }
 
     public static Player getDamageSource(Entity damager) {
+        FactionsXL plugin = FactionsXL.getInstance();
         if (damager instanceof Player) {
+            if (damager.getLastDamageCause() != null) {
+                EntityDamageEvent.DamageCause cause = damager.getLastDamageCause().getCause();
+                if (cause.equals(EntityDamageEvent.DamageCause.FIRE_TICK) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
+                    List<Player> lastDamagers = plugin.getFPlayerCache().getByPlayer((Player) damager).getLastDamagers();
+                    if (lastDamagers.size() == 1) {
+                        return lastDamagers.get(0);
+                    }
+                    return lastDamagers.get(lastDamagers.size() - 1);
+                }
+            }
             return (Player) damager;
         } else if (damager instanceof Arrow) {
             ProjectileSource shooter = ((Arrow) damager).getShooter();

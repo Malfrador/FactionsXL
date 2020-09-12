@@ -49,7 +49,7 @@ public class Battle {
         this.player1 = player1;
         this.player2 = player2;
         start = System.currentTimeMillis();
-        expiration = System.currentTimeMillis() + FConfig.MINUTE;
+        expiration = System.currentTimeMillis() * 1000 * 60;
     }
 
     public Player getPlayer1() {
@@ -69,7 +69,7 @@ public class Battle {
     }
 
     public void expandExpirationTime() {
-        expiration = System.currentTimeMillis() + FConfig.MINUTE;
+        expiration = System.currentTimeMillis() + 1000 * 60;
     }
 
     public boolean takesPart(Player player) {
@@ -85,10 +85,12 @@ public class Battle {
         Faction fl = factions.getByMember(looser);
         FPlayer winnerFP = fplayers.getByPlayer(winner);
         FPlayer looserFP = fplayers.getByPlayer(looser);
-        Region r = plugin.getBoard().getByLocation(winner.getLocation());
-        Faction owner = r.getOwner(); // NPE
-        if (r.getOccupant() != null || r.getOccupant() == f) {
-            MessageUtil.broadcastMessage("Ownah");
+        Region r = plugin.getBoard().getByLocation(looser.getLocation());
+        Faction owner = null;
+        if (r != null) {
+            owner = r.getOwner();
+        }
+        if (r != null && (r.getOccupant() != null || r.getOccupant() == f)) {
             owner = r.getOccupant();
         }
 
@@ -111,16 +113,16 @@ public class Battle {
             }
             w.addKill();
             w.getWar().addPlayerParticipation(winnerFP.getPlayer(), WarPlayerAction.KILL);
-            if (w.getFactions().contains(owner)) {
+            if (owner != null && w.getFactions().contains(owner)) {
                 if (r.isAttacked()) {
                     addInfluence(w, r, winnerFP);;
-                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(winner.getPlayer())), String.valueOf(r.getInfluence())));
                     break;
                 }
-            } else if (w.getEnemy().getFactions().contains(owner)){
+            } else if (owner != null && w.getEnemy().getFactions().contains(owner)){
                 if (r.isAttacked()) {
                     removeInfluence(w, r, winnerFP);
-                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill()), String.valueOf(r.getInfluence())));
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(looser.getPlayer())), String.valueOf(r.getInfluence())));
                     break;
                 }
             }
@@ -137,7 +139,7 @@ public class Battle {
     }
 
     public void removeInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
-        int influence = (int) Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer()));
+        int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
         if (influence > 8) {
             influence = 8;
         }
@@ -149,7 +151,7 @@ public class Battle {
     }
 
     public void addInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
-        int influence = (int) Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer()));
+        int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
         if (influence > 8) {
             influence = 8;
         }
