@@ -17,9 +17,9 @@
 package de.erethon.factionsxl.war.demand;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.commons.gui.GUIButton;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
+import de.erethon.factionsxl.legacygui.GUIButton;
 import de.erethon.factionsxl.war.WarParty;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

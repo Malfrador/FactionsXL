@@ -1,20 +1,18 @@
 /*
+ * Copyright (C) 2017-2020 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.erethon.factionsxl.command.war;
 
@@ -24,10 +22,13 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.command.FCommand;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.config.FMessage;
+import de.erethon.factionsxl.event.WarRegionAttackEvent;
+import de.erethon.factionsxl.event.WarRegionOccupiedEvent;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import de.erethon.factionsxl.war.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -137,12 +138,13 @@ public class OccupyCommand extends FCommand {
                         MessageUtil.sendMessage(sender, "&cDiese Region ist noch geschützt.");
                         return;
                     }
-                    if (plugin.getOccupationManager().isAlreadyAttacked(faction)) {
+                    if (plugin.getOccupationManager().isAlreadyAttacked(annexFrom)) {
                         MessageUtil.sendMessage(sender, "&cEine Region dieser Fraktion wird bereits angegriffen.");
                         return;
                     }
                     if (plugin.getOccupationManager().canStartOccupation(factionWP, factionWP.getEnemy())) {
                         MessageUtil.sendMessage(sender, "&cDu kannst aktuell keinen Angriff starten. Der Beteiligungs-Unterschied ist zu groß.");
+                        MessageUtil.sendMessage(sender, "&7&oEventuell ist die Besitzer-Kriegspartei nicht aktiv oder eure eigenen Kriegsbeteiligung ist zu hoch.");
                         return;
                     }
                     region.setAttackStartTime(System.currentTimeMillis());
@@ -150,6 +152,10 @@ public class OccupyCommand extends FCommand {
                     for (Faction f : factionWP.getEnemy().getFactions()) {
                         f.sendMessage("&aEure Region &6" + region.getName() + " &awird angegriffen!");
                     }
+
+                    WarRegionAttackEvent event = new WarRegionAttackEvent(factionWP, factionWP.getEnemy(), region);
+                    Bukkit.getPluginManager().callEvent(event);
+
                 } else {
                     MessageUtil.sendMessage(sender, "&cDu kannst Regionen nur angreifen wenn sie an eigene oder besetzte Regionen angrenzen.");
                 }
@@ -210,6 +216,9 @@ public class OccupyCommand extends FCommand {
 
                 faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
+
+                WarRegionOccupiedEvent event = new WarRegionOccupiedEvent(factionWP, factionWP.getEnemy(), region, faction);
+                Bukkit.getPluginManager().callEvent(event);
 
 
             } else {

@@ -1,20 +1,18 @@
 /*
+ * Copyright (C) 2017-2020 Daniel Saukel
  *
- *  * Copyright (C) 2017-2020 Daniel Saukel, Malfrador
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.erethon.factionsxl.war;
@@ -57,8 +55,8 @@ public class OccupationManager {
                             MessageUtil.log("Region " + rg.getName() + " is now safe.");
                             rg.setAttackStartTime(0);
                             rg.setLastDefendedTime(now);
-                            f.sendMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
-                            f.sendMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
+                            MessageUtil.broadcastMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
+                            MessageUtil.broadcastMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
                         }
                     }
                 }
@@ -79,8 +77,8 @@ public class OccupationManager {
                             MessageUtil.log("Region " + rg.getName() + " is now safe.");
                             rg.setAttackStartTime(0);
                             rg.setLastDefendedTime(now);
-                            f.sendMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
-                            f.sendMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
+                            MessageUtil.broadcastMessage("&aDie Region &6" + rg.getName() + "&a wurde erfolgreich verteidigt!");
+                            MessageUtil.broadcastMessage("&aSie ist nun für 48 Stunden vor Angriffen geschützt.");
                         }
                     }
                 }
@@ -152,7 +150,7 @@ public class OccupationManager {
             Region rg = fp.getLastRegion();
             if (rg.getAttackStartTime() != 0) {
                 if (rg.isAttacked()) {
-                    MessageUtil.sendActionBarMessage(fp.getPlayer(), "&cAngriff: &6" + getTimeLeft(rg) + "&6 Minuten");
+                    MessageUtil.sendActionBarMessage(fp.getPlayer(), "&cAngriff: &6" + getTimeLeft(rg) + "&6 Minuten &8| &7Einfluss: &a" + rg.getInfluence() + "%");
                 } else {
                     MessageUtil.sendActionBarMessage(fp.getPlayer(), "&7Vorbereitungszeit: &6" + getTimeLeft(rg) + "&6 Minuten");
                 }
@@ -213,9 +211,7 @@ public class OccupationManager {
             return false;
         }
         double part = (attackerParticipation - defenderParticipation);
-        if (part < 0) {
-            part = part * (-1);
-        }
+        part = Math.abs(part);
         return part > 10;
     }
 
