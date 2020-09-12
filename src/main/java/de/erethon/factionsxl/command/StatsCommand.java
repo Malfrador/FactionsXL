@@ -46,8 +46,16 @@ public class StatsCommand extends FCommand {
         MessageUtil.sendMessage(sender, "&6Fraktionen gegründet&8: &6" + player.getData().getFactionsCreated());
         MessageUtil.sendMessage(sender, "&6Geld in Fraktionen eingezahlt&8: &6" + player.getData().getMoneyDeposited());
         MessageUtil.sendMessage(sender, " ");
-        MessageUtil.sendMessage(sender, "&6Kills im Krieg&8:&6 " + player.getData().getKills());
-        MessageUtil.sendMessage(sender, "&6Tode im Krieg&8:&6 " + player.getData().getDeaths());
+        int deaths = player.getData().getDeaths();
+        int kills = player.getData().getKills();
+        double kd = 0;
+        if (deaths != 0) {
+            double n = (double) kills / (double) deaths;
+            kd =  Math.round(n * 100.00) / 100.0;
+        }
+        MessageUtil.sendMessage(sender, "&6Kills im Krieg&8:&6 " + kills);
+        MessageUtil.sendMessage(sender, "&6Tode im Krieg&8:&6 " + deaths);
+        MessageUtil.sendMessage(sender, "&6K/D&8:&6 " + kd );
         if (player.getFaction() != null && player.getFaction().isInWar()) {
             Faction faction = player.getFaction();
             MessageUtil.sendMessage(sender, "&6Kriegsbeteiligung:");
