@@ -73,8 +73,9 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                     break;
                 case CONQUEST:
                     guiMeta.setDisplayName(FMessage.WAR_CB_CONQUEST.getMessage());
-                    guiItem.setType(Material.DIAMOND_SWORD);
+                    guiItem.setType(Material.RED_BANNER);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
                 case IMPERIAL_BAN:
                     break;
@@ -82,6 +83,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                     guiMeta.setDisplayName(FMessage.WAR_CB_INDEPENDENCE.getMessage());
                     guiItem.setType(Material.LEAD);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
                 case LIBERATION:
                     break;
@@ -89,6 +91,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                     guiMeta.setDisplayName(FMessage.WAR_CB_BORDER.getMessage());
                     guiItem.setType(Material.STICKY_PISTON);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
                 case RESTORATION_OF_UNION:
                     break;
@@ -96,16 +99,19 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                     guiMeta.setDisplayName(FMessage.WAR_CB_RECONQUEST.getMessage());
                     guiItem.setType(Material.GOLDEN_SWORD);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
                 case RESUBJAGATION:
                     guiMeta.setDisplayName(FMessage.WAR_CB_RESUBJAGATION.getMessage());
-                    guiItem.setType(Material.IRON_SWORD);
+                    guiItem.setType(Material.BLUE_BANNER);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
                 case SUBJAGATION:
                     guiMeta.setDisplayName("Unterwerfung");
-                    guiItem.setType(Material.DIAMOND_AXE);
+                    guiItem.setType(Material.YELLOW_BANNER);
                     guiItem.setItemMeta(guiMeta);
+                    guiItem.setAmount(1);
                     gui.addItem(guiItem);
             }
         }
@@ -118,13 +124,13 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
         }
         Player player = (Player) event.getWhoClicked();
         Faction faction = plugin.getFPlayerCache().getByPlayer(player).getFaction();
-        event.setCancelled(true);
         PageGUI.playSound(event);
         ItemStack item = event.getCurrentItem();
         if (event.getCurrentItem() == null) {
             return;
         }
         String itemName = item.getItemMeta().getDisplayName();
+        event.setCancelled(true);
 
         // Object
         if (object == null) {
@@ -162,7 +168,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
         if (itemName.equals(FMessage.WAR_CB_RAID.getMessage())) {
             casus = new CasusBelli(CasusBelli.Type.RAID, object, null);
         }
-        if (itemName.equals(FMessage.WAR_CB_CONQUEST.getMessage())) {
+        else if (itemName.equalsIgnoreCase(FMessage.WAR_CB_CONQUEST.getMessage())) {
             for (CasusBelli cb : faction.getCasusBelli()) {
                 if (cb.getType() == CasusBelli.Type.CONQUEST && cb.getTarget() == object) {
                     casus = cb;
@@ -170,7 +176,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        if (itemName.equals(FMessage.WAR_CB_INDEPENDENCE.getMessage())) {
+        else if (itemName.equalsIgnoreCase(FMessage.WAR_CB_INDEPENDENCE.getMessage())) {
             for (CasusBelli cb : faction.getCasusBelli()) {
                 if (cb.getType() == CasusBelli.Type.INDEPENDENCE && cb.getTarget() == object) {
                     casus = cb;
@@ -178,7 +184,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        if (itemName.equals(FMessage.WAR_CB_RESUBJAGATION.getMessage())) {
+        else if (itemName.equalsIgnoreCase(FMessage.WAR_CB_RESUBJAGATION.getMessage())) {
             for (CasusBelli cb : faction.getCasusBelli()) {
                 if (cb.getType() == CasusBelli.Type.RESUBJAGATION && cb.getTarget() == object) {
                     casus = cb;
@@ -186,7 +192,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        if (itemName.equals(FMessage.WAR_CB_RECONQUEST.getMessage())) {
+        else if (itemName.equalsIgnoreCase(FMessage.WAR_CB_RECONQUEST.getMessage())) {
             for (CasusBelli cb : faction.getCasusBelli()) {
                 if (cb.getType() == CasusBelli.Type.RECONQUEST && cb.getTarget() == object) {
                     casus = cb;
@@ -194,7 +200,7 @@ public class CasusBelliMenu implements Listener, InventoryHolder {
                 }
             }
         }
-        if (itemName.equals("Unterwerfung")) {
+       else if (itemName.equalsIgnoreCase("Unterwerfung")) {
             for (CasusBelli cb : faction.getCasusBelli()) {
                 if (cb.getType() == CasusBelli.Type.SUBJAGATION && cb.getTarget() == object) {
                     casus = cb;
