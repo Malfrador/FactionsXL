@@ -165,6 +165,9 @@ public class WarHandler {
                                 r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
                             }   
                             r.setOwner((Faction) warParty.getLeader());
+                            r.clearOccupant();
+                            r.setAttacked(false);
+                            r.setAttackStartTime(0);
                         }
 
                     }
@@ -235,7 +238,7 @@ public class WarHandler {
         }
     }
 
-    // True if the peace time for faction is over. Peace time is last score * day
+    // True if the peace time for faction is over. Peace time is (last score / 2) * day
     public boolean isPeace(Faction faction) {
         long time = faction.getTimeLastPeace();
         int days = faction.getScoreLastPeace() / 2;

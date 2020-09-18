@@ -125,7 +125,7 @@ public class OccupyCommand extends FCommand {
             Faction enemyLeader = (Faction) factionWP.getEnemy().getLeader();
             long now = System.currentTimeMillis();
             if (region.getAttackStartTime() == 0) {
-                if (region.isAttackable(factionWP)) {
+                    if (region.isAttackable(factionWP)) {
                     if (enemyLeader.getCapital().equals(region) && getOccupiedRegionsOfLeader(factionWP.getEnemy()) < (enemyLeader.getRegions().size() * 0.75)) {
                         MessageUtil.sendMessage(sender, "&cDu kannst die feindliche Hauptstadt erst angreifen, wenn du 75% der Regionen des Feindes besetzt hast.");
                         return;
