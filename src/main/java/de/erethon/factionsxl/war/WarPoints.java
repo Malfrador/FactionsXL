@@ -42,10 +42,7 @@ public class WarPoints {
                 }
             }
         }
-        double mod = occupied / regions;
-        if (mod == 0) {
-            mod = 1;
-        }
+        double mod = 1 + (occupied / regions);
         switch (warParty.getWar().getCasusBelli().getType()) {
             case RAID:
                 switch (action) {

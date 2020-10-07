@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Daniel Saukel
+ * @author Daniel Saukel, Malfrador
  */
 public class WarListener implements Listener {
 
@@ -41,6 +41,7 @@ public class WarListener implements Listener {
     FactionCache factions = plugin.getFactionCache();
 
     Set<Battle> battleCache = new HashSet<>();
+    Set<Battle> endedBattles = new HashSet<>();
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -50,11 +51,12 @@ public class WarListener implements Listener {
         if (plugin.getFConfig().isExcludedWorld(event.getEntity().getWorld())) {
             return;
         }
-        Player player1 = EntityProtectionListener.getDamageSource(event.getDamager());
-        if (!(event.getEntity() instanceof Player) || player1 == null) {
+        if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player)) {
             return;
         }
+        Player player1 = EntityProtectionListener.getDamageSource(event.getDamager(), event.getEntity());
         Player player2 = (Player) event.getEntity();
+        plugin.getFPlayerCache().getByPlayer(player2).getLastDamagers().add(player1);
         Faction faction1 = factions.getByMember(player1);
         Faction faction2 = factions.getByMember(player2);
         if (faction1 == null || faction2 == null || faction1.getRelation(faction2) != Relation.ENEMY) {
@@ -85,14 +87,17 @@ public class WarListener implements Listener {
         }
         Player player1 = event.getEntity().getKiller();
         Player player2 = event.getEntity();
+        if (battleCache.isEmpty()) {
+            return;
+        }
         for (Battle battle : battleCache) {
             if (battle.takesPart(player2)) {
-                battleCache.remove(battle);
-                plugin.getFPlayerCache().getByPlayer(player2).getLastDamagers().clear();
                 System.out.println("Removed battle: " + battle.toString());
                 if (player1 != null && battle.takesPart(player1)) {
                     battle.win(player1, player2);
                 }
+                endedBattles.add(battle);
+                plugin.getFPlayerCache().getByPlayer(player2).getLastDamagers().clear();
             }
         }
     }
@@ -107,6 +112,7 @@ public class WarListener implements Listener {
 
         @Override
         public void run() {
+            battleCache.removeAll(endedBattles);
             if (battle.getExpirationTime() <= System.currentTimeMillis()) {
                 battleCache.remove(battle);
             }
