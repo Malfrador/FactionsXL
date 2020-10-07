@@ -90,6 +90,9 @@ public class WarTNT implements Listener {
         if (!fPlayer.isInWar(region.getOwner())) {
             return;
         }
+        if (!region.isAttacked()) {
+            return;
+        }
         block.setType(Material.AIR);
         fired.add(block.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), EntityType.PRIMED_TNT));
     }
@@ -112,6 +115,9 @@ public class WarTNT implements Listener {
         if (!region.getOwner().isInWar() || region.getOccupant() != null) {
             return;
         }
+        if (!region.isAttacked()) {
+            return;
+        }
         event.setYield(0);
         List<BlockState> blocks = new ArrayList<>();
         event.blockList().forEach(b -> blocks.add(b.getState()));
@@ -122,6 +128,10 @@ public class WarTNT implements Listener {
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
         if ( !fired.contains(event.getEntity())) {
+            return;
+        }
+        Region region = board.getByLocation(event.getLocation());
+        if (!region.isAttacked()) {
             return;
         }
         event.setYield(0);
