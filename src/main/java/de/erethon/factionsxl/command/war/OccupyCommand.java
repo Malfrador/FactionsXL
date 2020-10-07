@@ -202,11 +202,11 @@ public class OccupyCommand extends FCommand {
                     handler.forceWarGoal(factionWP);
                 }
                 region.setOccupant(faction);
+                region.setAttacked(false);
+                region.setAttackStartTime(0);
                 if (region.getOwner() == region.getOccupant()) {
                     region.clearOccupant();
                     region.setOwner(faction);
-                    region.setAttacked(false);
-                    region.setAttackStartTime(0);
                     faction.setExhaustion(faction.getExhaustion() - 5);
                 }
 

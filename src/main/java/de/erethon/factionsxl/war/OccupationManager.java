@@ -210,9 +210,12 @@ public class OccupationManager {
         if (defenderParticipation <= 1.00) {
             return false;
         }
-        double part = (attackerParticipation - defenderParticipation);
-        part = Math.abs(part);
-        return part > 10;
+        // If the attacker is weaker they should still be able to attack
+        if (attackerParticipation < defenderParticipation) {
+            return true;
+        }
+        MessageUtil.log("Participation: Defender: " + attackerParticipation + " / Attacker: " + defenderParticipation);
+        return Math.abs(attackerParticipation - defenderParticipation) < 10;
     }
 
     public boolean isAlreadyAttacked (Faction f) {

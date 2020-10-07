@@ -305,7 +305,7 @@ public class FactionsXL extends DREPlugin {
             public void run() {
                 occupationManager.showTimers();
             }
-        }.runTaskTimerAsynchronously(this, 5, FConfig.SECOND);
+        }.runTaskTimerAsynchronously(this, 40, 40);
 
         if (fConfig.isEconomyEnabled()) {
             new BukkitRunnable() {
