@@ -212,8 +212,48 @@ public class LandProtectionListener implements Listener {
             BROWN_STAINED_GLASS_PANE,
             GREEN_STAINED_GLASS_PANE,
             RED_STAINED_GLASS_PANE,
-            BLACK_STAINED_GLASS_PANE
-    ));
+            BLACK_STAINED_GLASS_PANE,
+            BAMBOO,
+            CORNFLOWER,
+            LILY_OF_THE_VALLEY,
+            WITHER_ROSE,
+            SWEET_BERRY_BUSH,
+            CRIMSON_FUNGUS,
+            WARPED_FUNGUS,
+            CRIMSON_NYLIUM,
+            WARPED_NYLIUM,
+            CRIMSON_ROOTS,
+            WARPED_ROOTS,
+            NETHER_SPROUTS,
+            SOUL_TORCH,
+            TWISTING_VINES,
+            WEEPING_VINES,
+            WARPED_WART_BLOCK,
+            KELP_PLANT,
+            SEAGRASS,
+            TALL_SEAGRASS,
+            TUBE_CORAL,
+            BRAIN_CORAL,
+            BUBBLE_CORAL,
+            FIRE_CORAL,
+            HORN_CORAL,
+            TUBE_CORAL_FAN,
+            BRAIN_CORAL_FAN,
+            BUBBLE_CORAL_FAN,
+            FIRE_CORAL_FAN,
+            HORN_CORAL_FAN,
+            DEAD_TUBE_CORAL,
+            DEAD_BRAIN_CORAL,
+            DEAD_BUBBLE_CORAL,
+            DEAD_FIRE_CORAL,
+            DEAD_HORN_CORAL,
+            DEAD_TUBE_CORAL_FAN,
+            DEAD_BRAIN_CORAL_FAN,
+            DEAD_BUBBLE_CORAL_FAN,
+            DEAD_FIRE_CORAL_FAN,
+            DEAD_HORN_CORAL_FAN
+
+            ));
 
     private static final Set<Material> WAR_PLACABLE = new HashSet<>(Arrays.asList(
             FIRE,
@@ -444,7 +484,21 @@ public class LandProtectionListener implements Listener {
         Relation rel = owner.getRelation(bFaction);
         if (rel == Relation.ENEMY) {
             Material type = destroyed.getType();
-            War w = wars.getWarTogether(owner, bFaction);
+            War war = null;
+            for (War w : wars.getByFaction(owner)) {
+                for (Faction f : w.getAttacker().getFactions()) {
+                    if (f.equals(bFaction)) {
+                        war = w;
+                        break;
+                    }
+                }
+                for (Faction f : w.getDefender().getFactions()) {
+                    if (f.equals(bFaction)) {
+                        war = w;
+                        break;
+                    }
+                }
+            }
             if (!region.isAttacked()) {
                 event.setCancelled(true);
                 MessageUtil.sendMessage(breaker, "&cDiese Region wird aktuell nicht angegriffen. Greife sie erst mit /f occupy an.");
@@ -455,21 +509,22 @@ public class LandProtectionListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (WAR_IMPORTANT.contains(type)) {
-                    w.addPlayerParticipation(breaker, WarPlayerAction.DESTROYED_IMPORTANT_BLOCK);
-                } else {
-                    w.addPlayerParticipation(breaker, WarPlayerAction.GRIEF);
+                if (WAR_IMPORTANT.contains(type) && war != null) {
+                    war.addPlayerParticipation(breaker, WarPlayerAction.DESTROYED_IMPORTANT_BLOCK);
+                } else if (war != null){
+                    war.addPlayerParticipation(breaker, WarPlayerAction.GRIEF);
                 }
             } else if (event instanceof BlockPlaceEvent) {
                 if (!WAR_PLACABLE.contains(type) && !NO_INTERACT.contains(type) && !INTERACTABLE.contains(type)) {
                     event.setCancelled(true);
                 }
-                if (type.equals(TNT)) {
-                    w.addPlayerParticipation(breaker, WarPlayerAction.PLACED_TNT);
+                if (type.equals(TNT) && war != null) {
+                    war.addPlayerParticipation(breaker, WarPlayerAction.PLACED_TNT);
                 }
                 if (type.equals(CHEST) && breaker.getInventory().getItemInMainHand().getItemMeta() != null &&
-                        breaker.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Blaupause")) {
-                    w.addPlayerParticipation(breaker, WarPlayerAction.PLACED_SIEGE);
+                        breaker.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Blaupause")
+                        && war != null) {
+                    war.addPlayerParticipation(breaker, WarPlayerAction.PLACED_SIEGE);
                 }
             } else if (event instanceof PlayerBucketEmptyEvent) {
                 event.setCancelled(true);
