@@ -69,7 +69,7 @@ public class EntityProtectionListener implements Listener {
         if (config.isExcludedWorld(event.getEntity().getWorld())) {
             return;
         }
-        Player attacker = getDamageSource(event.getDamager());
+        Player attacker = getDamageSource(event.getDamager(), event.getEntity());
         Entity eAttacker = attacker != null ? attacker : event.getDamager();
         Entity eDefender = event.getEntity();
         if (!(eAttacker instanceof Player)) {
@@ -243,18 +243,7 @@ public class EntityProtectionListener implements Listener {
     }
 
     public static Player getDamageSource(Entity damager) {
-        FactionsXL plugin = FactionsXL.getInstance();
         if (damager instanceof Player) {
-            if (damager.getLastDamageCause() != null) {
-                EntityDamageEvent.DamageCause cause = damager.getLastDamageCause().getCause();
-                if (cause.equals(EntityDamageEvent.DamageCause.FIRE_TICK) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
-                    List<Player> lastDamagers = plugin.getFPlayerCache().getByPlayer((Player) damager).getLastDamagers();
-                    if (lastDamagers.size() == 1) {
-                        return lastDamagers.get(0);
-                    }
-                    return lastDamagers.get(lastDamagers.size() - 1);
-                }
-            }
             return (Player) damager;
         } else if (damager instanceof Arrow) {
             ProjectileSource shooter = ((Arrow) damager).getShooter();
@@ -264,5 +253,27 @@ public class EntityProtectionListener implements Listener {
         }
         return null;
     }
+
+    public static Player getDamageSource(Entity damager, Entity damaged) {
+        FactionsXL plugin = FactionsXL.getInstance();
+        if (damaged instanceof Player && damager instanceof Player) {
+            if (damaged.getLastDamageCause() != null) {
+                EntityDamageEvent.DamageCause cause = damaged.getLastDamageCause().getCause();
+                if (cause.equals(EntityDamageEvent.DamageCause.FIRE_TICK) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
+                    List<Player> lastDamagers = plugin.getFPlayerCache().getByPlayer((Player) damaged).getLastDamagers();
+                    if (lastDamagers.isEmpty()) {
+                        return null;
+                    }
+                    if (lastDamagers.size() <= 1) {
+                        return lastDamagers.get(0);
+                    }
+                    return lastDamagers.get(lastDamagers.size() - 1);
+                }
+            }
+            return getDamageSource(damager);
+        }
+        return getDamageSource(damager);
+    }
+
 
 }

@@ -73,7 +73,7 @@ public class Battle {
     }
 
     public boolean takesPart(Player player) {
-        return player.equals(player1) || player.equals(player2);
+        return player1.getName().equals(player.getName()) || player2.getName().equals(player.getName());
     }
 
     /**
@@ -93,6 +93,8 @@ public class Battle {
         if (r != null && (r.getOccupant() != null || r.getOccupant() == f)) {
             owner = r.getOccupant();
         }
+
+        MessageUtil.log("Battle won: " + this.toString());
 
         winnerFP.getData().addKill();
         looserFP.getData().addDeath();
@@ -116,13 +118,13 @@ public class Battle {
             if (owner != null && w.getFactions().contains(owner)) {
                 if (r.isAttacked()) {
                     addInfluence(w, r, winnerFP);;
-                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(winner.getPlayer())), String.valueOf(r.getInfluence())));
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_DEFEND.getMessage(String.valueOf(getLimitedInfluence(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(winner.getPlayer()))), String.valueOf(r.getInfluence())));
                     break;
                 }
             } else if (owner != null && w.getEnemy().getFactions().contains(owner)){
                 if (r.isAttacked()) {
                     removeInfluence(w, r, winnerFP);
-                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(looser.getPlayer())), String.valueOf(r.getInfluence())));
+                    MessageUtil.sendActionBarMessage(winner, FMessage.WAR_OCCUPY_REGION_ATTACKED.getMessage(String.valueOf(getLimitedInfluence(config.getInfluenceFromKill() * w.getWar().getPlayerParticipation(looser.getPlayer()))), String.valueOf(r.getInfluence())));
                     break;
                 }
             }
@@ -140,7 +142,7 @@ public class Battle {
 
     public void removeInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
         int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
-        if (influence > 8) {
+        if (influence >= 8) {
             influence = 8;
         }
         if (rg.getInfluence() - influence < 0) {
@@ -152,7 +154,7 @@ public class Battle {
 
     public void addInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
         int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
-        if (influence > 8) {
+        if (influence >= 8) {
             influence = 8;
         }
         if (rg.getInfluence() + influence > 100) {
@@ -162,9 +164,17 @@ public class Battle {
         rg.setInfluence(rg.getInfluence() + influence);
     }
 
+    public double getLimitedInfluence(double influence) {
+        double inf = influence;
+        if (inf >= 8) {
+            inf = 8;
+        }
+        return inf;
+    }
+
     @Override
     public String toString() {
-        return "Battle{player1=" + player1.getName() + "player2=" + player2.getName() + "}";
+        return "Battle{player1=" + player1.getName() + " player2=" + player2.getName() + "}";
     }
 
 }
