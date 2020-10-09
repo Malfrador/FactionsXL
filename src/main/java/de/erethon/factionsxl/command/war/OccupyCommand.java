@@ -207,12 +207,10 @@ public class OccupyCommand extends FCommand {
                 if (region.getOwner() == region.getOccupant()) {
                     region.clearOccupant();
                     region.setOwner(faction);
-                    faction.setExhaustion(faction.getExhaustion() - 5);
                 }
 
                 region.getClaimFactions().putIfAbsent(annexFrom, Calendar.getInstance().getTime());
                 region.setInfluence((int) (config.getInfluenceNeeded() + 10));
-                annexFrom.setExhaustion(annexFrom.getExhaustion() + 3);
 
                 faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
