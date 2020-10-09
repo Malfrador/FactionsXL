@@ -139,6 +139,17 @@ public class Region {
      * the name of the region
      */
     public String getName() {
+        if (name.contains("_")) {
+            return name.replace("_", " ");
+        }
+        return name;
+    }
+
+    /**
+     * @return
+     * the name of the region, but without fancy replacements
+     */
+    public String getName(boolean noReplacement) {
         return name;
     }
 

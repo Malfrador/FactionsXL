@@ -88,6 +88,9 @@ public class Board {
             if (rg.getName().equals(name)) {
                 return rg;
             }
+            if (rg.getName(true).equals(name)) {
+                return rg;
+            }
         }
         return null;
     }
