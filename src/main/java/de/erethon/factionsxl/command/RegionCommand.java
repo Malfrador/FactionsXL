@@ -29,6 +29,7 @@ import de.erethon.factionsxl.faction.FactionCache;
 import de.erethon.factionsxl.player.FPermission;
 import de.erethon.factionsxl.util.ParsingUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.ArrayUtils;
@@ -95,7 +96,12 @@ public class RegionCommand extends FCommand {
         Faction faction = region.getOwner();
         ChatColor c = faction != null && sender instanceof Player ? faction.getRelation(factions.getByMember((Player) sender)).getColor() : Relation.PEACE.getColor();
 
-        MessageUtil.sendCenteredMessage(sender, c + "&l=== " + region.getName() + " ===");
+        BaseComponent[] id = MessageUtil.parse(c + "&l=== " + region.getName() + " ===");
+        HoverEvent tagHover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Region-ID: " + region.getId()).create());
+        for (BaseComponent component : id) {
+            component.setHoverEvent(tagHover);
+        }
+        MessageUtil.sendCenteredMessage(sender, id);
         MessageUtil.sendCenteredMessage(sender, "&6____________________________________________________");
         MessageUtil.sendMessage(sender, FMessage.CMD_REGION_OWNER.getMessage() + c + (faction != null ? faction.getLongName() : "None"));
         if (region.isNeutral()) {
