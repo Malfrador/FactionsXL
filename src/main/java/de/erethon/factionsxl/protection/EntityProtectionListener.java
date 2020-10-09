@@ -210,7 +210,7 @@ public class EntityProtectionListener implements Listener {
             }
         }
         Relation rel = owner.getRelation(aFaction);
-        if (!rel.canBuild()) {
+        if (!rel.canBuild() || (rel == Relation.ENEMY && !region.isAttacked() && !(damaged instanceof Player)) ) {
             event.setCancelled(true);
             FMessage message = FMessage.PROTECTION_CANNOT_BUILD_FACTION;
             switch (action) {
