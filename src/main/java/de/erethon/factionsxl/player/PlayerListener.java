@@ -93,7 +93,7 @@ public class PlayerListener implements Listener {
         }
         Player player = event.getPlayer();
         FPlayer fPlayer = fPlayers.getByPlayer(player);
-        Region rg = board.getByChunk(event.getTo().getChunk(), fPlayer.getLastRegion());
+        Region rg = board.getByChunk(event.getTo().getChunk());
         if (rg == null) {
             return;
         }
@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         FPlayer fPlayer = fPlayers.getByPlayer(player);
-        Region rg = board.getByChunk(event.getRespawnLocation().getChunk(), fPlayer.getLastRegion());
+        Region rg = board.getByChunk(event.getRespawnLocation().getChunk());
         if (rg == null) {
             return;
         }
