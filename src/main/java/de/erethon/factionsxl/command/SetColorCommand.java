@@ -78,7 +78,7 @@ public class SetColorCommand extends FCommand {
             icon = args[i + 2];
         }
         faction.setMapStyle(fill, line, icon);
-        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line, faction.getMapIcon());
+        faction.sendMessage(FMessage.CMD_SET_COLOR_SUCCESS.getMessage(), sender, fill, line);
     }
 
 }
