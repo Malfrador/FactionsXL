@@ -245,7 +245,7 @@ public class EntityProtectionListener implements Listener {
     public static Player getDamageSource(Entity damager) {
         if (damager instanceof Player) {
             return (Player) damager;
-        } else if (damager instanceof Arrow) {
+        } else if (damager instanceof Projectile) {
             ProjectileSource shooter = ((Arrow) damager).getShooter();
             if (shooter instanceof Player) {
                 return (Player) shooter;
