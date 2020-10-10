@@ -109,7 +109,7 @@ public class WarTNT implements Listener {
             return;
         }
         Region region = board.getByLocation(loc);
-        if (region.getOwner() == null) {
+        if (region == null ||region.getOwner() == null) {
             return;
         }
         if (!region.getOwner().isInWar() || region.getOccupant() != null) {
