@@ -69,6 +69,10 @@ public class CreateVassalCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
+        if (mother.isInWar()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
+            return;
+        }
 
         Location location = player.getLocation();
         Region region = board.getByLocation(location);
