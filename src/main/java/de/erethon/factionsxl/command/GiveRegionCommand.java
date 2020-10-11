@@ -63,11 +63,15 @@ public class GiveRegionCommand extends FCommand {
             ParsingUtil.sendMessage(sender, FMessage.ERROR_NO_PERMISSION.getMessage());
             return;
         }
+        if (faction.isInWar()) {
+            ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage());
+            return;
+        }
         Faction oldOwner = region.getOwner();
         region.setOwner(faction);
-        if (region.getCoreFactions().containsKey(region.getOwner())) {
+        if (region.getCoreFactions().containsKey(oldOwner)) {
             region.getCoreFactions().put(faction, region.getCoreFactions().get(region.getOwner()));
-            region.getCoreFactions().remove(region.getOwner());
+            region.getCoreFactions().remove(oldOwner);
         }
         ParsingUtil.broadcastMessage(FMessage.CMD_GIVE_REGION_SUCCESS.getMessage(), oldOwner, region, faction);
     }
