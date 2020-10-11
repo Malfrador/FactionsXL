@@ -121,9 +121,10 @@ public class FactionsXL extends DREPlugin {
     public FactionsXL() {
         settings = DREPluginSettings.builder()
                 .spigot(true)
+                .paper(true)
                 .economy(true)
                 .metrics(true)
-                .internals(Internals.v1_13_R2, Internals.v1_14_R1, Internals.v1_15_R1, Internals.v1_16_R1)
+                .internals(Internals.v1_14_R1, Internals.v1_15_R1, Internals.v1_16_R1)
                 .build();
     }
 
@@ -142,7 +143,7 @@ public class FactionsXL extends DREPlugin {
         initFolders();
         debugToFile("Enabling...");
         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
-            MessageUtil.log(this, "&4This plugin requires Spigot 1.13.2-1.16.2 to work. It is not compatible with CraftBukkit and older versions.");
+            MessageUtil.log(this, "&4This plugin requires Paper 1.14.4-1.16.2 to work. It is not compatible with CraftBukkit and older versions.");
         }
         instance = this;
 
