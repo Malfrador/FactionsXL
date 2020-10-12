@@ -91,7 +91,6 @@ public class WarHandler {
             Faction dLeader = (Faction) war.getDefender().getLeader();
             if (aLeader.getStability() <= 1) {
                 defenderGoals(war.getDefender());
-                war.end();
                 return;
             }
             if (dLeader.getStability() <= 1) {
@@ -111,6 +110,7 @@ public class WarHandler {
     }
 
     public void forceWarGoal(WarParty warParty) {
+        warParty.getWar().cleanup();
         MessageUtil.log("Ending war " + warParty.getWar().toString());
         WarParty enemy = warParty.getEnemy();
         Faction enemyLeader = (Faction) enemy.getLeader();
@@ -200,6 +200,7 @@ public class WarHandler {
     }
 
     public void defenderGoals(WarParty warParty) {
+        warParty.getWar().cleanup();
         WarParty enemy = warParty.getEnemy(); // Attacker in this case
         if (warParty.getWar().getCasusBelli().getType() == RAID && !(config.isDefenderRaidBounty())) {
             return;
@@ -255,6 +256,7 @@ public class WarHandler {
         if (enemyLeader.getRegions().isEmpty()) {
             enemyLeader.disband();
         }
+        warParty.getWar().end();
     }
 
     // True if the peace time for faction is over. Peace time is (last score / 2) * day

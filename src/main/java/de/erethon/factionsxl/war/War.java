@@ -22,7 +22,6 @@ import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.entity.Relation;
-import de.erethon.factionsxl.entity.RelationRequest;
 import de.erethon.factionsxl.event.WarDeclarationEvent;
 import de.erethon.factionsxl.event.WarEndEvent;
 import de.erethon.factionsxl.faction.Faction;
@@ -207,11 +206,16 @@ public class War {
         this.truce = true;
         Set<Faction> factionSetA =  this.getAttacker().getFactions();
         Set<Faction> factionSetD = this.getDefender().getFactions();
+        if (getCasusBelli().getType() == CasusBelli.Type.INDEPENDENCE) {
+            Faction faction = (Faction) attacker.getLeader();
+            faction.getRelations().remove((Faction) getCasusBelli().getTarget());
+            ((Faction) getCasusBelli().getTarget()).getRelations().remove(faction);
+        }
         // Set all relations to enemy
         for (Faction attacker : factionSetA) {
             for (Faction defender : factionSetD) {
                 if (attacker != defender) { // To prevent self-declaration, for example for vassals
-                    new RelationRequest(Bukkit.getConsoleSender(), attacker, defender, Relation.ENEMY).confirm();
+                    attacker.getRelations().put(defender, Relation.ENEMY);
                 }
             }
         }
@@ -226,18 +230,20 @@ public class War {
         }
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
+
+        wars.getWars().remove(this);
+        file.delete();
+        System.out.println("War" + this + "ended!");
+    }
+
+    public void cleanup() {
         Set<Faction> factionSet =  this.getAttacker().getFactions();
         Set<Faction> factionSetD = this.getDefender().getFactions();
         // Set all relations to peace
         for (Faction f : factionSet) {
             for (Faction f2 : factionSetD) {
-                new RelationRequest(Bukkit.getConsoleSender(), f, f2, Relation.PEACE).confirm();
-                if (f.isVassal()) {
-                    new RelationRequest(Bukkit.getConsoleSender(), f.getLord(), f2, Relation.PEACE).confirm();
-                }
-                if (f2.isVassal()) {
-                    new RelationRequest(Bukkit.getConsoleSender(), f, f2.getLord(), Relation.PEACE).confirm();
-                }
+                f.getRelations().remove(f2);
+                f2.getRelations().remove(f);
             }
         }
         // Remove Occupants from the Attacker
@@ -256,22 +262,6 @@ public class War {
                 }
             }
         }
-
-        // set timeLastPeace and score for looser
-        Faction attacker = (Faction) getAttacker().getLeader();
-        Faction defender = (Faction) getDefender().getLeader();
-        if (getDefender().getPoints() < 0) {
-            defender.setTimeLastPeace(System.currentTimeMillis());
-            defender.setScoreLastPeace(getDefender().getPoints());
-        }
-        if (getAttacker().getPoints() < 0) {
-            attacker.setTimeLastPeace(System.currentTimeMillis());
-            attacker.setScoreLastPeace(getAttacker().getPoints());
-        }
-
-        wars.getWars().remove(this);
-        file.delete();
-        System.out.println("War" + this + "ended!");
     }
 
     /* Serialization */

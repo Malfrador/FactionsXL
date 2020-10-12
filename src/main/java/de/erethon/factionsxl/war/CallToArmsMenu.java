@@ -66,13 +66,13 @@ public class CallToArmsMenu implements Listener {
         Bukkit.getPluginManager().registerEvents(this, FactionsXL.getInstance());
         this.attacker = attacker;
         attackerLeader = (Faction) attacker.getLeader(); // TODO: Might break after government update
-        attackerLeader.getRelatedFactions(Relation.ALLIANCE).forEach(f -> attackerCandidates.add(f));
-        attackerLeader.getRelatedFactions(Relation.COALITION).forEach(f -> attackerCandidates.add(f));
+        attackerCandidates.addAll(attackerLeader.getRelatedFactions(Relation.ALLIANCE));
+        attackerCandidates.addAll(attackerLeader.getRelatedFactions(Relation.COALITION));
         Faction mainTarget = defender.isVassal() ? defender.getLord() : defender;
         this.defender = new WarParty(mainTarget, WarPartyRole.DEFENDER);
         for (Entry<Faction, Relation> entry : mainTarget.getRelations().entrySet()) {
             Relation relation = entry.getValue();
-            if (relation == Relation.ALLIANCE || relation == Relation.PERSONAL_UNION || relation == Relation.VASSAL) {
+            if (relation == Relation.ALLIANCE || relation == Relation.PERSONAL_UNION || (relation == Relation.VASSAL && defender !=  attackerLeader)) {
                 this.defender.addParticipant(entry.getKey());
             }
         }
@@ -151,7 +151,7 @@ public class CallToArmsMenu implements Listener {
         }
         ItemMeta meta = button.getItemMeta();
         List<String> lore = meta.getLore();
-        if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
+        if (button.getItemMeta().getLore() != null && button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_ADD.getMessage())) {
             String name = ChatColor.stripColor(button.getItemMeta().getDisplayName());
 
             Faction f = plugin.getFactionCache().getByName(name);
@@ -166,7 +166,7 @@ public class CallToArmsMenu implements Listener {
 
             isReopen = true;
             gui.open(event.getWhoClicked(), 0, 0, 0);
-        } else if (button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage())) {
+        } else if (button.getItemMeta().getLore() != null && button.getItemMeta().getLore().contains(FMessage.WAR_CALL_TO_ARMS_REMOVE.getMessage())) {
             String name = ChatColor.stripColor(button.getItemMeta().getDisplayName());
             Faction f = plugin.getFactionCache().getByName(name);
             invitedAttackers.remove(f);
