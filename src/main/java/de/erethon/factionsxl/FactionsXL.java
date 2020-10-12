@@ -143,7 +143,10 @@ public class FactionsXL extends DREPlugin {
         initFolders();
         debugToFile("Enabling...");
         if (!compat.isSpigot() || !settings.getInternals().contains(compat.getInternals())) {
-            MessageUtil.log(this, "&4This plugin requires Paper 1.14.4-1.16.2 to work. It is not compatible with CraftBukkit and older versions.");
+            MessageUtil.log(this, "&4This plugin requires Spigot 1.14.4-1.16.2 to work. It is not compatible with CraftBukkit and older versions.");
+        }
+        if (!compat.isPaper()) {
+            MessageUtil.log(this, "Some features of FXL require Paper. Paper is a drop-in replacement for Spigot. Download it at papermc.io/downloads");
         }
         instance = this;
 
