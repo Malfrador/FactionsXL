@@ -204,34 +204,53 @@ public class WarHandler {
         if (warParty.getWar().getCasusBelli().getType() == RAID && !(config.isDefenderRaidBounty())) {
             return;
         }
-        if (warParty.getWar().getCasusBelli().getType() == RAID) {
-            Faction enemyF = (Faction) warParty.getEnemy().getLeader();
-            int bounty = enemyF.getMembers().size() * warParty.getKills();
-            enemyF.getAccount().withdraw(bounty);
-            return;
-        }
         Faction enemyLeader = (Faction) enemy.getLeader();
-        for (Region r : enemyLeader.getRegions()) {
-            if (config.isForceWarGoalsForAllDefenders()) {
-                for (Faction ally : warParty.getFactions()) {
-                    if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
-                        if (r.getCoreFactions().containsKey(r.getOwner())) {
-                            r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
+        switch (warParty.getWar().getCasusBelli().getType()) {
+            case BORDER_FRICTION:
+            case CLAIM_ON_THRONE:
+            case IMPERIAL_BAN:
+            case RESTORATION_OF_UNION: // Not implemented
+                break;
+            case CONQUEST:
+            case LIBERATION:
+            case SUBJAGATION:
+            case RESUBJAGATION:
+            case RECONQUEST:
+                for (Region r : enemyLeader.getRegions()) {
+                    if (config.isForceWarGoalsForAllDefenders()) {
+                        for (Faction ally : warParty.getFactions()) {
+                            if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
+                                if (r.getCoreFactions().containsKey(r.getOwner())) {
+                                    r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
+                                }
+                                r.setOwner(ally);
+                            }
                         }
-                        r.setOwner(ally);
+                    }
+
+                    else {
+                        if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
+                            if (r.getCoreFactions().containsKey(r.getOwner())) {
+                                r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
+                            }
+                            r.setOwner((Faction) warParty.getLeader());
+                        }
+
                     }
                 }
-            }
-
-            else {
-                if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
-                    if (r.getCoreFactions().containsKey(r.getOwner())) {
-                        r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
-                    }
-                    r.setOwner((Faction) warParty.getLeader());
-                }
-
-            }
+                return;
+            case INDEPENDENCE:
+                Faction newLord = (Faction) warParty.getWar().getCasusBelli().getTarget();
+                Faction newVassal = (Faction) warParty.getLeader();
+                new RelationRequest(Bukkit.getConsoleSender(), newLord, newVassal, Relation.VASSAL).confirm();
+                newVassal.setAllod(true);
+                newVassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, newLord, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
+                return;
+            case RAID:
+                Faction enemyF = (Faction) warParty.getEnemy().getLeader();
+                int bounty = enemyF.getMembers().size() * warParty.getKills();
+                enemyF.getAccount().withdraw(bounty);
+                return;
         }
         if (enemyLeader.getRegions().isEmpty()) {
             enemyLeader.disband();
