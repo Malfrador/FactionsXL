@@ -67,7 +67,7 @@ public class WarCommand extends FCommand {
             ParsingUtil.sendMessage(sender, "&cDu kannst diese Fraktion nicht angreifen!");
             return;
         }
-        if (warHandler.isPeace(object)) {
+        if (warHandler.isInPeace(object)) {
             ParsingUtil.sendMessage(sender, "&cDiese Fraktion befindet sich in der Friedenszeit.");
             return;
         }

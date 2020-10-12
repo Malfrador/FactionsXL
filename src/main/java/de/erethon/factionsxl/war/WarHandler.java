@@ -258,7 +258,7 @@ public class WarHandler {
     }
 
     // True if the peace time for faction is over. Peace time is (last score / 2) * day
-    public boolean isPeace(Faction faction) {
+    public boolean isInPeace(Faction faction) {
         long time = faction.getTimeLastPeace();
         int days = faction.getScoreLastPeace() / 2;
         if (time == 0) {

@@ -598,7 +598,7 @@ public class Faction extends LegalEntity {
             if (faction.admin.equals(admin)) {
                 relations.put(faction, Relation.PERSONAL_UNION);
                 faction.relations.put(this, Relation.PERSONAL_UNION);
-                ParsingUtil.broadcastMessage(FMessage.FACTION_PERSONAL_UNION_FORMED.getMessage(), this, faction, admin);
+                ParsingUtil.broadcastMessage(FMessage.FACTION_PERSONAL_UNION_FORMED.getMessage(), this, faction, plugin.getFPlayerCache().getByUniqueId(admin).getName());
             } else if (faction.getRelation(this) == Relation.PERSONAL_UNION) {
                 faction.relations.remove(this);
             }
