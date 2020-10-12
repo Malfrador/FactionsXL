@@ -38,10 +38,10 @@ import java.util.Collection;
  */
 public class WarDemandWarPartyGUI extends WarPartyGUI {
 
-    private FPlayerCache fPlayers;
-    private WarCache wars;
+    private final FPlayerCache fPlayers;
+    private final WarCache wars;
 
-    private Collection<Faction> ownFactions;
+    private final Collection<Faction> ownFactions;
 
     public WarDemandWarPartyGUI(FactionsXL plugin, Collection<Faction> ownFactions, WarParty... parties) {
         super(plugin, FMessage.FACTION_SELECT.getMessage(), parties);
@@ -72,11 +72,20 @@ public class WarDemandWarPartyGUI extends WarPartyGUI {
                 wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, true);
             }
         } else {
-            War war = wars.getUnsafe(buttonFaction);
+            War war = null;
+            for (Faction f : ownFactions) {
+                if (wars.getWarTogether(f, buttonFaction) != null) {
+                    war = wars.getWarTogether(f, buttonFaction);
+                }
+            }
+            if (war == null) {
+                MessageUtil.sendMessage(whoClicked, FMessage.ERROR_NOT_IN_WAR.getMessage());
+                return;
+            }
             if (right) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, fPlayers.getByPlayer(whoClicked).getFaction() , buttonFaction, false));
-                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_OFFER.getMessage());
-                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, true);
+                MessageUtil.sendMessage(whoClicked, FMessage.WAR_DEMAND_CREATION_MENU_MAKE_DEMANDS.getMessage());
+                wars.getWarDemandCreationMenu().open(whoClicked, buttonFaction, false);
             }
             if (left) {
                 fPlayers.getByPlayer(whoClicked).setPeaceOffer(new SeparatePeaceOffer(war, fPlayers.getByPlayer(whoClicked).getFaction(), buttonFaction, true));
