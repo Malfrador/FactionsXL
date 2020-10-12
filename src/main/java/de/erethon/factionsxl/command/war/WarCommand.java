@@ -71,11 +71,6 @@ public class WarCommand extends FCommand {
             ParsingUtil.sendMessage(sender, "&cDiese Fraktion befindet sich in der Friedenszeit.");
             return;
         }
-        // TO DO!
-        if (object.isInWar() && !(args.length == 3 && args[2].equalsIgnoreCase("-unsafe"))) {
-           sender.sendMessage("Kriege gegen Fraktionen, die schon im Krieg sind, sind bis auf Weiteres deaktiviert!");
-           return;
-        }
         WarParty subject = null;
         Set<Faction> factions = plugin.getFactionCache().getByLeader(player);
         Faction f = cache.getByMember(player);
