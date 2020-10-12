@@ -34,9 +34,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
-import static de.erethon.factionsxl.war.CasusBelli.Type.RAID;
+import static de.erethon.factionsxl.war.CasusBelli.Type.*;
 
 /**
  * @author Malfrador
@@ -215,6 +216,13 @@ public class OccupyCommand extends FCommand {
                 faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
 
+
+                if (war.getCasusBelli().getType() == CONQUEST || war.getCasusBelli().getType() == RECONQUEST) {
+                    if (hasOccupiedAllClaims(faction, annexFrom)) {
+                        plugin.getWarHandler().forceWarGoal(factionWP);
+                    }
+                }
+
                 WarRegionOccupiedEvent event = new WarRegionOccupiedEvent(factionWP, factionWP.getEnemy(), region, faction);
                 Bukkit.getPluginManager().callEvent(event);
 
@@ -237,5 +245,19 @@ public class OccupyCommand extends FCommand {
             }
         }
         return occupiedRegions;
+    }
+
+    public boolean hasOccupiedAllClaims(Faction occupant, Faction target) {
+        Set<Region> claimedRegions = new HashSet<>();
+        Set<Region> occupiedRegions = new HashSet<>();
+        for (Region r : target.getRegions()) {
+            if (r.getClaimFactions().containsKey(occupant)) {
+                claimedRegions.add(r);
+            }
+            if (r.getOccupant() != null && r.getOccupant().equals(occupant)) {
+                occupiedRegions.add(r);
+            }
+        }
+        return claimedRegions.equals(occupiedRegions);
     }
 }
