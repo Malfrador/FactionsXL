@@ -84,6 +84,11 @@ public class RelationNeutralCommand extends FCommand {
             case PERSONAL_UNION:
                 ParsingUtil.sendMessage(sender, FMessage.ERROR_PERSONAL_UNION_WITH_FACTION.getMessage(), subject, object);
                 return;
+            case ENEMY:
+                if (subject.isInWar()) {
+                    ParsingUtil.sendMessage(sender, FMessage.ERROR_IN_WAR.getMessage(), subject, object);
+                    return;
+                }
             default:
                 subject.getRelations().remove(object);
                 object.getRelations().remove(subject);
