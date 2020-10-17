@@ -102,16 +102,18 @@ public class Battle {
         Set<WarParty> WP = f.getWarParties();
         Set<WarParty> lWP = fl.getWarParties();
         for (WarParty w : WP) {
+            // Should only count for party where both players are involved
             if (warCache.getByParty(w).getTruce()) {
+                continue;
+            }
+            if (!looserFP.isInWarParty(w.getEnemy())) {
                 continue;
             }
             if (w.getPointsFromKills() <= config.getMaximumKillPoints() && (w.getWar().getCasusBelli().getType() != CasusBelli.Type.RAID)) {
                 points.updateScore(w, WarAction.KILL);
                 w.setPointsFromKills(w.getPointsFromKills() + 1);
-            }
-            if (w.getWar().getCasusBelli().getType() == CasusBelli.Type.RAID) {
+            } else if (w.getWar().getCasusBelli().getType() == CasusBelli.Type.RAID) {
                 points.updateScore(w, WarAction.KILL);
-
             }
             w.addKill();
             w.getWar().addPlayerParticipation(winnerFP.getPlayer(), WarPlayerAction.KILL);
@@ -133,6 +135,9 @@ public class Battle {
             if (warCache.getByParty(wL).getTruce()) {
                 continue;
             }
+            if (!winnerFP.isInWarParty(wL.getEnemy())) {
+                continue;
+            }
             if (wL.getPointsFromKills() <= config.getMaximumKillPoints() && (wL.getWar().getCasusBelli().getType() != CasusBelli.Type.RAID)) {
                 wL.setPointsFromKills(wL.getPointsFromKills() + 1);
             }
@@ -142,8 +147,8 @@ public class Battle {
 
     public void removeInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
         int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
-        if (influence >= 8) {
-            influence = 8;
+        if (influence >= 5) {
+            influence = 5;
         }
         if (rg.getInfluence() - influence < 0) {
             rg.setInfluence(0);
@@ -154,8 +159,8 @@ public class Battle {
 
     public void addInfluence(WarParty wp, Region rg, FPlayer fPlayer) {
         int influence = (int) Math.abs(Math.round(config.getInfluenceFromKill() * wp.getWar().getPlayerParticipation(fPlayer.getPlayer())));
-        if (influence >= 8) {
-            influence = 8;
+        if (influence >= 5) {
+            influence = 5;
         }
         if (rg.getInfluence() + influence > 100) {
             rg.setInfluence(100);
@@ -166,8 +171,8 @@ public class Battle {
 
     public double getLimitedInfluence(double influence) {
         double inf = influence;
-        if (inf >= 8) {
-            inf = 8;
+        if (inf >= 5) {
+            inf = 5;
         }
         return inf;
     }

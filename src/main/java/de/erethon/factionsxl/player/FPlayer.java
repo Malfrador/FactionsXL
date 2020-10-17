@@ -29,6 +29,7 @@ import de.erethon.factionsxl.entity.Relation;
 import de.erethon.factionsxl.entity.Request;
 import de.erethon.factionsxl.faction.Faction;
 import de.erethon.factionsxl.util.ParsingUtil;
+import de.erethon.factionsxl.war.WarParty;
 import de.erethon.factionsxl.war.demand.WarDemand;
 import de.erethon.factionsxl.war.peaceoffer.PeaceOffer;
 import org.bukkit.Location;
@@ -307,6 +308,10 @@ public class FPlayer implements FEntity, PlayerWrapper {
     public boolean isInWar(FEntity object) {
         Faction own = getFaction();
         return own != null ? own.isInWar(object) : false;
+    }
+
+    public boolean isInWarParty(WarParty party) {
+        return getFaction().getWarParties().contains(party);
     }
 
     public Location getHome() {
