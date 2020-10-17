@@ -83,7 +83,6 @@ public class WarHandler {
             // If the defender wins, the war ends and cores/claims are given to the defender
             if (war.getDefender().getPoints() >= 100) {
                 defenderGoals(war.getDefender());
-                war.end();
                 return;
             }
 
@@ -141,8 +140,6 @@ public class WarHandler {
                     enemyLeader.disband();
                 }
                 break;
-
-
             case CONQUEST: // Give all claimed regions to all winners / just regions claimed by the leader to the leader. Adds Reconquest CB if core
                 for (Region r : enemyLeader.getRegions()) {
                     if (config.isForceWarGoalsForAllWinners()) {
@@ -158,7 +155,6 @@ public class WarHandler {
                             }
                         }
                     }
-
                     else {
                         if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
                             if (r.getCoreFactions().containsKey(r.getOwner())) {

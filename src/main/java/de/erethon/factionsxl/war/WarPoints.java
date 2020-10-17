@@ -23,6 +23,7 @@ import de.erethon.factionsxl.board.Region;
 import de.erethon.factionsxl.config.FMessage;
 import de.erethon.factionsxl.faction.Faction;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 // TODO: Needs to be added to the config file
@@ -165,10 +166,16 @@ public class WarPoints {
         MessageUtil.log("Score change: " + wp.getName() + " Score: " + score + " Mod: " + String.valueOf(modifier));
 
         for (Faction f : wp.getFactions()) {
-            f.sendMessage(FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
+            for (Player player : f.getOnlineMembers()) {
+                String prefix = "&8[&a" + wp.getName() + "&7 vs. &c" + wp.getEnemy().getName() + "&8] ";
+                MessageUtil.sendMessage(player, prefix + FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
+            }
         }
         for (Faction f : wp.getEnemy().getFactions()) {
-            f.sendMessage(FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getEnemy().getPoints()), String.valueOf(wp.getPoints())));
+            for (Player player : f.getOnlineMembers()) {
+                String prefix = "&8[&a" + wp.getEnemy().getName() + "&7 vs. &c" + wp.getName() + "&8] ";
+                MessageUtil.sendMessage(player, prefix + FMessage.WAR_SCORE_CHANGED.getMessage(String.valueOf(wp.getPoints()), String.valueOf(wp.getEnemy().getPoints())));
+            }
         }
         if (wp.getPoints() >= 100 || wp.getPoints() <= -100){
             Bukkit.getScheduler().runTaskLater(plugin, new BukkitRunnable() {
