@@ -16,6 +16,7 @@
  */
 package de.erethon.factionsxl.war;
 
+import de.erethon.commons.chat.MessageUtil;
 import de.erethon.factionsxl.FactionsXL;
 import de.erethon.factionsxl.config.FConfig;
 import de.erethon.factionsxl.entity.Relation;
@@ -51,17 +52,21 @@ public class WarListener implements Listener {
         if (plugin.getFConfig().isExcludedWorld(event.getEntity().getWorld())) {
             return;
         }
-        if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
         Player player1 = EntityProtectionListener.getDamageSource(event.getDamager(), event.getEntity());
         Player player2 = (Player) event.getEntity();
+        if (player1 == null) {
+            return;
+        }
         plugin.getFPlayerCache().getByPlayer(player2).getLastDamagers().add(player1);
         Faction faction1 = factions.getByMember(player1);
         Faction faction2 = factions.getByMember(player2);
-        if (faction1 == null || faction2 == null || faction1.getRelation(faction2) != Relation.ENEMY) {
+        if (faction1 == null || faction2 == null || !faction1.getRelation(faction2).equals(Relation.ENEMY)) {
             return;
         }
+        MessageUtil.log("Player1: " + player1.toString() + " player2: " + player2.toString() + " faction1: " + faction1.getName() + " faction2: " + faction2.getName());
         plugin.getFPlayerCache().getByPlayer(player2).getLastDamagers().add(player1);
         Battle takesPart = null;
         for (Battle battle : battleCache) {
@@ -72,7 +77,7 @@ public class WarListener implements Listener {
         }
         if (takesPart == null) {
             takesPart = new Battle(player1, player2);
-            System.out.println("Created  battle: " + takesPart.toString());
+            MessageUtil.log("Created  battle: " + takesPart.toString());
             battleCache.add(takesPart);
             new Expiration(takesPart).runTaskTimer(plugin, 0L, FConfig.SECOND);
         } else {
@@ -92,7 +97,7 @@ public class WarListener implements Listener {
         }
         for (Battle battle : battleCache) {
             if (battle.takesPart(player2)) {
-                System.out.println("Removed battle: " + battle.toString());
+                MessageUtil.log("Removed battle: " + battle.toString());
                 if (player1 != null && battle.takesPart(player1)) {
                     battle.win(player1, player2);
                 }

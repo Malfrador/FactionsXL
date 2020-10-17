@@ -129,7 +129,7 @@ public class War {
         return participatingPlayers.get(player);
     }
 
-    public void setPlayerParticipation(OfflinePlayer player, double value) {
+    public void addPlayerParticipation(OfflinePlayer player, double value) {
         double current;
         if (participatingPlayers.containsKey(player)) {
             current = participatingPlayers.get(player);
@@ -142,19 +142,19 @@ public class War {
     public void addPlayerParticipation(OfflinePlayer player, WarPlayerAction action) {
         switch (action) {
             case KILL:
-                setPlayerParticipation(player, 1);
+                addPlayerParticipation(player, 1);
                 break;
             case PLACED_SIEGE:
-                setPlayerParticipation(player, 0.4);
+                addPlayerParticipation(player, 0.4);
                 break;
             case PLACED_TNT:
-                setPlayerParticipation(player, 0.3);
+                addPlayerParticipation(player, 0.3);
                 break;
             case DESTROYED_IMPORTANT_BLOCK:
-                setPlayerParticipation(player, 0.2);
+                addPlayerParticipation(player, 0.2);
                 break;
             case GRIEF:
-                setPlayerParticipation(player, 0.1);
+                addPlayerParticipation(player, 0.0);
                 break;
         }
     }
@@ -231,6 +231,11 @@ public class War {
         config = YamlConfiguration.loadConfiguration(file);
         WarCache wars = FactionsXL.getInstance().getWarCache();
 
+        MessageUtil.broadcastMessage(" ");
+        MessageUtil.broadcastCenteredMessage(FMessage.WAR_ENDED.getMessage(getAttacker().getName(), getDefender().getName()));
+        MessageUtil.broadcastMessage(" ");
+
+        cleanup();
         wars.getWars().remove(this);
         file.delete();
         System.out.println("War" + this + "ended!");
