@@ -126,36 +126,36 @@ public class OccupyCommand extends FCommand {
             Faction enemyLeader = (Faction) factionWP.getEnemy().getLeader();
             long now = System.currentTimeMillis();
             if (region.getAttackStartTime() == 0) {
-                    if (region.isAttackable(factionWP)) {
-                    if (enemyLeader.getCapital().equals(region) && getOccupiedRegionsOfLeader(factionWP.getEnemy()) < (enemyLeader.getRegions().size() * 0.75)) {
-                        MessageUtil.sendMessage(sender, "&cDu kannst die feindliche Hauptstadt erst angreifen, wenn du 75% der Regionen des Feindes besetzt hast.");
-                        return;
-                    }
-                    if (region.isAttacked()) {
-                        MessageUtil.sendMessage(sender, "&cDiese Region wird bereits angegriffen.");
-                        return;
-                    }
-                    if (region.getLastDefendedTime() != 0 && (now < (region.getLastDefendedTime() + 172800000))) { // 48 Stunden
-                        MessageUtil.sendMessage(sender, "&cDiese Region ist noch geschützt.");
-                        return;
-                    }
-                    if (plugin.getOccupationManager().isAlreadyAttacked(annexFrom)) {
-                        MessageUtil.sendMessage(sender, "&cEine Region dieser Fraktion wird bereits angegriffen.");
-                        return;
-                    }
-                    if (plugin.getOccupationManager().canStartOccupation(factionWP, factionWP.getEnemy())) {
-                        MessageUtil.sendMessage(sender, "&cDu kannst aktuell keinen Angriff starten. Der Beteiligungs-Unterschied ist zu groß.");
-                        MessageUtil.sendMessage(sender, "&7&oEventuell ist die Besitzer-Kriegspartei nicht aktiv oder eure eigenen Kriegsbeteiligung ist zu hoch.");
-                        return;
-                    }
-                    region.setAttackStartTime(System.currentTimeMillis());
-                    MessageUtil.sendMessage(sender, "&aAngriff gestartet! Der Feind erhält 20 Minuten Vorbereitungszeit. Der Angriff dauert insgesamt 120 Minuten.");
-                    for (Faction f : factionWP.getEnemy().getFactions()) {
-                        f.sendMessage("&aEure Region &6" + region.getName() + " &awird angegriffen!");
-                    }
+                if (region.isAttackable(factionWP)) {
+                if (enemyLeader.getCapital().equals(region) && getOccupiedRegionsOfLeader(factionWP.getEnemy()) < (enemyLeader.getRegions().size() * 0.75)) {
+                    MessageUtil.sendMessage(sender, "&cDu kannst die feindliche Hauptstadt erst angreifen, wenn du 75% der Regionen des Feindes besetzt hast.");
+                    return;
+                }
+                if (region.isAttacked()) {
+                    MessageUtil.sendMessage(sender, "&cDiese Region wird bereits angegriffen.");
+                    return;
+                }
+                if (region.getLastDefendedTime() != 0 && (now < (region.getLastDefendedTime() + 172800000))) { // 48 Stunden
+                    MessageUtil.sendMessage(sender, "&cDiese Region ist noch geschützt.");
+                    return;
+                }
+                if (plugin.getOccupationManager().isAlreadyAttacked(annexFrom)) {
+                    MessageUtil.sendMessage(sender, "&cEine Region dieser Fraktion wird bereits angegriffen.");
+                    return;
+                }
+                if (plugin.getOccupationManager().canStartOccupation(factionWP, factionWP.getEnemy())) {
+                    MessageUtil.sendMessage(sender, "&cDu kannst aktuell keinen Angriff starten. Der Beteiligungs-Unterschied ist zu groß.");
+                    MessageUtil.sendMessage(sender, "&7&oEventuell ist die Besitzer-Kriegspartei nicht aktiv oder eure eigenen Kriegsbeteiligung ist zu hoch.");
+                    return;
+                }
+                region.setAttackStartTime(System.currentTimeMillis());
+                MessageUtil.sendMessage(sender, "&aAngriff gestartet! Der Feind erhält 20 Minuten Vorbereitungszeit. Der Angriff dauert insgesamt 120 Minuten.");
+                for (Faction f : factionWP.getEnemy().getFactions()) {
+                    f.sendMessage("&aEure Region &6" + region.getName() + " &awird angegriffen!");
+                }
 
-                    WarRegionAttackEvent event = new WarRegionAttackEvent(factionWP, factionWP.getEnemy(), region);
-                    Bukkit.getPluginManager().callEvent(event);
+                WarRegionAttackEvent event = new WarRegionAttackEvent(factionWP, factionWP.getEnemy(), region);
+                Bukkit.getPluginManager().callEvent(event);
 
                 } else {
                     MessageUtil.sendMessage(sender, "&cDu kannst Regionen nur angreifen wenn sie an eigene oder besetzte Regionen angrenzen.");
@@ -216,15 +216,15 @@ public class OccupyCommand extends FCommand {
                 faction.sendMessage(FMessage.WAR_OCCUPY_SUCCESS.getMessage(), region);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
 
+                WarRegionOccupiedEvent event = new WarRegionOccupiedEvent(factionWP, factionWP.getEnemy(), region, faction);
+                Bukkit.getPluginManager().callEvent(event);
 
                 if (war.getCasusBelli().getType() == CONQUEST || war.getCasusBelli().getType() == RECONQUEST) {
-                    if (hasOccupiedAllClaims(faction, annexFrom)) {
+                    if (hasOccupiedAllClaims(faction, (Faction) war.getDefender().getLeader())) {
                         plugin.getWarHandler().forceWarGoal(factionWP);
                     }
                 }
 
-                WarRegionOccupiedEvent event = new WarRegionOccupiedEvent(factionWP, factionWP.getEnemy(), region, faction);
-                Bukkit.getPluginManager().callEvent(event);
 
 
             } else {

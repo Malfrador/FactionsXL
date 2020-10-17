@@ -500,7 +500,7 @@ public class LandProtectionListener implements Listener {
                     }
                 }
             }
-            if (!region.isAttacked()) {
+            if (!region.isAttacked() && region.getOccupant() == null) {
                 event.setCancelled(true);
                 MessageUtil.sendMessage(breaker, "&cDiese Region wird aktuell nicht angegriffen. Greife sie erst mit /f occupy an.");
                 return;
