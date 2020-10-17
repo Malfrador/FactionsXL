@@ -156,11 +156,37 @@ public class WarParty implements FEntity {
     }
 
     public void addParticipant(LegalEntity participant) {
+        if (participants.contains(participant)) {
+            return;
+        }
         participants.add(participant);
+        if (participant instanceof Faction) {
+            // Add vassals if any
+            Faction participantFaction = (Faction) participant;
+            for (Faction possibleVassal : participantFaction.getRelations().keySet()) {
+                if (participantFaction.getRelation(possibleVassal).equals(Relation.VASSAL) || participantFaction.getRelation(possibleVassal).equals(Relation.LORD)) {
+                    participants.add(possibleVassal);
+                    addParticipant(possibleVassal); // Do it again in case of vassals of vassals/lords of lords etc.
+                }
+            }
+        }
     }
 
     public void removeParticipant(LegalEntity participant) {
+        if (!participants.contains(participant)) {
+            return;
+        }
         participants.remove(participant);
+        if (participant instanceof Faction) {
+            // Remove vassals if any
+            Faction participantFaction = (Faction) participant;
+            for (Faction possibleVassal : participantFaction.getRelations().keySet()) {
+                if (participantFaction.getRelation(possibleVassal).equals(Relation.VASSAL) || participantFaction.getRelation(possibleVassal).equals(Relation.LORD)) {
+                    participants.remove(possibleVassal);
+                    removeParticipant(possibleVassal); // Do it again in case of vassals of vassals/lords of lords etc.
+                }
+            }
+        }
     }
 
     public void joinWar(LegalEntity faction) {
