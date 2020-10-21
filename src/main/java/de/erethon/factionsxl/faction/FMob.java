@@ -103,6 +103,9 @@ public class FMob implements Listener {
     public void onInteract(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
+        if (!(entity.getType().equals(EntityType.VILLAGER))) {
+            return;
+        }
         Faction faction = FactionsXL.getInstance().getFactionCache().getByLocation(entity.getLocation());
         if (faction == null) {
             return;
