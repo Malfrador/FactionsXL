@@ -210,6 +210,12 @@ public class War {
             Faction faction = (Faction) attacker.getLeader();
             faction.getRelations().remove((Faction) getCasusBelli().getTarget());
             ((Faction) getCasusBelli().getTarget()).getRelations().remove(faction);
+            // Vasalls that declare independence should leave wars that they participate in because of their lord
+            for (WarParty warParty : faction.getWarParties()) {
+                if (warParty.getLeader().equals(getCasusBelli().getTarget())) {
+                    warParty.leaveWar(faction);
+                }
+            }
         }
         // Set all relations to enemy
         for (Faction attacker : factionSetA) {
