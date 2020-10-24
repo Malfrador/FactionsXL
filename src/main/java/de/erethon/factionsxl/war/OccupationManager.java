@@ -212,6 +212,7 @@ public class OccupationManager {
         }
         // If the attacker is weaker they should still be able to attack
         if (attackerParticipation < defenderParticipation) {
+            MessageUtil.log("Attacker is weaker than defender. Can start attack. ");
             return true;
         }
         MessageUtil.log("Participation: Defender: " + attackerParticipation + " / Attacker: " + defenderParticipation);

@@ -113,6 +113,7 @@ public class WarHandler {
         MessageUtil.log("Ending war " + warParty.getWar().toString());
         WarParty enemy = warParty.getEnemy();
         Faction enemyLeader = (Faction) enemy.getLeader();
+        Set<Region> enemyRegions = enemyLeader.getRegions();
         switch (warParty.getWar().getCasusBelli().getType()) {
             case BORDER_FRICTION: // Not implemented
             case LIBERATION:
@@ -128,7 +129,7 @@ public class WarHandler {
                 break;
 
             case RECONQUEST: // Gives all core regions back to their owner. If current (loosing) owner has a core there as well, add Reconquest CB.
-                for (Region r : enemyLeader.getRegions()) {
+                for (Region r : enemyRegions) {
                     if (r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
                         if (r.getCoreFactions().containsKey(r.getOwner())) {
                             r.getOwner().getCasusBelli().add(new CasusBelli(CasusBelli.Type.RECONQUEST, warParty.getLeader(), null));
@@ -136,12 +137,12 @@ public class WarHandler {
                         r.setOwner((Faction) warParty.getLeader());
                     }
                 }
-                if (enemyLeader.getRegions().isEmpty()) {
+                if (enemyRegions.isEmpty()) {
                     enemyLeader.disband();
                 }
                 break;
             case CONQUEST: // Give all claimed regions to all winners / just regions claimed by the leader to the leader. Adds Reconquest CB if core
-                for (Region r : enemyLeader.getRegions()) {
+                for (Region r : enemyRegions) {
                     if (config.isForceWarGoalsForAllWinners()) {
                         for (Faction ally : warParty.getFactions()) {
                             if (r.getClaimFactions().containsKey(ally) || r.getCoreFactions().containsKey(ally)) {
@@ -168,7 +169,7 @@ public class WarHandler {
 
                     }
                 }
-                if (enemyLeader.getRegions().isEmpty()) {
+                if (enemyRegions.isEmpty()) {
                     enemyLeader.disband();
                 }
                 break;
