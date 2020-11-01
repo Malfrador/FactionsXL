@@ -86,6 +86,14 @@ public class OccupyCommand extends FCommand {
             MessageUtil.sendMessage(player, FMessage.WAR_OCCUPY_NOT_AT_WAR.getMessage());
             return;
         }
+        if (region.getOccupant() != null) {
+            for (WarParty warParty : faction.getWarParties()) {
+                if (warParty.getFactions().contains(region.getOccupant())) {
+                    ParsingUtil.sendMessage(sender, FMessage.WAR_OCCUPY_ALREADY_OCCUPIED.getMessage());
+                    return;
+                }
+            }
+        }
 
 
         if (annexFrom == faction) {
