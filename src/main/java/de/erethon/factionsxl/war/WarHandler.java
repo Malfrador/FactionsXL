@@ -112,6 +112,7 @@ public class WarHandler {
         warParty.getWar().cleanup();
         MessageUtil.log("Ending war " + warParty.getWar().toString());
         WarParty enemy = warParty.getEnemy();
+        Faction leader = (Faction) warParty.getLeader();
         Faction enemyLeader = (Faction) enemy.getLeader();
         Set<Region> enemyRegions = enemyLeader.getRegions();
         switch (warParty.getWar().getCasusBelli().getType()) {
@@ -137,9 +138,6 @@ public class WarHandler {
                         r.setOwner((Faction) warParty.getLeader());
                     }
                 }
-                if (enemyRegions.isEmpty()) {
-                    enemyLeader.disband();
-                }
                 break;
             case CONQUEST: // Give all claimed regions to all winners / just regions claimed by the leader to the leader. Adds Reconquest CB if core
                 for (Region r : enemyRegions) {
@@ -153,6 +151,9 @@ public class WarHandler {
                                 if (r.getClaimFactions().containsKey((Faction) warParty.getLeader()) || r.getCoreFactions().containsKey((Faction) warParty.getLeader())) {
                                     r.setOwner((Faction) warParty.getLeader());
                                 }
+                                r.clearOccupant();
+                                r.setAttacked(false);
+                                r.setAttackStartTime(0);
                             }
                         }
                     }
@@ -168,9 +169,6 @@ public class WarHandler {
                         }
 
                     }
-                }
-                if (enemyRegions.isEmpty()) {
-                    enemyLeader.disband();
                 }
                 break;
 
@@ -191,7 +189,12 @@ public class WarHandler {
                 newVassal.getCasusBelli().add(new CasusBelli(CasusBelli.Type.INDEPENDENCE, newLord, new Date(System.currentTimeMillis() + (config.getCBLiberationExp() * FConfig.DAY))));
                 break;
         }
+        enemyLeader.setScoreLastPeace(warParty.getPoints());
+        enemyLeader.setTimeLastPeace(System.currentTimeMillis());
 
+        if (enemyRegions.isEmpty()) {
+            enemyLeader.disband();
+        }
         warParty.getWar().end();
 
     }
@@ -250,6 +253,10 @@ public class WarHandler {
                 enemyF.getAccount().withdraw(bounty);
                 return;
         }
+
+        enemyLeader.setTimeLastPeace(System.currentTimeMillis());
+        enemyLeader.setScoreLastPeace(warParty.getPoints());
+
         if (enemyLeader.getRegions().isEmpty()) {
             enemyLeader.disband();
         }
