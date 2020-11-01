@@ -36,7 +36,7 @@ public class ChatSpyCommand extends FCommand {
         setMinArgs(0);
         setMaxArgs(1);
         setHelp(FMessage.CMD_CHATSPY_HELP.getMessage());
-        setPermission("fxl.chat.spycommand");
+        setPermission("fxl.chatspy");
         setPlayerCommand(true);
         setConsoleCommand(false);
     }
@@ -53,11 +53,11 @@ public class ChatSpyCommand extends FCommand {
         fplayer = plugin.getFPlayerCache().getByPlayer(player);
         if (fplayer.getData().getChatSpy()) {
             fplayer.getData().setChatSpy(false);
-            MessageUtil.sendMessage(player, "&aChat spy aktiviert!"); // FMessage funktioniert literally überall. Nur nicht mit cmd.chatSpy.on/off.......
+            MessageUtil.sendMessage(player, FMessage.CMD_CHATSPY_OFF.getMessage());
         }
         else {
             fplayer.getData().setChatSpy(true);
-            MessageUtil.sendMessage(player, "&cChat spy deaktiviert");
+            MessageUtil.sendMessage(player, FMessage.CMD_CHATSPY_ON.getMessage());
         }
     }
 
