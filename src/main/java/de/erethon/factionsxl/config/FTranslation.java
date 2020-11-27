@@ -34,7 +34,7 @@ public class FTranslation  {
     FileConfiguration messages = null;
 
     public FTranslation() {
-        languageFile = new File(plugin.getDataFolder() + "/items.yml");
+        languageFile = new File(plugin.getDataFolder() + "/languages/items.yml");
         if (!languageFile.exists()) {
             InputStream jarURL = plugin.getClass().getResourceAsStream("/languages/names_en.yml");
             try {
