@@ -27,6 +27,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+/**
+ * Translates material names, by using a YAML-config
+ * generated from the minecraft localization json files.
+ * Needs to be updated with every major version.
+ *
+ * German and English (default) names are included in the .jar
+ *
+ * @author Malfrador
+ *
+ */
+
 public class FTranslation  {
 
     FactionsXL plugin = FactionsXL.getInstance();
@@ -36,7 +47,7 @@ public class FTranslation  {
     public FTranslation() {
         languageFile = new File(plugin.getDataFolder() + "/languages/items.yml");
         if (!languageFile.exists()) {
-            InputStream jarURL = plugin.getClass().getResourceAsStream("/languages/names_en.yml");
+            InputStream jarURL = plugin.getClass().getResourceAsStream("/languages/items_en.yml");
             try {
                 copyFile(jarURL, new File(plugin.getDataFolder() + "/languages/items.yml"));
 
@@ -56,7 +67,13 @@ public class FTranslation  {
         else if (type.isItem()) {
             key = "item-minecraft-" + key;
         }
-        return messages.getString(key);
+        if (messages.getString(key) != null) {
+            return messages.getString(key);
+        }
+        else {
+            MessageUtil.log("The item/block " + key + " is missing a translation. Please update your items.yml");
+            return key;
+        }
     }
 
     public static void copyFile(InputStream in, File out) throws Exception {
