@@ -36,9 +36,9 @@ public class FTranslation  {
     public FTranslation() {
         languageFile = new File(plugin.getDataFolder() + "/items.yml");
         if (!languageFile.exists()) {
-            InputStream jarURL = plugin.getClass().getResourceAsStream("/languages/names_de.yml");
+            InputStream jarURL = plugin.getClass().getResourceAsStream("/languages/names_en.yml");
             try {
-                copyFile(jarURL, new File(plugin.getDataFolder() + "/items.yml"));
+                copyFile(jarURL, new File(plugin.getDataFolder() + "/languages/items.yml"));
 
             } catch (Exception e) {
                 MessageUtil.log(e.toString());
