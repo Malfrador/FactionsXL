@@ -24,6 +24,7 @@ import de.erethon.factionsxl.config.FMessage;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * @author Daniel Saukel
@@ -68,7 +69,7 @@ public class CooldownTeleportationTask extends ProgressBar {
     }
     @Override
     public void onFinish() {
-        player.teleport(targetLocation);
+        player.teleportAsync(targetLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
 }
