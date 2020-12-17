@@ -113,7 +113,6 @@ public class Faction extends LegalEntity {
     Map<Resource, Integer> consumableResources = new HashMap<>();
     Map<Resource, Integer> saturatedResources = new HashMap<>();
     Map<ResourceSubcategory, Integer> saturatedSubcategories = new HashMap<>();
-    Set<StatusEffect> effects = new HashSet<>();
     PopulationMenu populationMenu;
     IdeaMenu ideaMenu;
     Set<IdeaGroup> ideaGroups = new HashSet<>();
@@ -987,31 +986,6 @@ public class Faction extends LegalEntity {
     public SaturationLevel isSubcategorySaturated(ResourceSubcategory subcategory) {
         int value = saturatedSubcategories.get(subcategory) != null ? saturatedSubcategories.get(subcategory) : 0;
         return SaturationLevel.getByPercentage(value, subcategory.isBasic());
-    }
-
-    /**
-     * @return
-     * a set of StatusEffects that affect this faction
-     */
-    public Set<StatusEffect> getEffects() {
-        return effects;
-    }
-
-    /**
-     * @param resource
-     * @return the modifier for this resource after applying all effects
-     */
-    public double getTotalModifierForResource(Resource resource) {
-        double modifier = 0;
-        for (StatusEffect effect : getEffects()) {
-            if (effect.getProductionModifier().containsKey(resource)) {
-                modifier = modifier + effect.getProductionModifier().get(resource);
-            }
-            if (effect.getConsumptionModifier().containsKey(resource)) {
-                modifier = modifier + effect.getConsumptionModifier().get(resource);
-            }
-        }
-        return modifier;
     }
 
 
